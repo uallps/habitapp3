@@ -22,7 +22,7 @@ struct TaskListView: View {
                     }
                 }.toolbar {
                     Button("Añadir Tarea") {
-                        let newHabit = Habit(title : "Nuevo Hábito", completedDays: [])
+                        let newHabit = Habit(title : "Nuevo Hábito", doneDays: [])
                         viewModel.addHabit(habit : newHabit)
                     }
                 }.navigationTitle("Hábitos")

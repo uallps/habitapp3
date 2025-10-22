@@ -12,7 +12,7 @@ struct Day : Hashable, Equatable {
     let day : DayOfMonth
     let month : MonthOfYear
     let year : Year
-    let dateComponents: DateComponents
+    let date: Date = Date()
     
     struct DayOfMonth : Hashable {
         let value: Int

@@ -9,9 +9,9 @@ import Combine
 
 class TaskListViewModel: ObservableObject {
     @Published var habits: [Habit] = [
-        Habit(title: "Comprar leche", completedDays : [], dueDate: Date().addingTimeInterval(86400)),
-        Habit(title: "Hacer ejercicio", completedDays : [], priority: .high),
-        Habit(title: "Llamar a mamá", completedDays : [])
+        Habit(title: "Comprar leche", doneDays : [], dueDate: Date().addingTimeInterval(86400)),
+        Habit(title: "Hacer ejercicio", doneDays : [], priority: .high),
+        Habit(title: "Llamar a mamá", doneDays : [])
     ]
     
     func addHabit(habit : Habit) {

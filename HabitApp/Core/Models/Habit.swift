@@ -9,7 +9,7 @@ import Foundation
 struct Habit : Identifiable {
     let id = UUID()
     var title : String
-    var completedDays : [Day]
+    var doneDays : [Day]
     var dueDate : Date?
     var priority : Priority?
     
