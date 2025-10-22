@@ -28,13 +28,22 @@ struct TaskDetailView: View {
             //             }
             //         }
             //     }
-
+            
             
             CustomCalendarView(selectedDate: $selectedDate, doneDays: habit.doneDays)
-
-
-            .navigationTitle(habit.title)
-            
+                .navigationTitle(habit.title)
+                .onChange(of: selectedDate) { newValue in
+                    let calendar = Day.calendar
+                    if let day = Day.DayOfMonth(calendar.component(.day, from: newValue)),
+                       let month = Day.MonthOfYear(calendar.component(.month, from: newValue)) {
+                        let year = Day.Year(calendar.component(.year, from: newValue))
+                        let newDay = Day(day: day, month: month, year: year)
+                        if !habit.doneDays.contains(newDay) {
+                            habit.doneDays.append(newDay)
+                        }
+                    }
+                    
+                }
         }
     }
 }
