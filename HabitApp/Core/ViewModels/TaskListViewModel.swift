@@ -13,4 +13,15 @@ class TaskListViewModel : ObservableObject{
         Task(title: "Llamar a mamá")
     ]
     
-}
+    func addTask(_ title: String) {
+        tasks.append(Task(title: title))
+    }
+
+    func toggleCompletion(task: Task) {
+        if let index = tasks.firstIndex(where: { $0.id == task.id }) {
+            tasks[index].isCompleted.toggle()
+        }
+    }
+    }
+
+

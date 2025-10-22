@@ -5,29 +5,28 @@
 //  Created by Aula03 on 15/10/25.
 //
 
+import Foundation
 
 import SwiftUI
 
 struct TaskListView: View {
-    @ObservedObject var viewModel = TaskListViewModel()
+    @StateObject var viewModel = TaskListViewModel()
 
     var body: some View {
-        VStack {
-            Text("Tasks")
-                .font(.largeTitle)
-                .bold()
-                .padding()
-
-            List {
-                ForEach($viewModel.tasks) { $task in
-                    TaskRowView(task: $task)
-                }
+        VStack{
+            List(viewModel.tasks) { task in
+                TaskRowView(task: task, toggleCompletion: {
+                    viewModel.toggleCompletion(task:task)
+                })
             }
+            .toolbar {
+                Button("Añadir Tarea") {
+                    viewModel.addTask("nuevo")
+                }
+            }.navigationTitle("Tareas")
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
-
 
 #Preview {
     TaskListView()
