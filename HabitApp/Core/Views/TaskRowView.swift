@@ -17,7 +17,7 @@ struct TaskRowView: View {
         HStack {
             VStack(alignment: .leading) {
                 Text(habit.title)
-                    .strikethrough(habit.isCompleted)
+                    //.strikethrough(habit.isCompleted)
                 if AppConfig.showDueDates, let dueDate = habit.dueDate {
                     Text("Vence: \(dueDate.formatted(date: .abbreviated, time: .shortened))")
                         .font(.caption)
@@ -30,7 +30,7 @@ struct TaskRowView: View {
                 }
             }
             Button(action: toggleCompletion){
-                Image(systemName: habit.isCompleted ? "checkmark.circle.fill" : "circle")
+  //              Image(systemName: habit.isCompleted ? "checkmark.circle.fill" : "circle")
             }.buttonStyle(.plain)
         }
     }
