@@ -1,35 +1,39 @@
 //
 //  TaskListView.swift
-//  HabitApp
+//  TaskApp
 //
-//  Created by Aula03 on 15/10/25.
+//  Created by Francisco José García García on 15/10/25.
 //
-
-
+import Foundation
 import SwiftUI
 
 struct TaskListView: View {
-    @ObservedObject var viewModel = TaskListViewModel()
+    @StateObject var viewModel = TaskListViewModel()
 
     var body: some View {
-        VStack {
-            Text("Tasks")
-                .font(.largeTitle)
-                .bold()
-                .padding()
-
-            List {
-                ForEach($viewModel.tasks) { $task in
-                    TaskRowView(task: $task)
-                }
+        VStack{
+            
+            NavigationStack {
+                List($viewModel.tasks) { $habit in
+                    NavigationLink(destination : TaskDetailView(task: $task)) {
+                        TaskRowView(habit : habit, toggleCompletion:  {
+                            viewModel.toggleCompletion(task: task)
+                        })
+                    }
+                }.toolbar {
+                    Button("Añadir Tarea") {
+                        let newHabit = Habit(title : "Nueva Tarea")
+                        viewModel.addTask(habit : newTask)
+                    }
+                }.navigationTitle("Tareas")
             }
+            
+
+
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
-
 
 #Preview {
     TaskListView()
 }
-

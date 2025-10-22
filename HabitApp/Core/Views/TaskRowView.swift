@@ -1,63 +1,45 @@
 //
-//  TaskRowView.swift
-//  HabitApp
+//  TaskListRowView.swift
+//  TaskApp
 //
-//  Created by Aula03 on 15/10/25.
+//  Created by Francisco José García García on 15/10/25.
 //
-
 
 import SwiftUI
 
 struct TaskRowView: View {
-    @Binding var task: Task
+    
+    let habit: Habit
+    let toggleCompletion : () -> Void
+    
+    
     var body: some View {
         HStack {
+            Button(action: toggleCompletion){
+                Image(systemName: habit.isCompleted ? "checkmark.circle.fill" : "circle")
+            }.buttonStyle(.plain)
             VStack(alignment: .leading) {
-                Text(task.title)
-                    .strikethrough(task.isCompleted, color: .gray)
-                    .foregroundColor(task.isCompleted ? .gray : .primary)
-                    .font(.headline)
-                
-                if AppConfig.showDueDates, let dueDate = task.dueDate {
-                    Text("Due: \(dueDate, formatter: dateFormatter)")
-                        .font(.subheadline)
+                Text(habit.title)
+                    .strikethrough(habit.isCompleted)
+                if AppConfig.showDueDates, let dueDate = habit.dueDate {
+                    Text("Vence: \(dueDate.formatted(date: .abbreviated, time: .shortened))")
+                        .font(.caption)
                         .foregroundColor(.secondary)
                 }
-                
-                if AppConfig.showPriorities, let priority = task.priority {
-                    Text("Priority: \(priority.rawValue.capitalized)")
-                        .font(.subheadline)
-                        .foregroundColor(color(for: priority))
+                if AppConfig.showPriorities, let priority = habit.priority {
+                    Text("Prioridad: \(priority.rawValue)")
+                        .font(.caption)
+                        .foregroundColor(priorityColor(for: priority))
                 }
             }
-            Spacer()
-            Button(action: {
-                task.isCompleted.toggle()
-            }) {
-                Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
-                    .foregroundColor(task.isCompleted ? .green : .gray)
-                    .imageScale(.large)
-            }
-            .buttonStyle(BorderlessButtonStyle())
         }
-        .padding(.vertical, 4)
     }
     
-    func color(for priority: Priority) -> Color {
+    private func priorityColor(for priority: Priority) -> Color {
         switch priority {
-        case .low:
-            return .green
-        case .medium:
-            return .orange
-        case .high:
-            return .red
+        case .low: return .green
+        case .medium: return .yellow
+        case .high: return .red
         }
     }
 }
-
-private let dateFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .short
-    return formatter
-}()
-
