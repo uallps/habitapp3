@@ -14,16 +14,16 @@ struct TaskListView: View {
         VStack{
             
             NavigationStack {
-                List($viewModel.tasks) { $habit in
-                    NavigationLink(destination : TaskDetailView(task: $task)) {
+                List($viewModel.habits) { $habit in
+                    NavigationLink(destination : TaskDetailView(habit: $habit)) {
                         TaskRowView(habit : habit, toggleCompletion:  {
-                            viewModel.toggleCompletion(task: task)
+                            viewModel.toggleCompletion(habit: habit)
                         })
                     }
                 }.toolbar {
                     Button("Añadir Tarea") {
-                        let newHabit = Habit(title : "Nueva Tarea")
-                        viewModel.addTask(habit : newTask)
+                        let newHabit = Habit(title : "Nuevo Hábito")
+                        viewModel.addHabit(habit : newHabit)
                     }
                 }.navigationTitle("Tareas")
             }
