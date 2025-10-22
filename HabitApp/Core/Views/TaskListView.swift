@@ -25,7 +25,7 @@ struct TaskListView: View {
                         let newHabit = Habit(title : "Nuevo Hábito")
                         viewModel.addHabit(habit : newHabit)
                     }
-                }.navigationTitle("Tareas")
+                }.navigationTitle("Hábitos")
             }
             
 
