@@ -10,7 +10,7 @@
 > Se puede elegir una o más de las siguientes:
 
 - **Recordatorios** *(Opcional)* — Asignado a David Casado Fernández. 
-- **Rachas (Streaks)** *(Opcional)* — Asignado a David Granados.
+- **Rachas (Streaks)** *(Opcional)* — Asignado a David Granados Pérez.
 - **Notas Diarias** *(Opcional)* — Asignado a Franco Sergio Pereyra.
 - **Categorías** *(Opcional)* — Asignado a Ismael Fernández Méndez.
 - **Estadísticas** *(Opcional)* — Asignado a Juan José Fernández Requena.
