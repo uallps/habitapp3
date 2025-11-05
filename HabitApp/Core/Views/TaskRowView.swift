@@ -15,6 +15,9 @@ struct TaskRowView: View {
     
     var body: some View {
         HStack {
+            Button(action: toggleCompletion){
+                Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
+            }.buttonStyle(.plain)
             VStack(alignment: .leading) {
                 Text(habit.title)
                     //.strikethrough(habit.isCompleted)
