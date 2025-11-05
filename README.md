@@ -13,7 +13,7 @@
 - **Rachas (Streaks)** *(Opcional)* — Asignado a David Granados.
 - **Notas Diarias** *(Opcional)* — Asignado a Franco Sergio Pereyra.
 - **Categorías** *(Opcional)* — Asignado a Ismael Fernández Méndez.
-- **Estadísticas** *(Opcional)* — Asignado a Juan José Fernández Requena*
+- **Estadísticas** *(Opcional)* — Asignado a Juan José Fernández Requena.
 
 ### 3. Configuración *(Mandatoria)*
 
