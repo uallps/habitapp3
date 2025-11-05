@@ -8,21 +8,22 @@
 import SwiftUI
 
 @main
-struct TaskApp: App {
+struct HabitApp: App {
     @State private var selectedDetailView: String?
     
     var body: some Scene {
         WindowGroup{
 #if os(iOS)
             TabView {
-                TaskListView()
+                HabitListView()
                     .tabItem {
                         Label("Hábitos", systemImage: "checklist")
                     }
-                SettingsView()
-                    .tabItem {
-                        Label("Ajustes", systemImage: "gearshape")
-                    }
+                // TODO: Uncomment when SettingsView exists
+                // SettingsView()
+                //     .tabItem {
+                //         Label("Ajustes", systemImage: "gearshape")
+                //     }
             }
             .environmentObject(AppConfig())
 #else
@@ -38,16 +39,14 @@ struct TaskApp: App {
             } detail: {
                 switch selectedDetailView {
                 case "habitos":
-                    TaskListView()
-                //TODO: case "ajustes":
-                    //TODO: SettingsView()
+                    HabitListView()
+                    // TODO: case "ajustes":
+                    // TODO: SettingsView()
                 default:
                     Text("Seleccione una opción")
                 }
             }.environmentObject(AppConfig())
 #endif
-        WindowGroup {
-            HabitListView()
         }
     }
 }
