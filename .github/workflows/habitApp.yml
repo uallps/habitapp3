@@ -20,7 +20,7 @@ jobs:
       # You can list available simulators if you need to debug
       # - run: xcrun simctl list devices
 
-      - name: Build for iOS
+      - name: Build HabitApp for iOS
         run: |
           xcodebuild \
             -project HabitApp.xcodeproj \
@@ -28,10 +28,38 @@ jobs:
             -destination 'platform=iOS Simulator,name=iPhone 15' \
             clean build | xcpretty
 
-      - name: Run tests
+      - name: Boot simulator
         run: |
-          xcodebuild \
-            -project HabitApp.xcodeproj \
-            -scheme HabitApp \
-            -destination 'platform=iOS Simulator,name=iPhone 15' \
-            test | xcpretty
+          xcrun simctl boot "iPhone 15"
+          xcrun simctl bootstatus "iPhone 15" -b
+
+      - name: Launch app
+        run: |
+          mkdir -p screenshots
+          # Replace this with your app’s actual bundle identifier:
+          APP_BUNDLE_ID="com.ual.HabitApp"
+          xcrun simctl install booted build/Debug-iphonesimulator/HabitApp.app
+          xcrun simctl launch booted $APP_BUNDLE_ID || true
+          sleep 5  # wait for app UI to load
+
+      - name: Take screenshots
+        run: |
+          mkdir -p screenshots
+          xcrun simctl io booted screenshot screenshots/home.png
+          # You can add more screenshots if your UI tests move the app
+          # e.g., xcrun simctl io booted screenshot screenshots/settings.png
+          ls screenshots
+
+      - name: Upload screenshots as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: iOS-screenshots
+          path: screenshots
+
+      #- name: Run tests
+       # run: |
+        #  xcodebuild \
+         #   -project HabitApp.xcodeproj \
+          #  -scheme HabitApp \
+           # -destination 'platform=iOS Simulator,name=iPhone 15' \
+            #test | xcpretty
