@@ -34,11 +34,11 @@ struct HabitDetailWrapper: View {
                     .font(.headline)
                     .padding()
                     .frame(maxWidth: .infinity)
-                    .background(Color.blue)
                     .foregroundColor(.white)
-                    .cornerRadius(10)
                     .padding(.horizontal)
             }
+            .background(Color.blue)
+            .cornerRadius(10)
         }
         .navigationTitle("Nuevo hábito")
         .padding()
