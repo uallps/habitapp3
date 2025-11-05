@@ -1,12 +1,10 @@
 //
 //  TaskListView.swift
-//  HabitApp
+//  TaskApp
 //
-//  Created by Aula03 on 15/10/25.
+//  Created by Francisco José García García on 15/10/25.
 //
-
 import Foundation
-
 import SwiftUI
 
 struct TaskListView: View {
@@ -14,16 +12,24 @@ struct TaskListView: View {
 
     var body: some View {
         VStack{
-            List(viewModel.tasks) { task in
-                TaskRowView(task: task, toggleCompletion: {
-                    viewModel.toggleCompletion(task:task)
-                })
+            
+            NavigationStack {
+                List($viewModel.habits) { $habit in
+                    NavigationLink(destination : TaskDetailView(habit: $habit)) {
+                        TaskRowView(habit : habit, toggleCompletion:  {
+                            viewModel.toggleCompletion(habit: habit)
+                        })
+                    }
+                }.toolbar {
+                    Button("Añadir Tarea") {
+                        let newHabit = Habit(title : "Nuevo Hábito", doneDays: [])
+                        viewModel.addHabit(habit : newHabit)
+                    }
+                }.navigationTitle("Hábitos")
             }
-            .toolbar {
-                Button("Añadir Tarea") {
-                    viewModel.addTask("nuevo")
-                }
-            }.navigationTitle("Tareas")
+            
+
+
         }
     }
 }
@@ -31,4 +37,3 @@ struct TaskListView: View {
 #Preview {
     TaskListView()
 }
-
