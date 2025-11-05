@@ -20,18 +20,26 @@ jobs:
       # You can list available simulators if you need to debug
       # - run: xcrun simctl list devices
 
+      - name: Boot available simulator
+        run: |
+          DEVICE=$(xcrun simctl list devices available | grep -m 1 "iPhone" | awk -F'[()]' '{print $2}')
+          echo "Booting device: $DEVICE"
+          xcrun simctl boot "$DEVICE"
+          xcrun simctl bootstatus "$DEVICE" -b
+          echo "DEVICE_NAME=$DEVICE" >> $GITHUB_ENV
+
       - name: Build HabitApp for iOS
         run: |
           xcodebuild \
             -project HabitApp.xcodeproj \
             -scheme HabitApp \
-            -destination 'platform=iOS Simulator,name=iPhone 15' \
+            -destination 'platform=iOS Simulator,name={{ env.DEVICE_NAME }}' \
             clean build | xcpretty
 
       - name: Boot simulator
         run: |
-          xcrun simctl boot "iPhone 15"
-          xcrun simctl bootstatus "iPhone 15" -b
+          xcrun simctl boot "{{ env.DEVICE_NAME }}"
+          xcrun simctl bootstatus "{{ env.DEVICE_NAME }} " -b
 
       - name: Launch app
         run: |
