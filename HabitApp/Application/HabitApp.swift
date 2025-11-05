@@ -46,6 +46,8 @@ struct TaskApp: App {
                 }
             }.environmentObject(AppConfig())
 #endif
+        WindowGroup {
+            HabitListView()
         }
     }
 }

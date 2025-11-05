@@ -17,27 +17,31 @@ jobs:
       - name: Select Xcode version
         run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
 
-      - name: Boot available simulator
+      - name: Boot iPhone simulator
         run: |
-          DEVICE=$(xcrun simctl list devices available | grep -m 1 "iPhone" | awk -F'[()]' '{print $2}')
-          echo "Booting device: $DEVICE"
-          xcrun simctl boot "$DEVICE"
-          xcrun simctl bootstatus "$DEVICE" -b
-          echo "DEVICE_NAME=$DEVICE" >> $GITHUB_ENV
+          # Busca un iPhone real (no un UUID)
+          DEVICE_NAME="iPhone 16"
+          echo "Booting device: $DEVICE_NAME"
+          xcrun simctl boot "$DEVICE_NAME" || true
+          xcrun simctl bootstatus "$DEVICE_NAME" -b
+          echo "DEVICE_NAME=$DEVICE_NAME" >> $GITHUB_ENV
 
       - name: Build HabitApp for iOS
         run: |
           xcodebuild \
             -project HabitApp.xcodeproj \
             -scheme HabitApp \
-            -destination "platform=iOS Simulator,name=$DEVICE_NAME" \
+            -sdk iphonesimulator \
+            -destination "platform=iOS Simulator,name=$DEVICE_NAME,OS=latest" \
+            -derivedDataPath build \
+            -configuration Debug \
             clean build | xcpretty
 
       - name: Launch app
         run: |
           mkdir -p screenshots
           APP_BUNDLE_ID="com.ual.HabitApp"
-          xcrun simctl install booted build/Debug-iphonesimulator/HabitApp.app
+          xcrun simctl install booted build/Build/Products/Debug-iphonesimulator/HabitApp.app
           xcrun simctl launch booted $APP_BUNDLE_ID || true
           sleep 5
 
@@ -52,4 +56,3 @@ jobs:
         with:
           name: iOS-screenshots
           path: screenshots
-
