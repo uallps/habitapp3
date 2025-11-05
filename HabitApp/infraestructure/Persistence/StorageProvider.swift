@@ -1,4 +1,4 @@
 protocol StorageProvider {
-    func loadTasks() async throws -> [Habit]
-    func saveTasks(tasks: [Habit]) async throws
+    func loadHabits() async throws -> [Habit]
+    func saveHabits(habits: [Habit]) async throws
 }
