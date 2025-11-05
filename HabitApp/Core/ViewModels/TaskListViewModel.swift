@@ -19,7 +19,7 @@ class TaskListViewModel: ObservableObject {
     }
     
     func toggleCompletion(habit : Habit) {
-        if let index = habits.firstIndex(where: { $0.id == habit.id }) {
+        if habits.firstIndex(where: { $0.id == habit.id }) != nil {
             //habits[index].isCompleted.toggle()
         }
     }

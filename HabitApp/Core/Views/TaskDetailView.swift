@@ -32,7 +32,7 @@ struct TaskDetailView: View {
             
             CustomCalendarView(selectedDate: $selectedDate, doneDays: habit.doneDays)
                 .navigationTitle(habit.title)
-                .onChange(of: selectedDate) { newValue in
+                .onChange(of: selectedDate) { oldValue, newValue in
                     let calendar = Day.calendar
                     if let day = Day.DayOfMonth(calendar.component(.day, from: newValue)),
                        let month = Day.MonthOfYear(calendar.component(.month, from: newValue)) {
@@ -42,8 +42,10 @@ struct TaskDetailView: View {
                             habit.doneDays.append(newDay)
                         }
                     }
+                }
+
                     
                 }
         }
     }
-}
+
