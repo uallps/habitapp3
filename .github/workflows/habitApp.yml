@@ -31,13 +31,15 @@ jobs:
             -project HabitApp.xcodeproj \
             -scheme HabitApp \
             -destination "platform=iOS Simulator,name=$DEVICE_NAME" \
+            -derivedDataPath build \
+            -configuration Debug \
             clean build | xcpretty
 
       - name: Launch app
         run: |
           mkdir -p screenshots
           APP_BUNDLE_ID="com.ual.HabitApp"
-          xcrun simctl install booted build/Debug-iphonesimulator/HabitApp.app
+          xcrun simctl install booted build/Build/Products/Debug-iphonesimulator/HabitApp.app
           xcrun simctl launch booted $APP_BUNDLE_ID || true
           sleep 5
 
@@ -52,4 +54,3 @@ jobs:
         with:
           name: iOS-screenshots
           path: screenshots
-
