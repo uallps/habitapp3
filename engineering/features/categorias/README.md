@@ -1,31 +1,36 @@
-# Documentación de la funcionalidad Categorías
+# 📂 Documentación de la funcionalidad Categorías
 
-## Resumen
+## 🎯 Propósito
 La funcionalidad **Categorías** permite a los usuarios organizar y clasificar hábitos dentro de la aplicación. Este documento proporciona una visión técnica, consideraciones de diseño e información de implementación relevante.
 
-## Tabla de Contenidos
-1. [Propósito](#propósito)
-2. [Requisitos](#requisitos)
-3. [Modelo de Datos](#modelo-de-datos)
-4. [Componentes de UI](#componentes-de-ui)
-5. [Navegación](#navegación)
-6. [Persistencia](#persistencia)
-7. [Lógica de Negocio](#lógica-de-negocio)
-8. [Ejemplos de Código](#ejemplos-de-código)
-9. [Pruebas](#pruebas)
-10. [Mejoras Futuras](#mejoras-futuras)
+## 📝 Tabla de Contenidos
+1️⃣. [Tipos de categorías](#tipos-de-categorías)
 
-## Propósito
-Explica por qué existe esta funcionalidad y cómo mejora la experiencia del usuario:
-- Organizar elementos por categorías.
-- Permitir filtrado y agrupamiento.
-- Mejorar la navegación y la descubribilidad.
+## 1️⃣.Tipos de categorías
 
-## Requisitos
-- Objetivo iOS/macOS: `iOS 16+/macOS 13+`
-- SwiftUI 4+
-- Swift 5.8+
-- Core Data o capa de persistencia alternativa
-- Opcional: Combine para actualizaciones reactivas
+### 1️⃣.1️⃣.Hábitos Definidos Por el Usuario
+### 1️⃣.1️⃣.1️⃣.🏷 Nombre
 
-## Modelo de Datos
+Es intuitivo pensar que un hábito se categoriza por un nombre.
+
+Por ejemplo, supongamos que hay un conjunto de hábitos como siguen:
+- Limpiar tapicería coche
+- Limpiar cristales
+- Comprobar pastillas freno
+- Lubricar puertas
+- Aparcar con las ruedas rectas
+- Aparcar con marcha engranada después de freno de mano
+
+Todos estos hábitos están relacionados con la **Mecánica**.  
+
+Sin embargo, algunos hábitos, aun estando relacionados con la mecánica, son **sub-categorías** de la mecánica.
+
+Por ejemplo:
+- Tanto limpiar la tapicería del coche como limpiar los cristales son **Limpieza**.
+  - Categoría: `Mecánica -> Limpieza`
+- El resto está relacionado con el **Mantenimiento** del vehículo o son acciones **preventivas de desgaste**:
+  - `Mecánica -> Mantenimiento` (Comprobar pastillas freno)
+  - `Mecánica -> Acciones Preventivas` (Aparcar con las ruedas rectas, Aparcar con marcha engranada)
+
+⚡ Se puede ir tan profundo como quiera el usuario.
+
