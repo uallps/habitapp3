@@ -34,3 +34,4 @@ struct Habit: Identifiable {
 enum Priority: String, Codable {
     case low, medium, high
 }
+
