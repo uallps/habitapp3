@@ -11,6 +11,8 @@ La funcionalidad **Categorías** permite a los usuarios organizar y clasificar h
 ### 1️⃣ Hábitos Definidos por el Usuario
 Se espera que el propio usuario pueda crear sus categorías. Esto tiene poca relevancia si la aplicación se mantiene como un seguimiento offline, pero puede complicarse si las categorías se comparten entre usuarios (por ejemplo, en un sistema de competición o compartición de hábitos).
 
+Todas las formas para categorizar se definen a continuación. Se pueden utilizar varias maneras de categorizar simultáneamente.
+
 #### 📜 Nombre
 Cada hábito se categoriza por un nombre, que puede tener subcategorías.  
 
@@ -81,3 +83,6 @@ La aplicación ofrece categorías limitadas predefinidas.
 - Facilita la función online de competición de hábitos.  
 - Limitado en opciones, puede resultar restrictivo para el usuario.
 
+### 3️⃣ Decisión de Diseño
+
+Los hábitos serán categorizados mediante [Hábitos Definidos por el Usuario](#1️⃣-hábitos-definidos-por-el-usuario). En caso de que la aplicación defina en algún punto un sistema de competición o compartición de hábitos, será necesario una manera de normalizar y agrupar automáticamente categorías para evitar redundancia de categorías.
