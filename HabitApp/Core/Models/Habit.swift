@@ -15,6 +15,7 @@ struct Habit: Identifiable {
     var dueDate: Date?
     var priority: Priority?
     var reminderDate: Date?
+    var activeCategories: [UUID: Category] = [:]
 
     init(title: String,
          doneDays: [Day] = [],
@@ -28,6 +29,7 @@ struct Habit: Identifiable {
         self.dueDate = dueDate
         self.priority = priority
         self.reminderDate = reminderDate
+        self.activeCategories = activeCategories
     }
 }
 
