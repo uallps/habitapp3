@@ -10,6 +10,8 @@ La funcionalidad **Categorías** permite a los usuarios organizar y clasificar h
 
 ### 1️⃣.1️⃣. Hábitos Definidos Por el Usuario
 
+Se podría pretender que sea el mismo usuario quien cree las categorías. No tiene relevancia a corto plazo y si la aplicación se queda como un seguimiento de hábitos offline. Sin embargo, podría dificultarse si en algún momento se decide que las categorías pueden ser compartidas entre distintos usuarios. Este es el caso de un sistema de competición o compartición de hábitos.
+
 #### 1️⃣.1️⃣.1️⃣. 📜 Nombre
 Es intuitivo pensar que un hábito se categoriza por un nombre.
 
@@ -34,3 +36,7 @@ Por ejemplo:
 
 ⚡ Se puede ir tan profundo como quiera el usuario, creando jerarquías muy específicas 🔍📊.
 
+
+### 1️⃣.2️⃣. Hábitos No Definidos Por el Usuario
+
+La aplicación tiene una limitada opción de posibles categorías a elegir. A diferencia de [1️⃣.1️⃣](#1️⃣.1️⃣.-hábitos-definidos-por-el-usuario) se facilita una característica online de competición de hábitos. Sin embargo es muy limitado y puede ser molesto para el usuario.
