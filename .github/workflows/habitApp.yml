@@ -2,9 +2,9 @@ name: Build and Test HabitApp
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "franco" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "franco" ]
 
 jobs:
   build:
@@ -19,15 +19,15 @@ jobs:
 
       - name: Boot iPhone simulator
         run: |
-          # Busca un iPhone real (no un UUID)
           DEVICE_NAME="iPhone 16"
           echo "Booting device: $DEVICE_NAME"
           xcrun simctl boot "$DEVICE_NAME" || true
           xcrun simctl bootstatus "$DEVICE_NAME" -b
           echo "DEVICE_NAME=$DEVICE_NAME" >> $GITHUB_ENV
 
-      - name: Build HabitApp for iOS
+      - name: Build and Test HabitApp for iOS
         run: |
+          cd HabitApp
           xcodebuild \
             -project HabitApp.xcodeproj \
             -scheme HabitApp \
@@ -35,24 +35,64 @@ jobs:
             -destination "platform=iOS Simulator,name=$DEVICE_NAME,OS=latest" \
             -derivedDataPath build \
             -configuration Debug \
+            clean build test | xcpretty
+
+      - name: Build for macOS
+        run: |
+          cd HabitApp
+          xcodebuild \
+            -project HabitApp.xcodeproj \
+            -scheme HabitApp \
+            -sdk macosx \
+            -destination "platform=macOS" \
+            -derivedDataPath build-macos \
+            -configuration Debug \
             clean build | xcpretty
 
-      - name: Launch app
+      - name: Launch iOS app and test features
         run: |
+          cd HabitApp
           mkdir -p screenshots
           APP_BUNDLE_ID="com.ual.HabitApp"
           xcrun simctl install booted build/Build/Products/Debug-iphonesimulator/HabitApp.app
           xcrun simctl launch booted $APP_BUNDLE_ID || true
           sleep 5
+          
+          # Test app launch
+          if xcrun simctl list | grep -q "$APP_BUNDLE_ID"; then
+            echo "✅ App launched successfully"
+          else
+            echo "❌ App failed to launch"
+            exit 1
+          fi
 
       - name: Take screenshots
         run: |
-          mkdir -p screenshots
+          cd HabitApp
           xcrun simctl io booted screenshot screenshots/home.png
-          ls screenshots
+          sleep 2
+          xcrun simctl io booted screenshot screenshots/app-running.png
+          ls -la screenshots
+
+      - name: Verify build artifacts
+        run: |
+          cd HabitApp
+          echo "iOS Build artifacts:"
+          ls -la build/Build/Products/Debug-iphonesimulator/ || echo "No iOS artifacts found"
+          echo "macOS Build artifacts:"
+          ls -la build-macos/Build/Products/Debug/ || echo "No macOS artifacts found"
 
       - name: Upload screenshots as artifact
         uses: actions/upload-artifact@v4
         with:
           name: iOS-screenshots
-          path: screenshots
+          path: HabitApp/screenshots
+
+      - name: Upload build logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs
+          path: |
+            HabitApp/build/Logs
+            HabitApp/build-macos/Logs
