@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct HabitApp: App {
@@ -18,6 +19,10 @@ struct HabitApp: App {
                 HabitListView()
                     .tabItem {
                         Label("Hábitos", systemImage: "checklist")
+                    }
+                DailyNotesView()
+                    .tabItem {
+                        Label("Notas", systemImage: "note.text")
                     }
                 // TODO: Uncomment when SettingsView exists
                 // SettingsView()
@@ -32,6 +37,9 @@ struct HabitApp: App {
                     NavigationLink(value: "habitos") {
                         Label("Habitos", systemImage: "checklist")
                     }
+                    NavigationLink(value: "notas") {
+                        Label("Notas Diarias", systemImage: "note.text")
+                    }
                     NavigationLink(value: "ajustes") {
                         Label("Ajustes", systemImage: "gearshape")
                     }
@@ -40,6 +48,8 @@ struct HabitApp: App {
                 switch selectedDetailView {
                 case "habitos":
                     HabitListView(viewModel: HabitListViewModel())
+                case "notas":
+                    DailyNotesView()
                     // TODO: case "ajustes":
                     // TODO: SettingsView()
                 default:
@@ -48,5 +58,6 @@ struct HabitApp: App {
             }.environmentObject(AppConfig())
 #endif
         }
+        .modelContainer(for: [DailyNote.self])
     }
 }
