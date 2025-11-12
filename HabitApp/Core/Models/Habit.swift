@@ -25,7 +25,6 @@ struct Habit: Identifiable, Hashable{
          reminderDate: Date? = nil,
          activeCategories: CategorySet? = nil
     ) {
-         scheduledDays: [Int] = []) {
         self.title = title
         self.doneDays = doneDays
         self.isCompleted = isCompleted
