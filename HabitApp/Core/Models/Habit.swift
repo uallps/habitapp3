@@ -13,7 +13,6 @@ struct Habit: Identifiable {
     var doneDays: [Day]
     var isCompleted: Bool = false
     var dueDate: Date?
-    var priority: Priority?
     var reminderDate: Date?
     var activeCategories: CategorySet?
 
@@ -29,7 +28,6 @@ struct Habit: Identifiable {
         self.doneDays = doneDays
         self.isCompleted = isCompleted
         self.dueDate = dueDate
-        self.priority = priority
         self.reminderDate = reminderDate
         self.activeCategories = activeCategories
     }

@@ -1,6 +1,6 @@
 import Foundation
 
-enum Frequency: String, CaseIterable, Codable, Identifiable {
+enum Frequency {
     case daily = "Daily"
     case monthly = "Monthly"
     case weekly = "Weekly"

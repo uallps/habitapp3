@@ -14,8 +14,6 @@ struct CategorySet: Identifiable {
     var icon : Icon
     var priority : Priority
     var frequency : Frequency
-    var progress : Progress
-
 
     init(
         id: UUID = UUID(),
@@ -32,7 +30,6 @@ struct CategorySet: Identifiable {
         self.icon = icon
         self.priority = priority
         self.frequency = frequency
-        self.progress = progress
     }
 }
 
