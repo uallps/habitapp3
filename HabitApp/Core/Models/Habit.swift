@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Habit: Identifiable {
+struct Habit: Identifiable, Hashable{
     let id = UUID()
     var title: String
     var doneDays: [Day]
@@ -15,6 +15,7 @@ struct Habit: Identifiable {
     var dueDate: Date?
     var reminderDate: Date?
     var activeCategories: CategorySet?
+    var scheduledDays: [Int] = [] // 1 = Domingo, 2 = Lunes, ..., 7 = Sábado
 
     init(title: String,
          doneDays: [Day] = [],
@@ -24,12 +25,15 @@ struct Habit: Identifiable {
          reminderDate: Date? = nil,
          activeCategories: CategorySet? = nil
     ) {
+         scheduledDays: [Int] = []) {
         self.title = title
         self.doneDays = doneDays
         self.isCompleted = isCompleted
         self.dueDate = dueDate
         self.reminderDate = reminderDate
         self.activeCategories = activeCategories
+        self.scheduledDays = scheduledDays
+
     }
 }
 

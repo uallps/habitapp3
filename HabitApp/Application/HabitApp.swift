@@ -39,7 +39,7 @@ struct HabitApp: App {
             } detail: {
                 switch selectedDetailView {
                 case "habitos":
-                    HabitListView()
+                    HabitListView(viewModel: HabitListViewModel())
                     // TODO: case "ajustes":
                     // TODO: SettingsView()
                 default:

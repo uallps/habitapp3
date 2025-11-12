@@ -1,27 +1,32 @@
 //
-//  TaskListRowView.swift
-//  TaskApp
+//  HabitRowView.swift
+//  HabitApp
 //
-//  Created by Francisco José García García on 15/10/25.
+//  Created by Aula03 on 5/11/25.
 //
 
 import SwiftUI
 
-struct TaskRowView: View {
+struct HabitRowView: View {
     
     let habit: Habit
-    let toggleCompletion : () -> Void
-    
+    let toggleCompletion: () -> Void
     
     var body: some View {
         HStack {
-            Button(action: toggleCompletion){
-                Image(systemName: true ? "checkmark.circle.fill" : "circle") // TODO: Fix this with Task logic
+            //  Un solo botón con un solo ícono dinámico
+            Button(action: toggleCompletion) {
                 Image(systemName: habit.isCompleted ? "checkmark.circle.fill" : "circle")
-            }.buttonStyle(.plain)
+                    .foregroundColor(habit.isCompleted ? .green : .gray)
+                    .font(.title3)
+            }
+            .buttonStyle(.plain)
+            
             VStack(alignment: .leading) {
                 Text(habit.title)
-                    //.strikethrough(habit.isCompleted)
+                    .strikethrough(habit.isCompleted)
+                    .foregroundColor(habit.isCompleted ? .gray : .primary)
+                
                 if AppConfig.showDueDates, let dueDate = habit.dueDate {
                     Text("Vence: \(dueDate.formatted(date: .abbreviated, time: .shortened))")
                         .font(.caption)
@@ -29,13 +34,13 @@ struct TaskRowView: View {
                 }
                 if AppConfig.showPriorities, let priority = habit.activeCategories?.priority {
                     Text("Prioridad: \(priority.rawValue)")
+
                         .font(.caption)
                         .foregroundColor(priorityColor(for: priority))
                 }
             }
-            Button(action: toggleCompletion){
-  //              Image(systemName: habit.isCompleted ? "checkmark.circle.fill" : "circle")
-            }.buttonStyle(.plain)
+            
+            Spacer()
         }
     }
     
