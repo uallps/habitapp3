@@ -11,19 +11,23 @@ import SwiftUI
 struct HabitApp: App {
     @State private var selectedDetailView: String?
     
+    private var storageProvider: StorageProvider {
+        AppConfig().storageProvider
+    }
+    
     var body: some Scene {
         WindowGroup{
-#if os(iOS)
+            #if os(iOS)
             TabView {
                 HabitListView()
                     .tabItem {
                         Label("Hábitos", systemImage: "checklist")
                     }
                 // TODO: Uncomment when SettingsView exists
-                // SettingsView()
-                //     .tabItem {
-                //         Label("Ajustes", systemImage: "gearshape")
-                //     }
+                 SettingsView()
+                     .tabItem {
+                         Label("Ajustes", systemImage: "gearshape")
+                     }
             }
             .environmentObject(AppConfig())
 #else
@@ -39,9 +43,9 @@ struct HabitApp: App {
             } detail: {
                 switch selectedDetailView {
                 case "habitos":
-                    HabitListView()
-                    // TODO: case "ajustes":
-                    // TODO: SettingsView()
+                    HabitListView(storageProvider: storageProvider)
+                case "ajustes":
+                    SettingsView()
                 default:
                     Text("Seleccione una opción")
                 }

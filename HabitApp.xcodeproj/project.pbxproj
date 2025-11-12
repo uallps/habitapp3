@@ -30,7 +30,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		35EDF0D22E9FF1C000D50221 /* HabitApp */ = {
+		354045CA2EBBD171009707D5 /* HabitApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = HabitApp;
 			sourceTree = "<group>";
@@ -65,8 +65,8 @@
 		35EDF0C72E9FF1C000D50221 = {
 			isa = PBXGroup;
 			children = (
-				35EDF0D22E9FF1C000D50221 /* HabitApp */,
 				35EDF0D12E9FF1C000D50221 /* Products */,
+				354045CA2EBBD171009707D5 /* HabitApp */,
 			);
 			sourceTree = "<group>";
 		};
@@ -96,7 +96,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				35EDF0D22E9FF1C000D50221 /* HabitApp */,
+				354045CA2EBBD171009707D5 /* HabitApp */,
 			);
 			name = HabitApp;
 			packageProductDependencies = (
