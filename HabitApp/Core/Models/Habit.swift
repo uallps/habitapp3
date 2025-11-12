@@ -15,14 +15,16 @@ struct Habit: Identifiable {
     var dueDate: Date?
     var priority: Priority?
     var reminderDate: Date?
-    var activeCategories: [UUID: Category] = [:]
+    var activeCategories: CategorySet?
 
     init(title: String,
          doneDays: [Day] = [],
          isCompleted: Bool = false,
          dueDate: Date? = nil,
          priority: Priority? = nil,
-         reminderDate: Date? = nil) {
+         reminderDate: Date? = nil,
+         activeCategories: CategorySet? = nil
+    ) {
         self.title = title
         self.doneDays = doneDays
         self.isCompleted = isCompleted
@@ -31,9 +33,5 @@ struct Habit: Identifiable {
         self.reminderDate = reminderDate
         self.activeCategories = activeCategories
     }
-}
-
-enum Priority: String, Codable {
-    case low, medium, high
 }
 
