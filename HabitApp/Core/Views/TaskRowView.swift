@@ -27,7 +27,7 @@ struct TaskRowView: View {
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
-                if AppConfig.showPriorities, let priority = habit.priority {
+                if AppConfig.showPriorities, let priority = habit.activeCategories?.priority {
                     Text("Prioridad: \(priority.rawValue)")
                         .font(.caption)
                         .foregroundColor(priorityColor(for: priority))

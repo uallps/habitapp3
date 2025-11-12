@@ -1,10 +1,10 @@
 import Foundation
 
 enum Frequency {
-    case daily = "Daily"
-    case monthly = "Monthly"
-    case weekly = "Weekly"
-    case annual = "Annual"
+    case daily
+    case monthly
+    case weekly
+    case annual
         
     // Optional: an emoji representation
     var emoji: String {
