@@ -29,7 +29,7 @@ struct CustomCalendarView: View {
         return days
     }
     
-    // Get the weekday of the first day of the month (1 = Sunday, 7 = Saturday in most calendars)
+    // Get the weekday of the first day of the month (1 = Sunday, 7 = Saturday)
     private var firstWeekday: Int {
         let components = calendar.dateComponents([.year, .month], from: displayedMonth)
         guard let firstOfMonth = calendar.date(from: components) else { return 1 }
@@ -68,7 +68,7 @@ struct CustomCalendarView: View {
                 }
             }
             
-            // Days grid with padding for the first weekday
+            // Days grid with padding for the first weekday offset
             let columns = Array(repeating: GridItem(.flexible()), count: daysInWeek)
             
             LazyVGrid(columns: columns, spacing: 10) {
@@ -81,6 +81,11 @@ struct CustomCalendarView: View {
                 ForEach(days, id: \.self) { date in
                     let day = calendar.component(.day, from: date)
                     
+                    // Rango permitido: desde hoy hasta 14 días en el futuro
+                    let today = calendar.startOfDay(for: Date())
+                    let maxSelectableDate = calendar.date(byAdding: .day, value: 0, to: today)!
+                    let isDisabled = date < today || date > maxSelectableDate
+                    
                     VStack {
                         Text("\(day)")
                             .frame(width: 30, height: 30)
@@ -88,7 +93,11 @@ struct CustomCalendarView: View {
                                 Circle()
                                     .fill(calendar.isDate(date, inSameDayAs: selectedDate) ? Color.blue : Color.clear)
                             )
-                            .foregroundColor(calendar.isDate(date, equalTo: Date(), toGranularity: .day) ? .red : .primary)
+                            .foregroundColor(
+                                isDisabled ? .gray :
+                                (calendar.isDate(date, equalTo: today, toGranularity: .day) ? .red : .primary)
+                            )
+                            .opacity(isDisabled ? 0.4 : 1)
                             .overlay(
                                 Circle()
                                     .fill(Color.green)
@@ -96,9 +105,18 @@ struct CustomCalendarView: View {
                                     .offset(x: 10, y: 10)
                                     .opacity(doneDays.contains(where: { $0.isSameDay(as: date) }) ? 1 : 0)
                             )
-                    }
-                    .onTapGesture {
-                        selectedDate = date
+                            .onTapGesture {
+                                if !isDisabled {
+                                       // Si el usuario toca el mismo día, deselecciona
+                                       if calendar.isDate(date, inSameDayAs: selectedDate) {
+                                           selectedDate = Date.distantPast // valor “nulo” simbólico
+                                       } else {
+                                           selectedDate = date
+                                       }
+                                   } else {
+                                       print("❌ Fecha fuera del rango permitido")
+                                   }
+                            }
                     }
                 }
             }
@@ -116,8 +134,6 @@ struct CustomCalendarView: View {
         if let newMonth = calendar.date(byAdding: .month, value: value, to: displayedMonth) {
             displayedMonth = newMonth
             
-            // Optionally reset selectedDate to the first day of the new month or keep it unchanged
-            // Here we just keep selectedDate if it’s still in the new month; otherwise reset to newMonth start
             if !calendar.isDate(selectedDate, equalTo: newMonth, toGranularity: .month) {
                 selectedDate = newMonth
             }
