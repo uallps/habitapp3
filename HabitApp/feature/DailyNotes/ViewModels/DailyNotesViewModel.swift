@@ -1,11 +1,11 @@
 import Foundation
 import SwiftData
+import Combine
 
-@Observable
-class DailyNotesViewModel {
+final class DailyNotesViewModel: ObservableObject {
     private var modelContext: ModelContext
-    var notes: [DailyNote] = []
-    var selectedDate = Date()
+    @Published var notes: [DailyNote] = []
+    @Published var selectedDate = Date()
     
     init(modelContext: ModelContext) {
         self.modelContext = modelContext
@@ -21,7 +21,10 @@ class DailyNotesViewModel {
             note.date >= startOfDay && note.date < endOfDay
         }
         
-        let descriptor = FetchDescriptor<DailyNote>(predicate: predicate, sortBy: [SortDescriptor(\.createdAt, order: .reverse)])
+        let descriptor = FetchDescriptor<DailyNote>(
+            predicate: predicate,
+            sortBy: [SortDescriptor(\.createdAt, order: .reverse)]
+        )
         
         do {
             notes = try modelContext.fetch(descriptor)
@@ -43,6 +46,14 @@ class DailyNotesViewModel {
         loadNotes()
     }
     
+    func saveAndGoToNoteDate(_ note: DailyNote, title: String, content: String) {
+        note.updateContent(title: title, content: content)
+        selectedDate = Calendar.current.startOfDay(for: note.date) // Ajusta la fecha al día de la nota
+        saveContext()
+        loadNotes()
+    }
+
+    
     func deleteNote(_ note: DailyNote) {
         modelContext.delete(note)
         saveContext()
@@ -50,9 +61,20 @@ class DailyNotesViewModel {
     }
     
     func changeDate(to date: Date) {
-        selectedDate = date
+        let today = Calendar.current.startOfDay(for: Date())
+        let maxDate = Calendar.current.date(byAdding: .month, value: 3, to: today)!
+
+        // Limitar rango permitido
+        if date < today {
+            selectedDate = today
+        } else if date > maxDate {
+            selectedDate = maxDate
+        } else {
+            selectedDate = date
+        }
         loadNotes()
     }
+
     
     private func saveContext() {
         do {
