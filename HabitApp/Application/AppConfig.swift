@@ -1,7 +1,7 @@
 import SwiftUI
 import Combine
 
-// ObservableObject is a protocol that ensure this class has data that, when changed, trigger UI updates. Similar concept to mutable states in Jetpack Compose.
+// ObservableObject is a protocol that ensure this class has data that, when changed, triggers UI updates. Similar concept to mutable states in Jetpack Compose.
 class AppConfig: ObservableObject  {
 
     // @AppStorage connects a property to UserDefaults automatically.
