@@ -7,30 +7,31 @@
 
 import SwiftUI
 
-@main // Entrypoint
+@main // Punto de entrada
 
-// HabitApp conforms App protocol.
+// HabitApp cumple con el protocolo App.
 struct HabitApp: App {
     @State private var selectedDetailView: String?
     
-    // Body is a computed property, this is, a property which value is calculated when running the app instead of being stored directly. So, when the
-    // app tries to read body instead of reading the previous value, it's calculated. A computed property is any property that instead of being followed by a
-    // "=" is followed by { } the next keywords represent the return type.
+    // Body es una propiedad calculada, es decir, una propiedad cuyo valor se calcula al ejecutar la app en lugar de almacenarse directamente.
+    // Así, cuando la app intenta leer body, en vez de leer un valor previo, este se calcula. Una propiedad calculada es cualquier propiedad que,
+    // en lugar de ir seguida de un "=", va seguida de { }. Las palabras clave posteriores representan el tipo de retorno.
 
-    // Some scene is Swift's opaque type feature. It's basically: “body will return a specific type that conforms to Scene, but I don’t want to expose the concrete type here."
+    // Some Scene es la característica de tipos opacos de Swift. Básicamente significa: “body devolverá un tipo específico que cumple con Scene,
+    // pero no quiero exponer el tipo concreto aquí."
     var body: some Scene {
-        // WindowGroup is a struct in Swift (think of a Kotlin data class) that conforms to the Scene protocol. 
-        // You are initializing that struct. Swift allows trailing closure syntax, so if the last parameter is a function, 
-        // you can write it outside the parentheses.
+        // WindowGroup es una struct en Swift (similar a un data class de Kotlin) que cumple con el protocolo Scene.
+        // Estás inicializando esa struct. Swift permite la sintaxis de trailing closure, así que si el último parámetro es una función,
+        // puedes escribirla fuera de los paréntesis.
         WindowGroup{
 #if os(iOS)
             TabView {
                 HabitListView()
-                // Dot for modifiers system (SwiftUI), DSL-Like
+                // Sistema de modificadores con punto (SwiftUI), estilo DSL
                     .tabItem {
                         Label("Hábitos", systemImage: "checklist")
                     }
-                // TODO: Uncomment when SettingsView exists
+                // TODO: Descomentar cuando exista SettingsView
                 // SettingsView()
                 //     .tabItem {
                 //         Label("Ajustes", systemImage: "gearshape")
