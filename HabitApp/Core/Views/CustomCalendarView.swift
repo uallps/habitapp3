@@ -141,8 +141,8 @@ struct CustomCalendarView: View {
     }
 }
 
-// Your Day model extension remains the same
 extension Day {
+    // date es el label externo; date es el nombre local del parámetro
     func isSameDay(as date: Date) -> Bool {
         let calendar = Calendar.current
         return self.day.value == calendar.component(.day, from: date) &&
