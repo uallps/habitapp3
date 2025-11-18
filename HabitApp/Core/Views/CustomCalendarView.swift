@@ -2,36 +2,33 @@ import SwiftUI
 
 struct CustomCalendarView: View {
 
-    // The Binding system in SwiftUI is similar to C pointers or state management in other mobile frameworks like Jetpack Compose.
+    // El sistema Binding en SwiftUI es similar a los punteros en C o al manejo de estado en otros frameworks móviles como Jetpack Compose.
 
-    //To compare them:
-    // C pointer: “I give you access to the memory where my value lives.”
+    // Para compararlos:
+    // Puntero en C: "Te doy acceso a la memoria donde vive mi valor."
+    // Binding de SwiftUI: "Te doy acceso controlado de lectura/escritura a mi valor."
+    // (comportamiento similar a un puntero pero implementado con closures, no direcciones de memoria)
 
-    // SwiftUI Binding: “I give you controlled getter/setter access to my value.”
-    // (pointer behavior but implemented with closures, not memory addresses)
+    // State hoisting en Jetpack Compose: "Te doy el valor y una función para cambiarlo, y cuando el valor cambia el componente padre se vuelve a renderizar."
 
-    // Jetpack Compose state hoisting: “I give you the value and a function to change it, and when the value changes throughout the function, the
-    // parent gets rendered again.”
-
-
-    // Swift UI is conceptually similar to passing a “reference to a value,” but type-safe, controlled, no manual memory.
+    // SwiftUI es conceptualmente similar a pasar una "referencia a un valor", pero con tipado seguro, controlado y sin gestión manual de memoria.
     
-    // So What Is Binding in SwiftUI?
-    // A Binding<Value> is a two-way connection between a value and a view that both reads and writes that value. 
-    // The value isn’t stored in the @Binding itself — it's owned elsewhere (for example, in a @State variable, or in an @ObservedObject / @EnvironmentObject). 
-    // When the bound value changes (via the Binding), SwiftUI will update views that depend on that value. Just like Jetpack Compose.
-
-    // It's like a C pointer, because it provides access to a value owned elsewhere, but it's like Jetpack Compose state hoisting because 
-    // it allows both reading and writing the value, triggering UI updates.
-
-    // @Binding is a property wrapper that tells SwiftUI:
-    // “I don’t own this value. I just have a reference to it, and I can read or write it, but it's owned by any other file. I just took this parammeter and I know the value.”
+    // ¿Qué es Binding en SwiftUI?
+    // Un Binding<Value> es una conexión bidireccional entre un valor y una vista que lee y escribe ese valor.
+    // El valor no se almacena en el @Binding en sí — pertenece a otro lugar (por ejemplo, a una variable @State, o a un @ObservedObject / @EnvironmentObject).
+    // Cuando el valor vinculado cambia (vía el Binding), SwiftUI actualizará las vistas que dependen de ese valor. Igual que en Jetpack Compose.
+    
+    // Es como un puntero en C, porque proporciona acceso a un valor que pertenece a otro sitio, pero es como el state hoisting de Jetpack Compose
+    // porque permite leer y escribir el valor, disparando actualizaciones de UI.
+    
+    // @Binding es un property wrapper que le dice a SwiftUI:
+    // "No poseo este valor. Solo tengo una referencia a él, y puedo leerlo o escribirlo, pero pertenece a otra parte. Solo recibí este parámetro y conozco el valor."
 
     @Binding var selectedDate: Date
     
-    // However, this is an State variable because it is internal to this view. This view owns this value.
-    // It could be passed down from this file to another child view so if the child view changes it, this view gets updated.
-    // Basically: "Hey, I own this value, but if you need to change it I can pass it down to you so you can change it and I get updated."
+    // Sin embargo, esta es una variable @State porque es interna a esta vista. Esta vista posee este valor.
+    // Podría pasarse desde este archivo a una vista hija de modo que si la vista hija lo cambia, esta vista se actualice.
+    // Básicamente: "Oye, yo poseo este valor, pero si necesitas cambiarlo puedo pasártelo para que lo cambies y yo me actualice."
     @State private var displayedMonth: Date
 
     let doneDays: [Day]
@@ -42,11 +39,11 @@ struct CustomCalendarView: View {
     init(selectedDate: Binding<Date>, doneDays: [Day]) {
         self._selectedDate = selectedDate
         self.doneDays = doneDays
-        // Initialize displayedMonth to the start of the month for selectedDate
+        // Inicializa displayedMonth al inicio del mes para selectedDate
         _displayedMonth = State(initialValue: calendar.date(from: calendar.dateComponents([.year, .month], from: selectedDate.wrappedValue))!)
     }
     
-    // Get all days for the current displayed month
+    // Obtener todos los días del mes actualmente mostrado
     private var days: [Date] {
         guard let monthInterval = calendar.dateInterval(of: .month, for: displayedMonth) else { return [] }
         var days: [Date] = []
@@ -59,7 +56,7 @@ struct CustomCalendarView: View {
         return days
     }
     
-    // Get the weekday of the first day of the month (1 = Sunday, 7 = Saturday)
+    // Obtener el weekday del primer día del mes (1 = domingo, 7 = sábado)
     private var firstWeekday: Int {
         let components = calendar.dateComponents([.year, .month], from: displayedMonth)
         guard let firstOfMonth = calendar.date(from: components) else { return 1 }
@@ -68,7 +65,7 @@ struct CustomCalendarView: View {
     
     var body: some View {
         VStack {
-            // Month navigation header
+            // Encabezado de navegación del mes
             HStack {
                 Button(action: {
                     changeMonth(by: -1)
@@ -87,7 +84,7 @@ struct CustomCalendarView: View {
             }
             .padding(.horizontal)
             
-            // Weekday labels
+            // Etiquetas de los días de la semana
             let weekdaySymbols = calendar.shortStandaloneWeekdaySymbols
             HStack {
                 ForEach(weekdaySymbols, id: \.self) { day in
@@ -98,11 +95,11 @@ struct CustomCalendarView: View {
                 }
             }
             
-            // Days grid with padding for the first weekday offset
+            // Rejilla de días con padding para el offset del primer weekday
             let columns = Array(repeating: GridItem(.flexible()), count: daysInWeek)
             
             LazyVGrid(columns: columns, spacing: 10) {
-                // Padding empty spaces for first weekday offset
+                // Espacios vacíos iniciales para compensar el primer día de la semana
                 ForEach(0..<firstWeekday-1, id: \.self) { _ in
                     Text(" ")
                         .frame(width: 30, height: 30)
@@ -172,7 +169,7 @@ struct CustomCalendarView: View {
 }
 
 extension Day {
-    // date es el label externo; date es el nombre local del parámetro
+    // date es la etiqueta externa; date es el nombre local del parámetro
     func isSameDay(as date: Date) -> Bool {
         let calendar = Calendar.current
         return self.day.value == calendar.component(.day, from: date) &&
