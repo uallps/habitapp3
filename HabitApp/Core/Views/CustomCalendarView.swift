@@ -1,10 +1,40 @@
 import SwiftUI
 
 struct CustomCalendarView: View {
-    @Binding var selectedDate: Date
-    let doneDays: [Day]
+
+    // The Binding system in SwiftUI is similar to C pointers or state management in other mobile frameworks like Jetpack Compose.
+
+    //To compare them:
+    // C pointer: “I give you access to the memory where my value lives.”
+
+    // SwiftUI Binding: “I give you controlled getter/setter access to my value.”
+    // (pointer behavior but implemented with closures, not memory addresses)
+
+    // Jetpack Compose state hoisting: “I give you the value and a function to change it, and when the value changes throughout the function, the
+    // parent gets rendered again.”
+
+
+    // Swift UI is conceptually similar to passing a “reference to a value,” but type-safe, controlled, no manual memory.
     
-    @State private var displayedMonth: Date  // Track current displayed month
+    // So What Is Binding in SwiftUI?
+    // A Binding<Value> is a two-way connection between a value and a view that both reads and writes that value. 
+    // The value isn’t stored in the @Binding itself — it's owned elsewhere (for example, in a @State variable, or in an @ObservedObject / @EnvironmentObject). 
+    // When the bound value changes (via the Binding), SwiftUI will update views that depend on that value. Just like Jetpack Compose.
+
+    // It's like a C pointer, because it provides access to a value owned elsewhere, but it's like Jetpack Compose state hoisting because 
+    // it allows both reading and writing the value, triggering UI updates.
+
+    // @Binding is a property wrapper that tells SwiftUI:
+    // “I don’t own this value. I just have a reference to it, and I can read or write it, but it's owned by any other file. I just took this parammeter and I know the value.”
+
+    @Binding var selectedDate: Date
+    
+    // However, this is an State variable because it is internal to this view. This view owns this value.
+    // It could be passed down from this file to another child view so if the child view changes it, this view gets updated.
+    // Basically: "Hey, I own this value, but if you need to change it I can pass it down to you so you can change it and I get updated."
+    @State private var displayedMonth: Date
+
+    let doneDays: [Day]
     
     private let calendar = Calendar.current
     private let daysInWeek = 7
