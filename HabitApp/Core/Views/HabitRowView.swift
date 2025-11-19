@@ -27,17 +27,12 @@ struct HabitRowView: View {
                     .strikethrough(habit.isCompleted)
                     .foregroundColor(habit.isCompleted ? .gray : .primary)
                 
-                if AppConfig.showDueDates, let dueDate = habit.dueDate {
-                    Text("Vence: \(dueDate.formatted(date: .abbreviated, time: .shortened))")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-                
-                if AppConfig.showPriorities, let priority = habit.activeCategories?.priority {
-                    Text("Prioridad: \(priority.rawValue)")
-                        .font(.caption)
-                        .foregroundColor(priorityColor(for: priority))
-                }
+//                if AppConfig.showDueDates, let dueDate = habit.dueDate {
+//                    Text("Vence: \(dueDate.formatted(date: .abbreviated, time: .shortened))")
+//                        .font(.caption)
+//                        .foregroundColor(.secondary)
+//                }
+               
             }
             
             Spacer()

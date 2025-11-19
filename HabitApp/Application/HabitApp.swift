@@ -28,7 +28,9 @@ struct HabitApp: App {
         WindowGroup{
 #if os(iOS)
             TabView {
-                HabitListView()
+                HabitListView(
+                    viewModel: HabitListViewModel()
+                )
                 // Sistema de modificadores con punto (SwiftUI), estilo DSL
                     .tabItem {
                         Label("Hábitos", systemImage: "checklist")

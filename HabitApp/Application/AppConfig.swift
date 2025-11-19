@@ -13,10 +13,6 @@ class AppConfig: ObservableObject  {
     // directamente en disco, sin relaciones entre ellos.
     // Básicamente, cualquier propiedad marcada con @AppStorage se lee o escribe según las circunstancias adecuadas.
 
-    @AppStorage("showDueDates")
+    @AppStorage("showCategories")
     static var showDueDates: Bool = true
-    @AppStorage("showPriorities")
-    static var showPriorities: Bool = true
-    @AppStorage("enableReminders")
-    static var enableReminders: Bool = true
 }
