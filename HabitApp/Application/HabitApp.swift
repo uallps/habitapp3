@@ -19,6 +19,8 @@ struct HabitApp: App {
 
     // Some Scene es la característica de tipos opacos de Swift. Básicamente significa: “body devolverá un tipo específico que cumple con Scene,
     // pero no quiero exponer el tipo concreto aquí."
+    
+    // Me da igual el tipo de Scene que devuelvas PERO debe de ser siempre un único tipo (No puedes devolver SubScene1 con una lógica y en otra rama lógica SubScene2)
     var body: some Scene {
         // WindowGroup es una struct en Swift (similar a un data class de Kotlin) que cumple con el protocolo Scene.
         // Estás inicializando esa struct. Swift permite la sintaxis de trailing closure, así que si el último parámetro es una función,

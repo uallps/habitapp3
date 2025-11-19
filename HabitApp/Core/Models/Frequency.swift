@@ -1,11 +1,11 @@
 import Foundation
 
-enum Frequency {
+enum Frequency: Hashable {
     case daily
     case monthly
     case weekly
     case annual
-        
+
     // Optional: an emoji representation
     var emoji: String {
         switch self {
