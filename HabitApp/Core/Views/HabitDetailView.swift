@@ -38,19 +38,6 @@ struct HabitDetailView: View {
                 .padding(.vertical, 6)
             }
             
-            Section(header: Text("Marcar día completado")) {
-                CustomCalendarView(selectedDate: $selectedDate, doneDays: habit.doneDays)
-                    .frame(maxHeight: 300)
-                    .onChange(of: selectedDate) { oldValue, newValue in
-                        let calendar = Day.calendar
-                        if let day = Day.DayOfMonth(calendar.component(.day, from: newValue)),
-                           let month = Day.MonthOfYear(calendar.component(.month, from: newValue)) {
-                            let year = Day.Year(calendar.component(.year, from: newValue))
-                            let newDay = Day(day: day, month: month, year: year)
-                            habit.doneDays = [newDay] // Solo un día activo a la vez
-                        }
-                    }
-            }
         }
         .navigationTitle(habit.title)
     }
