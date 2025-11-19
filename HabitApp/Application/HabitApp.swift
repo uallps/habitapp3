@@ -51,6 +51,9 @@ struct HabitApp: App {
                     NavigationLink(value: "ajustes") {
                         Label("Ajustes", systemImage: "gearshape")
                     }
+                    NavigationLink(value: "categorias") {
+                        Label("Categorias", systemImage: "folder")
+                    }
                 }
             } detail: {
                 switch selectedDetailView {
@@ -58,6 +61,10 @@ struct HabitApp: App {
                     HabitListView(viewModel: HabitListViewModel())
                     // TODO: case "ajustes":
                     // TODO: SettingsView()
+                case "categorias":
+                    HabitCategoryView(
+                        
+                    )
                 default:
                     Text("Seleccione una opción")
                 }
