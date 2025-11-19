@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct TaskDetailView: View {
+struct HabitDetailView: View {
     @Binding var habit: Habit
     @State private var selectedDate = Date()
     

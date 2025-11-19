@@ -77,7 +77,13 @@ struct HabitListView: View {
                     }
                 }
             }
-
+            .navigationDestination(for: Habit.self) { habit in
+                if let index = viewModel.habits.firstIndex(where: { $0.id == habit.id }) {
+                    HabitDetailView(habit: $viewModel.habits[index])
+                } else {
+                    Text("Hábito no encontrado")
+                }
+            }
             .listStyle(.automatic)
         }
     }
