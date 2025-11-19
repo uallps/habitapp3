@@ -8,13 +8,9 @@ struct HabitCategoryView: View {
     @State private var selectedFrequency: Frequency = .weekly
     @State private var progress: Double = 0.0
     
-    // A simple pool of SF Symbols to choose from
-    private let iconOptions: [String] = [
-        "folder", "bookmark", "star", "heart", "leaf", "flame",
-        "bolt", "sun.max", "moon", "cloud", "figure.walk",
-        "figure.run", "bicycle", "book", "music.note", "paintbrush",
-        "pencil", "clock", "calendar", "checkmark.seal"
-    ]
+    @StateObject private var loader = EmojiLoader()
+
+
     
     var body: some View {
         NavigationStack {
@@ -24,12 +20,19 @@ struct HabitCategoryView: View {
                 }
                 
                 Section(header: Text("Icono")) {
-                    IconPickerGrid(
-                        icons: iconOptions,
-                        selectedIcon: $selectedIcon
-                    )
-                    .padding(.vertical, 4)
+                    if loader.emojis.isEmpty {
+                        ProgressView("Cargando emojis...")
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    } else {
+                        Picker("Selecciona un emoji", selection: $selectedIcon) {
+                            ForEach(loader.emojis, id: \.self) { emoji in
+                                Text(emoji).tag(emoji)
+                            }
+                        }
+                        .pickerStyle(.menu) // keeps it compact
+                    }
                 }
+
                 
                 Section(header: Text("Prioridad")) {
                     Picker("Prioridad", selection: $selectedPriority) {
@@ -48,29 +51,6 @@ struct HabitCategoryView: View {
                         Text("Anual \(Frequency.annual.emoji)").tag(Frequency.annual)
                     }
                     .pickerStyle(.menu)
-                }
-                
-                Section(header: Text("Progreso")) {
-                    VStack(alignment: .leading, spacing: 8) {
-                        HStack {
-                            ProgressView(value: progress / 100.0)
-                                .frame(maxWidth: .infinity)
-                            Text("\(Int(progress))%")
-                                .monospacedDigit()
-                                .foregroundColor(.secondary)
-                        }
-                        Slider(value: $progress, in: 0...100, step: 1) {
-                            Text("Progreso")
-                        } minimumValueLabel: {
-                            Text("0%")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        } maximumValueLabel: {
-                            Text("100%")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
                 }
                 
                 Section {
