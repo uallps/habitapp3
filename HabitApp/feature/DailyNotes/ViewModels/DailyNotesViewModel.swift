@@ -34,11 +34,27 @@ final class DailyNotesViewModel: ObservableObject {
     }
     
     func addNote(title: String, content: String) {
-        let note = DailyNote(title: title, content: content, date: selectedDate)
-        modelContext.insert(note)
-        saveContext()
-        loadNotes()
-    }
+          let note = DailyNote(title: title, content: content, date: selectedDate)
+          modelContext.insert(note)
+          saveContext()
+          loadNotes()
+          
+          // 🔔 Notificar plugins
+          PluginRegistry.shared.dataObservers.forEach { plugin in
+              plugin.onDataChanged(
+                  taskId: note.id,
+                  title: note.title,
+                  dueDate: note.date
+              )
+          }
+      }
+      
+      private func saveContext() {
+          do { try modelContext.save() }
+          catch { print("Error guardando contexto: \(error)") }
+      }
+  
+
     
     func updateNote(_ note: DailyNote, title: String, content: String) {
         note.updateContent(title: title, content: content)
@@ -76,11 +92,5 @@ final class DailyNotesViewModel: ObservableObject {
     }
 
     
-    private func saveContext() {
-        do {
-            try modelContext.save()
-        } catch {
-            print("Error saving context: \(error)")
-        }
-    }
+ 
 }

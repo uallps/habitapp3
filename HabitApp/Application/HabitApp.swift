@@ -11,24 +11,54 @@ import SwiftData
 @main
 struct HabitApp: App {
     @State private var selectedDetailView: String?
-    
+    init() {
+        #if os(iOS)
+        UNUserNotificationCenter.current().requestAuthorization(
+            options: [.alert, .sound, .badge]
+        ) { granted, error in
+            if granted {
+                print("Permiso concedido para notificaciones")
+            } else if let error = error {
+                print("Error solicitando permisos: \(error)")
+            }
+        }
+        
+        #endif
+    }
     var body: some Scene {
         WindowGroup{
 #if os(iOS)
             TabView {
-                HabitListView()
-                    .tabItem {
-                        Label("Hábitos", systemImage: "checklist")
-                    }
-                DailyNotesView()
-                    .tabItem {
-                        Label("Notas", systemImage: "note.text")
-                    }
-                // TODO: Uncomment when SettingsView exists
-                // SettingsView()
-                //     .tabItem {
-                //         Label("Ajustes", systemImage: "gearshape")
-                //     }
+                // TAB 1: Hábitos
+                NavigationStack {
+                    HabitListView(
+                        viewModel: HabitListViewModel()
+                    )
+                }
+                .tabItem {
+                    Label("Hábitos", systemImage: "checklist")
+                }
+
+                // TAB 2: Notas Diarias
+                NavigationStack {
+                    DailyNotesView()
+                }
+                .tabItem {
+                    Label("Notas", systemImage: "note.text")
+                }
+                NavigationStack {
+                    TestReminderView()
+                }
+                .tabItem {
+                    Label("Test Notificaciones", systemImage: "bell")
+                }
+                // TAB 4: Ajustes (placeholder)
+                NavigationStack {
+                    Text("Ajustes (próximamente)")
+                }
+                .tabItem {
+                    Label("Ajustes", systemImage: "gearshape")
+                }
             }
             .environmentObject(AppConfig())
 #else
