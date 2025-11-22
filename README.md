@@ -32,7 +32,7 @@ HabitApp/
 │
 ├── Plugins/
 │   ├── PluginRegistry.swift
-│   ├── RowComponentPlugin.swift
+│   ├── TaskDataObservingPlugin.swift # Protocolo para plugins que observan cambios en datos (habit o nota)
 │   └── ReminderPlugin.swift      # Plugin para programar notificaciones locales
 │
 └── README.md
