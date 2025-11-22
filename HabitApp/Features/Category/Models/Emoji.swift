@@ -1,6 +1,6 @@
 import Foundation
 
-struct Emoji: Identifiable, Hashable {
+struct Emoji: Identifiable, Hashable, Comparable {
     let id: String
     let emoji: String
     let name: String
@@ -16,5 +16,11 @@ extension Character {
         }
         // Others are composed (like 👩‍💻) — treat them as emoji if any scalar is an emoji
         return self.unicodeScalars.contains { $0.properties.isEmoji }
+    }
+}
+
+extension Emoji {
+    static func < (lhs: Emoji, rhs: Emoji) -> Bool {
+        lhs.name < rhs.name
     }
 }

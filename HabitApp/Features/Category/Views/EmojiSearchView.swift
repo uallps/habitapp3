@@ -1,17 +1,15 @@
+import SwiftUI
+
 struct EmojiSearchView: View {
+    
+    @StateObject private var loader: EmojiLoader = EmojiLoader()
+    @StateObject private var model: EmojiSearchModel
 
-    @StateObject private var loader = EmojiLoader()
-
-    private var allEmojis: [Emoji] {
-        var keywords: [Emoji] = [:]
-
-        for emoji in loader.emojis {
-            keywords[emoji] = 
-        }
-        return keywords
+    init() {
+        let loader = EmojiLoader()
+        _loader = StateObject(wrappedValue: loader)
+        _model = StateObject(wrappedValue: EmojiSearchModel(allEmojis: loader.emojis))
     }
-
-    @StateObject var model = EmojiSearchModel(allEmojis: allEmojis)
     
     var body: some View {
         VStack {
@@ -25,7 +23,7 @@ struct EmojiSearchView: View {
             ScrollView {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 40))]) {
                     ForEach(model.filteredEmojis, id: \.self) { emoji in
-                        Text(emoji)
+                        Text(emoji.emoji)
                             .font(.largeTitle)
                     }
                 }

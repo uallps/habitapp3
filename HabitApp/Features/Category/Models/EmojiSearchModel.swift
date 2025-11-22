@@ -3,13 +3,14 @@ import Combine
 
 class EmojiSearchModel: ObservableObject {
     @Published var searchText: String
-    @Published var filteredEmojis: [Emojis]
+    @Published var filteredEmojis: [Emoji]
     
     private var allEmojis: [Emoji]
     
     init(allEmojis: [Emoji]) {
-        self.allEmojis = allEMojis
+        self.allEmojis = allEmojis
         self.filteredEmojis = []
+        self.searchText = ""
     }
     
     func updateFilter() {
@@ -18,7 +19,7 @@ class EmojiSearchModel: ObservableObject {
             filteredEmojis = allEmojis
         } else {
             filteredEmojis = allEmojis.filter { emoji in
-                allEmojis[emoji]?.name.contains(query) ?? false
+               emoji.name.contains(query)
             }
         }
     }

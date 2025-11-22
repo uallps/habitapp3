@@ -26,7 +26,7 @@ struct HabitCategoryView: View {
                     } else {
                         Picker("Selecciona un emoji", selection: $selectedIcon) {
                             ForEach(loader.emojis, id: \.self) { emoji in
-                                Text(emoji).tag(emoji)
+                                Text(emoji.emoji).tag(emoji)
                             }
                         }
                         .pickerStyle(.menu) // keeps it compact
