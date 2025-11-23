@@ -16,43 +16,30 @@ class EmojiLoader: ObservableObject {
 
             // Try to load emoji-test.txt from the app bundle
             let fileLines: [String]
-            if let url = Bundle.main.url(forResource: "emoji-test", withExtension: "txt"),
+            if let url = Bundle.main.url(forResource: "emoji", withExtension: "txt"),
                let contents = try? String(contentsOf: url, encoding: .utf8) {
                 fileLines = contents.components(separatedBy: .newlines)
             } else {
                 fileLines = []
             }
-            
-            print("Is fileLines empty?" , fileLines.isEmpty)
-            
+
             // Unicode scalars from U+1F300 to U+1FAFF roughly covers all common emojis
-            for scalarValue in 0x1F300...0x1FAFF {
-                if let scalar = UnicodeScalar(scalarValue) {
-                    let char = Character(scalar)
-                    if char.isEmoji {
-                        print("Char is emoji")
-                         let emojiStr = String(char)
-                         let hex = String(format: "%04X", scalar.value)
-                        print("emojiStr: ", emojiStr)
-                        print("hex: ", hex)
-
-                         let match = fileLines.first { line in
-                           print("line: ", line)
-                            if line.contains(emojiStr) { return true }
-                            if line.uppercased().contains("U+\(hex)") { return true }
-                            if line.uppercased().contains("0X\(hex)") { return true }
-                            if line.uppercased().contains(hex) { return true }
-                            return false
-                        }
-                        
-                        allEmojis.append(Emoji(id: hex, emoji: emojiStr, name: emojiStr, scalarValue: UInt32(scalarValue) ))
-                        
-                        
-                    }
-
-
+            for line in fileLines {
+                
+                let substrings = line.split(separator: ";")
+                let emojiId : String
+                let emoji : String
+                let emojiDesc : String
+                
+                if(substrings.count >= 4 )  {
+                    emojiId = String(substrings[0])
+                    emoji = String(substrings[2])
+                    emojiDesc = String(substrings[3])
                 }
-            }
+                
+                allEmojis.append(Emoji(id: emojiId, emoji: emoji, name: emojiDesc))
+            
+                }
             
             // Optional: sort or deduplicate
             allEmojis = Array(Set(allEmojis)).sorted()

@@ -4,7 +4,6 @@ struct Emoji: Identifiable, Hashable, Comparable {
     let id: String
     let emoji: String
     let name: String
-    let scalarValue: UInt32
 }
 
 extension Character {
