@@ -35,17 +35,12 @@ class EmojiLoader: ObservableObject {
                     emojiId = String(substrings[0])
                     emoji = String(substrings[2])
                     emojiDesc = String(substrings[3])
-                }
-                
-                allEmojis.append(Emoji(id: emojiId, emoji: emoji, name: emojiDesc))
+                    allEmojis.append(Emoji(id: emojiId, emoji: emoji, name: emojiDesc))                }
             
                 }
             
-            // Optional: sort or deduplicate
-            allEmojis = Array(Set(allEmojis)).sorted()
             
             DispatchQueue.main.async {
-                print("Inside main async, self.emojis is Empty?", allEmojis.isEmpty)
                 self.emojis = allEmojis
             }
         }
