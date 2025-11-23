@@ -23,21 +23,29 @@ class EmojiLoader: ObservableObject {
                 fileLines = []
             }
             
+            print("Is fileLines empty?" , fileLines.isEmpty)
+            
             // Unicode scalars from U+1F300 to U+1FAFF roughly covers all common emojis
             for scalarValue in 0x1F300...0x1FAFF {
                 if let scalar = UnicodeScalar(scalarValue) {
                     let char = Character(scalar)
                     if char.isEmoji {
+                        print("Char is emoji")
                          let emojiStr = String(char)
                          let hex = String(format: "%04X", scalar.value)
+                        print("emojiStr: ", emojiStr)
+                        print("hex: ", hex)
 
                          let match = fileLines.first { line in
+                           print("line: ", line)
                             if line.contains(emojiStr) { return true }
                             if line.uppercased().contains("U+\(hex)") { return true }
                             if line.uppercased().contains("0X\(hex)") { return true }
                             if line.uppercased().contains(hex) { return true }
                             return false
                         }
+                        
+                        allEmojis.append(Emoji(id: hex, emoji: emojiStr, name: emojiStr, scalarValue: UInt32(scalarValue) ))
                         
                         
                     }
@@ -50,6 +58,7 @@ class EmojiLoader: ObservableObject {
             allEmojis = Array(Set(allEmojis)).sorted()
             
             DispatchQueue.main.async {
+                print("Inside main async, self.emojis is Empty?", allEmojis.isEmpty)
                 self.emojis = allEmojis
             }
         }
