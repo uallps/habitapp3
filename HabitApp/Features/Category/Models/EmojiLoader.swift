@@ -23,7 +23,6 @@ class EmojiLoader: ObservableObject {
                 fileLines = []
             }
 
-            // Unicode scalars from U+1F300 to U+1FAFF roughly covers all common emojis
             for line in fileLines {
                 
                 let substrings = line.split(separator: ";")
