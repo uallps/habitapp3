@@ -1,31 +1,38 @@
-import SwiftUI
+
+import Foundation
 import Combine
 
 class EmojiSearchModel: ObservableObject {
-    @Published var searchText: String
-    @Published var filteredEmojis: [Emoji]
-    
-    private var allEmojis: [Emoji]
-    
-    init(allEmojis: [Emoji]) {
-        self.allEmojis = allEmojis
-        self.filteredEmojis = []
-        self.searchText = ""
+    @Published var searchText: String = "" {
+        didSet { updateFilter() }
     }
-    
-    func updateFilter() {
-        let query = searchText.lowercased()
-        if query.isEmpty {
+    @Published private(set) var filteredEmojis: [Emoji] = []
+
+    var allEmojis: [Emoji] {
+        didSet { updateFilter() }
+    }
+
+    init(allEmojis: [Emoji] = []) {
+        self.allEmojis = allEmojis
+        self.filteredEmojis = allEmojis
+    }
+
+    private func updateFilter() {
+        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        guard !query.isEmpty else {
             filteredEmojis = allEmojis
-        } else {
-            filteredEmojis = allEmojis.filter { emoji in
-               emoji.name.contains(query)
-            }
+            return
+        }
+
+        filteredEmojis = allEmojis.filter { emoji in
+            // match on name or the emoji character itself
+            emoji.name.lowercased().contains(query) ||
+            emoji.emoji.contains(query)
         }
     }
 
-    func searchEmojis(with emojiDesc: String) {
-        searchText = emojiDesc
-        updateFilter()
+    // optional convenience
+    func searchEmojis(with text: String) {
+        searchText = text
     }
 }

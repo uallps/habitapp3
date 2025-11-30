@@ -9,8 +9,7 @@ struct HabitCategoryView: View {
     @State private var progress: Double = 0.0
     
     @StateObject private var loader = EmojiLoader()
-    
-    
+    @State private var showingEmojiSearch = false
     
     var body: some View {
         NavigationStack {
@@ -20,17 +19,17 @@ struct HabitCategoryView: View {
                 }
                 
                 Section(header: Text("Icono")) {
-                    if loader.emojis.isEmpty {
-                        ProgressView("Cargando emojis...")
-                            .frame(maxWidth: .infinity, alignment: .center)
-                    } else {
-                        Picker("Selecciona un emoji", selection: $selectedIcon) {
-                            ForEach(loader.emojis, id: \.self) { emoji in
-                                Text(emoji.emoji).tag(emoji.emoji)
+                        Button {
+                            showingEmojiSearch = true
+                        } label: {
+                            HStack {
+                                Text("Selecciona un emoji")
+                                Spacer()
+                                Text(selectedIcon.isEmpty ? "🙂" : selectedIcon)
                             }
-                        }.pickerStyle(.menu)
-                        
-                    }
+                        }.sheet(isPresented: $showingEmojiSearch) {
+                            EmojiSearchView(selectedIcon: $selectedIcon)
+                        }
                     
                     
                     Section(header: Text("Prioridad")) {
