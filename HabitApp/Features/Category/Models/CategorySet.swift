@@ -5,7 +5,7 @@ struct CategorySet: Identifiable, Hashable {
     var name: String
     // Almacena una representación hasheable del color (nombre del asset).
     var colorAssetName: String
-    var icon: Icon
+    var icon: UserImageSlot
     var priority: Priority
     var frequency: Frequency
 
@@ -18,7 +18,7 @@ struct CategorySet: Identifiable, Hashable {
         id: UUID = UUID(),
         name: String,
         colorAssetName: String = "AccentColor",
-        icon: Icon,
+        icon: UserImageSlot,
         priority: Priority,
         frequency: Frequency,
         progress: Progress

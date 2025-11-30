@@ -55,6 +55,10 @@ struct HabitCategoryView: View {
                             }.frame(alignment: .leading)                        }
                     }
                 }
+                
+                UserImagesPickerView(
+                    
+                )
 
                 Section(header: Text("Prioridad")) {
                     Picker("Prioridad", selection: $selectedPriority) {
