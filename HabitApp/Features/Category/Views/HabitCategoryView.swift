@@ -3,77 +3,105 @@ import SwiftUI
 struct HabitCategoryView: View {
     // Local state for creating a category
     @State private var name: String = ""
-    @State private var selectedIcon: String = ""
+    @State private var selectedIconOne: String = ""
+    @State private var selectedIconTwo: String = ""
+    @State private var selectedIconThree: String = ""
+
+    // Wrapper to make a Binding<String> identifiable for the sheet
+    struct EmojiBindingWrapper: Identifiable {
+        let id = UUID()
+        var binding: Binding<String>
+    }
+
+    @State private var activeEmoji: EmojiBindingWrapper? = nil
+
     @State private var selectedPriority: Priority = .medium
     @State private var selectedFrequency: Frequency = .weekly
     @State private var progress: Double = 0.0
-    
+
     @StateObject private var loader = EmojiLoader()
-    @State private var showingEmojiSearch = false
-    
+
     var body: some View {
         NavigationStack {
             Form {
                 Section(header: Text("Nombre")) {
                     TextField("Nombre de la categoría", text: $name)
                 }
-                
-                Section(header: Text("Icono")) {
+
+                Section(header: Text("Emojis:")) {
+                    VStack() {
                         Button {
-                            showingEmojiSearch = true
+                            activeEmoji = EmojiBindingWrapper(binding: $selectedIconOne)
                         } label: {
                             HStack {
-                                Text("Selecciona un emoji")
-                                Spacer()
-                                Text(selectedIcon.isEmpty ? "🙂" : selectedIcon)
-                            }
-                        }.sheet(isPresented: $showingEmojiSearch) {
-                            EmojiSearchView(selectedIcon: $selectedIcon)
-                        }
-                    
-                    
-                    Section(header: Text("Prioridad")) {
-                        Picker("Prioridad", selection: $selectedPriority) {
-                            Text("\(Priority.high.emoji) Alta").tag(Priority.high)
-                            Text("\(Priority.medium.emoji) Media").tag(Priority.medium)
-                            Text("\(Priority.low.emoji) Baja").tag(Priority.low)
-                        }
-                        .pickerStyle(.segmented)
-                    }
-                    
-                    Section(header: Text("Frecuencia")) {
-                        Picker("Frecuencia", selection: $selectedFrequency) {
-                            Text("Diaria \(Frequency.daily.emoji)").tag(Frequency.daily)
-                            Text("Semanal \(Frequency.weekly.emoji)").tag(Frequency.weekly)
-                            Text("Mensual \(Frequency.monthly.emoji)").tag(Frequency.monthly)
-                            Text("Anual \(Frequency.annual.emoji)").tag(Frequency.annual)
-                        }
-                        .pickerStyle(.menu)
-                    }
-                    
-                    Section {
+                                Text("Emoji 1")
+                                Text(selectedIconOne.isEmpty ? "" : selectedIconOne)
+                            }.frame(alignment: .leading)                       }
+
                         Button {
+                            activeEmoji = EmojiBindingWrapper(binding: $selectedIconTwo)
                         } label: {
-                            Label("Guardar categoría", systemImage: "checkmark.circle.fill")
-                                .font(.headline)
-                        }
-                        .disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                            HStack {
+                                Text("Emoji 2")
+                                Text(selectedIconTwo.isEmpty ? "" : selectedIconTwo)
+                            }.frame(alignment: .leading)                        }
+
+                        Button {
+                            activeEmoji = EmojiBindingWrapper(binding: $selectedIconThree)
+                        } label: {
+                            HStack {
+                                Text("Emoji 3")
+                                Text(selectedIconThree.isEmpty ? "" : selectedIconThree)
+                            }.frame(alignment: .leading)                        }
                     }
                 }
-                .navigationTitle("Nueva categoría")
+
+                Section(header: Text("Prioridad")) {
+                    Picker("Prioridad", selection: $selectedPriority) {
+                        Text("\(Priority.high.emoji) Alta").tag(Priority.high)
+                        Text("\(Priority.medium.emoji) Media").tag(Priority.medium)
+                        Text("\(Priority.low.emoji) Baja").tag(Priority.low)
+                    }
+                    .pickerStyle(.segmented)
+                }
+
+                Section(header: Text("Frecuencia")) {
+                    Picker("Frecuencia", selection: $selectedFrequency) {
+                        Text("Diaria \(Frequency.daily.emoji)").tag(Frequency.daily)
+                        Text("Semanal \(Frequency.weekly.emoji)").tag(Frequency.weekly)
+                        Text("Mensual \(Frequency.monthly.emoji)").tag(Frequency.monthly)
+                        Text("Anual \(Frequency.annual.emoji)").tag(Frequency.annual)
+                    }
+                    .pickerStyle(.menu)
+                }
+
+                Section {
+                    Button {
+                        // Save action
+                    } label: {
+                        Label("Guardar categoría", systemImage: "checkmark.circle.fill")
+                            .font(.headline)
+                    }
+                    .disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                }
             }
+            .navigationTitle("Nueva categoría")
+        }
+        // Sheet attached once to the Form (or outer VStack)
+        .sheet(item: $activeEmoji) { wrapper in
+            EmojiSearchView(selectedIcon: wrapper.binding)
         }
     }
-    
+
     // MARK: - Icon Picker Grid
-    
+
     private struct IconPickerGrid: View {
         let icons: [String]
         @Binding var selectedIcon: String
-        
+
         // 5 columns grid
         private let columns = Array(repeating: GridItem(.flexible(), spacing: 12), count: 5)
-        
+
         var body: some View {
             LazyVGrid(columns: columns, spacing: 12) {
                 ForEach(icons, id: \.self) { icon in
