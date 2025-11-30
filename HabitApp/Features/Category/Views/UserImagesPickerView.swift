@@ -3,77 +3,78 @@ import PhotosUI
 
 struct UserImagesPickerView: View {
     @StateObject var viewModel = UserImagesViewModel()
-    
+
+    #if os(iOS)
+    @State private var pickedItem: PhotosPickerItem? = nil
+    #endif
+
     var body: some View {
         NavigationStack {
-            Form {
-                Section(header: Text("Imagen")) {
-                    HStack {
-                        ForEach(viewModel.slots.indices, id: \.self) { index in
-                            Button {
-                                viewModel.activeSlotIndex = index
-                            } label: {
-                                if let image = viewModel.slots[index].image {
-                                    #if os(iOS)
-                                    Image(uiImage: image)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: 60, height: 60)
-                                        .cornerRadius(8)
-                                    #elseif os(macOS)
-                                    Image(nsImage: image)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: 60, height: 60)
-                                        .cornerRadius(8)
-                                    #endif
-                                } else {
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .fill(Color.gray.opacity(0.2))
-                                        .frame(width: 60, height: 60)
-                                        .overlay(Text("+").font(.title))
-                                }
-                            }
-                        }
+            content
+        }
+    }
+
+    @ViewBuilder
+    private var content: some View {
+        #if os(iOS)
+        VStack(spacing: 16) {
+            PhotosPicker(
+                selection: $pickedItem,
+                matching: .images,
+                photoLibrary: .shared()
+            ) {
+                imageButton
+            }
+            .onChange(of: pickedItem) { newItem in
+                guard let item = newItem else { return }
+                Task { await viewModel.loadImage(from: item) }
+            }
+
+            Spacer() // fill vertical space
+        }
+        .padding()
+        #elseif os(macOS)
+        Form {
+            Section(header: Text("Image")) {
+                Button {
+                    let panel = NSOpenPanel()
+                    panel.allowedFileTypes = ["png", "jpg", "jpeg"]
+                    panel.allowsMultipleSelection = false
+                    if panel.runModal() == .OK, let url = panel.url,
+                       let nsImage = NSImage(contentsOf: url) {
+                        viewModel.assign(image: nsImage)
+                        viewModel.pickedImages.append(nsImage)
                     }
-                }
-                
-                Section(header: Text("Pick Images")) {
-                    #if os(iOS)
-                    PhotosPicker(
-                        selection: Binding(
-                            get: { nil },
-                            set: { item in
-                                guard let item = item else { return }
-                                Task { await viewModel.loadImage(from: item) }
-                            }
-                        ),
-                        matching: .images,
-                        photoLibrary: .shared()
-                    ) {
-                        Text("Select Image from Library")
-                    }
-                    #elseif os(macOS)
-                    Button("Select Image from Library") {
-                        let panel = NSOpenPanel()
-                        panel.allowedFileTypes = ["png", "jpg", "jpeg"]
-                        panel.allowsMultipleSelection = false
-                        if panel.runModal() == .OK, let url = panel.url,
-                           let nsImage = NSImage(contentsOf: url) {
-                            viewModel.assign(image: nsImage)
-                            viewModel.pickedImages.append(nsImage)
-                        }
-                    }
-                    #endif
-                }
-                
-                Section {
-                    Button("Save Category") {
-                        // Save using viewModel.slots
-                    }
+                } label: {
+                    imageButton
                 }
             }
-            .navigationTitle("New Category")
+        }
+        #endif
+    }
+
+    @ViewBuilder
+    var imageButton: some View {
+        if let image = viewModel.image {
+            #if os(iOS)
+            Image(uiImage: image)
+                .resizable()
+                .scaledToFill()
+                .frame(width: 120, height: 120)
+                .clipped()
+                .cornerRadius(12)
+            #elseif os(macOS)
+            Image(nsImage: image)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 120, height: 120)
+                .cornerRadius(12)
+            #endif
+        } else {
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.gray.opacity(0.2))
+                .frame(width: 120, height: 120)
+                .overlay(Text("+").font(.largeTitle))
         }
     }
 }

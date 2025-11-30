@@ -4,18 +4,11 @@ import Combine
 
 @MainActor
 class UserImagesViewModel: ObservableObject {
-    @Published var slots: [UserImageSlot] = [
-        UserImageSlot(image: nil),
-        UserImageSlot(image: nil),
-        UserImageSlot(image: nil)
-    ]
-    
+    @Published var image: PlatformImage? = nil
     @Published var pickedImages: [PlatformImage] = []
-    @Published var activeSlotIndex: Int? = nil
 
     func assign(image: PlatformImage) {
-        guard let index = activeSlotIndex, index < slots.count else { return }
-        slots[index].image = image
+        self.image = image
     }
     
     func loadImage(from item: PhotosPickerItem) async {

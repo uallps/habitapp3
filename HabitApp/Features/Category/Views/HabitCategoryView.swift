@@ -45,7 +45,9 @@ struct HabitCategoryView: View {
                                 Text("Emoji 2")
                                 Text(selectedIconTwo.isEmpty ? "" : selectedIconTwo)
                             }.frame(alignment: .leading)                        }
-
+                        
+                        Spacer()
+                        
                         Button {
                             activeEmoji = EmojiBindingWrapper(binding: $selectedIconThree)
                         } label: {
