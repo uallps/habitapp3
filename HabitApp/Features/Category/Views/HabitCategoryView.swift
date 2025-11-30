@@ -1,67 +1,46 @@
 import SwiftUI
 
 struct HabitCategoryView: View {
-    // Local state for creating a category
+    // MARK: - Category State
     @State private var name: String = ""
     @State private var selectedIconOne: String = ""
     @State private var selectedIconTwo: String = ""
     @State private var selectedIconThree: String = ""
 
-    // Wrapper to make a Binding<String> identifiable for the sheet
-    struct EmojiBindingWrapper: Identifiable {
-        let id = UUID()
-        var binding: Binding<String>
-    }
-
-    @State private var activeEmoji: EmojiBindingWrapper? = nil
-
     @State private var selectedPriority: Priority = .medium
     @State private var selectedFrequency: Frequency = .weekly
     @State private var progress: Double = 0.0
 
+    // MARK: - Emoji Picker Sheet
+    struct ActiveEmoji: Identifiable {
+        let id: Int
+    }
+    @State private var activeEmoji: ActiveEmoji? = nil
+
+    // Emoji loader if needed
     @StateObject private var loader = EmojiLoader()
 
     var body: some View {
         NavigationStack {
             Form {
+                // MARK: - Name
                 Section(header: Text("Nombre")) {
                     TextField("Nombre de la categoría", text: $name)
                 }
 
-                Section(header: Text("Emojis:")) {
-                    VStack() {
-                        Button {
-                            activeEmoji = EmojiBindingWrapper(binding: $selectedIconOne)
-                        } label: {
-                            HStack {
-                                Text("Emoji 1")
-                                Text(selectedIconOne.isEmpty ? "" : selectedIconOne)
-                            }.frame(alignment: .leading)                       }
-
-                        Button {
-                            activeEmoji = EmojiBindingWrapper(binding: $selectedIconTwo)
-                        } label: {
-                            HStack {
-                                Text("Emoji 2")
-                                Text(selectedIconTwo.isEmpty ? "" : selectedIconTwo)
-                            }.frame(alignment: .leading)                        }
-                        
-                        Spacer()
-                        
-                        Button {
-                            activeEmoji = EmojiBindingWrapper(binding: $selectedIconThree)
-                        } label: {
-                            HStack {
-                                Text("Emoji 3")
-                                Text(selectedIconThree.isEmpty ? "" : selectedIconThree)
-                            }.frame(alignment: .leading)                        }
+                // MARK: - Emoji Buttons
+                Section(header: Text("Emojis")) {
+                    VStack(spacing: 12) {
+                        emojiButton(title: "Emoji 1", emoji: selectedIconOne, id: 1)
+                        emojiButton(title: "Emoji 2", emoji: selectedIconTwo, id: 2)
+                        emojiButton(title: "Emoji 3", emoji: selectedIconThree, id: 3)
                     }
                 }
-                
-                UserImagesPickerView(
-                    
-                )
 
+                // MARK: - Image Picker (if needed)
+                UserImagesPickerView()
+
+                // MARK: - Priority Picker
                 Section(header: Text("Prioridad")) {
                     Picker("Prioridad", selection: $selectedPriority) {
                         Text("\(Priority.high.emoji) Alta").tag(Priority.high)
@@ -71,6 +50,7 @@ struct HabitCategoryView: View {
                     .pickerStyle(.segmented)
                 }
 
+                // MARK: - Frequency Picker
                 Section(header: Text("Frecuencia")) {
                     Picker("Frecuencia", selection: $selectedFrequency) {
                         Text("Diaria \(Frequency.daily.emoji)").tag(Frequency.daily)
@@ -81,6 +61,7 @@ struct HabitCategoryView: View {
                     .pickerStyle(.menu)
                 }
 
+                // MARK: - Save Button
                 Section {
                     Button {
                         // Save action
@@ -93,46 +74,31 @@ struct HabitCategoryView: View {
             }
             .navigationTitle("Nueva categoría")
         }
-        // Sheet attached once to the Form (or outer VStack)
+        // MARK: - Emoji Sheet (single sheet for all buttons)
         .sheet(item: $activeEmoji) { wrapper in
-            EmojiSearchView(selectedIcon: wrapper.binding)
-        }
-    }
-
-    // MARK: - Icon Picker Grid
-
-    private struct IconPickerGrid: View {
-        let icons: [String]
-        @Binding var selectedIcon: String
-
-        // 5 columns grid
-        private let columns = Array(repeating: GridItem(.flexible(), spacing: 12), count: 5)
-
-        var body: some View {
-            LazyVGrid(columns: columns, spacing: 12) {
-                ForEach(icons, id: \.self) { icon in
-                    Button {
-                        selectedIcon = icon
-                    } label: {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(selectedIcon == icon ? Color.accentColor.opacity(0.2) : Color.gray.opacity(0.12))
-                            Image(systemName: icon)
-                                .font(.system(size: 20, weight: .semibold))
-                                .foregroundStyle(selectedIcon == icon ? Color.accentColor : Color.primary)
-                                .padding(10)
-                        }
-                    }
-                    .buttonStyle(.plain)
-                    .frame(height: 44)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(selectedIcon == icon ? Color.accentColor : Color.gray.opacity(0.25), lineWidth: selectedIcon == icon ? 2 : 1)
-                    )
-                    .accessibilityLabel(Text(icon))
-                    .accessibilityAddTraits(selectedIcon == icon ? .isSelected : [])
-                }
+            switch wrapper.id {
+            case 1: EmojiSearchView(selectedIcon: $selectedIconOne)
+            case 2: EmojiSearchView(selectedIcon: $selectedIconTwo)
+            default: EmojiSearchView(selectedIcon: $selectedIconThree)
             }
         }
     }
+
+    // MARK: - Helper: Emoji Button
+    @ViewBuilder
+    private func emojiButton(title: String, emoji: String, id: Int) -> some View {
+        Button {
+            activeEmoji = ActiveEmoji(id: id)
+        } label: {
+            HStack {
+                Text(title)
+                Text(emoji.isEmpty ? "—" : emoji)
+            }
+            .padding(8)
+            .background(Color.gray.opacity(0.1))
+            .cornerRadius(8)
+        }
+        .buttonStyle(.plain)
+    }
 }
+
