@@ -21,7 +21,6 @@ struct CategorySet: Identifiable, Hashable {
         icon: UserImageSlot,
         priority: Priority,
         frequency: Frequency,
-        progress: Progress
     ) {
         self.id = id
         self.name = name

@@ -37,11 +37,12 @@ struct HabitApp: App {
                 
                 // Tab 3: Categorías
                 NavigationStack {
-                    HabitCategoryView()
+                    CategoryListView(viewModel: CategoryListViewModel())
                 }
                 .tabItem {
                     Label("Categorías", systemImage: "folder")
                 }
+                
             }
             .environmentObject(AppConfig())
 #else
@@ -64,7 +65,7 @@ struct HabitApp: App {
                 // TODO: case "ajustes":
                 // TODO: SettingsView()
                 case "categorias":
-                    HabitCategoryView()
+                    CategoryListView(viewModel: CategoryListViewModel())
                 default:
                     Text("Seleccione una opción")
                 }
