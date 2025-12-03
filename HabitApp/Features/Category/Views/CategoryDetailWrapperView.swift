@@ -13,7 +13,18 @@ struct CategoryDetailWrapperView: View {
 
     @State private var selectedPriority: Priority = .medium
     @State private var selectedFrequency: Frequency = .weekly
-    @State private var progress: Double = 0.0
+    
+    enum SelectionMode: String, CaseIterable, Identifiable {
+
+          case emoji = "Emoji"
+
+          case image = "Imagen"
+
+          var id: String { rawValue }
+
+      }
+    
+    @State private var selectionMode: SelectionMode = .emoji
 
     // MARK: - Emoji Picker Sheet
     struct ActiveEmoji: Identifiable {
@@ -31,18 +42,35 @@ struct CategoryDetailWrapperView: View {
                     Section(header: Text("Nombre")) {
                         TextField("Nombre de la categoría", text: $name)
                     }
+                    
 
-                    // MARK: - Emoji Buttons
-                    Section(header: Text("Emojis")) {
-                        VStack(spacing: 12) {
-                            emojiButton(title: "Emoji 1", emoji: selectedIconOne, id: 1)
-                            emojiButton(title: "Emoji 2", emoji: selectedIconTwo, id: 2)
-                            emojiButton(title: "Emoji 3", emoji: selectedIconThree, id: 3)
+                        Section("Tipo de icono") {
+
+                            Picker("Selecciona tipo", selection: $selectionMode) {
+                                ForEach(SelectionMode.allCases) { mode in
+                                    Text(mode.rawValue).tag(mode as SelectionMode)
+                                }
+
+                            }
+
+                            .pickerStyle(.segmented)
+
                         }
+                    
+                    switch selectionMode {
+                    case .emoji:
+                        // MARK: - Emoji Buttons
+                        Section(header: Text("Emojis")) {
+                            VStack(spacing: 12) {
+                                emojiButton(title: "Emoji 1", emoji: selectedIconOne, id: 1)
+                                emojiButton(title: "Emoji 2", emoji: selectedIconTwo, id: 2)
+                                emojiButton(title: "Emoji 3", emoji: selectedIconThree, id: 3)
+                            }
+                        }
+                    case .image:
+                        // MARK: - Image Picker (if needed)
+                        UserImagesPickerView()
                     }
-
-                    // MARK: - Image Picker (if needed)
-                    UserImagesPickerView()
 
                     // MARK: - Priority Picker
                     Section(header: Text("Prioridad")) {
