@@ -18,7 +18,7 @@ final class DailyNotesViewModel: ObservableObject {
         let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
         
         let predicate = #Predicate<DailyNote> { note in
-            note.date >= startOfDay && note.date < endOfDay
+            note.date >= startOfDay && note.date < endOfDay && note.habit == nil
         }
         
         let descriptor = FetchDescriptor<DailyNote>(

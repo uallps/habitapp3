@@ -20,6 +20,9 @@ class Habit {
     var scheduledDays: [Int] // 1 = Domingo, 2 = Lunes, ..., 7 = Sábado
     var createdAt: Date
     var updatedAt: Date
+    
+    @Relationship(deleteRule: .cascade, inverse: \DailyNote.habit)
+    var notes: [DailyNote] = []
 
     init(title: String,
          doneDates: [Date] = [],

@@ -56,15 +56,13 @@ struct HabitListView: View {
                 
                 // 🔹 Lista de hábitos filtrados
                 List(filteredHabits) { habit in
-                    NavigationLink(value: habit) {
-                        HabitRowView(
-                            habit: habit,
-                            toggleCompletion: {
-                                viewModel.toggleCompletion(habit: habit, for: currentDate)
-                            },
-                            date: currentDate
-                        )
-                    }
+                    HabitRowView(
+                        habit: habit,
+                        toggleCompletion: {
+                            viewModel.toggleCompletion(habit: habit, for: currentDate)
+                        },
+                        date: currentDate
+                    )
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }

@@ -2,10 +2,17 @@ import SwiftUI
 
 struct AddNoteView: View {
     @Environment(\.dismiss) private var dismiss
-    let viewModel: DailyNotesViewModel
+    @Environment(\.modelContext) private var modelContext
+    let viewModel: DailyNotesViewModel?
+    let habit: Habit?
 
     @State private var title = ""
     @State private var content = ""
+    
+    init(viewModel: DailyNotesViewModel? = nil, habit: Habit? = nil) {
+        self.viewModel = viewModel
+        self.habit = habit
+    }
 
     var body: some View {
         #if os(iOS)
@@ -39,7 +46,13 @@ extension AddNoteView {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Guardar") {
-                        viewModel.addNote(title: title, content: content)
+                        if let viewModel = viewModel {
+                            viewModel.addNote(title: title, content: content)
+                        } else {
+                            let note = DailyNote(title: title, content: content, habit: habit)
+                            modelContext.insert(note)
+                            try? modelContext.save()
+                        }
                         dismiss()
                     }
                     .disabled(title.isEmpty)
@@ -71,7 +84,13 @@ extension AddNoteView {
             ToolbarItemGroup {
                 Button("Cancelar") { dismiss() }
                 Button("Guardar") {
-                    viewModel.addNote(title: title, content: content)
+                    if let viewModel = viewModel {
+                        viewModel.addNote(title: title, content: content)
+                    } else {
+                        let note = DailyNote(title: title, content: content, habit: habit)
+                        modelContext.insert(note)
+                        try? modelContext.save()
+                    }
                     dismiss()
                 }
                 .disabled(title.isEmpty)

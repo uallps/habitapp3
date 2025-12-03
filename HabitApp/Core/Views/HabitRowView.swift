@@ -42,6 +42,15 @@ struct HabitRowView: View {
             }
             
             Spacer()
+            
+            NavigationLink {
+                HabitNotesView(habit: habit)
+            } label: {
+                Image(systemName: "note.text")
+                    .foregroundColor(.blue)
+                    .font(.title3)
+            }
+            .buttonStyle(.plain)
         }
     }
     
