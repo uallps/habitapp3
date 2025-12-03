@@ -2,12 +2,11 @@ import SwiftUI
 
 struct CategoryListView: View {
     @ObservedObject var viewModel: CategoryListViewModel
-    var filteredCategories: [CategorySet] = []
 
     var body: some View {
         NavigationStack {
             VStack(spacing: 12) {
-                List(filteredCategories) { category in
+                List(viewModel.categories) { category in
                     NavigationLink(value: category) {
                         CategoryRowView(
                             category: category
