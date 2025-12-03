@@ -1,9 +1,19 @@
 import Foundation
 
-struct Emoji: Identifiable, Hashable, Comparable {
-    let id: String
+class Emoji: Icon, Comparable {
     let emoji: String
     let name: String
+
+    init(emoji: String, name: String, id: String) {
+        self.emoji = emoji
+        self.name = name
+        super.init(id: id)
+    }
+
+    // MARK: - Comparable
+    static func < (lhs: Emoji, rhs: Emoji) -> Bool {
+        lhs.name < rhs.name
+    }
 }
 
 extension Character {
@@ -15,11 +25,5 @@ extension Character {
         }
         // Others are composed (like 👩‍💻) — treat them as emoji if any scalar is an emoji
         return self.unicodeScalars.contains { $0.properties.isEmoji }
-    }
-}
-
-extension Emoji {
-    static func < (lhs: Emoji, rhs: Emoji) -> Bool {
-        lhs.name < rhs.name
     }
 }

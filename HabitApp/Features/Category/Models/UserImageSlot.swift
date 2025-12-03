@@ -8,7 +8,12 @@ import AppKit
 typealias PlatformImage = NSImage
 #endif
 
-struct UserImageSlot : Hashable {
-    let id = UUID()
+// UserImageSlot is now a subclass of CategoryIconBase
+class UserImageSlot: Icon {
     var image: PlatformImage?
+
+    init(image: PlatformImage?, id: String) {
+        self.image = image
+        super.init(id: id)
+    }
 }

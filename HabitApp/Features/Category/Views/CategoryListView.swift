@@ -13,7 +13,14 @@ struct CategoryListView: View {
                     NavigationLink {
                         CategoryDetailWrapperView(
                             viewModel: viewModel,
-                            categorySet: CategorySet(name: "", icon: UserImageSlot(image: nil), priority: .low, frequency: .daily)
+                            categorySet: CategorySet(
+                                id: UUID(),
+                                name: "",
+                                colorAssetName: "AccentColor",
+                                icon: UserImageSlot(image: nil, id: ""),
+                                priority: .low,
+                                frequency: .daily
+                            )
                         )
                     } label: {
                         Label("Añadir", systemImage: "plus")
