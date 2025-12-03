@@ -1,7 +1,10 @@
 import SwiftUI
+import SwiftData
 
 struct HabitListView: View {
     @ObservedObject var viewModel: HabitListViewModel
+    @Query private var habits: [Habit]
+    @Environment(\.modelContext) private var modelContext
     @State private var currentDate = Date()
     private let calendar = Calendar.current
     private let weekdaySymbols = Calendar.current.shortStandaloneWeekdaySymbols
@@ -57,8 +60,9 @@ struct HabitListView: View {
                         HabitRowView(
                             habit: habit,
                             toggleCompletion: {
-                                viewModel.toggleCompletion(habit: habit)
-                            }
+                                viewModel.toggleCompletion(habit: habit, for: currentDate)
+                            },
+                            date: currentDate
                         )
                     }
                 }
@@ -67,11 +71,10 @@ struct HabitListView: View {
             .navigationTitle("Hábitos")
             .toolbar {
                 ToolbarItem(placement: .automatic) {
-                    NavigationLink {
-                        HabitDetailWrapper(
-                            viewModel: viewModel,
-                            habit: Habit(title: "", doneDays: [])
-                        )
+                    Button {
+                        let newHabit = Habit(title: "Nuevo Hábito")
+                        modelContext.insert(newHabit)
+                        try? modelContext.save()
                     } label: {
                         Label("Añadir", systemImage: "plus")
                     }
@@ -80,13 +83,32 @@ struct HabitListView: View {
 
             .listStyle(.automatic)
         }
+        .onAppear {
+            if habits.isEmpty {
+                createSampleHabits()
+            }
+        }
+    }
+    
+    private func createSampleHabits() {
+        let sampleHabits = [
+            Habit(title: "Hacer ejercicio", priority: .high, scheduledDays: [2, 4, 6]), // Lunes, Miércoles, Viernes
+            Habit(title: "Leer 30 minutos", priority: .medium, scheduledDays: [1, 2, 3, 4, 5, 6, 7]), // Todos los días
+            Habit(title: "Meditar", priority: .low, scheduledDays: [1, 7]) // Domingo y Sábado
+        ]
+        
+        for habit in sampleHabits {
+            modelContext.insert(habit)
+        }
+        
+        try? modelContext.save()
     }
     
     // MARK: - Helpers
     
     private var filteredHabits: [Habit] {
         let weekday = calendar.component(.weekday, from: currentDate)
-        return viewModel.habits.filter { $0.scheduledDays.contains(weekday) }
+        return habits.filter { $0.scheduledDays.contains(weekday) }
     }
     
     private func dayName(for date: Date) -> String {

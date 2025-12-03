@@ -88,6 +88,6 @@ struct HabitApp: App {
             }.environmentObject(AppConfig())
 #endif
         }
-        .modelContainer(for: [DailyNote.self])
+        .modelContainer(for: [DailyNote.self, Habit.self])
     }
 }

@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct HabitDetailWrapper: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
     @ObservedObject var viewModel: HabitListViewModel
     @State var habit: Habit
     
@@ -27,7 +29,8 @@ struct HabitDetailWrapper: View {
             Spacer()
             
             Button(action: {
-                viewModel.addHabit(habit: habit)
+                modelContext.insert(habit)
+                try? modelContext.save()
                 dismiss()
             }) {
                 Text("Guardar hábito")

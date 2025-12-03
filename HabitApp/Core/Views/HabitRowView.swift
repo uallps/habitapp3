@@ -11,21 +11,22 @@ struct HabitRowView: View {
     
     let habit: Habit
     let toggleCompletion: () -> Void
+    var date: Date = Date()
     
     var body: some View {
         HStack {
             //  Un solo botón con un solo ícono dinámico
             Button(action: toggleCompletion) {
-                Image(systemName: habit.isCompleted ? "checkmark.circle.fill" : "circle")
-                    .foregroundColor(habit.isCompleted ? .green : .gray)
+                Image(systemName: habit.isCompletedForDate(date) ? "checkmark.circle.fill" : "circle")
+                    .foregroundColor(habit.isCompletedForDate(date) ? .green : .gray)
                     .font(.title3)
             }
             .buttonStyle(.plain)
             
             VStack(alignment: .leading) {
                 Text(habit.title)
-                    .strikethrough(habit.isCompleted)
-                    .foregroundColor(habit.isCompleted ? .gray : .primary)
+                    .strikethrough(habit.isCompletedForDate(date))
+                    .foregroundColor(habit.isCompletedForDate(date) ? .gray : .primary)
                 
                 if AppConfig.showDueDates, let dueDate = habit.dueDate {
                     Text("Vence: \(dueDate.formatted(date: .abbreviated, time: .shortened))")
