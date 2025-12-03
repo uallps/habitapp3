@@ -68,7 +68,11 @@ struct CategoryDetailWrapperView: View {
                     // MARK: - Save Button
                     Section {
                         Button {
+                            categorySet.name = name
+                            categorySet.priority = selectedPriority
+                            categorySet.frequency = selectedFrequency
                             viewModel.addCategory(category: categorySet)
+                            dismiss()
                         } label: {
                             Label("Guardar categoría", systemImage: "checkmark.circle.fill")
                                 .font(.headline)
