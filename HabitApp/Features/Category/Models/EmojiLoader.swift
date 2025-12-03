@@ -34,7 +34,7 @@ class EmojiLoader: ObservableObject {
                     emojiId = String(substrings[0])
                     emoji = String(substrings[2])
                     emojiDesc = String(substrings[3])
-                    allEmojis.append(Emoji(emoji: emojiId, name: emoji, id: emojiDesc))
+                    allEmojis.append( Emoji(  emoji: emoji, name: emojiDesc, id: emojiId ) )
                 }
             
                 }
