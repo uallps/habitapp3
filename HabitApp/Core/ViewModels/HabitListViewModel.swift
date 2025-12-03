@@ -5,8 +5,9 @@
 
 import Foundation
 import SwiftData
+import Combine 
 
-class HabitListViewModel: ObservableObject {
+final class HabitListViewModel: ObservableObject {
     
     func addHabit(title: String, 
                   dueDate: Date? = nil, 

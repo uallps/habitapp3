@@ -3,16 +3,18 @@ import SwiftData
 import Combine
 
 final class DailyNotesViewModel: ObservableObject {
-    private var modelContext: ModelContext
+    private var modelContext: ModelContext?
     @Published var notes: [DailyNote] = []
     @Published var selectedDate = Date()
     
-    init(modelContext: ModelContext) {
+    init(modelContext: ModelContext? = nil) {
         self.modelContext = modelContext
         loadNotes()
     }
     
     func loadNotes() {
+        guard let modelContext else { return }  // <--- evitar crash
+
         let calendar = Calendar.current
         let startOfDay = calendar.startOfDay(for: selectedDate)
         let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
@@ -34,6 +36,8 @@ final class DailyNotesViewModel: ObservableObject {
     }
     
     func addNote(title: String, content: String) {
+        guard let modelContext else { return }  // <--- evitar crash
+
           let note = DailyNote(title: title, content: content, date: selectedDate)
           modelContext.insert(note)
           saveContext()
@@ -50,6 +54,8 @@ final class DailyNotesViewModel: ObservableObject {
       }
       
       private func saveContext() {
+          guard let modelContext else { return }  // <--- evitar crash
+
           do { try modelContext.save() }
           catch { print("Error guardando contexto: \(error)") }
       }
@@ -57,12 +63,16 @@ final class DailyNotesViewModel: ObservableObject {
 
     
     func updateNote(_ note: DailyNote, title: String, content: String) {
+        guard let modelContext else { return }  // <--- evitar crash
+
         note.updateContent(title: title, content: content)
         saveContext()
         loadNotes()
     }
     
     func saveAndGoToNoteDate(_ note: DailyNote, title: String, content: String) {
+        guard let modelContext else { return }  // <--- evitar crash
+
         note.updateContent(title: title, content: content)
         selectedDate = Calendar.current.startOfDay(for: note.date) // Ajusta la fecha al día de la nota
         saveContext()
@@ -71,6 +81,8 @@ final class DailyNotesViewModel: ObservableObject {
 
     
     func deleteNote(_ note: DailyNote) {
+        guard let modelContext else { return }  // <--- evitar crash
+
         modelContext.delete(note)
         saveContext()
         loadNotes()

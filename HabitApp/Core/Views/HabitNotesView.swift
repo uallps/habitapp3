@@ -3,32 +3,52 @@ import SwiftData
 
 struct HabitNotesView: View {
     let habit: Habit
-    @Query private var allNotes: [DailyNote]
     @Environment(\.modelContext) private var modelContext
+    @Query private var allNotes: [DailyNote]
+    
     @State private var showingAddNote = false
-    
-    private var habitNotes: [DailyNote] {
-        allNotes.filter { $0.habit?.id == habit.id }
+    @StateObject private var notesViewModel: DailyNotesViewModel
+
+    init(habit: Habit, modelContext: ModelContext) {
+        self.habit = habit
+        _notesViewModel = StateObject(wrappedValue: DailyNotesViewModel(modelContext: modelContext))
     }
-    
+
     var body: some View {
         NavigationStack {
             List {
                 ForEach(habitNotes.sorted { $0.date > $1.date }) { note in
                     NavigationLink {
-                        NoteDetailView(note: note)
+                        NoteDetailView(note: note, viewModel: notesViewModel)
                     } label: {
-                        NoteRowView(note: note)
+                        HStack {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(note.title)
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+                                    .lineLimit(1)
+                                if !note.content.isEmpty {
+                                    Text(note.content)
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                        .lineLimit(2)
+                                }
+                            }
+                            Spacer()
+                            Text(note.date, format: .dateTime.day().month())
+                                .font(.caption2)
+                                .foregroundColor(.gray)
+                        }
+                        .padding(.vertical, 4)
                     }
                 }
                 .onDelete(perform: deleteNotes)
             }
+            .listStyle(.insetGrouped)
             .navigationTitle("Notas - \(habit.title)")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        showingAddNote = true
-                    } label: {
+                    Button { showingAddNote = true } label: {
                         Image(systemName: "plus")
                     }
                 }
@@ -38,12 +58,14 @@ struct HabitNotesView: View {
             }
         }
     }
+
+    private var habitNotes: [DailyNote] {
+        allNotes.filter { $0.habit?.id == habit.id }
+    }
     
     private func deleteNotes(offsets: IndexSet) {
-        let sortedNotes = habitNotes.sorted { $0.date > $1.date }
-        for index in offsets {
-            modelContext.delete(sortedNotes[index])
-        }
+        let sorted = habitNotes.sorted { $0.date > $1.date }
+        for i in offsets { modelContext.delete(sorted[i]) }
         try? modelContext.save()
     }
 }

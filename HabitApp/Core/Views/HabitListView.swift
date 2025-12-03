@@ -6,6 +6,7 @@ struct HabitListView: View {
     @Query private var habits: [Habit]
     @Environment(\.modelContext) private var modelContext
     @State private var currentDate = Date()
+    @State private var showingNewHabitSheet = false
     private let calendar = Calendar.current
     private let weekdaySymbols = Calendar.current.shortStandaloneWeekdaySymbols
 
@@ -70,36 +71,26 @@ struct HabitListView: View {
             .toolbar {
                 ToolbarItem(placement: .automatic) {
                     Button {
-                        let newHabit = Habit(title: "Nuevo Hábito")
-                        modelContext.insert(newHabit)
-                        try? modelContext.save()
+                        showingNewHabitSheet = true
                     } label: {
                         Label("Añadir", systemImage: "plus")
                     }
                 }
             }
-
-            .listStyle(.automatic)
+            .sheet(isPresented: $showingNewHabitSheet) {
+                // Abrimos HabitDetailWrapper para crear un nuevo hábito
+                HabitDetailWrapper(
+                    viewModel: viewModel,
+                    habit: Habit(title: ""),
+                    isNew: true
+                )
+            }
         }
         .onAppear {
             if habits.isEmpty {
                 createSampleHabits()
             }
         }
-    }
-    
-    private func createSampleHabits() {
-        let sampleHabits = [
-            Habit(title: "Hacer ejercicio", priority: .high, scheduledDays: [2, 4, 6]), // Lunes, Miércoles, Viernes
-            Habit(title: "Leer 30 minutos", priority: .medium, scheduledDays: [1, 2, 3, 4, 5, 6, 7]), // Todos los días
-            Habit(title: "Meditar", priority: .low, scheduledDays: [1, 7]) // Domingo y Sábado
-        ]
-        
-        for habit in sampleHabits {
-            modelContext.insert(habit)
-        }
-        
-        try? modelContext.save()
     }
     
     // MARK: - Helpers
@@ -133,5 +124,19 @@ struct HabitListView: View {
         let todayWeekday = calendar.component(.weekday, from: today)
         let diff = weekday - todayWeekday
         return calendar.date(byAdding: .day, value: diff, to: today) ?? today
+    }
+    
+    private func createSampleHabits() {
+        let sampleHabits = [
+            Habit(title: "Hacer ejercicio", priority: .high, scheduledDays: [2, 4, 6]),
+            Habit(title: "Leer 30 minutos", priority: .medium, scheduledDays: [1, 2, 3, 4, 5, 6, 7]),
+            Habit(title: "Meditar", priority: .low, scheduledDays: [1, 7])
+        ]
+        
+        for habit in sampleHabits {
+            modelContext.insert(habit)
+        }
+        
+        try? modelContext.save()
     }
 }
