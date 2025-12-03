@@ -6,7 +6,7 @@ class CategoryListViewModel: ObservableObject {
 
     ]
     
-    func addHabit(category: CategorySet) {
+    func addCategory(category: CategorySet) {
         categories.append(category)
     }
 }

@@ -14,7 +14,7 @@ struct CategoryDetailWrapperView: View {
             Spacer()
             
             Button(action: {
-                //viewModel.addHabit categorySet: CategorySet)
+                viewModel.addCategory(category: categorySet)
                 dismiss()
             }) {
                 Text("Guardar categoría")
