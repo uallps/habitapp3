@@ -31,7 +31,6 @@ struct CustomCalendarView: View {
     @State private var displayedMonth: Date
     let doneDates: [Date]   // <-- Ahora recibe fechas directamente
     
-    @State private var displayedMonth: Date
     private let calendar = Calendar.current
     private let daysInWeek = 7
     

@@ -14,5 +14,10 @@ class AppConfig: ObservableObject  {
     // Básicamente, cualquier propiedad marcada con @AppStorage se lee o escribe según las circunstancias adecuadas.
 
     @AppStorage("showCategories")
-    static var showDueDates: Bool = true
-}
+    static var showCategories: Bool = true
+    @AppStorage("showDueDates")
+    static var  showDueDates : Bool = true
+    @AppStorage("showPriorities")
+    static var showPriorities : Bool = true
+    @AppStorage("enableReminders")
+    static var enableReminders: Bool = true}

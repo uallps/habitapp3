@@ -25,7 +25,7 @@ struct CategoryListView: View {
                                 id: UUID(),
                                 name: "",
                                 colorAssetName: "AccentColor",
-                                icon: UserImageSlot(image: nil, id: ""),
+                                icon: UserImageSlot(image: nil),
                                 priority: .low,
                                 frequency: .daily
                             )

@@ -13,7 +13,19 @@
     "¿Eliminar nota?" : {
 
     },
+    "%@ Alta" : {
+
+    },
+    "%@ Baja" : {
+
+    },
+    "%@ Media" : {
+
+    },
     "%lld" : {
+
+    },
+    "+" : {
 
     },
     "Actualizado: %@ a las %@" : {
@@ -35,7 +47,22 @@
     "Añadir" : {
 
     },
+    "Anual %@" : {
+
+    },
+    "Buscar emoji..." : {
+
+    },
     "Cancelar" : {
+
+    },
+    "Cargando emojis..." : {
+
+    },
+    "Categorias" : {
+
+    },
+    "Categorías" : {
 
     },
     "Contenido" : {
@@ -60,6 +87,9 @@
     "Detalles del hábito" : {
 
     },
+    "Diaria %@" : {
+
+    },
     "Días de la semana" : {
 
     },
@@ -72,6 +102,9 @@
     "Eliminar" : {
 
     },
+    "Emojis" : {
+
+    },
     "Esta acción no se puede deshacer" : {
 
     },
@@ -81,7 +114,13 @@
     "Fecha" : {
 
     },
+    "Frecuencia" : {
+
+    },
     "Guardar" : {
+
+    },
+    "Guardar categoría" : {
 
     },
     "Guardar hábito" : {
@@ -96,10 +135,22 @@
     "Hello, world!" : {
 
     },
+    "Image" : {
+
+    },
     "Marcar día completado" : {
 
     },
+    "Mensual %@" : {
+
+    },
     "No hay notas para esta fecha" : {
+
+    },
+    "Nombre" : {
+
+    },
+    "Nombre de la categoría" : {
 
     },
     "Notas" : {
@@ -109,6 +160,9 @@
 
     },
     "Notas Diarias" : {
+
+    },
+    "Nueva categoría" : {
 
     },
     "Nueva Nota" : {
@@ -180,7 +234,13 @@
     "Selecciona los días de la semana" : {
 
     },
+    "Selecciona tipo" : {
+
+    },
     "Seleccione una opción" : {
+
+    },
+    "Semanal %@" : {
 
     },
     "Sin notas" : {
@@ -190,6 +250,9 @@
 
     },
     "Test Notificaciones" : {
+
+    },
+    "Tipo de icono" : {
 
     },
     "Título" : {

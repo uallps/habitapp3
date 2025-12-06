@@ -1,7 +1,7 @@
 import Foundation
 import SwiftData
 
-enum Frequency: Hashable {
+enum Frequency: String, Hashable, Codable, CaseIterable {
     case daily
     case monthly
     case weekly
