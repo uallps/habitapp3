@@ -1,6 +1,6 @@
 import Foundation
 
-class Icon: Hashable {
+class Icon {
     let id: String
 
     init(id: String) {

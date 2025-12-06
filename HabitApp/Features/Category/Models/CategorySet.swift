@@ -12,9 +12,6 @@ class CategorySet: Identifiable, Hashable {
     var priority: Priority
     var frequency: Frequency
     
-    var frequencyStr: String
-    var priorityStr: String
-    
     // Color calculado a partir del nombre del asset para que SwiftUI pueda seguir usando Color.
     var color: Color {
         Color(colorAssetName)

@@ -1,18 +1,23 @@
 import Foundation
 
-class Emoji: Icon, Comparable {
+class Emoji: Icon, Comparable, Equatable {
     let emoji: String
     let name: String
-
+    
     init(emoji: String, name: String, id: String) {
         self.emoji = emoji
         self.name = name
         super.init(id: id)
     }
-
+    
     // MARK: - Comparable
     static func < (lhs: Emoji, rhs: Emoji) -> Bool {
         lhs.name < rhs.name
+    }
+    
+    // MARK: - Equatable
+    static func == (lhs: Emoji, rhs: Emoji) -> Bool {
+        lhs.id == rhs.id
     }
 }
 
