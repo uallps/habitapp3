@@ -70,4 +70,13 @@ class Habit {
 
 enum Priority: String, Codable, CaseIterable {
     case low, medium, high
+    
+    
+    var localized: String {
+        switch self {
+        case .low: return NSLocalizedString("priority_low", comment: "")
+        case .medium: return NSLocalizedString("priority_medium", comment: "")
+        case .high: return NSLocalizedString("priority_high", comment: "")
+        }
+    }
 }

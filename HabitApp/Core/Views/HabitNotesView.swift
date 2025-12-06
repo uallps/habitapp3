@@ -44,14 +44,28 @@ struct HabitNotesView: View {
                 }
                 .onDelete(perform: deleteNotes)
             }
+            #if os(iOS)
             .listStyle(.insetGrouped)
+            #else
+            .listStyle(.inset)
+            #endif
             .navigationTitle("Notas - \(habit.title)")
             .toolbar {
+                #if os(macOS)
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        showingAddNote = true
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+                }
+                #else
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button { showingAddNote = true } label: {
                         Image(systemName: "plus")
                     }
                 }
+                #endif
             }
             .sheet(isPresented: $showingAddNote) {
                 AddNoteView(habit: habit)

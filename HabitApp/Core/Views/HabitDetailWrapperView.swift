@@ -38,7 +38,7 @@ struct HabitDetailWrapper: View {
                 set: { habit.priority = $0 }
             )) {
                 ForEach(Priority.allCases, id: \.self) { priority in
-                    Text(priority.rawValue.capitalized).tag(priority)
+                    Text(priority.localized.togglingFirstLetterCase).tag(priority)
                 }
             }
             .pickerStyle(SegmentedPickerStyle())

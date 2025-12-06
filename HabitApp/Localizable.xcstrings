@@ -1,0 +1,209 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "" : {
+
+    },
+    " " : {
+
+    },
+    "¿Eliminar hábito?" : {
+
+    },
+    "¿Eliminar nota?" : {
+
+    },
+    "%lld" : {
+
+    },
+    "Actualizado: %@ a las %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Actualizado: %1$@ a las %2$@"
+          }
+        }
+      }
+    },
+    "Ajustes" : {
+
+    },
+    "Ajustes (próximamente)" : {
+
+    },
+    "Añadir" : {
+
+    },
+    "Cancelar" : {
+
+    },
+    "Contenido" : {
+
+    },
+    "Creado: %@ a las %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Creado: %1$@ a las %2$@"
+          }
+        }
+      }
+    },
+    "Crear nota con notificación en 10s" : {
+
+    },
+    "Detalle de Nota" : {
+
+    },
+    "Detalles del hábito" : {
+
+    },
+    "Días de la semana" : {
+
+    },
+    "Editar" : {
+
+    },
+    "Editar hábito" : {
+
+    },
+    "Eliminar" : {
+
+    },
+    "Esta acción no se puede deshacer" : {
+
+    },
+    "Esta acción no se puede deshacer." : {
+
+    },
+    "Fecha" : {
+
+    },
+    "Guardar" : {
+
+    },
+    "Guardar hábito" : {
+
+    },
+    "Habitos" : {
+
+    },
+    "Hábitos" : {
+
+    },
+    "Hello, world!" : {
+
+    },
+    "Marcar día completado" : {
+
+    },
+    "No hay notas para esta fecha" : {
+
+    },
+    "Notas" : {
+
+    },
+    "Notas - %@" : {
+
+    },
+    "Notas Diarias" : {
+
+    },
+    "Nueva Nota" : {
+
+    },
+    "Nuevo hábito" : {
+
+    },
+    "Prioridad" : {
+
+    },
+    "Prioridad: %@" : {
+
+    },
+    "priority_high" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "high"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "alta"
+          }
+        }
+      }
+    },
+    "priority_low" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "low"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "baja"
+          }
+        }
+      }
+    },
+    "priority_medium" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "medium"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "media"
+          }
+        }
+      }
+    },
+    "Prueba de ReminderPlugin" : {
+
+    },
+    "Selecciona los días de la semana" : {
+
+    },
+    "Seleccione una opción" : {
+
+    },
+    "Sin notas" : {
+
+    },
+    "Tareas para %@" : {
+
+    },
+    "Test Notificaciones" : {
+
+    },
+    "Título" : {
+
+    },
+    "Título de la nota" : {
+
+    },
+    "Título del hábito" : {
+
+    },
+    "Vence: %@" : {
+
+    }
+  },
+  "version" : "1.1"
+}
