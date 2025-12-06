@@ -38,6 +38,25 @@ struct HabitDetailView: View {
                 .padding(.vertical, 6)
             }
             
+            Section(header: Text("Marcar día completado")) {
+                CustomCalendarView(selectedDate: $selectedDate, doneDates: habit.doneDates)
+                    .frame(maxHeight: 300)
+                    .onChange(of: selectedDate) { oldValue, newValue in
+                        
+                        // Si se deselecciona (Date.distantPast)
+                        if newValue == Date.distantPast {
+                            habit.doneDates.removeAll()
+                            return
+                        }
+                        
+                        let calendar = Calendar.current
+                        let selectedDay = calendar.startOfDay(for: newValue)
+                        
+                        // Solo permitir 1 día activo (como tenías antes)
+                        habit.doneDates = [selectedDay]
+                    }
+            }
+
         }
         .navigationTitle(habit.title)
     }

@@ -1,8 +1,12 @@
 import SwiftUI
+import SwiftData
 
 struct HabitListView: View {
     @ObservedObject var viewModel: HabitListViewModel
+    @Query private var habits: [Habit]
+    @Environment(\.modelContext) private var modelContext
     @State private var currentDate = Date()
+    @State private var showingNewHabitSheet = false
     private let calendar = Calendar.current
     private let weekdaySymbols = Calendar.current.shortStandaloneWeekdaySymbols
 
@@ -53,38 +57,39 @@ struct HabitListView: View {
                 
                 // 🔹 Lista de hábitos filtrados
                 List(filteredHabits) { habit in
-                    NavigationLink(value: habit) {
-                        HabitRowView(
-                            habit: habit,
-                            toggleCompletion: {
-                                viewModel.toggleCompletion(habit: habit)
-                            }
-                        )
-                    }
+                    HabitRowView(
+                        habit: habit,
+                        toggleCompletion: {
+                            viewModel.toggleCompletion(habit: habit, for: currentDate)
+                        },
+                        date: currentDate
+                    )
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .navigationTitle("Hábitos")
             .toolbar {
                 ToolbarItem(placement: .automatic) {
-                    NavigationLink {
-                        HabitDetailWrapper(
-                            viewModel: viewModel,
-                            habit: Habit(title: "", doneDays: [])
-                        )
+                    Button {
+                        showingNewHabitSheet = true
                     } label: {
                         Label("Añadir", systemImage: "plus")
                     }
                 }
             }
-            .navigationDestination(for: Habit.self) { habit in
-                if let index = viewModel.habits.firstIndex(where: { $0.id == habit.id }) {
-                    HabitDetailView(habit: $viewModel.habits[index])
-                } else {
-                    Text("Hábito no encontrado")
-                }
+            .sheet(isPresented: $showingNewHabitSheet) {
+                // Abrimos HabitDetailWrapper para crear un nuevo hábito
+                HabitDetailWrapper(
+                    viewModel: viewModel,
+                    habit: Habit(title: ""),
+                    isNew: true
+                )
             }
-            .listStyle(.automatic)
+        }
+        .onAppear {
+            if habits.isEmpty {
+                createSampleHabits()
+            }
         }
     }
     
@@ -92,7 +97,7 @@ struct HabitListView: View {
     
     private var filteredHabits: [Habit] {
         let weekday = calendar.component(.weekday, from: currentDate)
-        return viewModel.habits.filter { $0.scheduledDays.contains(weekday) }
+        return habits.filter { $0.scheduledDays.contains(weekday) }
     }
     
     private func dayName(for date: Date) -> String {
@@ -119,5 +124,19 @@ struct HabitListView: View {
         let todayWeekday = calendar.component(.weekday, from: today)
         let diff = weekday - todayWeekday
         return calendar.date(byAdding: .day, value: diff, to: today) ?? today
+    }
+    
+    private func createSampleHabits() {
+        let sampleHabits = [
+            Habit(title: "Hacer ejercicio", priority: .high, scheduledDays: [2, 4, 6]),
+            Habit(title: "Leer 30 minutos", priority: .medium, scheduledDays: [1, 2, 3, 4, 5, 6, 7]),
+            Habit(title: "Meditar", priority: .low, scheduledDays: [1, 7])
+        ]
+        
+        for habit in sampleHabits {
+            modelContext.insert(habit)
+        }
+        
+        try? modelContext.save()
     }
 }

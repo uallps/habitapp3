@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct CustomCalendarView: View {
-
     // El sistema Binding en SwiftUI es similar a los punteros en C o al manejo de estado en otros frameworks móviles como Jetpack Compose.
 
     // Para compararlos:
@@ -30,20 +29,24 @@ struct CustomCalendarView: View {
     // Podría pasarse desde este archivo a una vista hija de modo que si la vista hija lo cambia, esta vista se actualice.
     // Básicamente: "Oye, yo poseo este valor, pero si necesitas cambiarlo puedo pasártelo para que lo cambies y yo me actualice."
     @State private var displayedMonth: Date
-
-    let doneDays: [Day]
+    let doneDates: [Date]   // <-- Ahora recibe fechas directamente
     
+    @State private var displayedMonth: Date
     private let calendar = Calendar.current
     private let daysInWeek = 7
     
-    init(selectedDate: Binding<Date>, doneDays: [Day]) {
+    init(selectedDate: Binding<Date>, doneDates: [Date]) {
         self._selectedDate = selectedDate
-        self.doneDays = doneDays
-        // Inicializa displayedMonth al inicio del mes para selectedDate
-        _displayedMonth = State(initialValue: calendar.date(from: calendar.dateComponents([.year, .month], from: selectedDate.wrappedValue))!)
+        self.doneDates = doneDates
+        // Inicio del mes de la fecha seleccionada
+        _displayedMonth = State(initialValue:
+            Calendar.current.date(from:
+                Calendar.current.dateComponents([.year, .month], from: selectedDate.wrappedValue)
+            )!
+        )
     }
     
-    // Obtener todos los días del mes actualmente mostrado
+    // Días del mes mostrado
     private var days: [Date] {
         guard let monthInterval = calendar.dateInterval(of: .month, for: displayedMonth) else { return [] }
         var days: [Date] = []
@@ -59,7 +62,7 @@ struct CustomCalendarView: View {
     // Obtener el weekday del primer día del mes (1 = domingo, 7 = sábado)
     private var firstWeekday: Int {
         let components = calendar.dateComponents([.year, .month], from: displayedMonth)
-        guard let firstOfMonth = calendar.date(from: components) else { return 1 }
+        let firstOfMonth = calendar.date(from: components)!
         return calendar.component(.weekday, from: firstOfMonth)
     }
     
@@ -67,18 +70,14 @@ struct CustomCalendarView: View {
         VStack {
             // Encabezado de navegación del mes
             HStack {
-                Button(action: {
-                    changeMonth(by: -1)
-                }) {
+                Button(action: { changeMonth(by: -1) }) {
                     Image(systemName: "chevron.left")
                 }
                 Spacer()
                 Text(monthYearString)
                     .font(.headline)
                 Spacer()
-                Button(action: {
-                    changeMonth(by: 1)
-                }) {
+                Button(action: { changeMonth(by: 1) }) {
                     Image(systemName: "chevron.right")
                 }
             }
@@ -101,48 +100,48 @@ struct CustomCalendarView: View {
             LazyVGrid(columns: columns, spacing: 10) {
                 // Espacios vacíos iniciales para compensar el primer día de la semana
                 ForEach(0..<firstWeekday-1, id: \.self) { _ in
-                    Text(" ")
-                        .frame(width: 30, height: 30)
+                    Text(" ").frame(width: 30, height: 30)
                 }
                 
+                // Calendar days
                 ForEach(days, id: \.self) { date in
                     let day = calendar.component(.day, from: date)
                     
-                    // Rango permitido: desde hoy hasta 14 días en el futuro
                     let today = calendar.startOfDay(for: Date())
-                    let maxSelectableDate = calendar.date(byAdding: .day, value: 0, to: today)!
-                    let isDisabled = date < today || date > maxSelectableDate
+                    let isDisabled = date < today // Solo permite días a partir de hoy
                     
                     VStack {
                         Text("\(day)")
                             .frame(width: 30, height: 30)
                             .background(
                                 Circle()
-                                    .fill(calendar.isDate(date, inSameDayAs: selectedDate) ? Color.blue : Color.clear)
+                                    .fill(calendar.isDate(date, inSameDayAs: selectedDate) ? Color.blue : .clear)
                             )
-                            .foregroundColor(
-                                isDisabled ? .gray :
-                                (calendar.isDate(date, equalTo: today, toGranularity: .day) ? .red : .primary)
+                            .foregroundColor(isDisabled ? .gray :
+                                (calendar.isDate(date, inSameDayAs: today) ? .red : .primary)
                             )
                             .opacity(isDisabled ? 0.4 : 1)
                             .overlay(
+                                // Punto verde si el día está marcado como hecho
                                 Circle()
                                     .fill(Color.green)
                                     .frame(width: 6, height: 6)
                                     .offset(x: 10, y: 10)
-                                    .opacity(doneDays.contains(where: { $0.isSameDay(as: date) }) ? 1 : 0)
+                                    .opacity(
+                                        doneDates.contains {
+                                            calendar.isDate($0, inSameDayAs: date)
+                                        } ? 1 : 0
+                                    )
                             )
                             .onTapGesture {
                                 if !isDisabled {
-                                       // Si el usuario toca el mismo día, deselecciona
-                                       if calendar.isDate(date, inSameDayAs: selectedDate) {
-                                           selectedDate = Date.distantPast // valor “nulo” simbólico
-                                       } else {
-                                           selectedDate = date
-                                       }
-                                   } else {
-                                       print("❌ Fecha fuera del rango permitido")
-                                   }
+                                    // Deselección si toca el mismo día
+                                    if calendar.isDate(date, inSameDayAs: selectedDate) {
+                                        selectedDate = Date.distantPast
+                                    } else {
+                                        selectedDate = date
+                                    }
+                                }
                             }
                     }
                 }
@@ -150,6 +149,8 @@ struct CustomCalendarView: View {
             .padding()
         }
     }
+    
+    // MARK: Helpers
     
     private var monthYearString: String {
         let formatter = DateFormatter()
@@ -160,7 +161,7 @@ struct CustomCalendarView: View {
     private func changeMonth(by value: Int) {
         if let newMonth = calendar.date(byAdding: .month, value: value, to: displayedMonth) {
             displayedMonth = newMonth
-            
+            // Ajustar fecha seleccionada al mes nuevo si no coincide
             if !calendar.isDate(selectedDate, equalTo: newMonth, toGranularity: .month) {
                 selectedDate = newMonth
             }
@@ -168,12 +169,3 @@ struct CustomCalendarView: View {
     }
 }
 
-extension Day {
-    // date es la etiqueta externa; date es el nombre local del parámetro
-    func isSameDay(as date: Date) -> Bool {
-        let calendar = Calendar.current
-        return self.day.value == calendar.component(.day, from: date) &&
-               self.month.value == calendar.component(.month, from: date) &&
-               self.year.value == calendar.component(.year, from: date)
-    }
-}

@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 #if os(iOS)
 import UIKit
@@ -9,6 +10,7 @@ typealias PlatformImage = NSImage
 #endif
 
 // UserImageSlot is now a subclass of CategoryIconBase
+@Model
 class UserImageSlot: Icon {
     var image: PlatformImage?
 

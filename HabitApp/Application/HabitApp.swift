@@ -1,23 +1,30 @@
-//
-//  HabitAppApp.swift
-//  HabitApp
-//
-//  Created by Aula03 on 15/10/25.
-//
-
 import SwiftUI
+import SwiftData
 
 @main // Punto de entrada
 
 // HabitApp cumple con el protocolo App.
 struct HabitApp: App {
     @State private var selectedDetailView: String?
-    
+    init() {
+        #if os(iOS)
+        UNUserNotificationCenter.current().requestAuthorization(
+            options: [.alert, .sound, .badge]
+        ) { granted, error in
+            if granted {
+                print("Permiso concedido para notificaciones")
+            } else if let error = error {
+                print("Error solicitando permisos: \(error)")
+            }
+        }
+        
+        #endif
+    }
     var body: some Scene {
         WindowGroup {
 #if os(iOS)
             TabView {
-                // Tab 1: Hábitos
+                // TAB 1: Hábitos
                 NavigationStack {
                     HabitListView(
                         viewModel: HabitListViewModel()
@@ -26,8 +33,21 @@ struct HabitApp: App {
                 .tabItem {
                     Label("Hábitos", systemImage: "checklist")
                 }
-                
-                // Tab 2: Ajustes (placeholder until you add SettingsView)
+
+                // TAB 2: Notas Diarias
+                NavigationStack {
+                    DailyNotesView()
+                }
+                .tabItem {
+                    Label("Notas", systemImage: "note.text")
+                }
+                NavigationStack {
+                    TestReminderView()
+                }
+                .tabItem {
+                    Label("Test Notificaciones", systemImage: "bell")
+                }
+                // TAB 4: Ajustes (placeholder)
                 NavigationStack {
                     Text("Ajustes (próximamente)")
                 }
@@ -51,6 +71,9 @@ struct HabitApp: App {
                     NavigationLink(value: "habitos") {
                         Label("Habitos", systemImage: "checklist")
                     }
+                    NavigationLink(value: "notas") {
+                        Label("Notas Diarias", systemImage: "note.text")
+                    }
                     NavigationLink(value: "ajustes") {
                         Label("Ajustes", systemImage: "gearshape")
                     }
@@ -66,6 +89,10 @@ struct HabitApp: App {
                 // TODO: SettingsView()
                 case "categorias":
                     CategoryListView(viewModel: CategoryListViewModel())
+                case "notas":
+                    DailyNotesView()
+                    // TODO: case "ajustes":
+                    // TODO: SettingsView()
                 default:
                     Text("Seleccione una opción")
                 }
@@ -73,5 +100,6 @@ struct HabitApp: App {
             .environmentObject(AppConfig())
 #endif
         }
+        .modelContainer(for: [DailyNote.self, Habit.self])
     }
 }

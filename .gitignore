@@ -3,6 +3,7 @@
 *.xccheckout
 *.xcscmblueprint
 *.xcbkptlist
+UserIntefaceState.xcuserstate
 
 # User-specific Xcode data
 xcuserdata/

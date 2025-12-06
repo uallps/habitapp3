@@ -1,19 +1,25 @@
 import SwiftUI
+import SwiftData
 
-struct CategorySet: Identifiable, Hashable {
-    let id: UUID
-    var name: String
-    // Almacena una representación hasheable del color (nombre del asset).
+@Model
+class CategorySet: Identifiable, Hashable {
+    
+    @Attribute(.unique) var id: UUID
+    
+    var name: String    // Almacena una representación hasheable del color (nombre del asset).
     var colorAssetName: String
     var icon: UserImageSlot
     var priority: Priority
     var frequency: Frequency
-
+    
+    var frequencyStr: String
+    var priorityStr: String
+    
     // Color calculado a partir del nombre del asset para que SwiftUI pueda seguir usando Color.
     var color: Color {
         Color(colorAssetName)
     }
-
+    
     init(
         id: UUID = UUID(),
         name: String,
