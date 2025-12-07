@@ -43,6 +43,7 @@ jobs:
 
       - name: Boot simulator and launch app
         if: success()
+        timeout-minutes: 2
         run: |
           mkdir -p screenshots
           
@@ -64,33 +65,27 @@ jobs:
           
           # Install and launch
           xcrun simctl install booted "$APP_PATH"
-          
-          # Start recording
-          xcrun simctl io booted recordVideo --codec=h264 screenshots/demo.mp4 &
-          RECORD_PID=$!
-          
           xcrun simctl launch --console booted $APP_BUNDLE_ID
           sleep 3
           
-          # Screenshots
+          # Take screenshots only
+          echo "📸 Taking screenshots..."
           xcrun simctl io booted screenshot screenshots/01-launch.png
           sleep 2
+          
           xcrun simctl ui booted tap 150 850
           sleep 2
           xcrun simctl io booted screenshot screenshots/02-notes.png
+          
           xcrun simctl ui booted tap 250 850
           sleep 2
           xcrun simctl io booted screenshot screenshots/03-goals.png
+          
           xcrun simctl ui booted tap 50 850
           sleep 2
           xcrun simctl io booted screenshot screenshots/04-habits.png
           
-          # Stop recording
-          sleep 2
-          kill $RECORD_PID
-          sleep 2
-          
-          echo "✅ Demo captured"
+          echo "✅ Screenshots captured"
           ls -la screenshots
 
       - name: Code Quality Analysis
@@ -152,7 +147,7 @@ jobs:
           echo "" >> build-report.md
           echo "## Build Status" >> build-report.md
           echo "- ✅ iOS Build: Success" >> build-report.md
-          echo "- ✅ App Demo: 4 screenshots + video" >> build-report.md
+          echo "- ✅ App Demo: 4 screenshots" >> build-report.md
           cat build-report.md
           
       - name: Upload build report
