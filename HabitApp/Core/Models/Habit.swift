@@ -24,8 +24,7 @@ class Habit {
     @Relationship(deleteRule: .cascade, inverse: \DailyNote.habit)
     var notes: [DailyNote] = []
     
-    @Relationship(deleteRule: .cascade, inverse: \Streak.habit)
-    var streaks: [Streak] = []
+
     
     @Relationship(deleteRule: .cascade, inverse: \Goal.habit)
     var goals: [Goal] = []

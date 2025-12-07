@@ -1,7 +1,10 @@
 import Foundation
 import SwiftData
+import Combine
 
-class GoalsViewModel: ObservableObject {
+final class GoalsViewModel: ObservableObject {
+    
+    @Published var goals: [Goal] = []
     
     func getActiveGoals(_ goals: [Goal]) -> [Goal] {
         return goals.filter { !$0.isCompleted }.sorted { $0.targetDate < $1.targetDate }

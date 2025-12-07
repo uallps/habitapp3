@@ -47,14 +47,6 @@ struct HabitApp: App {
                     Label("Notas", systemImage: "note.text")
                 }
                 
-                // TAB 3: Rachas
-                NavigationStack {
-                    StreaksView()
-                }
-                .tabItem {
-                    Label("Rachas", systemImage: "flame")
-                }
-                
                 // TAB 4: Objetivos
                 NavigationStack {
                     GoalsView()
@@ -103,8 +95,6 @@ struct HabitApp: App {
                     HabitListView(viewModel: HabitListViewModel())
                 case "notas":
                     DailyNotesView()
-                case "rachas":
-                    StreaksView()
                 case "objetivos":
                     GoalsView()
                     // TODO: case "ajustes":
@@ -115,6 +105,6 @@ struct HabitApp: App {
             }.environmentObject(AppConfig())
 #endif
         }
-        .modelContainer(for: [DailyNote.self, Habit.self, Streak.self, Goal.self, Milestone.self])
+        .modelContainer(for: [DailyNote.self, Habit.self, Goal.self, Milestone.self])
     }
 }
