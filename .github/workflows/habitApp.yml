@@ -52,7 +52,7 @@ jobs:
           xcrun simctl bootstatus "$DEVICE_NAME" -b
           
           # Find app
-          APP_BUNDLE_ID="com.ual.HabitApp"
+          APP_BUNDLE_ID="ual.HabitApp"
           APP_PATH=$(find ./DerivedData -name "HabitApp.app" -type d | head -n 1)
           
           if [ -z "$APP_PATH" ]; then
