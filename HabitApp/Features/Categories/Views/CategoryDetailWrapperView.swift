@@ -16,15 +16,19 @@ struct CategoryDetailWrapperView: View {
 
         guard selectedColor != nil else { return false }
         
+        switch selectionMode {
+        case .emoji:
+            guard !selectedIconOne.isEmpty || !selectedIconTwo.isEmpty || !selectedIconThree.isEmpty else { return false }
+        case .image:
+            if userImageVM.image == nil {
+                return false
+            }
+        }
+
         guard selectedPriority != nil else { return false }
         guard selectedFrequency != nil else { return false }
         
-        switch selectionMode {
-        case .emoji:
-            return !selectedIconOne.isEmpty || !selectedIconTwo.isEmpty || !selectedIconThree.isEmpty
-        case .image:
-            return !userImageVM.pickedImages.isEmpty
-        }
+        return true
     }
     // MARK: - Category State
     @State private var name: String = ""
@@ -108,7 +112,9 @@ struct CategoryDetailWrapperView: View {
                         }
                     case .image:
                         // MARK: - Image Picker (if needed)
-                        UserImagesPickerView()
+                        UserImagesPickerView(
+                            viewModel: userImageVM
+                        )
                     }
 
                     // MARK: - Priority Picker

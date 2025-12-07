@@ -2,7 +2,7 @@ import SwiftUI
 import PhotosUI
 
 struct UserImagesPickerView: View {
-    @StateObject var viewModel = UserImagesViewModel()
+    @StateObject var viewModel: UserImagesViewModel
 
     #if os(iOS)
     @State private var pickedItem: PhotosPickerItem? = nil
@@ -35,7 +35,7 @@ struct UserImagesPickerView: View {
         .padding()
         #elseif os(macOS)
         Form {
-            Section(header: Text("Image")) {
+            Section(header: Text("Imagen")) {
                 Button {
                     let panel = NSOpenPanel()
                     panel.allowedFileTypes = ["png", "jpg", "jpeg"]
