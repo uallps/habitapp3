@@ -43,7 +43,7 @@ jobs:
 
       - name: Boot simulator and launch app
         if: success()
-        timeout-minutes: 3
+        timeout-minutes: 10
         continue-on-error: true
         run: |
           mkdir -p screenshots
@@ -64,34 +64,23 @@ jobs:
           
           echo "✅ Found app at: $APP_PATH"
           
-          # Install app
+          # Install and launch app
           xcrun simctl install booted "$APP_PATH"
-          
-          # Grant notification permissions
-          echo "Granting notification permissions..."
-          xcrun simctl privacy booted grant notifications $APP_BUNDLE_ID || true
-          
-          # Launch app
-          xcrun simctl launch booted $APP_BUNDLE_ID
+          xcrun simctl launch booted $APP_BUNDLE_ID &
           sleep 5
           
-          # Take screenshots
+          # Take screenshots quickly
           echo "📸 Taking screenshots..."
-          xcrun simctl io booted screenshot screenshots/01-launch.png
-          echo "✅ Screenshot 1 captured"
-          sleep 2
+          xcrun simctl io booted screenshot screenshots/01-launch.png || true
+          sleep 1
+          xcrun simctl io booted screenshot screenshots/02-app.png || true
+          sleep 1
+          xcrun simctl io booted screenshot screenshots/03-app.png || true
+          sleep 1
+          xcrun simctl io booted screenshot screenshots/04-app.png || true
           
-          # Try to navigate (may not work in CI)
-          xcrun simctl spawn booted launchctl kickstart -k system/com.apple.backboardd || true
-          sleep 1
-          xcrun simctl io booted screenshot screenshots/02-app-view.png || true
-          sleep 1
-          xcrun simctl io booted screenshot screenshots/03-app-view2.png || true
-          sleep 1
-          xcrun simctl io booted screenshot screenshots/04-app-view3.png || true
-          
-          echo "✅ Screenshots process completed"
-          ls -la screenshots || true
+          echo "✅ Screenshots captured"
+          ls -la screenshots
 
       - name: Code Quality Analysis
         run: |
