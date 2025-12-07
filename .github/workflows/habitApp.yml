@@ -66,8 +66,8 @@ jobs:
           
           # Install and launch
           xcrun simctl install booted "$APP_PATH"
-          xcrun simctl launch --console booted $APP_BUNDLE_ID
-          sleep 3
+          xcrun simctl launch booted $APP_BUNDLE_ID
+          sleep 5
           
           # Take screenshots only
           echo "📸 Taking screenshots..."
