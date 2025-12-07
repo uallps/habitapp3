@@ -5,14 +5,22 @@ struct CategoryDetailWrapperView: View {
     @ObservedObject var viewModel: CategoryListViewModel
     @State var categorySet: CategorySet
     
+    @State private var activeSheet: ActiveSheet?
+
     // MARK: - Category State
     @State private var name: String = ""
     @State private var selectedIconOne: String = ""
     @State private var selectedIconTwo: String = ""
     @State private var selectedIconThree: String = ""
-
+    
+    let allColors: [Color] = [
+        .red, .orange, .yellow, .green, .mint, .teal,
+        .cyan, .blue, .indigo, .purple, .pink, .brown,
+        .gray
+    ]
     @State private var selectedPriority: Priority = .medium
     @State private var selectedFrequency: Frequency = .weekly
+    @State private var selectedColor: Color = .red
     
     enum SelectionMode: String, CaseIterable, Identifiable {
 
@@ -26,12 +34,6 @@ struct CategoryDetailWrapperView: View {
     
     @State private var selectionMode: SelectionMode = .emoji
 
-    // MARK: - Emoji Picker Sheet
-    struct ActiveEmoji: Identifiable {
-        let id: Int
-    }
-    @State private var activeEmoji: ActiveEmoji? = nil
-
     // Emoji loader if needed
     @StateObject private var loader = EmojiLoader()
     
@@ -43,6 +45,22 @@ struct CategoryDetailWrapperView: View {
                         TextField("Nombre de la categoría", text: $name)
                     }
                     
+                    Section("Color") {
+                        Button {
+                            activeSheet = .colorPicker
+                        }label: {
+                            HStack {
+                                Circle()
+                                    .fill(selectedColor)
+                                    .frame(width: 36, height: 36)
+                                    .overlay(
+                                        Circle().stroke(Color.black, lineWidth: 1)
+                                    )
+                                
+                                Text("Color seleccionado")
+                            }
+                        }
+                    }
 
                         Section("Tipo de icono") {
 
@@ -109,22 +127,44 @@ struct CategoryDetailWrapperView: View {
                     }
                 }
                 .navigationTitle("Nueva categoría")
-            }
-            // MARK: - Emoji Sheet (single sheet for all buttons)
-            .sheet(item: $activeEmoji) { wrapper in
-                switch wrapper.id {
-                case 1: EmojiSearchView(selectedIcon: $selectedIconOne)
-                case 2: EmojiSearchView(selectedIcon: $selectedIconTwo)
-                default: EmojiSearchView(selectedIcon: $selectedIconThree)
+            }        .sheet(item: $activeSheet) { item in
+    switch item {
+    case .colorPicker:
+        ScrollView {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 48))], spacing: 12) {
+                ForEach(allColors, id: \.self) { color in
+                    Circle()
+                        .fill(color)
+                        .frame(width: 36, height: 36)
+                        .overlay(Circle().stroke(Color.black, lineWidth: 1))
+                        .onTapGesture {
+                            selectedColor = color
+                            activeSheet = nil
+                        }
                 }
             }
+            .padding(.horizontal)
+            .padding(.top, 24)
         }
+
+    case .emoji(let id):
+        switch id {
+        case 1: EmojiSearchView(selectedIcon: $selectedIconOne)
+        case 2: EmojiSearchView(selectedIcon: $selectedIconTwo)
+        case 3: EmojiSearchView(selectedIcon: $selectedIconThree)
+        default: EmojiSearchView(selectedIcon: $selectedIconThree)
+        }
+    }
+}
+
+        }
+
 
         // MARK: - Helper: Emoji Button
         @ViewBuilder
         private func emojiButton(title: String, emoji: String, id: Int) -> some View {
             Button {
-                activeEmoji = ActiveEmoji(id: id)
+                activeSheet = .emoji(id)
             } label: {
                 HStack {
                     Text(title)
@@ -136,4 +176,16 @@ struct CategoryDetailWrapperView: View {
             }
             .buttonStyle(.plain)
         }
+}
+
+enum ActiveSheet: Identifiable {
+    case colorPicker
+    case emoji(Int)
+
+    var id: String {
+        switch self {
+        case .colorPicker: return "colorPicker"
+        case .emoji(let id): return "emoji\(id)"
+        }
+    }
 }
