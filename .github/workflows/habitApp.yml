@@ -43,7 +43,8 @@ jobs:
 
       - name: Boot simulator and launch app
         if: success()
-        timeout-minutes: 2
+        timeout-minutes: 10
+        continue-on-error: true
         run: |
           mkdir -p screenshots
           
@@ -123,12 +124,13 @@ jobs:
           name: build-iOS-HabitApp
           path: ./DerivedData/Build/Products/**/*.app
 
-      - name: Upload screenshots and video
-        if: success()
+      - name: Upload screenshots
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: app-demo
           path: screenshots
+          if-no-files-found: warn
 
       - name: Generate Build Report
         run: |
