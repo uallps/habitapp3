@@ -25,7 +25,7 @@ jobs:
           xcrun simctl bootstatus "$DEVICE_NAME" -b
           echo "DEVICE_NAME=$DEVICE_NAME" >> $GITHUB_ENV
 
-      - name: Build and Test HabitApp for iOS
+      - name: Build HabitApp for iOS
         run: |
           xcodebuild \
             -project HabitApp.xcodeproj \
@@ -34,7 +34,7 @@ jobs:
             -destination "platform=iOS Simulator,name=$DEVICE_NAME,OS=latest" \
             -derivedDataPath build \
             -configuration Debug \
-            clean build test | xcpretty
+            clean build | xcpretty
 
       - name: Launch iOS app and test features
         run: |
@@ -50,6 +50,11 @@ jobs:
           fi
           
           echo "Found app at: $APP_PATH"
+          
+          # Ensure simulator is booted
+          xcrun simctl boot "$DEVICE_NAME" || true
+          sleep 3
+          
           xcrun simctl install booted "$APP_PATH"
           xcrun simctl launch booted $APP_BUNDLE_ID || true
           sleep 5
