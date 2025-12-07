@@ -25,4 +25,9 @@ final class GoalsViewModel: ObservableObject {
             }
         }
     }
+    
+    func deleteGoal(_ goal: Goal, context: ModelContext) {
+        context.delete(goal)
+        try? context.save()
+    }
 }

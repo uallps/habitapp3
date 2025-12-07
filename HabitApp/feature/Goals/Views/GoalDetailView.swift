@@ -4,6 +4,7 @@ import SwiftData
 struct GoalDetailView: View {
     @Bindable var goal: Goal
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel = GoalsViewModel()
     
     var body: some View {
@@ -136,6 +137,16 @@ struct GoalDetailView: View {
         }
         .navigationTitle(goal.title)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(role: .destructive) {
+                    viewModel.deleteGoal(goal, context: modelContext)
+                    dismiss()
+                } label: {
+                    Image(systemName: "trash")
+                }
+            }
+        }
     }
 }
 
