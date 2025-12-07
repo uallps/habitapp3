@@ -27,7 +27,6 @@ jobs:
 
       - name: Build and Test HabitApp for iOS
         run: |
-          cd HabitApp
           xcodebuild \
             -project HabitApp.xcodeproj \
             -scheme HabitApp \
@@ -37,21 +36,8 @@ jobs:
             -configuration Debug \
             clean build test | xcpretty
 
-      - name: Build for macOS
-        run: |
-          cd HabitApp
-          xcodebuild \
-            -project HabitApp.xcodeproj \
-            -scheme HabitApp \
-            -sdk macosx \
-            -destination "platform=macOS" \
-            -derivedDataPath build-macos \
-            -configuration Debug \
-            clean build | xcpretty
-
       - name: Launch iOS app and test features
         run: |
-          cd HabitApp
           mkdir -p screenshots
           APP_BUNDLE_ID="com.ual.HabitApp"
           APP_PATH=$(find build -name "HabitApp.app" -path "*/Debug-iphonesimulator/*" | head -n 1)
@@ -78,7 +64,6 @@ jobs:
 
       - name: Run UI Tests and Automation
         run: |
-          cd HabitApp
           APP_BUNDLE_ID="com.ual.HabitApp"
           
           # Test 1: Capture initial state
@@ -108,8 +93,8 @@ jobs:
 
       - name: Code Quality Analysis
         run: |
-          cd HabitApp
           echo "📊 Analyzing code quality..."
+          cd HabitApp
           
           # Count Swift files
           SWIFT_FILES=$(find . -name "*.swift" | wc -l)
@@ -136,26 +121,17 @@ jobs:
 
       - name: Verify build artifacts
         run: |
-          cd HabitApp
           echo "iOS Build artifacts:"
           find build -name "*.app" -type d || echo "No iOS artifacts found"
-          echo "macOS Build artifacts:"
-          find build-macos -name "*.app" -type d || echo "No macOS artifacts found"
           
           # Check app size
           if [ -d "build" ]; then
             APP_SIZE=$(du -sh build | cut -f1)
             echo "iOS Build size: $APP_SIZE"
           fi
-          
-          if [ -d "build-macos" ]; then
-            MACOS_SIZE=$(du -sh build-macos | cut -f1)
-            echo "macOS Build size: $MACOS_SIZE"
-          fi
 
       - name: Generate Test Report
         run: |
-          cd HabitApp
           echo "# HabitApp Test Report" > test-report.md
           echo "" >> test-report.md
           echo "## Build Information" >> test-report.md
@@ -176,19 +152,17 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: iOS-screenshots
-          path: HabitApp/screenshots
+          path: screenshots
           
       - name: Upload test report
         uses: actions/upload-artifact@v4
         with:
           name: test-report
-          path: HabitApp/test-report.md
+          path: test-report.md
 
       - name: Upload build logs
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: build-logs
-          path: |
-            HabitApp/build/Logs
-            HabitApp/build-macos/Logs
+          path: build/Logs
