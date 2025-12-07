@@ -4,9 +4,28 @@ struct CategoryDetailWrapperView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var viewModel: CategoryListViewModel
     @State var categorySet: CategorySet
+    @ObservedObject var userImageVM: UserImagesViewModel
+    
+    @State private var showAlert = false
+    @State private var alertMessage = ""
     
     @State private var activeSheet: ActiveSheet?
+    
+    private var isCategoryValid: Bool {
+        guard !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return false }
 
+        guard selectedColor != nil else { return false }
+        
+        guard selectedPriority != nil else { return false }
+        guard selectedFrequency != nil else { return false }
+        
+        switch selectionMode {
+        case .emoji:
+            return !selectedIconOne.isEmpty || !selectedIconTwo.isEmpty || !selectedIconThree.isEmpty
+        case .image:
+            return !userImageVM.pickedImages.isEmpty
+        }
+    }
     // MARK: - Category State
     @State private var name: String = ""
     @State private var selectedIconOne: String = ""
@@ -18,9 +37,9 @@ struct CategoryDetailWrapperView: View {
         .cyan, .blue, .indigo, .purple, .pink, .brown,
         .gray
     ]
-    @State private var selectedPriority: Priority = .medium
-    @State private var selectedFrequency: Frequency = .weekly
-    @State private var selectedColor: Color = .red
+    @State private var selectedPriority: Priority? = nil
+    @State private var selectedFrequency: Frequency? = nil
+    @State private var selectedColor: Color? = nil
     
     enum SelectionMode: String, CaseIterable, Identifiable {
 
@@ -50,14 +69,16 @@ struct CategoryDetailWrapperView: View {
                             activeSheet = .colorPicker
                         }label: {
                             HStack {
-                                Circle()
-                                    .fill(selectedColor)
-                                    .frame(width: 36, height: 36)
-                                    .overlay(
-                                        Circle().stroke(Color.black, lineWidth: 1)
-                                    )
-                                
-                                Text("Color seleccionado")
+                                if selectedColor != nil {
+                                    Circle()
+                                        .fill(selectedColor ?? .red)
+                                        .frame(width: 36, height: 36)
+                                        .overlay(
+                                            Circle().stroke(Color.black, lineWidth: 1)
+                                        )
+                                }
+
+                                Text(selectedColor != nil ? "Color seleccionado" : "Selecciona color")
                             }
                         }
                     }
@@ -93,20 +114,22 @@ struct CategoryDetailWrapperView: View {
                     // MARK: - Priority Picker
                     Section(header: Text("Prioridad")) {
                         Picker("Prioridad", selection: $selectedPriority) {
-                            Text("\(Priority.high.emoji) Alta").tag(Priority.high)
-                            Text("\(Priority.medium.emoji) Media").tag(Priority.medium)
-                            Text("\(Priority.low.emoji) Baja").tag(Priority.low)
+                            Text("Selecciona prioridad").tag(Priority?.none)
+                            Text("\(Priority.high.emoji) Alta").tag(Priority?.some(.high))
+                            Text("\(Priority.medium.emoji) Media").tag(Priority?.some(.medium))
+                            Text("\(Priority.low.emoji) Baja").tag(Priority?.some(.low))
                         }
-                        .pickerStyle(.segmented)
+                        .pickerStyle(.menu)
                     }
 
                     // MARK: - Frequency Picker
                     Section(header: Text("Frecuencia")) {
                         Picker("Frecuencia", selection: $selectedFrequency) {
-                            Text("Diaria \(Frequency.daily.emoji)").tag(Frequency.daily)
-                            Text("Semanal \(Frequency.weekly.emoji)").tag(Frequency.weekly)
-                            Text("Mensual \(Frequency.monthly.emoji)").tag(Frequency.monthly)
-                            Text("Anual \(Frequency.annual.emoji)").tag(Frequency.annual)
+                            Text("Selecciona frecuencia").tag(Frequency?.none)
+                            Text("Diaria \(Frequency.daily.emoji)").tag(Frequency?.some(.daily))
+                            Text("Semanal \(Frequency.weekly.emoji)").tag(Frequency?.some(.weekly))
+                            Text("Mensual \(Frequency.monthly.emoji)").tag(Frequency?.some(.monthly))
+                            Text("Anual \(Frequency.annual.emoji)").tag(Frequency?.some(.annual))
                         }
                         .pickerStyle(.menu)
                     }
@@ -114,16 +137,37 @@ struct CategoryDetailWrapperView: View {
                     // MARK: - Save Button
                     Section {
                         Button {
-                            categorySet.name = name
-                            categorySet.priority = selectedPriority
-                            categorySet.frequency = selectedFrequency
-                            viewModel.addCategory(category: categorySet)
-                            dismiss()
+                            
+                            if isCategoryValid {
+                                categorySet.name = name
+                                categorySet.priority = Priority.medium
+                                categorySet.frequency = Frequency.daily
+                                viewModel.addCategory(category: categorySet)
+                                dismiss()
+                            }else {
+                                if name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                                    alertMessage = "¡Falta nombre!"
+                                } else if selectedColor == nil {
+                                    alertMessage = "¡Falta color!"
+                                } else if selectionMode == .emoji && selectedIconOne.isEmpty && selectedIconTwo.isEmpty && selectedIconThree.isEmpty {
+                                    alertMessage = "¡Hace falta al menos un emoji!"
+                                } else if selectionMode == .image {
+                                    alertMessage = "¡Hace falta una imagen!"
+                                } else if selectedPriority == nil {
+                                    alertMessage = "¡Falta prioridad!"
+                                } else if selectedFrequency == nil {
+                                    alertMessage = "¡Falta frecuencia!"
+                                }
+                                showAlert = true
+                            }
+
                         } label: {
                             Label("Guardar categoría", systemImage: "checkmark.circle.fill")
                                 .font(.headline)
                         }
-                        .disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                        .alert(alertMessage, isPresented: $showAlert) {
+                            Button("OK", role: .cancel) { }
+                        }
                     }
                 }
                 .navigationTitle("Nueva categoría")

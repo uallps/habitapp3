@@ -27,8 +27,9 @@ struct CategoryListView: View {
                                 colorAssetName: "AccentColor",
                                 icon: UserImageSlot(image: nil),
                                 priority: .low,
-                                frequency: .daily
-                            )
+                                frequency: .daily,
+                            ),
+                            userImageVM: UserImagesViewModel()
                         )
                     } label: {
                         Label("Añadir", systemImage: "plus")

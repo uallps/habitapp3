@@ -177,6 +177,9 @@
     "Nuevo hábito" : {
 
     },
+    "OK" : {
+
+    },
     "Prioridad" : {
 
     },
@@ -237,7 +240,16 @@
     "Prueba de ReminderPlugin" : {
 
     },
+    "Selecciona color" : {
+
+    },
+    "Selecciona frecuencia" : {
+
+    },
     "Selecciona los días de la semana" : {
+
+    },
+    "Selecciona prioridad" : {
 
     },
     "Selecciona tipo" : {
