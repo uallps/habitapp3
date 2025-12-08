@@ -2,7 +2,7 @@ import SwiftUI
 import PhotosUI
 
 struct UserImagesPickerView: View {
-    @StateObject var viewModel: UserImagesViewModel
+    @StateObject var userImagesVM: UserImagesViewModel
 
     #if os(iOS)
     @State private var pickedItem: PhotosPickerItem? = nil
@@ -27,10 +27,10 @@ struct UserImagesPickerView: View {
             }
             .onChange(of: pickedItem) { newItem in
                 guard let item = newItem else { return }
-                Task { await viewModel.loadImage(from: item) }
+                Task { await userImagesVM.loadImage(from: item) }
             }
 
-            Spacer() // fill vertical space
+            Spacer()
         }
         .padding()
         #elseif os(macOS)
@@ -42,8 +42,8 @@ struct UserImagesPickerView: View {
                     panel.allowsMultipleSelection = false
                     if panel.runModal() == .OK, let url = panel.url,
                        let nsImage = NSImage(contentsOf: url) {
-                        viewModel.assign(image: nsImage)
-                        viewModel.pickedImages.append(nsImage)
+                        userImagesVM.assign(image: nsImage)
+                        userImagesVM.pickedImages.append(nsImage)
                     }
                 } label: {
                     imageButton
@@ -55,7 +55,7 @@ struct UserImagesPickerView: View {
 
     @ViewBuilder
     var imageButton: some View {
-        if let image = viewModel.image {
+        if let image = userImagesVM.image {
             #if os(iOS)
             Image(uiImage: image)
                 .resizable()
