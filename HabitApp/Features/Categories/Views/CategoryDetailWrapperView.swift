@@ -126,7 +126,16 @@ struct CategoryDetailWrapperView: View {
                                 categorySet.name = name
                                 categorySet.priority = Priority.medium
                                 categorySet.frequency = Frequency.daily
-                                categoryListVM.addCategory(category: categorySet)
+                                categoryListVM.addCategory(
+                                    name: name,
+                                    colorAssetName: selectedColor != nil ? "CustomColor" : "AccentColor",
+                                    icon: selectionMode == .image ? userImageVM.pickedImages.first.map { UserImageSlot(image: $0) } ?? UserImageSlot(image: nil) : UserImageSlot(image: nil),
+                                    priority: selectedPriority!,
+                                    frequency: selectedFrequency!,
+                                    selectedEmojiOne: selectedIconOne,
+                                    selectedEmojiTwo: selectedIconTwo,
+                                    selectedEmojiThree: selectedIconThree
+                                )
                                 dismiss()
                             }else {
                                 if name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
