@@ -13,7 +13,8 @@ class UserImagesViewModel: ObservableObject {
     
     func loadImage(from item: PhotosPickerItem) async {
         #if os(iOS)
-        if let uiImage = try? await item.loadTransferable(type: UIImage.self) {
+        if let data = try? await item.loadTransferable(type: Data.self),
+           let uiImage = UIImage(data: data) {
             pickedImages.append(uiImage)
             assign(image: uiImage)
         }
