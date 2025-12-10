@@ -10,7 +10,7 @@ struct PluginRegistry {
     
     var dataObservers: [TaskDataObservingPlugin] = [
         ReminderPlugin()
-        // Aquí puedes agregar más plugins de datos
+        
     ]
 
 }

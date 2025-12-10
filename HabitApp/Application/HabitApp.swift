@@ -70,6 +70,8 @@ struct HabitApp: App {
                 }
             }
             .environmentObject(AppConfig())
+            .setupApp()    
+
 #else
             NavigationSplitView {
                 List(selection: $selectedDetailView) {

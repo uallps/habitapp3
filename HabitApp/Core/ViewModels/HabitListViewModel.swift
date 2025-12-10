@@ -37,6 +37,13 @@ final class HabitListViewModel: ObservableObject {
         } else {
             habit.markAsCompleted(for: date)
         }
+        
+        // Notificar al sistema de plugins
+        TaskDataObserverManager.shared.notify(
+            taskId: habit.id,
+            title: habit.title,
+            date: habit.dueDate
+        )
     }
     
     func deleteHabit(_ habit: Habit, context: ModelContext) {

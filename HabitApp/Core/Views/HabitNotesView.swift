@@ -46,6 +46,7 @@ struct HabitNotesView: View {
             }
             .listStyle(.insetGrouped)
             .navigationTitle("Notas - \(habit.title)")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button { showingAddNote = true } label: {

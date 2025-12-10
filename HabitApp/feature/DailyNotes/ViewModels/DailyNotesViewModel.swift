@@ -63,7 +63,6 @@ final class DailyNotesViewModel: ObservableObject {
 
     
     func updateNote(_ note: DailyNote, title: String, content: String) {
-        guard let modelContext else { return }  // <--- evitar crash
 
         note.updateContent(title: title, content: content)
         saveContext()
@@ -71,7 +70,6 @@ final class DailyNotesViewModel: ObservableObject {
     }
     
     func saveAndGoToNoteDate(_ note: DailyNote, title: String, content: String) {
-        guard let modelContext else { return }  // <--- evitar crash
 
         note.updateContent(title: title, content: content)
         selectedDate = Calendar.current.startOfDay(for: note.date) // Ajusta la fecha al día de la nota
