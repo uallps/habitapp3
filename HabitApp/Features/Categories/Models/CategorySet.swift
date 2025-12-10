@@ -9,7 +9,6 @@ class CategorySet: Identifiable, Hashable {
     var name: String    // Almacena una representación hasheable del color (nombre del asset).
     var colorAssetName: String
     var icon: UserImageSlot
-    var emojis: [String] = []
     var priority: Priority
     var frequency: Frequency
     

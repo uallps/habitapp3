@@ -2,17 +2,15 @@ import SwiftUI
 
 struct CategoryDetailWrapperView: View {
     @Environment(\.dismiss) private var dismiss
-
-    @ObservedObject var categoryListVM: CategoryListViewModel
-    @ObservedObject var categoryDetailWrapperViewVM = CategoryDetailWrapperView()
+    @ObservedObject var viewModel: CategoryListViewModel
+    @State var categorySet: CategorySet
     @ObservedObject var userImageVM: UserImagesViewModel
     
     @State private var showAlert = false
     @State private var alertMessage = ""
-    @State private var activeSheet: ActiveSheet?
-    @State private var selectionMode: SelectionMode = .emoji
     
-    // Lógica para prevenir guardar la categoría si falta información
+    @State private var activeSheet: ActiveSheet?
+    
     private var isCategoryValid: Bool {
         guard !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return false }
 
@@ -32,22 +30,40 @@ struct CategoryDetailWrapperView: View {
         
         return true
     }
-
-    // Estado de la categoría que se está creando o editando
+    // MARK: - Category State
     @State private var name: String = ""
     @State private var selectedIconOne: String = ""
     @State private var selectedIconTwo: String = ""
     @State private var selectedIconThree: String = ""
     
+    let allColors: [Color] = [
+        .red, .orange, .yellow, .green, .mint, .teal,
+        .cyan, .blue, .indigo, .purple, .pink, .brown,
+        .gray
+    ]
     @State private var selectedPriority: Priority? = nil
     @State private var selectedFrequency: Frequency? = nil
     @State private var selectedColor: Color? = nil
     
+    enum SelectionMode: String, CaseIterable, Identifiable {
+
+          case emoji = "Emoji"
+
+          case image = "Imagen"
+
+          var id: String { rawValue }
+
+      }
     
+    @State private var selectionMode: SelectionMode = .emoji
+
+    // Emoji loader if needed
+    @StateObject private var loader = EmojiLoader()
     
     var body: some View {
             NavigationStack {
                 Form {
+                    // MARK: - Name
                     Section(header: Text("Nombre")) {
                         TextField("Nombre de la categoría", text: $name)
                     }
@@ -72,6 +88,7 @@ struct CategoryDetailWrapperView: View {
                     }
 
                         Section("Tipo de icono") {
+
                             Picker("Selecciona tipo", selection: $selectionMode) {
                                 ForEach(SelectionMode.allCases) { mode in
                                     Text(mode.rawValue).tag(mode as SelectionMode)
@@ -85,6 +102,7 @@ struct CategoryDetailWrapperView: View {
                     
                     switch selectionMode {
                     case .emoji:
+                        // MARK: - Emoji Buttons
                         Section(header: Text("Emojis")) {
                             VStack(spacing: 12) {
                                 emojiButton(title: "Emoji 1", emoji: selectedIconOne, id: 1)
@@ -93,11 +111,13 @@ struct CategoryDetailWrapperView: View {
                             }
                         }
                     case .image:
+                        // MARK: - Image Picker (if needed)
                         UserImagesPickerView(
-                            categoryListVM: userImageVM
+                            viewModel: userImageVM
                         )
                     }
 
+                    // MARK: - Priority Picker
                     Section(header: Text("Prioridad")) {
                         Picker("Prioridad", selection: $selectedPriority) {
                             Text("Selecciona prioridad").tag(Priority?.none)
@@ -108,6 +128,7 @@ struct CategoryDetailWrapperView: View {
                         .pickerStyle(.menu)
                     }
 
+                    // MARK: - Frequency Picker
                     Section(header: Text("Frecuencia")) {
                         Picker("Frecuencia", selection: $selectedFrequency) {
                             Text("Selecciona frecuencia").tag(Frequency?.none)
@@ -119,6 +140,7 @@ struct CategoryDetailWrapperView: View {
                         .pickerStyle(.menu)
                     }
 
+                    // MARK: - Save Button
                     Section {
                         Button {
                             
@@ -126,16 +148,7 @@ struct CategoryDetailWrapperView: View {
                                 categorySet.name = name
                                 categorySet.priority = Priority.medium
                                 categorySet.frequency = Frequency.daily
-                                categoryListVM.addCategory(
-                                    name: name,
-                                    colorAssetName: selectedColor != nil ? "CustomColor" : "AccentColor",
-                                    icon: selectionMode == .image ? userImageVM.pickedImages.first.map { UserImageSlot(image: $0) } ?? UserImageSlot(image: nil) : UserImageSlot(image: nil),
-                                    priority: selectedPriority!,
-                                    frequency: selectedFrequency!,
-                                    selectedEmojiOne: selectedIconOne,
-                                    selectedEmojiTwo: selectedIconTwo,
-                                    selectedEmojiThree: selectedIconThree
-                                )
+                                viewModel.addCategory(category: categorySet)
                                 dismiss()
                             }else {
                                 if name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -197,6 +210,7 @@ struct CategoryDetailWrapperView: View {
         }
 
 
+        // MARK: - Helper: Emoji Button
         @ViewBuilder
         private func emojiButton(title: String, emoji: String, id: Int) -> some View {
             Button {
@@ -214,4 +228,14 @@ struct CategoryDetailWrapperView: View {
         }
 }
 
+enum ActiveSheet: Identifiable {
+    case colorPicker
+    case emoji(Int)
 
+    var id: String {
+        switch self {
+        case .colorPicker: return "colorPicker"
+        case .emoji(let id): return "emoji\(id)"
+        }
+    }
+}

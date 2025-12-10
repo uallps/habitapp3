@@ -2,25 +2,26 @@ import SwiftUI
 
 struct EmojiSearchView: View {
     @Binding var selectedIcon: String
-    @ObservedObject var emojiSearchVM = EmojiSearchViewModel()
+    @StateObject private var loader = EmojiLoader()
+    @StateObject private var model = EmojiSearchModel()
 
     // environment to dismiss the sheet
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         VStack {
-            if emojiSearchVM.loader.emojis.isEmpty {
+            if loader.emojis.isEmpty {
                 ProgressView("Cargando emojis...")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
                 // make sure model has the latest emojis when loader finishes
-                TextField("Buscar emoji...", text: $emojiSearchVM.model.searchText)
+                TextField("Buscar emoji...", text: $model.searchText)
                     .textFieldStyle(.roundedBorder)
                     .padding()
 
                 ScrollView {
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 48))], spacing: 12) {
-                        ForEach(emojiSearchVM.model.filteredEmojis, id: \.self) { emoji in
+                        ForEach(model.filteredEmojis, id: \.self) { emoji in
                             Text(emoji.emoji)
                                 .font(.system(size: 34))
                                 .frame(width: 56, height: 56)
@@ -37,10 +38,10 @@ struct EmojiSearchView: View {
         }
         .onAppear {
             // ensure model receives the loaded emoji list
-            emojiSearchVM.model.allEmojis = loader.emojis
+            model.allEmojis = loader.emojis
         }
         .onReceive(loader.$emojis) { emojis in
-            emojiSearchVM.model.allEmojis = emojis
+            model.allEmojis = emojis
         }
         .frame(minWidth: 300, minHeight: 400)
     }
