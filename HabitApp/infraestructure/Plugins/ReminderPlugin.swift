@@ -19,10 +19,11 @@ struct ReminderPlugin: TaskDataObservingPlugin {
         let timeInterval = dueDate.timeIntervalSinceNow
         print("🔔 ReminderPlugin: Programando alerta para '\(title)' en \(timeInterval)s")
         
-        if timeInterval > 0 {
+        // Solo programar si es en el futuro (más de 5 segundos)
+        if timeInterval > 5 {
             scheduleAlert(title: title, delay: timeInterval)
         } else {
-            showImmediateAlert(title: title)
+            print("🔔 ReminderPlugin: Fecha muy cercana o pasada, no se programa alerta")
         }
     }
     
@@ -39,18 +40,25 @@ struct ReminderPlugin: TaskDataObservingPlugin {
     }
     
     private func showAlert(title: String, message: String) {
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-              let window = windowScene.windows.first else {
-            print("🔔 No se pudo obtener la ventana")
-            return
-        }
-        
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        
-        if let topController = window.rootViewController?.topMostViewController() {
-            topController.present(alert, animated: true)
-            print("🔔 Alerta mostrada: \(message)")
+        DispatchQueue.main.async {
+            guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                  let window = windowScene.windows.first(where: { $0.isKeyWindow }) else {
+                print("🔔 No se pudo obtener la ventana principal")
+                return
+            }
+            
+            guard let topController = window.rootViewController?.topMostViewController(),
+                  topController.presentedViewController == nil else {
+                print("🔔 No se puede mostrar alerta, hay otra vista presente")
+                return
+            }
+            
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            
+            topController.present(alert, animated: true) {
+                print("🔔 Alerta mostrada: \(message)")
+            }
         }
     }
 }

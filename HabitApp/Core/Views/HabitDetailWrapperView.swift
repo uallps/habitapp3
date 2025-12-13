@@ -68,9 +68,17 @@ struct HabitDetailWrapper: View {
     // MARK: - Funciones
     private func saveHabit() {
         if isNew {
-            modelContext.insert(habit)
+            viewModel.addHabit(
+                title: habit.title,
+                dueDate: habit.dueDate,
+                priority: habit.priority,
+                reminderDate: habit.reminderDate,
+                scheduledDays: habit.scheduledDays,
+                context: modelContext
+            )
+        } else {
+            try? modelContext.save()
         }
-        try? modelContext.save()
         dismiss()
     }
     

@@ -43,12 +43,8 @@ final class DailyNotesViewModel: ObservableObject {
           saveContext()
           loadNotes()
           
-          // 🔔 Notificar plugins
-          TaskDataObserverManager.shared.notify(
-              taskId: note.id,
-              title: note.title,
-              date: note.date
-          )
+          // Las notas diarias no necesitan alertas automáticas
+          // Solo los hábitos con recordatorio las necesitan
       }
       
       private func saveContext() {
