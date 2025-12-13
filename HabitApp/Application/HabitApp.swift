@@ -39,11 +39,20 @@ struct HabitApp: App {
                 .tabItem {
                     Label("Notas", systemImage: "note.text")
                 }
+                
+                // TAB 4: Objetivos
+                NavigationStack {
+                    GoalsView()
+                }
+                .tabItem {
+                    Label("Objetivos", systemImage: "target")
+                }
+                
                 NavigationStack {
                     TestReminderView()
                 }
                 .tabItem {
-                    Label("Test Notificaciones", systemImage: "bell")
+                    Label("Test", systemImage: "bell")
                 }
                 // TAB 4: Ajustes (placeholder)
                 NavigationStack {
@@ -54,6 +63,8 @@ struct HabitApp: App {
                 }
             }
             .environmentObject(AppConfig())
+            .setupApp()    
+
 #else
             NavigationSplitView {
                 List(selection: $selectedDetailView) {
@@ -62,6 +73,12 @@ struct HabitApp: App {
                     }
                     NavigationLink(value: "notas") {
                         Label("Notas Diarias", systemImage: "note.text")
+                    }
+                    NavigationLink(value: "rachas") {
+                        Label("Rachas", systemImage: "flame")
+                    }
+                    NavigationLink(value: "objetivos") {
+                        Label("Objetivos", systemImage: "target")
                     }
                     NavigationLink(value: "ajustes") {
                         Label("Ajustes", systemImage: "gearshape")
@@ -73,6 +90,8 @@ struct HabitApp: App {
                     HabitListView(viewModel: HabitListViewModel())
                 case "notas":
                     DailyNotesView()
+                case "objetivos":
+                    GoalsView()
                     // TODO: case "ajustes":
                     // TODO: SettingsView()
                 default:
@@ -81,6 +100,6 @@ struct HabitApp: App {
             }.environmentObject(AppConfig())
 #endif
         }
-        .modelContainer(for: [DailyNote.self, Habit.self])
+        .modelContainer(for: [DailyNote.self, Habit.self, Goal.self, Milestone.self])
     }
 }

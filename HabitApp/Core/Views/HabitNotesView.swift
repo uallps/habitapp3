@@ -50,6 +50,7 @@ struct HabitNotesView: View {
             .listStyle(.inset)
             #endif
             .navigationTitle("Notas - \(habit.title)")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 #if os(macOS)
                 ToolbarItem(placement: .primaryAction) {
