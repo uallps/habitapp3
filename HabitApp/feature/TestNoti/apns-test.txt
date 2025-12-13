@@ -1,0 +1,28 @@
+# APNS Test Configuration
+# Simulación de Push Notifications para HabitApp
+
+## Payload de ejemplo:
+{
+  "aps": {
+    "alert": {
+      "title": "Recordatorio HabitApp",
+      "body": "Es hora de completar tu hábito: Ejercicio diario"
+    },
+    "sound": "default",
+    "badge": 1
+  },
+  "custom": {
+    "habitId": "12345678-1234-1234-1234-123456789012",
+    "type": "habit_reminder"
+  }
+}
+
+## Headers requeridos:
+apns-topic: com.habitapp.notifications
+apns-push-type: alert
+apns-priority: 10
+
+## Para testing local:
+- Usar alertas UIAlert como fallback
+- Simular delay con DispatchQueue
+- Log de eventos para debugging

@@ -6,132 +6,77 @@
 //
 
 import SwiftUI
-import UserNotifications
+import UIKit
 
 struct TestReminderView: View {
-    @State private var authStatus: UNAuthorizationStatus = .notDetermined
-    @State private var message = "Listo para probar"
+    @State private var message = "Listo para probar alertas"
     
     var body: some View {
         VStack(spacing: 20) {
             Text("Test Notificaciones")
                 .font(.title2)
             
-            Text("Estado: \(statusText)")
-                .foregroundColor(authStatus == .authorized ? .green : .red)
-            
             Text(message)
                 .padding()
             
-            Button("Solicitar Permisos") {
-                requestPermissions()
+            Button("Test Plugin Directo") {
+                testReminderPlugin()
             }
             
-            Button("Notificación en 5s") {
-                scheduleTestNotification(seconds: 5)
-            }
-            .disabled(authStatus != .authorized)
-            
-            Button("Notificación en 10s") {
-                scheduleTestNotification(seconds: 10)
-            }
-            .disabled(authStatus != .authorized)
-            
-            Button("Ver Pendientes") {
-                checkPendingNotifications()
+            Button("Alerta en 3s") {
+                scheduleTestAlert(seconds: 3)
             }
             
-            Button("Ver Entregadas") {
-                checkDeliveredNotifications()
+            Button("Alerta en 5s") {
+                scheduleTestAlert(seconds: 5)
             }
             
-            Button("Limpiar Entregadas") {
-                clearDeliveredNotifications()
+            Button("Alerta Inmediata") {
+                showTestAlert()
             }
         }
         .padding()
-        .onAppear {
-            checkAuthStatus()
-        }
+
     }
     
-    private var statusText: String {
-        switch authStatus {
-        case .authorized: return "Autorizado ✅"
-        case .denied: return "Denegado ❌"
-        case .notDetermined: return "No determinado ⚠️"
-        case .provisional: return "Provisional 📱"
-        case .ephemeral: return "Efímero ⏰"
-        @unknown default: return "Desconocido ❓"
-        }
-    }
-    
-    private func checkAuthStatus() {
-        UNUserNotificationCenter.current().getNotificationSettings { settings in
-            DispatchQueue.main.async {
-                authStatus = settings.authorizationStatus
-            }
-        }
-    }
-    
-    private func requestPermissions() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
-            DispatchQueue.main.async {
-                if granted {
-                    authStatus = .authorized
-                    message = "Permisos concedidos ✅"
-                } else {
-                    authStatus = .denied
-                    message = "Permisos denegados ❌"
-                }
-            }
-        }
-    }
-    
-    private func scheduleTestNotification(seconds: Int) {
-        let content = UNMutableNotificationContent()
-        content.title = "Test Notificación"
-        content.body = "Esta es una prueba de notificación después de \(seconds) segundos"
-        content.sound = .default
+    private func testReminderPlugin() {
+        let plugin = ReminderPlugin()
+        let futureDate = Date().addingTimeInterval(3)
         
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(seconds), repeats: false)
-        let request = UNNotificationRequest(identifier: "test-\(UUID().uuidString)", content: content, trigger: trigger)
+        plugin.onDataChanged(
+            taskId: UUID(),
+            title: "Test desde Plugin",
+            dueDate: futureDate
+        )
         
-        UNUserNotificationCenter.current().add(request) { error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    message = "Error: \(error.localizedDescription)"
-                } else {
-                    message = "Notificación programada para \(seconds)s ⏰"
-                }
-            }
+        message = "Plugin ejecutado - alerta en 3s ⏰"
+    }
+    
+    private func scheduleTestAlert(seconds: Int) {
+        message = "Alerta programada para \(seconds)s ⏰"
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + TimeInterval(seconds)) {
+            showAlert(title: "Test Alerta", message: "Alerta después de \(seconds) segundos")
         }
     }
     
-    private func checkPendingNotifications() {
-        UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
-            DispatchQueue.main.async {
-                message = "Pendientes: \(requests.count)"
-                for request in requests {
-                    print("⏳ Pendiente: \(request.identifier) - \(request.content.title)")
-                }
-            }
-        }
+    private func showTestAlert() {
+        showAlert(title: "Test Inmediato", message: "Esta es una alerta inmediata")
+        message = "Alerta mostrada ✅"
     }
     
-    private func checkDeliveredNotifications() {
-        UNUserNotificationCenter.current().getDeliveredNotifications { notifications in
-            DispatchQueue.main.async {
-                message = "Entregadas: \(notifications.count)"
-                for notification in notifications {
-                    print("✅ Entregada: \(notification.request.identifier) - \(notification.request.content.title)")
-                }
-            }
+    private func showAlert(title: String, message: String) {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = windowScene.windows.first else {
+            print("No se pudo obtener la ventana")
+            return
         }
-    }
-    
-    private func clearDeliveredNotifications() {
-        UNUserNotificationCenter.current().removeAllDeliveredNotifications()
-        message = "Entregadas limpiadas 🧹"
+        
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        
+        if let topController = window.rootViewController?.topMostViewController() {
+            topController.present(alert, animated: true)
+        }
     }
 }
