@@ -40,6 +40,14 @@ struct TestReminderView: View {
             Button("Ver Pendientes") {
                 checkPendingNotifications()
             }
+            
+            Button("Ver Entregadas") {
+                checkDeliveredNotifications()
+            }
+            
+            Button("Limpiar Entregadas") {
+                clearDeliveredNotifications()
+            }
         }
         .padding()
         .onAppear {
@@ -105,9 +113,25 @@ struct TestReminderView: View {
             DispatchQueue.main.async {
                 message = "Pendientes: \(requests.count)"
                 for request in requests {
-                    print("📱 \(request.identifier): \(request.content.title)")
+                    print("⏳ Pendiente: \(request.identifier) - \(request.content.title)")
                 }
             }
         }
+    }
+    
+    private func checkDeliveredNotifications() {
+        UNUserNotificationCenter.current().getDeliveredNotifications { notifications in
+            DispatchQueue.main.async {
+                message = "Entregadas: \(notifications.count)"
+                for notification in notifications {
+                    print("✅ Entregada: \(notification.request.identifier) - \(notification.request.content.title)")
+                }
+            }
+        }
+    }
+    
+    private func clearDeliveredNotifications() {
+        UNUserNotificationCenter.current().removeAllDeliveredNotifications()
+        message = "Entregadas limpiadas 🧹"
     }
 }
