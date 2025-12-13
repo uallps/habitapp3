@@ -18,7 +18,7 @@
 }
 
 ## Headers requeridos:
-apns-topic: com.habitapp.notifications
+apns-topic: ual.Habitapp.notifications
 apns-push-type: alert
 apns-priority: 10
 

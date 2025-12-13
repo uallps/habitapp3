@@ -44,13 +44,11 @@ final class DailyNotesViewModel: ObservableObject {
           loadNotes()
           
           // 🔔 Notificar plugins
-          PluginRegistry.shared.dataObservers.forEach { plugin in
-              plugin.onDataChanged(
-                  taskId: note.id,
-                  title: note.title,
-                  dueDate: note.date
-              )
-          }
+          TaskDataObserverManager.shared.notify(
+              taskId: note.id,
+              title: note.title,
+              date: note.date
+          )
       }
       
       private func saveContext() {

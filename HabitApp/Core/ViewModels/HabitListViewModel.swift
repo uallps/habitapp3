@@ -26,6 +26,15 @@ final class HabitListViewModel: ObservableObject {
         
         do {
             try context.save()
+            
+            // Notificar plugins si hay fecha de recordatorio
+            if let reminderDate = reminderDate {
+                TaskDataObserverManager.shared.notify(
+                    taskId: habit.id,
+                    title: habit.title,
+                    date: reminderDate
+                )
+            }
         } catch {
             print("Error saving habit: \(error)")
         }
