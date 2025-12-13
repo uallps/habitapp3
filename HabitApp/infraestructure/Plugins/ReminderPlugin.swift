@@ -10,32 +10,46 @@ import UserNotifications
 
 struct ReminderPlugin: TaskDataObservingPlugin {
     
-    // Este método se llama cada vez que hay un cambio en los datos
     func onDataChanged(taskId: UUID, title: String, dueDate: Date?) {
-        guard let dueDate else { return }
-        scheduleNotification(title: title, date: dueDate)
+        guard let dueDate else { 
+            print("🔔 ReminderPlugin: No hay fecha para \(title)")
+            return 
+        }
+        
+        let timeInterval = dueDate.timeIntervalSinceNow
+        print("🔔 ReminderPlugin: Programando notificación para '\(title)' en \(timeInterval)s")
+        
+        if timeInterval > 0 {
+            scheduleNotification(title: title, date: dueDate, taskId: taskId)
+        } else {
+            print("🔔 ReminderPlugin: Fecha ya pasó, no se programa notificación")
+        }
     }
     
-    private func scheduleNotification(title: String, date: Date) {
+    private func scheduleNotification(title: String, date: Date, taskId: UUID) {
         let content = UNMutableNotificationContent()
         content.title = "Recordatorio"
         content.body = title
         content.sound = .default
+        content.badge = 1
         
+        let timeInterval = max(date.timeIntervalSinceNow, 1)
         let trigger = UNTimeIntervalNotificationTrigger(
-            timeInterval: max(date.timeIntervalSinceNow, 1),
+            timeInterval: timeInterval,
             repeats: false
         )
         
         let request = UNNotificationRequest(
-            identifier: UUID().uuidString,
+            identifier: "reminder-\(taskId.uuidString)",
             content: content,
             trigger: trigger
         )
         
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
-                print("Error programando recordatorio: \(error)")
+                print("🔔 Error programando recordatorio: \(error)")
+            } else {
+                print("🔔 Notificación programada exitosamente para \(timeInterval)s")
             }
         }
     }
