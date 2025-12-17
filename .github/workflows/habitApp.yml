@@ -40,11 +40,10 @@ jobs:
         run: |
           DEVICE_INFO=$(xcrun simctl list devices available | grep -oE 'iPhone [^)]* \([^)]+\)' | tail -n 1)
           DEVICE_NAME=$(echo "$DEVICE_INFO" | sed -E 's/ \(.+\)//')
-          DEVICE_RUNTIME=$(echo "$DEVICE_INFO" | grep -oE '\([^)]+\)' | tr -d '()')
+          DEVICE_OS=$(echo "$DEVICE_INFO" | grep -oE '[0-9]+\.[0-9]+') # Extract just version
 
           echo "DEVICE_NAME=$DEVICE_NAME" >> $GITHUB_ENV
-          echo "DEVICE_RUNTIME=$DEVICE_RUNTIME" >> $GITHUB_ENV
-          echo "Latest iPhone simulator: $DEVICE_NAME ($DEVICE_RUNTIME)"
+          echo "DEVICE_OS=$DEVICE_OS" >> $GITHUB_ENV
 
       - name: Get latest iOS SDK
         if: matrix.platform == 'iOS'
@@ -61,7 +60,7 @@ jobs:
               -project HabitApp.xcodeproj \
               -scheme "${{ matrix.scheme }}" \
               -sdk "$LATEST_SDK" \
-              -destination "platform=iOS Simulator,OS=$DEVICE_RUNTIME,name=$DEVICE_NAME" \
+              -destination "platform=iOS Simulator,OS=$DEVICE_OS,name=$DEVICE_NAME" \
               -derivedDataPath ./DerivedData \
               CODE_SIGN_IDENTITY="" \
               CODE_SIGNING_REQUIRED=NO \
