@@ -2,9 +2,9 @@ name: Build and Test HabitApp
 
 on:
   push:
-    branches: [ "ismael" ]
+    branches: [ "categorias" ]
   pull_request:
-    branches: [ "ismael" ]
+    branches: [ "categorias" ]
 
 jobs:
   build:
