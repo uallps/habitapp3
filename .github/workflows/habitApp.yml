@@ -19,7 +19,6 @@ jobs:
         include:
           - platform: iOS
             sdk: iphonesimulator
-            destination: "platform=iOS Simulator,OS=26.0.1,name=iPhone 17"
             artifact-name: ios-build
           - platform: macOS
             sdk: macosx
@@ -35,17 +34,51 @@ jobs:
       - name: Show available SDKs
         run: xcodebuild -showsdks
 
+      - name: Get latest iPhone simulator
+        if: matrix.platform == 'iOS'
+        id: get-simulator
+        run: |
+          DEVICE_INFO=$(xcrun simctl list devices available | grep -oE 'iPhone [^)]* \([^)]+\)' | tail -n 1)
+          DEVICE_NAME=$(echo "$DEVICE_INFO" | sed -E 's/ \(.+\)//')
+          DEVICE_RUNTIME=$(echo "$DEVICE_INFO" | grep -oE '\([^)]+\)' | tr -d '()')
+
+          echo "DEVICE_NAME=$DEVICE_NAME" >> $GITHUB_ENV
+          echo "DEVICE_RUNTIME=$DEVICE_RUNTIME" >> $GITHUB_ENV
+          echo "Latest iPhone simulator: $DEVICE_NAME ($DEVICE_RUNTIME)"
+
+      - name: Get latest iOS SDK
+        if: matrix.platform == 'iOS'
+        id: get-sdk
+        run: |
+          LATEST_SDK=$(xcodebuild -showsdks | grep -oE 'iphonesimulator[0-9.]+' | sort -V | tail -n1)
+          echo "LATEST_SDK=$LATEST_SDK" >> $GITHUB_ENV
+          echo "Latest iOS SDK: $LATEST_SDK"
+
       - name: Build for ${{ matrix.platform }}
         run: |
-          xcodebuild clean build \
-            -project HabitApp.xcodeproj \
-            -scheme "${{ matrix.scheme }}" \
-            -sdk ${{ matrix.sdk }} \
-            -destination '${{ matrix.destination }}' \
-            -derivedDataPath ./DerivedData \
-            CODE_SIGN_IDENTITY="" \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO
+          if [ "${{ matrix.platform }}" == "iOS" ]; then
+            xcodebuild clean build \
+              -project HabitApp.xcodeproj \
+              -scheme "${{ matrix.scheme }}" \
+              -sdk "$LATEST_SDK" \
+              -destination "platform=iOS Simulator,OS=$DEVICE_RUNTIME,name=$DEVICE_NAME" \
+              -derivedDataPath ./DerivedData \
+              CODE_SIGN_IDENTITY="" \
+              CODE_SIGNING_REQUIRED=NO \
+              CODE_SIGNING_ALLOWED=NO \
+              -verbose
+          else
+            xcodebuild clean build \
+              -project HabitApp.xcodeproj \
+              -scheme "${{ matrix.scheme }}" \
+              -sdk macosx \
+              -destination "platform=macOS" \
+              -derivedDataPath ./DerivedData \
+              CODE_SIGN_IDENTITY="" \
+              CODE_SIGNING_REQUIRED=NO \
+              CODE_SIGNING_ALLOWED=NO \
+              -verbose
+          fi
 
       - name: Find and list build products
         if: success()
@@ -55,15 +88,6 @@ jobs:
           ls -R ./DerivedData/Build/Products/
 
 
-      - name: Get the latest iPhone simulator
-        if: matrix.platform == 'iOS'
-        id: get-iphone
-        run: |
-          # List all available simulators and filter for iPhone models
-          DEVICE_LIST=$(xcrun simctl list devices | grep -o 'iPhone [^)]*' | sort -r | head -n 1)
-          echo "Latest iPhone: $DEVICE_LIST"
-          echo "device_name=$DEVICE_LIST" >> $GITHUB_ENV
-
       - name: Run Tests on iOS Simulator
         if: success() && matrix.platform == 'iOS'
         timeout-minutes: 10
@@ -72,7 +96,6 @@ jobs:
           mkdir -p screenshots
           
           # Boot simulator
-          DEVICE_NAME="iPhone 16"
           xcrun simctl boot "$DEVICE_NAME" || true
           xcrun simctl bootstatus "$DEVICE_NAME" -b
           
@@ -155,13 +178,12 @@ jobs:
           name: build-iOS-HabitApp
           path: ./DerivedData/Build/Products/**/*.app
 
-      - name: Upload screenshots
-        if: always()
+      - name: Upload Screenshots
+        if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: app-demo
-          path: screenshots
-          if-no-files-found: warn
+          name: screenshots
+          path: screenshots/
 
       - name: Upload build report
         uses: actions/upload-artifact@v4
