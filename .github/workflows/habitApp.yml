@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         platform: [iOS, macOS]
-        scheme: ["TaskApp", "TaskApp Premium"]
+        scheme: ["HabitApp", "HabitApp Premium"]
         include:
           - platform: iOS
             sdk: iphonesimulator
@@ -38,7 +38,7 @@ jobs:
       - name: Build for ${{ matrix.platform }}
         run: |
           xcodebuild clean build \
-            -project TaskApp.xcodeproj \
+            -project HabitApp.xcodeproj \
             -scheme "${{ matrix.scheme }}" \
             -sdk ${{ matrix.sdk }} \
             -destination '${{ matrix.destination }}' \
