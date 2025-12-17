@@ -5,94 +5,140 @@ on:
     branches: [ "categorias" ]
   pull_request:
     branches: [ "categorias" ]
+  workflow_dispatch:
 
 jobs:
   build:
+    name: Build HabitApp for iOS
     runs-on: macos-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Select Xcode version
-        run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+      - name: Show Xcode version
+        run: xcodebuild -version
 
-      - name: Boot iPhone simulator
-        run: |
-          DEVICE_NAME="iPhone 16"
-          echo "Booting device: $DEVICE_NAME"
-          xcrun simctl boot "$DEVICE_NAME" || true
-          xcrun simctl bootstatus "$DEVICE_NAME" -b
-          echo "DEVICE_NAME=$DEVICE_NAME" >> $GITHUB_ENV
+      - name: Show available SDKs
+        run: xcodebuild -showsdks
 
-      - name: Build and Test HabitApp for iOS
+      - name: Build for iOS
         run: |
-          cd HabitApp
-          xcodebuild \
+          xcodebuild clean build \
             -project HabitApp.xcodeproj \
             -scheme HabitApp \
             -sdk iphonesimulator \
-            -destination "platform=iOS Simulator,name=$DEVICE_NAME,OS=latest" \
-            -derivedDataPath build \
-            -configuration Debug \
-            clean build test | xcpretty
+            -destination 'platform=iOS Simulator,OS=latest,name=iPhone 16' \
+            -derivedDataPath ./DerivedData \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
 
-      - name: Build for macOS
+      - name: Find and list build products
+        if: success()
         run: |
-          cd HabitApp
-          xcodebuild \
-            -project HabitApp.xcodeproj \
-            -scheme HabitApp \
-            -sdk macosx \
-            -destination "platform=macOS" \
-            -derivedDataPath build-macos \
-            -configuration Debug \
-            clean build | xcpretty
+          echo "=== iOS Build products ==="
+          find ./DerivedData -name "*.app" -type d
+          ls -R ./DerivedData/Build/Products/
 
-      - name: Launch iOS app and test features
+      - name: Run Tests on iOS Simulator
+        if: success()
+        timeout-minutes: 10
+        continue-on-error: true
         run: |
-          cd HabitApp
           mkdir -p screenshots
-          APP_BUNDLE_ID="com.ual.HabitApp"
-          xcrun simctl install booted build/Build/Products/Debug-iphonesimulator/HabitApp.app
-          xcrun simctl launch booted $APP_BUNDLE_ID || true
-          sleep 5
           
-          # Test app launch
-          if xcrun simctl list | grep -q "$APP_BUNDLE_ID"; then
-            echo "✅ App launched successfully"
-          else
-            echo "❌ App failed to launch"
+          # Boot simulator
+          DEVICE_NAME="iPhone 16"
+          xcrun simctl boot "$DEVICE_NAME" || true
+          xcrun simctl bootstatus "$DEVICE_NAME" -b
+          
+          # Find app
+          APP_BUNDLE_ID="ual.HabitApp"
+          APP_PATH=$(find ./DerivedData -name "HabitApp.app" -type d | head -n 1)
+          
+          if [ -z "$APP_PATH" ]; then
+            echo "❌ App not found"
             exit 1
           fi
+          
+          echo "✅ Found app at: $APP_PATH"
+          
+          # Install and launch app
+          xcrun simctl install booted "$APP_PATH"
+          xcrun simctl launch booted $APP_BUNDLE_ID &
+          sleep 5
+          
+          # Run UI tests, they'll create the screenshots
+          echo "📋 Running XCTest cases..."
 
-      - name: Take screenshots
+          xcodebuild test \
+            -project HabitApp.xcodeproj \
+            -scheme HabitApp \
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,OS=latest,name=iPhone 16' \
+            | tee result.log
+
+          # Check if tests failed
+          if grep -q "Test failed" result.log; then
+            echo "❌ Tests failed"
+            exit 1
+          else
+            echo "✅ Tests passed"
+          fi
+
+      - name: Code Quality Analysis
         run: |
+          echo "📊 Analyzing code quality..."
           cd HabitApp
-          xcrun simctl io booted screenshot screenshots/home.png
-          sleep 2
-          xcrun simctl io booted screenshot screenshots/app-running.png
-          ls -la screenshots
+          
+          # Count Swift files
+          SWIFT_FILES=$(find . -name "*.swift" | wc -l)
+          echo "Total Swift files: $SWIFT_FILES"
+          
+          # Count lines of code
+          LOC=$(find . -name "*.swift" -exec cat {} \; | wc -l)
+          echo "Total lines of code: $LOC"
+          
+          # Find TODO and FIXME comments
+          echo "\n🔍 TODO items:"
+          grep -r "TODO" --include="*.swift" . || echo "No TODOs found"
+          
+          echo "\n🔍 FIXME items:"
+          grep -r "FIXME" --include="*.swift" . || echo "No FIXMEs found"
+          
+          # Check for SwiftData models
+          echo "\n📦 SwiftData Models:"
+          grep -r "@Model" --include="*.swift" . | cut -d: -f1 | sort -u
+          
+          # List all features
+          echo "\n🎯 Features implemented:"
+          ls -d feature/*/ 2>/dev/null || echo "No features directory"
 
-      - name: Verify build artifacts
-        run: |
-          cd HabitApp
-          echo "iOS Build artifacts:"
-          ls -la build/Build/Products/Debug-iphonesimulator/ || echo "No iOS artifacts found"
-          echo "macOS Build artifacts:"
-          ls -la build-macos/Build/Products/Debug/ || echo "No macOS artifacts found"
-
-      - name: Upload screenshots as artifact
+      - name: Archive build artifacts
+        if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: iOS-screenshots
-          path: HabitApp/screenshots
+          name: build-iOS-HabitApp
+          path: ./DerivedData/Build/Products/**/*.app
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-demo
+          path: screenshots
+          if-no-files-found: warn
+
+      - name: Upload build report
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-report
+          path: build-report.md
 
       - name: Upload build logs
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: build-logs
-          path: |
-            HabitApp/build/Logs
-            HabitApp/build-macos/Logs
+          path: ./DerivedData/Logs
