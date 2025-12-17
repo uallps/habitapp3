@@ -17,6 +17,7 @@ class CategorySet: Identifiable, Hashable {
         Color(colorAssetName)
     }
     
+    
     init(
         id: UUID = UUID(),
         name: String,
