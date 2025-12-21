@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXContainerItemProxy section */
+		3586417D2EF8414D0000C589 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 35EDF0C82E9FF1C000D50221 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 35EDF0CF2E9FF1C000D50221;
+			remoteInfo = HabitApp;
+		};
 		35EDF0DE2E9FF1C300D50221 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 35EDF0C82E9FF1C000D50221 /* Project object */;
@@ -24,12 +31,18 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		358641772EF8414D0000C589 /* HabitAppUITestsXCTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HabitAppUITestsXCTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		35EDF0D02E9FF1C000D50221 /* HabitApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HabitApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		35EDF0DD2E9FF1C300D50221 /* HabitAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HabitAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		35EDF0E72E9FF1C300D50221 /* HabitAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HabitAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		358641782EF8414D0000C589 /* HabitAppUITestsXCTest */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = HabitAppUITestsXCTest;
+			sourceTree = "<group>";
+		};
 		35EDF0D22E9FF1C000D50221 /* HabitApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = HabitApp;
@@ -38,6 +51,13 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		358641742EF8414D0000C589 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		35EDF0CD2E9FF1C000D50221 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -66,6 +86,7 @@
 			isa = PBXGroup;
 			children = (
 				35EDF0D22E9FF1C000D50221 /* HabitApp */,
+				358641782EF8414D0000C589 /* HabitAppUITestsXCTest */,
 				35EDF0D12E9FF1C000D50221 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -76,6 +97,7 @@
 				35EDF0D02E9FF1C000D50221 /* HabitApp.app */,
 				35EDF0DD2E9FF1C300D50221 /* HabitAppTests.xctest */,
 				35EDF0E72E9FF1C300D50221 /* HabitAppUITests.xctest */,
+				358641772EF8414D0000C589 /* HabitAppUITestsXCTest.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -83,6 +105,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		358641762EF8414D0000C589 /* HabitAppUITestsXCTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3586417F2EF8414D0000C589 /* Build configuration list for PBXNativeTarget "HabitAppUITestsXCTest" */;
+			buildPhases = (
+				358641732EF8414D0000C589 /* Sources */,
+				358641742EF8414D0000C589 /* Frameworks */,
+				358641752EF8414D0000C589 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3586417E2EF8414D0000C589 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				358641782EF8414D0000C589 /* HabitAppUITestsXCTest */,
+			);
+			name = HabitAppUITestsXCTest;
+			packageProductDependencies = (
+			);
+			productName = HabitAppUITestsXCTest;
+			productReference = 358641772EF8414D0000C589 /* HabitAppUITestsXCTest.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		35EDF0CF2E9FF1C000D50221 /* HabitApp */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 35EDF0F12E9FF1C300D50221 /* Build configuration list for PBXNativeTarget "HabitApp" */;
@@ -155,6 +200,10 @@
 				LastSwiftUpdateCheck = 2600;
 				LastUpgradeCheck = 2600;
 				TargetAttributes = {
+					358641762EF8414D0000C589 = {
+						CreatedOnToolsVersion = 26.0;
+						TestTargetID = 35EDF0CF2E9FF1C000D50221;
+					};
 					35EDF0CF2E9FF1C000D50221 = {
 						CreatedOnToolsVersion = 26.0;
 					};
@@ -185,11 +234,19 @@
 				35EDF0CF2E9FF1C000D50221 /* HabitApp */,
 				35EDF0DC2E9FF1C300D50221 /* HabitAppTests */,
 				35EDF0E62E9FF1C300D50221 /* HabitAppUITests */,
+				358641762EF8414D0000C589 /* HabitAppUITestsXCTest */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		358641752EF8414D0000C589 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		35EDF0CE2E9FF1C000D50221 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -214,6 +271,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		358641732EF8414D0000C589 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		35EDF0CC2E9FF1C000D50221 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -238,6 +302,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		3586417E2EF8414D0000C589 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 35EDF0CF2E9FF1C000D50221 /* HabitApp */;
+			targetProxy = 3586417D2EF8414D0000C589 /* PBXContainerItemProxy */;
+		};
 		35EDF0DF2E9FF1C300D50221 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 35EDF0CF2E9FF1C000D50221 /* HabitApp */;
@@ -251,6 +320,49 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		358641802EF8414D0000C589 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = es.ual.HabitAppUITestsXCTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = HabitApp;
+			};
+			name = Debug;
+		};
+		358641812EF8414D0000C589 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = es.ual.HabitAppUITestsXCTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = HabitApp;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		35EDF0EF2E9FF1C300D50221 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -514,6 +626,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		3586417F2EF8414D0000C589 /* Build configuration list for PBXNativeTarget "HabitAppUITestsXCTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				358641802EF8414D0000C589 /* Debug */,
+				358641812EF8414D0000C589 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		35EDF0CB2E9FF1C000D50221 /* Build configuration list for PBXProject "HabitApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

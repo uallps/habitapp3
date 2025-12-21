@@ -5,10 +5,17 @@ struct CategoryRowView: View {
     let category: CategorySet
     
     var body: some View {
-            VStack(alignment: .leading) {
-                Text(category.name)
-            }
+        
+        HStack() {
+            Text(category.name)
             
-            Spacer()
+            Circle()
+                .fill(category.color)
+                .frame(width: 26, height: 26)
+                .overlay(
+                    Circle().stroke(Color.black, lineWidth: 1)
+                )
+            
         }
     }
+}

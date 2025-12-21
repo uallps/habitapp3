@@ -24,7 +24,6 @@ struct CategoryListView: View {
                             categorySet: CategorySet(
                                 id: UUID(),
                                 name: "",
-                                colorAssetName: "AccentColor",
                                 icon: UserImageSlot(image: nil),
                                 priority: .low,
                                 frequency: .daily,

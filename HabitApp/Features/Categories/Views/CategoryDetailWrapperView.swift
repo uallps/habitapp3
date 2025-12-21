@@ -41,6 +41,19 @@ struct CategoryDetailWrapperView: View {
         .cyan, .blue, .indigo, .purple, .pink, .brown,
         .gray
     ]
+    
+    // Lazy var para asegurarse de que allColors existe. Un lazy var se computa cuando self existe.
+    lazy var allColorsMap: [Color: String] = Dictionary(
+        uniqueKeysWithValues: zip(
+            allColors,
+            [
+                "red", "orange", "yellow", "green", "mint", "teal",
+                "cyan", "blue", "indigo", "purple", "pink", "brown",
+                "gray"
+            ]
+        )
+    )
+    
     @State private var selectedPriority: Priority? = nil
     @State private var selectedFrequency: Frequency? = nil
     @State private var selectedColor: Color? = nil
@@ -148,6 +161,7 @@ struct CategoryDetailWrapperView: View {
                                 categorySet.name = name
                                 categorySet.priority = Priority.medium
                                 categorySet.frequency = Frequency.daily
+                                categorySet.colorAssetName = "red"
                                 viewModel.addCategory(category: categorySet)
                                 dismiss()
                             }else {
