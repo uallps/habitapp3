@@ -16,6 +16,7 @@ struct CategoryRowView: View {
                     Circle().stroke(Color.black, lineWidth: 1)
                 )
             
+            
         }
     }
 }

@@ -36,14 +36,14 @@ struct CategoryDetailWrapperView: View {
     @State private var selectedIconTwo: String = ""
     @State private var selectedIconThree: String = ""
     
-    let allColors: [Color] = [
+    static let allColors: [Color] = [
         .red, .orange, .yellow, .green, .mint, .teal,
         .cyan, .blue, .indigo, .purple, .pink, .brown,
         .gray
     ]
     
     // Lazy var para asegurarse de que allColors existe. Un lazy var se computa cuando self existe.
-    lazy var allColorsMap: [Color: String] = Dictionary(
+    static let allColorsMap: [Color: String] = Dictionary(
         uniqueKeysWithValues: zip(
             allColors,
             [
@@ -158,10 +158,11 @@ struct CategoryDetailWrapperView: View {
                         Button {
                             
                             if isCategoryValid {
+                                let selectedColorName = CategoryDetailWrapperView.allColorsMap[selectedColor ?? Color.red]
                                 categorySet.name = name
                                 categorySet.priority = Priority.medium
                                 categorySet.frequency = Frequency.daily
-                                categorySet.colorAssetName = "red"
+                                categorySet.colorAssetName = selectedColorName ?? "red"
                                 viewModel.addCategory(category: categorySet)
                                 dismiss()
                             }else {
@@ -196,7 +197,7 @@ struct CategoryDetailWrapperView: View {
     case .colorPicker:
         ScrollView {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 48))], spacing: 12) {
-                ForEach(allColors, id: \.self) { color in
+                ForEach(CategoryDetailWrapperView.allColors, id: \.self) { color in
                     Circle()
                         .fill(color)
                         .frame(width: 36, height: 36)
