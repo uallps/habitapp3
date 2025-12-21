@@ -40,7 +40,7 @@ jobs:
         run: |
           DEVICE_INFO=$(xcrun simctl list devices available | grep -oE 'iPhone [^)]* \([^)]+\)' | tail -n 1)
           DEVICE_NAME=$(echo "$DEVICE_INFO" | sed -E 's/ \(.+\)//')
-          DEVICE_OS=$(echo "$DEVICE_INFO" | grep -oE '[0-9]+\.[0-9]+') # Extract just version
+          DEVICE_OS=$(echo "$DEVICE_INFO" | grep -oE '[0-9]+\.[0-9]+')
 
           echo "DEVICE_NAME=$DEVICE_NAME" >> $GITHUB_ENV
           echo "DEVICE_OS=$DEVICE_OS" >> $GITHUB_ENV
@@ -86,42 +86,41 @@ jobs:
           find ./DerivedData -name "*.app" -type d
           ls -R ./DerivedData/Build/Products/
 
-
-      - name: Run Tests on iOS Simulator
+      - name: Run UI Tests on iOS Simulator
         if: success() && matrix.platform == 'iOS'
         timeout-minutes: 10
         continue-on-error: true
         run: |
           mkdir -p screenshots
-          
+
           # Boot simulator
           xcrun simctl boot "$DEVICE_NAME" || true
           xcrun simctl bootstatus "$DEVICE_NAME" -b
-          
+
           # Find app
           APP_BUNDLE_ID="ual.HabitApp"
           APP_PATH=$(find ./DerivedData -name "HabitApp.app" -type d | head -n 1)
-          
+
           if [ -z "$APP_PATH" ]; then
             echo "❌ App not found"
             exit 1
           fi
-          
+
           echo "✅ Found app at: $APP_PATH"
-          
+
           # Install and launch app
           xcrun simctl install booted "$APP_PATH"
           xcrun simctl launch booted $APP_BUNDLE_ID &
           sleep 5
-          
-          # Run UI tests, they'll create the screenshots
-          echo "📋 Running XCTest cases..."
+
+          # Run UI tests for HabitAppUITestXCTest target
+          echo "📋 Running UI XCTest cases..."
 
           xcodebuild test \
             -project HabitApp.xcodeproj \
-            -scheme HabitApp \
-            -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,OS=latest,name=iPhone 16' \
+            -scheme HabitAppUITestXCTest \
+            -sdk "$LATEST_SDK" \
+            -destination "platform=iOS Simulator,OS=$DEVICE_OS,name=$DEVICE_NAME" \
             | tee result.log
 
           # Check if tests failed
@@ -131,6 +130,7 @@ jobs:
           else
             echo "✅ Tests passed"
           fi
+
       - name: Upload Screenshots as Build Artifacts
         if: success()
         uses: actions/upload-artifact@v4
@@ -147,26 +147,21 @@ jobs:
           echo "📊 Analyzing code quality..."
           cd HabitApp
           
-          # Count Swift files
           SWIFT_FILES=$(find . -name "*.swift" | wc -l)
           echo "Total Swift files: $SWIFT_FILES"
           
-          # Count lines of code
           LOC=$(find . -name "*.swift" -exec cat {} \; | wc -l)
           echo "Total lines of code: $LOC"
           
-          # Find TODO and FIXME comments
           echo "\n🔍 TODO items:"
           grep -r "TODO" --include="*.swift" . || echo "No TODOs found"
           
           echo "\n🔍 FIXME items:"
           grep -r "FIXME" --include="*.swift" . || echo "No FIXMEs found"
           
-          # Check for SwiftData models
           echo "\n📦 SwiftData Models:"
           grep -r "@Model" --include="*.swift" . | cut -d: -f1 | sort -u
           
-          # List all features
           echo "\n🎯 Features implemented:"
           ls -d feature/*/ 2>/dev/null || echo "No features directory"
 
