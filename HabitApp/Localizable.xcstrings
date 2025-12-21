@@ -13,13 +13,7 @@
     "¿Eliminar nota?" : {
 
     },
-    "%@ Alta" : {
-
-    },
-    "%@ Baja" : {
-
-    },
-    "%@ Media" : {
+    "%@" : {
 
     },
     "%lld" : {
@@ -45,9 +39,6 @@
 
     },
     "Añadir" : {
-
-    },
-    "Anual %@" : {
 
     },
     "Buscar emoji..." : {
@@ -91,9 +82,6 @@
 
     },
     "Detalles del hábito" : {
-
-    },
-    "Diaria %@" : {
 
     },
     "Días de la semana" : {
@@ -145,9 +133,6 @@
 
     },
     "Marcar día completado" : {
-
-    },
-    "Mensual %@" : {
 
     },
     "No hay notas para esta fecha" : {
@@ -256,9 +241,6 @@
 
     },
     "Seleccione una opción" : {
-
-    },
-    "Semanal %@" : {
 
     },
     "Sin notas" : {

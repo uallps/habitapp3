@@ -52,7 +52,17 @@ struct CategoryRowView: View {
                     )
             }
             
+            HStack() {
+                Text(
+                    "Prioridad: " + category.priority.emoji
+                )
+            }
             
+            HStack() {
+                Text(
+                    "Frecuencia: " + category.frequency.emoji
+                )
+            }
         }
     }
 }

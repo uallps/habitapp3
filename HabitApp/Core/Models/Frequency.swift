@@ -10,10 +10,10 @@ enum Frequency: String, Hashable, Codable, CaseIterable {
     // Optional: an emoji representation
     var emoji: String {
         switch self {
-        case .daily: return "🔁🌞"
-        case .weekly: return "🌞📅🌙"
-        case .monthly: return "📅"
-        case .annual: return "🌱🌳"
+        case .daily: return "Diaria 🔁🌞"
+        case .weekly: return "Semanal 🌞📅🌙"
+        case .monthly: return "Mensual 📅"
+        case .annual: return "Anual 🌱🌳"
         }
     }
 }
