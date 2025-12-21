@@ -14,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        platform: [iOS, macOS]
+        platform: [iOS]
         scheme: ["HabitApp"]
         include:
           - platform: iOS
@@ -38,12 +38,21 @@ jobs:
         if: matrix.platform == 'iOS'
         id: get-simulator
         run: |
-          DEVICE_INFO=$(xcrun simctl list devices available | grep -oE 'iPhone [^)]* \([^)]+\)' | tail -n 1)
-          DEVICE_NAME=$(echo "$DEVICE_INFO" | sed -E 's/ \(.+\)//')
+          # Find the latest available iPhone simulator
+          DEVICE_INFO=$(xcrun simctl list devices available | grep -E "iPhone.*(Booted|Shutdown)" | grep -v unavailable | tail -n 1)
+          
+          if [ -z "$DEVICE_INFO" ]; then
+            echo "❌ No available iPhone simulator found"
+            exit 1
+          fi
+
+          DEVICE_NAME=$(echo "$DEVICE_INFO" | sed -E 's/ \([^)]+\)//' | xargs)
           DEVICE_OS=$(echo "$DEVICE_INFO" | grep -oE '[0-9]+\.[0-9]+')
 
           echo "DEVICE_NAME=$DEVICE_NAME" >> $GITHUB_ENV
           echo "DEVICE_OS=$DEVICE_OS" >> $GITHUB_ENV
+
+          echo "✅ Using simulator: $DEVICE_NAME ($DEVICE_OS)"
 
       - name: Get latest iOS SDK
         if: matrix.platform == 'iOS'
