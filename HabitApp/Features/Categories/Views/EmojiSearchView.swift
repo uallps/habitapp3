@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct EmojiSearchView: View {
-    @Binding var selectedIcon: String
+    @Binding var selectedIcon: Emoji
     @StateObject private var loader = EmojiLoader()
     @StateObject private var model = EmojiSearchModel()
 
@@ -27,7 +27,7 @@ struct EmojiSearchView: View {
                                 .frame(width: 56, height: 56)
                                 .background(RoundedRectangle(cornerRadius: 8).fill(Color.secondary.opacity(0.2)))
                                 .onTapGesture {
-                                    selectedIcon = emoji.emoji
+                                    selectedIcon = emoji
                                     dismiss()
                                 }
                         }

@@ -1,8 +1,10 @@
 import Foundation
+import SwiftData
 
+@Model
 class Emoji: Comparable, Equatable, Hashable {
-    let emoji: String
-    let name: String
+    var emoji: String
+    var name: String
     
     init(emoji: String, name: String, id: String) {
         self.emoji = emoji

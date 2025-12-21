@@ -6,11 +6,12 @@ struct CategoryDetailWrapperView: View {
     @State var categorySet: CategorySet
     @ObservedObject var userImageVM: UserImagesViewModel
     
+
     @State private var showAlert = false
     @State private var alertMessage = ""
     
     @State private var activeSheet: ActiveSheet?
-    
+
     private var isCategoryValid: Bool {
         guard !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return false }
 
@@ -18,7 +19,7 @@ struct CategoryDetailWrapperView: View {
         
         switch selectionMode {
         case .emoji:
-            guard !selectedIconOne.isEmpty || !selectedIconTwo.isEmpty || !selectedIconThree.isEmpty else { return false }
+            guard !selectedIconOne.emoji.isEmpty || !selectedIconTwo.emoji.isEmpty || !selectedIconThree.emoji.isEmpty else { return false }
         case .image:
             if userImageVM.image == nil {
                 return false
@@ -32,9 +33,9 @@ struct CategoryDetailWrapperView: View {
     }
     // MARK: - Category State
     @State private var name: String = ""
-    @State private var selectedIconOne: String = ""
-    @State private var selectedIconTwo: String = ""
-    @State private var selectedIconThree: String = ""
+    @State private var selectedIconOne: Emoji = Emoji(emoji: "", name: "", id: "")
+    @State private var selectedIconTwo: Emoji = Emoji(emoji: "", name: "", id: "")
+    @State private var selectedIconThree: Emoji = Emoji(emoji: "", name: "", id: "")
     
     static let allColors: [Color] = [
         .red, .orange, .yellow, .green, .mint, .teal,
@@ -69,9 +70,6 @@ struct CategoryDetailWrapperView: View {
       }
     
     @State private var selectionMode: SelectionMode = .emoji
-
-    // Emoji loader if needed
-    @StateObject private var loader = EmojiLoader()
     
     var body: some View {
             NavigationStack {
@@ -118,9 +116,9 @@ struct CategoryDetailWrapperView: View {
                         // MARK: - Emoji Buttons
                         Section(header: Text("Emojis")) {
                             VStack(spacing: 12) {
-                                emojiButton(title: "Emoji 1", emoji: selectedIconOne, id: 1)
-                                emojiButton(title: "Emoji 2", emoji: selectedIconTwo, id: 2)
-                                emojiButton(title: "Emoji 3", emoji: selectedIconThree, id: 3)
+                                emojiButton(title: "Emoji 1", emoji: selectedIconOne.emoji, id: 1)
+                                emojiButton(title: "Emoji 2", emoji: selectedIconTwo.emoji, id: 2)
+                                emojiButton(title: "Emoji 3", emoji: selectedIconThree.emoji, id: 3)
                             }
                         }
                     case .image:
@@ -163,6 +161,24 @@ struct CategoryDetailWrapperView: View {
                                 categorySet.priority = Priority.medium
                                 categorySet.frequency = Frequency.daily
                                 categorySet.colorAssetName = selectedColorName ?? "red"
+                                
+                                switch(selectionMode) {
+                                case .emoji:
+                                    categorySet.icon = UserImageSlot(
+                                        emojis: [
+                                            selectedIconOne,
+                                            selectedIconTwo,
+                                            selectedIconThree
+                                        ]
+                                    )
+
+                                case .image:
+                                    categorySet.icon = UserImageSlot(
+                                        image: userImageVM.image
+                                    )
+
+                                }
+                                
                                 viewModel.addCategory(category: categorySet)
                                 dismiss()
                             }else {

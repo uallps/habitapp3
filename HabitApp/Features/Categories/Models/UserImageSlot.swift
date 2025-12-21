@@ -9,7 +9,6 @@ import AppKit
 typealias PlatformImage = NSImage
 #endif
 
-// UserImageSlot is now a subclass of CategoryIconBase
 @Model
 class UserImageSlot {
     
@@ -32,5 +31,11 @@ class UserImageSlot {
 #else
         self.imageData = image?.tiffRepresentation
 #endif
+    }
+    
+    var emojis: [Emoji]?
+    
+    init(emojis: [Emoji]) {
+        self.emojis = emojis
     }
 }
