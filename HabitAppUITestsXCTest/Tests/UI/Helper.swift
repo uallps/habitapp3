@@ -3,7 +3,7 @@ import XCTest
 class Helper {
     
     // Launches the app and asserts that a given button exists
-    static func launchAppA() -> XCUIApplication {
+    static func launchApp() -> XCUIApplication {
         let app = XCUIApplication()
         app.launch()
         return app

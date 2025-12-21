@@ -3,7 +3,7 @@ import XCTest
 class CreateCategories: XCTestCase {
 
     func testCreateCategoriasiOS() {
-        let app = Helper.launchAppAndAssertButtonExistence()
+        let app = Helper.launchApp()
         
         // Assert that the login screen is visible
         XCTAssertTrue(app.buttons["Login"].exists)
@@ -13,12 +13,12 @@ class CreateCategories: XCTestCase {
         attachment.name = "Categorías Tab iOS"
         attachment.lifetime = .keepAlways
         add(attachment)
-        Helper.saveScreenshots("./screenshots/CategoriasTab_iOS.png")
+        Helper.saveScreenshots(path: "./screenshots/CategoriasTab_iOS.png")
 
 }
 
     func testCreateCategoriasMac() {
-        let app = Helper.launchAppAndAssertButtonExistence()
+        let app = Helper.launchApp()
 
         XCTAssertTrue(app.staticTexts["Categorías"].exists)
         app.staticTexts["Categorías"].click()
@@ -27,6 +27,6 @@ class CreateCategories: XCTestCase {
         attachment.name = "Categorías Tab macOS"
         attachment.lifetime = .keepAlways
         add(attachment)
-        Helper.saveScreenshots("./screenshots/CategoriasTab_Mac.png")
+        Helper.saveScreenshots(path: "./screenshots/CategoriasTab_Mac.png")
     }
 }
