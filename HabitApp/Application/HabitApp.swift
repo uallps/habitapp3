@@ -17,7 +17,6 @@ struct HabitApp: App {
                 print("Error solicitando permisos: \(error)")
             }
         }
-        
         #endif
     }
     var body: some Scene {
@@ -100,6 +99,12 @@ struct HabitApp: App {
             .environmentObject(AppConfig())
 #endif
         }
-        .modelContainer(for: [DailyNote.self, Habit.self])
+        // Register all @Model types here
+        .modelContainer(for: [
+            DailyNote.self,
+            Habit.self,
+            CategorySet.self,
+            UserImageSlot.self
+        ])
     }
 }
