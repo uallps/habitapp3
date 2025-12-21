@@ -5,8 +5,7 @@ struct CategoryRowView: View {
     let category: CategorySet
     
     var body: some View {
-        
-        HStack() {
+        HStack {
             Text(category.name)
             
             Circle()
@@ -15,6 +14,43 @@ struct CategoryRowView: View {
                 .overlay(
                     Circle().stroke(Color.black, lineWidth: 1)
                 )
+            
+            if let image = category.icon.image {
+                #if os(iOS)
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 46, height: 46)
+                    .clipShape(Circle())
+                    .overlay(
+                        Circle().stroke(Color.black, lineWidth: 1)
+                    )
+                #elseif os(macOS)
+                Image(nsImage: image)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 46, height: 46)
+                    .clipShape(Circle())
+                    .overlay(
+                        Circle().stroke(Color.black, lineWidth: 1)
+                    )
+                #endif
+            } else {
+                Capsule()
+                    .fill(Color.white)
+                    .frame(width: 50, height: 40)
+                    .overlay(
+                        HStack(spacing: 0) {
+                            ForEach(category.icon.emojis ?? [], id: \.self) { emoji in
+                                Text(emoji.emoji)
+                                    .font(.title2)
+                            }
+                        }
+                    )
+                    .overlay(
+                        Capsule().stroke(Color.black, lineWidth: 1)
+                    )
+            }
             
             
         }
