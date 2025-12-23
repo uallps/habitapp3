@@ -153,6 +153,9 @@
     "Mensual %@" : {
 
     },
+    "Mixta %@" : {
+
+    },
     "No hay notas para esta fecha" : {
 
     },
@@ -236,6 +239,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "media"
+          }
+        }
+      }
+    },
+    "priority_mixed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "mixed"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "mixto"
           }
         }
       }

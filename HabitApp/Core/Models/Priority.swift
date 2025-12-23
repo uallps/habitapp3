@@ -1,7 +1,7 @@
 import Foundation
 
 enum Priority: String, Hashable, Codable, CaseIterable {
-    case low, medium, high
+    case low, medium, high, mixed
 
     // Optional: a color for SwiftUI
     var color: String {
@@ -12,7 +12,10 @@ enum Priority: String, Hashable, Codable, CaseIterable {
             return "Orange"
         case .low:
             return "Green"
+        case .mixed:
+            return "🎨"
         }
+
     }
     
     var localized: String {
@@ -20,6 +23,7 @@ enum Priority: String, Hashable, Codable, CaseIterable {
         case .low: return NSLocalizedString("priority_low", comment: "")
         case .medium: return NSLocalizedString("priority_medium", comment: "")
         case .high: return NSLocalizedString("priority_high", comment: "")
+        case .mixed: return NSLocalizedString("priority_mixed", comment: "")
         }
     }
     
@@ -29,6 +33,7 @@ enum Priority: String, Hashable, Codable, CaseIterable {
         case .high: return "🔴"
         case .medium: return "🟠"
         case .low: return "🟢"
+        case .mixed: return "🎨"
         }
     }
 }

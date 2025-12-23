@@ -147,6 +147,7 @@ struct CategoryDetailWrapperView: View {
                         Text("Alta \(Priority.high.emoji)").tag(Priority?.some(.high))
                         Text("Media \(Priority.medium.emoji)").tag(Priority?.some(.medium))
                         Text("Baja \(Priority.low.emoji)").tag(Priority?.some(.low))
+                        Text("Mixta \(Priority.mixed.emoji)").tag(Priority?.some(.mixed))
                     }
                     .pickerStyle(.menu)
                 }
@@ -159,6 +160,7 @@ struct CategoryDetailWrapperView: View {
                         Text("Semanal \(Frequency.weekly.emoji)").tag(Frequency?.some(.weekly))
                         Text("Mensual \(Frequency.monthly.emoji)").tag(Frequency?.some(.monthly))
                         Text("Anual \(Frequency.annual.emoji)").tag(Frequency?.some(.annual))
+                        Text("Mixta \(Frequency.mixed.emoji)").tag(Frequency?.some(.mixed))
                     }
                     .pickerStyle(.menu)
                 }
