@@ -58,7 +58,36 @@ struct CategoryDetailWrapperView: View {
     }
 
     @State private var selectionMode: SelectionMode = .emoji
+    
+    init(viewModel: CategoryListViewModel, categorySet: CategorySet, userImageVM: UserImagesViewModel) {
+        self.viewModel = viewModel
+        self._categorySet = State(initialValue: categorySet)
+        self.userImageVM = userImageVM
 
+        // Initialize state from categorySet
+        self._name = State(initialValue: categorySet.name)
+        self._selectedPriority = State(initialValue: categorySet.priority)
+        self._selectedFrequency = State(initialValue: categorySet.frequency)
+        self._selectedColor = State(initialValue: categorySet.color)
+
+        // Initialize icons
+        if let emojis = categorySet.icon.emojis, !emojis.isEmpty {
+            self._selectedIconOne = State(initialValue: emojis.indices.contains(0) ? emojis[0] : Emoji(emoji: "", name: "", id: ""))
+            self._selectedIconTwo = State(initialValue: emojis.indices.contains(1) ? emojis[1] : Emoji(emoji: "", name: "", id: ""))
+            self._selectedIconThree = State(initialValue: emojis.indices.contains(2) ? emojis[2] : Emoji(emoji: "", name: "", id: ""))
+            self._selectionMode = State(initialValue: .emoji)
+        } else if categorySet.icon.image != nil {
+            self._selectedIconOne = State(initialValue: Emoji(emoji: "", name: "", id: ""))
+            self._selectedIconTwo = State(initialValue: Emoji(emoji: "", name: "", id: ""))
+            self._selectedIconThree = State(initialValue: Emoji(emoji: "", name: "", id: ""))
+            self._selectionMode = State(initialValue: .image)
+        } else {
+            self._selectedIconOne = State(initialValue: Emoji(emoji: "", name: "", id: ""))
+            self._selectedIconTwo = State(initialValue: Emoji(emoji: "", name: "", id: ""))
+            self._selectedIconThree = State(initialValue: Emoji(emoji: "", name: "", id: ""))
+            self._selectionMode = State(initialValue: .emoji)
+        }
+    }
     var body: some View {
         NavigationStack {
             Form {
@@ -139,6 +168,7 @@ struct CategoryDetailWrapperView: View {
                     Button {
                         if isCategoryValid {
                             let selectedColorName = CategoryDetailWrapperView.allColorsMap[selectedColor ?? Color.red]
+                            let oldCategorySetName = categorySet.name
                             categorySet.name = name
                             categorySet.priority = selectedPriority ?? .medium
                             categorySet.frequency = selectedFrequency ?? .daily
@@ -158,8 +188,11 @@ struct CategoryDetailWrapperView: View {
                                     image: userImageVM.image
                                 )
                             }
-
-                            viewModel.addCategory(category: categorySet)
+                            if oldCategorySetName == "" {
+                                viewModel.addCategory(category: categorySet)
+                            }else {
+                                
+                            }
                             dismiss()
                         } else {
                             if name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {

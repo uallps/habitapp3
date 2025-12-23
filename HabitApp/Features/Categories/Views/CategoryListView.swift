@@ -7,11 +7,16 @@ struct CategoryListView: View {
         NavigationStack {
             VStack(spacing: 12) {
                 List(viewModel.categories) { category in
-                    NavigationLink(value: category) {
-                        CategoryRowView(
-                            category: category
+                    NavigationLink {
+                        CategoryDetailWrapperView(
+                            viewModel: viewModel,
+                            categorySet: category,
+                            userImageVM: UserImagesViewModel()
                         )
+                    } label: {
+                        CategoryRowView(category: category)
                     }
+                    
 
                 }.frame(maxWidth: .infinity, maxHeight: .infinity)
             }

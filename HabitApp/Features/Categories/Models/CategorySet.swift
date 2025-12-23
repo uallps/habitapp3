@@ -25,7 +25,7 @@ class CategorySet: Identifiable, Hashable {
         case "pink": return .pink
         case "brown": return .brown
         case "gray": return .gray
-        default: return Color(colorAssetName)
+        default: return .red
         }
     }
     
