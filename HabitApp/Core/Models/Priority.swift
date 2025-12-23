@@ -26,9 +26,9 @@ enum Priority: String, Hashable, Codable, CaseIterable {
     // Optional: an emoji representation
     var emoji: String {
         switch self {
-        case .high: return "Alta 🔴"
-        case .medium: return "Media 🟠"
-        case .low: return "Baja 🟢"
+        case .high: return "🔴"
+        case .medium: return "🟠"
+        case .low: return "🟢"
         }
     }
 }

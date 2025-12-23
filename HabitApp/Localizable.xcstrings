@@ -38,7 +38,16 @@
     "Ajustes (próximamente)" : {
 
     },
+    "Alta %@" : {
+
+    },
     "Añadir" : {
+
+    },
+    "Anual %@" : {
+
+    },
+    "Baja %@" : {
 
     },
     "Buscar emoji..." : {
@@ -82,6 +91,9 @@
 
     },
     "Detalles del hábito" : {
+
+    },
+    "Diaria %@" : {
 
     },
     "Días de la semana" : {
@@ -133,6 +145,12 @@
 
     },
     "Marcar día completado" : {
+
+    },
+    "Media %@" : {
+
+    },
+    "Mensual %@" : {
 
     },
     "No hay notas para esta fecha" : {
@@ -241,6 +259,9 @@
 
     },
     "Seleccione una opción" : {
+
+    },
+    "Semanal %@" : {
 
     },
     "Sin notas" : {

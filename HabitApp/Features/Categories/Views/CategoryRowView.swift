@@ -53,15 +53,27 @@ struct CategoryRowView: View {
             }
             
             HStack() {
+                #if os(macOS)
                 Text(
                     "Prioridad: " + category.priority.emoji
                 )
+                #else
+                Text(
+                    "P: " + category.priority.emoji
+                )
+                #endif
             }
             
             HStack() {
+                #if os(macOs)
                 Text(
                     "Frecuencia: " + category.frequency.emoji
                 )
+                #else
+                Text(
+                    "F: " + category.frequency.emoji
+                )
+                #endif
             }
         }
     }

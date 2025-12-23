@@ -115,9 +115,9 @@ struct CategoryDetailWrapperView: View {
                 Section(header: Text("Prioridad")) {
                     Picker("Prioridad", selection: $selectedPriority) {
                         Text("Selecciona prioridad").tag(Priority?.none)
-                        Text("\(Priority.high.emoji)").tag(Priority?.some(.high))
-                        Text("\(Priority.medium.emoji)").tag(Priority?.some(.medium))
-                        Text("\(Priority.low.emoji)").tag(Priority?.some(.low))
+                        Text("Alta \(Priority.high.emoji)").tag(Priority?.some(.high))
+                        Text("Media \(Priority.medium.emoji)").tag(Priority?.some(.medium))
+                        Text("Baja \(Priority.low.emoji)").tag(Priority?.some(.low))
                     }
                     .pickerStyle(.menu)
                 }
@@ -126,10 +126,10 @@ struct CategoryDetailWrapperView: View {
                 Section(header: Text("Frecuencia")) {
                     Picker("Frecuencia", selection: $selectedFrequency) {
                         Text("Selecciona frecuencia").tag(Frequency?.none)
-                        Text("\(Frequency.daily.emoji)").tag(Frequency?.some(.daily))
-                        Text("\(Frequency.weekly.emoji)").tag(Frequency?.some(.weekly))
-                        Text("\(Frequency.monthly.emoji)").tag(Frequency?.some(.monthly))
-                        Text("\(Frequency.annual.emoji)").tag(Frequency?.some(.annual))
+                        Text("Diaria \(Frequency.daily.emoji)").tag(Frequency?.some(.daily))
+                        Text("Semanal \(Frequency.weekly.emoji)").tag(Frequency?.some(.weekly))
+                        Text("Mensual \(Frequency.monthly.emoji)").tag(Frequency?.some(.monthly))
+                        Text("Anual \(Frequency.annual.emoji)").tag(Frequency?.some(.annual))
                     }
                     .pickerStyle(.menu)
                 }
