@@ -13,10 +13,10 @@ Se espera que el propio usuario pueda crear sus categorías. Esto tiene poca rel
 
 Todas las formas para categorizar se definen a continuación. Se pueden utilizar varias maneras de categorizar simultáneamente.
 
-#### 📜 Nombre
-Cada hábito se categoriza por un nombre, que puede tener subcategorías.  
+#### 📜 ¿Qué es una categoría?
+Cada hábito se categoriza por un nombre, que puede pertenecer a categorías distintas.  
 
-Ejemplo de hábitos relacionados con **Mecánica**:  
+Ejemplo de hábitos relacionados con la categoría **Mecánica**:  
 - 🧽 Limpiar tapicería del coche  
 - 🧹 Limpiar cristales  
 - 🔧 Comprobar pastillas de freno  
@@ -24,7 +24,7 @@ Ejemplo de hábitos relacionados con **Mecánica**:
 - 🚗 Aparcar con las ruedas rectas  
 - 🅿️ Aparcar con marcha engranada después de freno de mano  
 
-Subcategorías dentro de "Mecánica":  
+Una categoría puede tener a su vez, subcategorías. Por ejemplo, dentro de "Mecánica":  
 - **Limpieza** 🧽✨  
   - `Mecánica -> Limpieza` (limpieza de tapicería y cristales)  
 - **Mantenimiento** 🔧  
@@ -34,54 +34,38 @@ Subcategorías dentro de "Mecánica":
 
 ⚡ El usuario puede crear jerarquías tan profundas como quiera, generando categorías muy específicas 🔍📊.
 
+Una categoría tiene, simultáneamente: Nombre, icono, prioridad y frecuencia.
+
 #### 🪧 Icono
-Los iconos complementan el nombre y la jerarquía de la categoría.  
-- Pueden representar visualmente la categoría sin necesidad de texto.  
-- Se recomienda usar secuencias de 2 o 3 iconos para diferenciar categorías complejas.  
-- Aunque ilimitados, demasiados iconos pueden dificultar la comprensión.
+Los iconos complementan el nombre y la jerarquía de la categoría. Permiten al usuario definir visualmente sus categorías.
+
+Existen dos tipos de icono distintos:
+
+- Secuencia de emojis: El usuario puede elegir entre 1 y 3 emojis que en conjunto representan gráficamente a la categoría.
+- Imágenes del dispositivo: Como su nombre indica, el usuario carga una imagen de su dispositivo para representar la categoría.
 
 #### 🚦 Prioridad
-Los hábitos pueden tener distintas prioridades:  
+Las categorías pueden tener distintas prioridades:  
 - 🔴 Alta prioridad  
 - 🟠 Media prioridad  
 - 🟢 Baja prioridad  
 
-Ejemplos:  
-- 🟠 Lavarse y lubricar la barba  
-- 🟠 Lavarse el pelo  
-- 🔴 Ducharse con jabón  
-- 🔴 Lavarse los dientes  
-- 🟢 Peinarse la barba  
+¿Qué significa que una categoría tenga prioridad?
 
-#### 🗓️ Frecuencia
-Definición de periodicidad del hábito:  
-- 🔁🌞 **Diario:** Todos los días  
-- 🌞📅🌙 **Semanal:** Uno o varios días por semana  
-- 📅 **Mensual:** Uno o varios días por mes  
-- 🌱🌳 **Anual:** Uno o varios días por año o años  
+Una categoría tiene prioridad 🔴, 🟠 o 🟢, pero puede contener hábitos de distintas prioridades.
+
+La prioridad de una categoría permite al usuario anteponer conjuntos de hábitos frente a otros.
 
 Ejemplos:  
-- 🔁🌞 Lavarse los dientes  
-- 🌞📅🌙 Lavarse la barba (miércoles y domingos)  
-- 🌞📅🌙 Lavarse el pelo (miércoles y domingos)  
-- 📅 Comprobar presión de las ruedas (una vez al mes)  
-- 🌱🌳 ITV (una vez cada agosto)  
-- 🌱🌳 Visitar Alicante (cada 2 años)
+- 🟠 Lavarse y lubricar la barba (Dentro de la categoría Higiene (🔴) )
+- 🟠 Lavarse el pelo (Dentro de la categoría Higiene (🔴) )
+- 🔴 Ducharse con jabón  (Dentro de la categoría Higiene (🔴) )
+- 🔴 Lavarse los dientes  (Dentro de la categoría Higiene (🔴) )
+- 🟢 Peinarse la barba  (Dentro de la categoría Higiene (🔴) )
 
-#### 📈 Progreso
-Estado del hábito:  
-- ✅ Completado  
-- 🔄 En progreso  
-- ❌ No realizado  
+Dentro de la Higiene, hay hábitos menos prioritarios que otros.
 
-Ejemplos relacionados con frecuencia:  
-- 🔄 🌱🌳 Renovar DNI (cada 5 años): aún no completado, pero en curso  
-- ❌ 🌞📅🌙 Lavarse el pelo: olvidado por el usuario
-
-### 2️⃣ Hábitos No Definidos por el Usuario
-La aplicación ofrece categorías limitadas predefinidas.  
-- Facilita la función online de competición de hábitos.  
-- Limitado en opciones, puede resultar restrictivo para el usuario.
+Pero el usuario puede considerar que la Higiene (🔴) sea más importante que Coche (🟠)
 
 ### 3️⃣ Decisión de Diseño
 
