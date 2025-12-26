@@ -4,11 +4,16 @@ struct CategoryDetailWrapperView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var viewModel: CategoryListViewModel
     @State var category: Category
+
+    private let parent: Category?
+
     @ObservedObject var userImageVM: UserImagesViewModel
 
     @State private var showAlert = false
     @State private var alertMessage = ""
     @State private var activeSheet: ActiveSheet?
+
+    @State private var showAddSubcategory = false
 
     private var isCategoryValid: Bool {
         guard !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return false }
@@ -57,10 +62,11 @@ struct CategoryDetailWrapperView: View {
 
     @State private var selectionMode: SelectionMode = .emoji
     
-    init(viewModel: CategoryListViewModel, category: Category, userImageVM: UserImagesViewModel) {
+    init(viewModel: CategoryListViewModel, category: Category, userImageVM: UserImagesViewModel, parent: Category? = nil) {
         self.viewModel = viewModel
         self._category = State(initialValue: category)
         self.userImageVM = userImageVM
+        self.parent = parent
 
         // Inicializar estado de categoría.
 
@@ -175,10 +181,11 @@ struct CategoryDetailWrapperView: View {
                                     image: userImageVM.image
                                 )
                             }
-                            if oldCategoryName == "" {
+                            if viewModel.categoryExists(name: oldCategoryName) == false {
                                 viewModel.addCategory(category: category)
                             }else {
-                                
+                                // Actualizar categoría existente
+                                viewModel.updateCategory(oldName: oldCategoryName, newCategory: category)
                             }
                             dismiss()
                         } else {
@@ -205,7 +212,53 @@ struct CategoryDetailWrapperView: View {
                 }
 
                 Section(header: Text("Subcategorías")) {
-                    
+                    if category.subCategories.isEmpty {
+                        Text("No hay subcategorías")
+                    } else {
+                        ForEach(Array(category.subCategories.values), id: \.id).sorted(by: { $0.name < $1.name }) { subcategory in
+                            NavigationLink {
+                                CategoryDetailWrapperView(
+                                    viewModel: viewModel,
+                                    category: sub,
+                                    userImageVM: userImageVM,
+                                    parent: parent ?? category
+                                )
+                            }
+                        } label: {
+                                HStack(spacing: 12) {
+                                    Circle()
+                                        .fill(sub.color)
+                                        .frame(width: 28, height: 28)
+                                        .overlay(Circle().stroke(Color.black.opacity(0.2), lineWidth: 1))
+                                    Text(sub.name)
+                                    Spacer()
+                                    Text(sub.priority.emoji)
+                                        .foregroundColor(.secondary)
+                                }
+                                .padding(.vertical, 6)
+                      }
+
+                    // Botón para crear una nueva subcategoría (abre un editor vacío)
+                    NavigationLink(isActive: $showAddSubcategory) {
+                        // Nueva categoría vacía para ser editada como subcategoría
+                        let newSub = Category(name: "", icon: UserImageSlot(), priority: .medium)
+                        CategoryDetailWrapperView(
+                            viewModel: viewModel,
+                            category: newSub,
+                            userImageVM: userImageVM
+                            parent: parent ?? category
+                        )
+                    } label: {
+                        EmptyView()
+                    }
+
+                    Button {
+                        showAddSubcategory = true
+                    } label: {
+                        Label("Añadir subcategoría", systemImage: "plus.circle")
+                    }
+
+                    }
                 }
 
             }

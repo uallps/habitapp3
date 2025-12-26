@@ -25,6 +25,15 @@ class CategoryListViewModel: ObservableObject {
     }
 
     func categoryExists(name: String) -> Bool {
-        return categories[name] != nil
+        return categories[name] != nil && !name.isEmpty
+    }
+
+    func updateCategory(oldName: String, newCategory: Category) {
+        // Eliminar la categoría antigua si el nombre ha cambiado.
+        if oldName != newCategory.name {
+            categories.removeValue(forKey: oldName)
+        }
+        // Añadir o actualizar la categoría con el nuevo nombre.
+        categories[newCategory.name] = newCategory
     }
 }
