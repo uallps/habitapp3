@@ -25,6 +25,15 @@ final class HabitListViewModel: ObservableObject {
             print("Error saving habit: \(error)")
         }
     }
+
+    func addHabitToCategory(habit: Habit, category: Category, context: ModelContext) {
+        category.habits[habit.id] = habit
+        do {
+            try context.save()
+        } catch {
+            print("Error adding habit to category: \(error)")
+        }
+    }
     
     func toggleCompletion(habit: Habit, for date: Date = Date()) {
         if habit.isCompletedForDate(date) {

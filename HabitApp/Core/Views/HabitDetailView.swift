@@ -3,6 +3,10 @@ import SwiftUI
 struct HabitDetailView: View {
     @Binding var habit: Habit
     @State private var selectedDate = Date()
+
+    @EnvironmentObject var categoryListVM: CategoryListViewModel
+    @EnvironmentObject var userImageVM: UserImagesViewModel
+    @EnvironmentObject var habitListVM: HabitListViewModel
     
     private let calendar = Calendar.current
     private let weekdaySymbols = Calendar.current.shortStandaloneWeekdaySymbols
@@ -55,6 +59,51 @@ struct HabitDetailView: View {
                         // Solo permitir 1 día activo (como tenías antes)
                         habit.doneDates = [selectedDay]
                     }
+            }
+
+            Section(header: Text("Añadir hábito a categoría")) {
+                if Array(categoryListVM.categories.values).isEmpty {
+                    Text("No hay categorías disponibles. Crea al menos una categoría.")
+                        .foregroundColor(.gray)
+
+                }else {
+                    List {
+                        ForEach(Array(categoryListVM.categories.values).sorted(by: { $0.name < $1.name })) { category in
+                           NavigationLink {
+                                CategoryDetailWrapperView(
+                                    viewModel: categoryListVM,
+                                    category: category,
+                                    userImageVM: userImageVM
+                                )
+                           } label: {
+                                 HStack(spacing: 12) {
+                                    Circle()
+                                        .fill(category.color)
+                                        .frame(width: 28, height: 28)
+                                        .overlay(Circle().stroke(Color.black.opacity(0.2), lineWidth: 1))
+                                    Text(category.name)
+                                    Spacer()
+                                    Text(category.priority.emoji)
+                                        .foregroundColor(.secondary)
+                                }
+                                .padding(.vertical, 6)
+
+                                Button {
+                                    habitListVM.addHabitToCategory(habit: habit, category: category, context: categoryListVM.modelContext)
+                                } label {
+                                        Image(systemName: "plus.circle.fill")
+                                            .foregroundColor(.blue)
+                                            .imageScale(.large)
+                                }
+                                .buttonStyle(.plain)
+
+                           }
+                           .buttonStyle(.plain)
+
+                        }
+                    }
+                    .frame(minHeight: 120, maxHeight: 300)
+                }
             }
 
         }

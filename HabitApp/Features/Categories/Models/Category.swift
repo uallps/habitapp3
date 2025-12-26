@@ -32,6 +32,7 @@ class Category: Identifiable, Hashable {
     var priority: Priority
 
     var subCategories = [String: Category] = [:]
+    var habits: [UUID: Habit] = [:]
     
     
     init(
