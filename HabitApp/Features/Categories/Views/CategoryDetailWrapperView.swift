@@ -204,6 +204,10 @@ struct CategoryDetailWrapperView: View {
                     }
                 }
 
+                Section(header: Text("Subcategorías")) {
+                    
+                }
+
             }
             .navigationTitle("Nueva categoría")
         }

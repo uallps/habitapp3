@@ -5,7 +5,6 @@ import SwiftData
 class Category: Identifiable, Hashable {
     
     @Attribute(.unique) var id: UUID
-    
     var name: String    // Nombre de la categoría. Es único (Siempre se almacena en minúsculas y sin espacios, por lo que es irrelevante si el usuario usa mayúsculas o espacios)
     
     var colorAssetName: String
@@ -31,6 +30,8 @@ class Category: Identifiable, Hashable {
     
     var icon: UserImageSlot
     var priority: Priority
+
+    var subCategories = [String: Category] = [:]
     
     
     init(
