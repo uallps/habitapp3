@@ -181,12 +181,14 @@ struct CategoryDetailWrapperView: View {
                                     image: userImageVM.image
                                 )
                             }
-                            if viewModel.categoryExists(name: oldCategoryName) == false {
-                                viewModel.addCategory(category: category)
-                            }else {
-                                // Actualizar categoría existente
-                                viewModel.updateCategory(oldName: oldCategoryName, newCategory: category)
-                            }
+
+                            upsertCategory(
+                                categoryName: oldCategoryName,
+                                parent: parent,
+                                category: category
+                            )
+
+
                             dismiss()
                         } else {
                             if name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -309,6 +311,19 @@ struct CategoryDetailWrapperView: View {
             .cornerRadius(8)
         }
         .buttonStyle(.plain)
+    }
+
+    private func upsertCategory(categoryName: String, parent: Category?, category: Category) {
+                                    if viewModel.categoryExists(name: categoryName) == false {
+                                viewModel.addCategory(category: category)
+                            }else {
+                                // Actualizar categoría existente
+                                viewModel.updateCategory(oldName: categoryName, newCategory: category)
+                            }
+        if let parent = parent {
+            viewModel.addSubCategory(category: parent, subCategory: category)
+        } 
+
     }
 
     enum ActiveSheet: Identifiable {
