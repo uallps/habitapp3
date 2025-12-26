@@ -3,7 +3,7 @@ import SwiftUI
 struct CategoryDetailWrapperView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var viewModel: CategoryListViewModel
-    @State var categorySet: CategorySet
+    @State var category: Category
     @ObservedObject var userImageVM: UserImagesViewModel
 
     @State private var showAlert = false
@@ -20,7 +20,6 @@ struct CategoryDetailWrapperView: View {
             if userImageVM.image == nil { return false }
         }
         guard selectedPriority != nil else { return false }
-        guard selectedFrequency != nil else { return false }
         return true
     }
 
@@ -48,7 +47,6 @@ struct CategoryDetailWrapperView: View {
     )
 
     @State private var selectedPriority: Priority? = nil
-    @State private var selectedFrequency: Frequency? = nil
     @State private var selectedColor: Color? = nil
 
     enum SelectionMode: String, CaseIterable, Identifiable {
@@ -59,24 +57,25 @@ struct CategoryDetailWrapperView: View {
 
     @State private var selectionMode: SelectionMode = .emoji
     
-    init(viewModel: CategoryListViewModel, categorySet: CategorySet, userImageVM: UserImagesViewModel) {
+    init(viewModel: CategoryListViewModel, category: Category, userImageVM: UserImagesViewModel) {
         self.viewModel = viewModel
-        self._categorySet = State(initialValue: categorySet)
+        self._category = State(initialValue: category)
         self.userImageVM = userImageVM
 
-        // Initialize state from categorySet
-        self._name = State(initialValue: categorySet.name)
-        self._selectedPriority = State(initialValue: categorySet.priority)
-        self._selectedFrequency = State(initialValue: categorySet.frequency)
-        self._selectedColor = State(initialValue: categorySet.color)
+        // Inicializar estado de categoría.
+
+        // Guardar nombre de la categoría siempre sin espacios y sin mayúsculas.
+        self._name = State(initialValue: category.name.trimmingCharacters(in: .whitespacesAndNewlines).underscoredCapitalized)
+        self._selectedPriority = State(initialValue: category.priority)
+        self._selectedColor = State(initialValue: category.color)
 
         // Initialize icons
-        if let emojis = categorySet.icon.emojis, !emojis.isEmpty {
+        if let emojis = category.icon.emojis, !emojis.isEmpty {
             self._selectedIconOne = State(initialValue: emojis.indices.contains(0) ? emojis[0] : Emoji(emoji: "", name: "", id: ""))
             self._selectedIconTwo = State(initialValue: emojis.indices.contains(1) ? emojis[1] : Emoji(emoji: "", name: "", id: ""))
             self._selectedIconThree = State(initialValue: emojis.indices.contains(2) ? emojis[2] : Emoji(emoji: "", name: "", id: ""))
             self._selectionMode = State(initialValue: .emoji)
-        } else if categorySet.icon.image != nil {
+        } else if category.icon.image != nil {
             self._selectedIconOne = State(initialValue: Emoji(emoji: "", name: "", id: ""))
             self._selectedIconTwo = State(initialValue: Emoji(emoji: "", name: "", id: ""))
             self._selectedIconThree = State(initialValue: Emoji(emoji: "", name: "", id: ""))
@@ -152,33 +151,19 @@ struct CategoryDetailWrapperView: View {
                     .pickerStyle(.menu)
                 }
 
-                // MARK: - Frequency Picker
-                Section(header: Text("Frecuencia")) {
-                    Picker("Frecuencia", selection: $selectedFrequency) {
-                        Text("Selecciona frecuencia").tag(Frequency?.none)
-                        Text("Diaria \(Frequency.daily.emoji)").tag(Frequency?.some(.daily))
-                        Text("Semanal \(Frequency.weekly.emoji)").tag(Frequency?.some(.weekly))
-                        Text("Mensual \(Frequency.monthly.emoji)").tag(Frequency?.some(.monthly))
-                        Text("Anual \(Frequency.annual.emoji)").tag(Frequency?.some(.annual))
-                        Text("Mixta \(Frequency.mixed.emoji)").tag(Frequency?.some(.mixed))
-                    }
-                    .pickerStyle(.menu)
-                }
-
                 // MARK: - Save Button
                 Section {
                     Button {
                         if isCategoryValid {
                             let selectedColorName = CategoryDetailWrapperView.allColorsMap[selectedColor ?? Color.red]
-                            let oldCategorySetName = categorySet.name
-                            categorySet.name = name
-                            categorySet.priority = selectedPriority ?? .medium
-                            categorySet.frequency = selectedFrequency ?? .daily
-                            categorySet.colorAssetName = selectedColorName ?? "red"
+                            let oldCategoryName = category.name
+                         category.name = name
+                         category.priority = selectedPriority ?? .medium
+                         category.colorAssetName = selectedColorName ?? "red"
 
                             switch(selectionMode) {
                             case .emoji:
-                                categorySet.icon = UserImageSlot(
+                             category.icon = UserImageSlot(
                                     emojis: [
                                         selectedIconOne,
                                         selectedIconTwo,
@@ -186,12 +171,12 @@ struct CategoryDetailWrapperView: View {
                                     ]
                                 )
                             case .image:
-                                categorySet.icon = UserImageSlot(
+                             category.icon = UserImageSlot(
                                     image: userImageVM.image
                                 )
                             }
-                            if oldCategorySetName == "" {
-                                viewModel.addCategory(category: categorySet)
+                            if oldCategoryName == "" {
+                                viewModel.addCategory(category: category)
                             }else {
                                 
                             }
@@ -207,8 +192,6 @@ struct CategoryDetailWrapperView: View {
                                 alertMessage = "¡Hace falta una imagen!"
                             } else if selectedPriority == nil {
                                 alertMessage = "¡Falta prioridad!"
-                            } else if selectedFrequency == nil {
-                                alertMessage = "¡Falta frecuencia!"
                             }
                             showAlert = true
                         }
@@ -220,6 +203,7 @@ struct CategoryDetailWrapperView: View {
                         Button("OK", role: .cancel) { }
                     }
                 }
+
             }
             .navigationTitle("Nueva categoría")
         }

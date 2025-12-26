@@ -2,11 +2,11 @@ import Foundation
 import Combine
 
 class CategoryListViewModel: ObservableObject {
-    @Published var categories: [CategorySet] = [
+    @Published var categories: [String: Category] = [
 
     ]
     
-    func addCategory(category: CategorySet) {
-        categories.append(category)
+    func addCategory(category: Category) {
+        categories[category.name] = category
     }
 }

@@ -2,11 +2,11 @@ import SwiftUI
 import SwiftData
 
 @Model
-class CategorySet: Identifiable, Hashable {
+class Category: Identifiable, Hashable {
     
     @Attribute(.unique) var id: UUID
     
-    var name: String    // Almacena una representación hasheable del color (nombre del asset).
+    var name: String    // Nombre de la categoría. Es único (Siempre se almacena en minúsculas y sin espacios, por lo que es irrelevante si el usuario usa mayúsculas o espacios)
     
     var colorAssetName: String
     
@@ -31,7 +31,6 @@ class CategorySet: Identifiable, Hashable {
     
     var icon: UserImageSlot
     var priority: Priority
-    var frequency: Frequency
     
     
     init(
@@ -40,13 +39,11 @@ class CategorySet: Identifiable, Hashable {
         colorAssetName: String = "black",
         icon: UserImageSlot,
         priority: Priority,
-        frequency: Frequency,
     ) {
         self.id = id
         self.name = name
         self.colorAssetName = colorAssetName
         self.icon = icon
         self.priority = priority
-        self.frequency = frequency
     }
 }

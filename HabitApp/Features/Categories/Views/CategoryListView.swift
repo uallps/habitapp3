@@ -31,7 +31,6 @@ struct CategoryListView: View {
                                 name: "",
                                 icon: UserImageSlot(image: nil),
                                 priority: .low,
-                                frequency: .daily,
                             ),
                             userImageVM: UserImagesViewModel()
                         )

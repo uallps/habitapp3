@@ -6,7 +6,9 @@ struct CategoryRowView: View {
     
     var body: some View {
         HStack {
-            Text(category.name)
+
+            // El nombre de la categoría se almacena en minúsculas, pero se muestra con la primera letra en mayúsculas.
+            Text(category.name.togglingFirstLetterCase)
             
             Circle()
                 .fill(category.color)
@@ -64,17 +66,6 @@ struct CategoryRowView: View {
                 #endif
             }
             
-            HStack() {
-                #if os(macOs)
-                Text(
-                    "Frecuencia: " + category.frequency.emoji
-                )
-                #else
-                Text(
-                    "F: " + category.frequency.emoji
-                )
-                #endif
-            }
         }
     }
 }
