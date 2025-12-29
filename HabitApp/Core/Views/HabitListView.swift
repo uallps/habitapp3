@@ -88,7 +88,7 @@ struct HabitListView: View {
         }
         .onAppear {
             if habits.isEmpty {
-                createSampleHabits()
+                viewModel.createSampleHabits(context: modelContext)
             }
         }
     }
@@ -124,19 +124,5 @@ struct HabitListView: View {
         let todayWeekday = calendar.component(.weekday, from: today)
         let diff = weekday - todayWeekday
         return calendar.date(byAdding: .day, value: diff, to: today) ?? today
-    }
-    
-    private func createSampleHabits() {
-        let sampleHabits = [
-            Habit(title: "Hacer ejercicio", priority: .high, scheduledDays: [2, 4, 6]),
-            Habit(title: "Leer 30 minutos", priority: .medium, scheduledDays: [1, 2, 3, 4, 5, 6, 7]),
-            Habit(title: "Meditar", priority: .low, scheduledDays: [1, 7])
-        ]
-        
-        for habit in sampleHabits {
-            modelContext.insert(habit)
-        }
-        
-        try? modelContext.save()
     }
 }

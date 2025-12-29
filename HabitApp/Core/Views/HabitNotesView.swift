@@ -3,14 +3,17 @@ import SwiftData
 
 struct HabitNotesView: View {
     let habit: Habit
+    let currentDate: Date
     @Environment(\.modelContext) private var modelContext
     @Query private var allNotes: [DailyNote]
     
     @State private var showingAddNote = false
     @StateObject private var notesViewModel: DailyNotesViewModel
+    private let calendar = Calendar.current
 
-    init(habit: Habit, modelContext: ModelContext) {
+    init(habit: Habit, currentDate: Date, modelContext: ModelContext) {
         self.habit = habit
+        self.currentDate = currentDate
         _notesViewModel = StateObject(wrappedValue: DailyNotesViewModel(modelContext: modelContext))
     }
 
@@ -55,13 +58,20 @@ struct HabitNotesView: View {
                 }
             }
             .sheet(isPresented: $showingAddNote) {
-                AddNoteView(habit: habit, noteDate: Date())
+                AddNoteView(habit: habit, noteDate: currentDate)
             }
         }
     }
 
     private var habitNotes: [DailyNote] {
-        allNotes.filter { $0.habit?.id == habit.id }
+        let startOfDay = calendar.startOfDay(for: currentDate)
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+        
+        return allNotes.filter { note in
+            note.habit?.id == habit.id &&
+            note.date >= startOfDay &&
+            note.date < endOfDay
+        }
     }
     
     private func deleteNotes(offsets: IndexSet) {

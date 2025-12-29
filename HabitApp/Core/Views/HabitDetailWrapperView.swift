@@ -77,14 +77,13 @@ struct HabitDetailWrapper: View {
                 context: modelContext
             )
         } else {
-            try? modelContext.save()
+            viewModel.updateHabit(habit, context: modelContext)
         }
         dismiss()
     }
     
     private func deleteHabit() {
-        modelContext.delete(habit)
-        try? modelContext.save()
+        viewModel.deleteHabit(habit, context: modelContext)
         dismiss()
     }
 }

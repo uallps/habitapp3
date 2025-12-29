@@ -40,6 +40,14 @@ final class HabitListViewModel: ObservableObject {
         }
     }
     
+    func updateHabit(_ habit: Habit, context: ModelContext) {
+        do {
+            try context.save()
+        } catch {
+            print("Error updating habit: \(error)")
+        }
+    }
+    
     func toggleCompletion(habit: Habit, for date: Date = Date()) {
         if habit.isCompletedForDate(date) {
             habit.markAsIncomplete(for: date)
@@ -62,6 +70,24 @@ final class HabitListViewModel: ObservableObject {
             try context.save()
         } catch {
             print("Error deleting habit: \(error)")
+        }
+    }
+    
+    func createSampleHabits(context: ModelContext) {
+        let sampleHabits = [
+            Habit(title: "Hacer ejercicio", priority: .high, scheduledDays: [2, 4, 6]),
+            Habit(title: "Leer 30 minutos", priority: .medium, scheduledDays: [1, 2, 3, 4, 5, 6, 7]),
+            Habit(title: "Meditar", priority: .low, scheduledDays: [1, 7])
+        ]
+        
+        for habit in sampleHabits {
+            context.insert(habit)
+        }
+        
+        do {
+            try context.save()
+        } catch {
+            print("Error creating sample habits: \(error)")
         }
     }
 }
