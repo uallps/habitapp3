@@ -38,14 +38,16 @@ final class DailyNotesViewModel: ObservableObject {
     func addNote(title: String, content: String) {
         guard let modelContext else { return }  // <--- evitar crash
 
-          let note = DailyNote(title: title, content: content, date: selectedDate)
-          modelContext.insert(note)
-          saveContext()
-          loadNotes()
-          
-          // Las notas diarias no necesitan alertas automáticas
-          // Solo los hábitos con recordatorio las necesitan
-      }
+        let calendar = Calendar.current
+        let noteDate = calendar.startOfDay(for: selectedDate)
+        let note = DailyNote(title: title, content: content, date: noteDate)
+        modelContext.insert(note)
+        saveContext()
+        loadNotes()
+        
+        // Las notas diarias no necesitan alertas automáticas
+        // Solo los hábitos con recordatorio las necesitan
+    }
       
       private func saveContext() {
           guard let modelContext else { return }  // <--- evitar crash
