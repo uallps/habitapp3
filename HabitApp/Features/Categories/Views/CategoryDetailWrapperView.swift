@@ -247,7 +247,7 @@ struct CategoryDetailWrapperView: View {
                         CategoryDetailWrapperView(
                             viewModel: viewModel,
                             category: newSub,
-                            userImageVM: userImageVM
+                            userImageVM: userImageVM,
                             parent: parent ?? category
                         )
                     } label: {

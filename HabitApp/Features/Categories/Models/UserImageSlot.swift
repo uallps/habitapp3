@@ -10,7 +10,22 @@ typealias PlatformImage = NSImage
 #endif
 
 @Model
-class UserImageSlot {
+class UserImageSlot: Encodable, Decodable {
+    
+    enum CodingKeys: String, CodingKey {
+        case imageData, emojis
+    }
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(imageData, forKey: .imageData)
+        try container.encode(emojis, forKey: .emojis)
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        imageData = try container.decode(Data.self, forKey: .imageData)
+        emojis = try container.decode([Emoji].self, forKey: .emojis)
+    }
     
     // Ni NSImage ni UIImage son PersistentModel, por lo que hay que almacenar la imagen en una base de datos de otra manera (con Data).
     var image: PlatformImage? {

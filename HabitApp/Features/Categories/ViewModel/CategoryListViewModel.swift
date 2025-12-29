@@ -4,15 +4,13 @@ import Combine
 class CategoryListViewModel: ObservableObject {
 
     // String es el nombre de la categoría, que es único.
-    @Published var categories: [String: Category] = [
-
-    ]
+    @Published var categories: [String: Category] = [:]
     
     func addCategory(category: Category) {
         categories[category.name] = category
     }
 
-    func addSubCategory(category: Category, subCategory: SubCategory) {
+    func addSubCategory(category: Category, subCategory: Category) {
         categories[category.name]?.subCategories[subCategory.name] = subCategory
     }
 
@@ -20,7 +18,7 @@ class CategoryListViewModel: ObservableObject {
         categories.removeValue(forKey: category.name)
     }
 
-    func removeSubCategory(category: Category, subCategory: SubCategory) {
+    func removeSubCategory(category: Category, subCategory: Category) {
         categories[category.name]?.subCategories.removeValue(forKey: subCategory.name)
     }
 

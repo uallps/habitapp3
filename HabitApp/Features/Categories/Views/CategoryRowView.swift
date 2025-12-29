@@ -2,7 +2,7 @@ import SwiftUI
 
 struct CategoryRowView: View {
     
-    let category: CategorySet
+    let category: Category
     
     var body: some View {
         HStack {

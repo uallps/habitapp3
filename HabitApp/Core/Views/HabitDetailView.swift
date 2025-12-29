@@ -76,26 +76,7 @@ struct HabitDetailView: View {
                                     userImageVM: userImageVM
                                 )
                            } label: {
-                                 HStack(spacing: 12) {
-                                    Circle()
-                                        .fill(category.color)
-                                        .frame(width: 28, height: 28)
-                                        .overlay(Circle().stroke(Color.black.opacity(0.2), lineWidth: 1))
-                                    Text(category.name)
-                                    Spacer()
-                                    Text(category.priority.emoji)
-                                        .foregroundColor(.secondary)
-                                }
-                                .padding(.vertical, 6)
-
-                                Button {
-                                    habitListVM.addHabitToCategory(habit: habit, category: category, context: categoryListVM.modelContext)
-                                } label {
-                                        Image(systemName: "plus.circle.fill")
-                                            .foregroundColor(.blue)
-                                            .imageScale(.large)
-                                }
-                                .buttonStyle(.plain)
+                                 CategoryRowView(category: category)
 
                            }
                            .buttonStyle(.plain)

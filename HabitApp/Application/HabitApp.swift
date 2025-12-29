@@ -103,7 +103,7 @@ struct HabitApp: App {
         .modelContainer(for: [
             DailyNote.self,
             Habit.self,
-            CategorySet.self,
+            Category.self,
             UserImageSlot.self
         ])
     }

@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 @Model
-class Habit {
+class Habit: Encodable, Decodable {
     @Attribute(.unique) var id: UUID
     var title: String
     var doneDates: [Date]
@@ -13,18 +13,50 @@ class Habit {
     var scheduledDays: [Int] // 1 = Domingo, 2 = Lunes, ..., 7 = Sábado
     var createdAt: Date
     var updatedAt: Date
-    var activeCategories: CategorySet?
     
     @Relationship(deleteRule: .cascade, inverse: \DailyNote.habit)
     var notes: [DailyNote] = []
-
+    
+    enum CodingKeys: String, CodingKey {
+        case id, title, doneDates, isCompleted, dueDate, priority, reminderDate, scheduledDays, createdAt, updatedAt
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(title, forKey: .title)
+        try container.encode(doneDates, forKey: .doneDates)
+        try container.encode(isCompleted, forKey: .isCompleted)
+        try container.encode(dueDate, forKey: .dueDate)
+        try container.encode(priority, forKey: .priority)
+        try container.encode(reminderDate, forKey: .reminderDate)
+        try container.encode(scheduledDays, forKey: .scheduledDays)
+        try container.encode(createdAt, forKey: .createdAt)
+        try container.encode(updatedAt, forKey: .updatedAt)
+        // Note: `notes` relationship is usually not encoded
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        title = try container.decode(String.self, forKey: .title)
+        doneDates = try container.decode([Date].self, forKey: .doneDates)
+        isCompleted = try container.decode(Bool.self, forKey: .isCompleted)
+        dueDate = try container.decodeIfPresent(Date.self, forKey: .dueDate)
+        priority = try container.decodeIfPresent(Priority.self, forKey: .priority)
+        reminderDate = try container.decodeIfPresent(Date.self, forKey: .reminderDate)
+        scheduledDays = try container.decode([Int].self, forKey: .scheduledDays)
+        createdAt = try container.decode(Date.self, forKey: .createdAt)
+        updatedAt = try container.decode(Date.self, forKey: .updatedAt)
+        notes = [] // relationship is not decoded here
+    }
+    
     init(title: String,
          doneDates: [Date] = [],
          isCompleted: Bool = false,
          dueDate: Date? = nil,
          priority: Priority? = nil,
          reminderDate: Date? = nil,
-         activeCategories: CategorySet? = nil,
+         activeCategories: Category? = nil,
          scheduledDays: [Int] = []) {
         self.id = UUID()
         self.title = title
@@ -32,7 +64,6 @@ class Habit {
         self.isCompleted = isCompleted
         self.dueDate = dueDate
         self.reminderDate = reminderDate
-        self.activeCategories = activeCategories
         self.scheduledDays = scheduledDays
         self.priority = priority
         self.createdAt = Date()

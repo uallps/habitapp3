@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 
 @Model
-class Category: Identifiable, Hashable {
+class Category: Identifiable, Hashable, Encodable, Decodable {
     
     @Attribute(.unique) var id: UUID
     var name: String    // Nombre de la categoría. Es único (Siempre se almacena en minúsculas y sin espacios, por lo que es irrelevante si el usuario usa mayúsculas o espacios)
@@ -30,8 +30,30 @@ class Category: Identifiable, Hashable {
     
     var icon: UserImageSlot
     var priority: Priority
+    
+    enum CodingKeys: String, CodingKey {
+        case id, name, colorAssetName, icon, priority, subCategories
+    }
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(name, forKey: .name)
+        try container.encode(colorAssetName, forKey: .colorAssetName)
+        try container.encode(icon, forKey: .icon)
+        try container.encode(priority, forKey: .priority)
+        try container.encode(subCategories, forKey: .subCategories)
+    }
+    
+    required init (from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        colorAssetName = try container.decode(String.self, forKey: .colorAssetName)
+        icon = try container.decode(UserImageSlot.self, forKey: .icon)
+        priority = try container.decode(Priority.self, forKey: .priority)
+    }
 
-    var subCategories = [String: Category] = [:]
+    var subCategories : [String: Category] = [:]
     var habits: [UUID: Habit] = [:]
     
     
