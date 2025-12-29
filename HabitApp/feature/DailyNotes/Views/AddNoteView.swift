@@ -97,15 +97,30 @@ extension AddNoteView {
 extension AddNoteView {
     private func saveNote() {
         if let viewModel = viewModel {
-            // Si usamos el viewModel, la fecha se puede establecer desde él
-            viewModel.selectedDate = noteDate
+            // Usar la fecha pasada directamente al viewModel
+            let calendar = Calendar.current
+            let normalizedDate = calendar.startOfDay(for: noteDate)
+            viewModel.selectedDate = normalizedDate
             viewModel.addNote(title: title, content: content)
         } else {
             // Insertar nota directamente en el contexto
-            let note = DailyNote(title: title, content: content, date: noteDate)
+            let calendar = Calendar.current
+            let normalizedDate = calendar.startOfDay(for: noteDate)
+            let note = DailyNote(title: title, content: content, date: normalizedDate)
             note.habit = habit
             modelContext.insert(note)
             try? modelContext.save()
+            
+            // Programar notificación si la nota es para una fecha futura
+            let today = calendar.startOfDay(for: Date())
+            if normalizedDate > today {
+                let notificationTitle = habit != nil ? "Hábito: \(habit!.title) - \(title)" : "Nota: \(title)"
+                TaskDataObserverManager.shared.notify(
+                    taskId: note.id,
+                    title: notificationTitle,
+                    date: normalizedDate
+                )
+            }
         }
     }
 }

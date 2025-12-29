@@ -6,41 +6,101 @@
 //
 
 import SwiftUI
-import SwiftData
-import UserNotifications
-
+#if os(iOS)
+import UIKit
+#endif
 
 struct TestReminderView: View {
-    @StateObject private var viewModel: DailyNotesViewModel
-
-    init() {
-        // Creamos un contexto temporal para pruebas
-        let context = ModelContext(try! ModelContainer(for: DailyNote.self))
-        _viewModel = StateObject(wrappedValue: DailyNotesViewModel(modelContext: context))
-    }
+    @State private var message = "Listo para probar alertas"
     
     var body: some View {
         VStack(spacing: 20) {
-            Text("Prueba de ReminderPlugin")
+            Text("Test Notificaciones")
                 .font(.title2)
+            
+            Text(message)
                 .padding()
             
-            Button("Crear nota con notificación en 10s") {
-                let futureDate = Date().addingTimeInterval(10)
-                let note = DailyNote(title: "Recordatorio Test", content: "Esta es una prueba", date: futureDate)
-                
-                viewModel.addNote(title: note.title, content: note.content)
-                
-                print("Nota creada con fecha: \(futureDate)")
-                
-                // Listar notificaciones pendientes
-                UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
-                    for r in requests {
-                        print("Notificación pendiente: \(r.identifier) - \(r.content.title)")
-                    }
-                }
+            Button("Test Plugin Directo") {
+                testReminderPlugin()
+            }
+            
+            Button("Alerta en 3s") {
+                scheduleTestAlert(seconds: 3)
+            }
+            
+            Button("Alerta en 5s") {
+                scheduleTestAlert(seconds: 5)
+            }
+            
+            Button("Alerta Inmediata") {
+                showTestAlert()
+            }
+            
+            Button("Test Hábitos Mañana") {
+                testHabitsNotification()
             }
         }
         .padding()
+
+    }
+    
+    private func testReminderPlugin() {
+        let plugin = ReminderPlugin()
+        let futureDate = Date().addingTimeInterval(3)
+        
+        plugin.onDataChanged(
+            taskId: UUID(),
+            title: "Test desde Plugin",
+            dueDate: futureDate
+        )
+        
+        message = "Plugin ejecutado - alerta en 3s ⏰"
+    }
+    
+    private func scheduleTestAlert(seconds: Int) {
+        message = "Alerta programada para \(seconds)s ⏰"
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + TimeInterval(seconds)) {
+            showAlert(title: "Test Alerta", message: "Alerta después de \(seconds) segundos")
+        }
+    }
+    
+    private func showTestAlert() {
+        showAlert(title: "Test Inmediato", message: "Esta es una alerta inmediata")
+        message = "Alerta mostrada ✅"
+    }
+    
+    private func testHabitsNotification() {
+        let viewModel = HabitListViewModel()
+        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date()) ?? Date()
+        
+        // Crear hábitos de prueba
+        let testHabits = [
+            Habit(title: "Ejercicio", scheduledDays: [Calendar.current.component(.weekday, from: tomorrow)]),
+            Habit(title: "Lectura", scheduledDays: [Calendar.current.component(.weekday, from: tomorrow)])
+        ]
+        
+        viewModel.scheduleHabitsNotification(for: tomorrow, habits: testHabits)
+        message = "Notificación de hábitos programada para mañana ⏰"
+    }
+    
+    private func showAlert(title: String, message: String) {
+        #if os(iOS)
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = windowScene.windows.first else {
+            print("No se pudo obtener la ventana")
+            return
+        }
+        
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        
+        if let topController = window.rootViewController?.topMostViewController() {
+            topController.present(alert, animated: true)
+        }
+        #else
+        print("Alerta en macOS: \(title) - \(message)")
+        #endif
     }
 }

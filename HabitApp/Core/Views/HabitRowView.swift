@@ -44,7 +44,7 @@ struct HabitRowView: View {
             
             // 🔹 Navegación a notas
             NavigationLink {
-                HabitNotesView(habit: habit, modelContext: modelContext)
+                HabitNotesView(habit: habit, currentDate: date, modelContext: modelContext)
             } label: {
                 Image(systemName: "note.text")
                     .foregroundColor(.blue)

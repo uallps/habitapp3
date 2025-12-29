@@ -1,135 +1,215 @@
+# HabitApp - Sistema de Hábitos y Notas
 
----
+Una aplicación multiplataforma (iOS/macOS) para gestionar hábitos diarios y notas con sistema de notificaciones inteligentes.
 
-# HabitApp
+## 🚀 Características Principales
 
-**HabitApp** es una aplicación de ejemplo en **SwiftUI + SwiftData** para iOS y macOS que permite gestionar hábitos, notas diarias y recordatorios locales. Está estructurada siguiendo un enfoque **MVVM** y soporta plugins para extender su funcionalidad.
+### 📱 **Multiplataforma**
 
----
+- **iOS**: Interfaz TabView optimizada para móviles
+- **macOS**: NavigationSplitView con sidebar para escritorio
 
-## 📁 Estructura del proyecto
+### ✅ **Gestión de Hábitos**
 
-```
-HabitApp/
-│
-├── App/
-│   └── HabitApp.swift            # Punto de entrada @main con TabView (iOS) y NavigationSplitView (macOS)
-│
-├── Models/
-│   └── DailyNote.swift           # Modelo de nota diaria usando @Model de SwiftData
-│
-├── ViewModels/
-│   └── DailyNotesViewModel.swift # Lógica de negocio para notas diarias (iOS + macOS)
-│
-├── Views/
-│   ├── DailyNotesView.swift      # Vista principal de notas diarias unificada iOS/macOS
-│   ├── AddNoteView.swift         # Vista para crear nuevas notas, unificada iOS/macOS
-│   ├── NoteDetailView.swift      # Vista detalle de nota
-│   └── NoteRowView.swift         # Fila individual en la lista de notas
-│
-├── Extensions/
-│   └── ViewModifiers.swift       # ViewModifiers para estilizar listas y botones
-│
-├── Plugins/
-│   ├── PluginRegistry.swift
-│   ├── TaskDataObservingPlugin.swift # Protocolo para plugins que observan cambios en datos (habit o nota)
-│   └── ReminderPlugin.swift      # Plugin para programar notificaciones locales
-│
-└── README.md
-```
+- Crear hábitos con días específicos de la semana
+- Marcar como completado/incompleto por día
+- Sistema de prioridades (Alta, Media, Baja)
 
----
+### 📝 **Notas Diarias**
 
-## 🛠 Tecnologías usadas
+- Notas independientes por fecha
+- Notas asociadas a hábitos específicos
+- Filtrado automático por día seleccionado
 
-* **SwiftUI**: interfaz declarativa para iOS/macOS.
-* **SwiftData**: persistencia de modelos (`DailyNote`) usando `@Model`, `ModelContainer` y `ModelContext`.
-* **Combine**: para publicar cambios de datos en el ViewModel.
-* **UserNotifications**: notificaciones locales en iOS.
-* Arquitectura **MVVM**.
-* Plugins para extender funcionalidad (como recordatorios).
+### 🎯 **Objetivos** (Solo iOS)
 
----
+- Crear objetivos con metas numéricas
+- Hitos intermedios
+- Seguimiento de progreso automático
+- Asociación con hábitos
 
-## 💡 Funcionalidades principales
+## 🔔 Sistema de Notificaciones
 
-### 1️⃣ Habit List (iOS/macOS)
+### **Arquitectura de Plugins**
 
-* Pantalla principal de hábitos (placeholder en este ejemplo).
-* Tab en iOS y NavigationSplitView en macOS.
-
-### 2️⃣ Daily Notes
-
-* Crear, editar y borrar notas.
-* Lista de notas filtradas por fecha.
-* Fecha limitada entre hoy y 3 meses en el futuro.
-* Vista unificada para iOS/macOS usando `#if os(iOS)`.
-
-### 3️⃣ Reminder Plugin
-
-* **ReminderPlugin** observa cambios en los datos de las notas.
-* Cuando se crea o actualiza una nota con fecha futura, programa una notificación local en iOS.
-* En macOS se puede extender a `NSUserNotificationCenter` si se desea.
-* Permite verificar notificaciones pendientes usando:
+El sistema utiliza una arquitectura de plugins para manejar notificaciones:
 
 ```swift
-UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
-    for r in requests {
-        print("Notificación pendiente: \(r.identifier) - \(r.content.title)")
+// 1. Protocolo base
+protocol TaskDataObservingPlugin {
+    func onDataChanged(taskId: UUID, title: String, dueDate: Date?)
+}
+
+// 2. Manager central
+TaskDataObserverManager.shared.notify(
+    taskId: UUID(),
+    title: "Título de la notificación",
+    date: fechaFutura
+)
+
+// 3. Plugin de recordatorios
+struct ReminderPlugin: TaskDataObservingPlugin {
+    func onDataChanged(taskId: UUID, title: String, dueDate: Date?) {
+        // Programa alerta UIKit para iOS
+        // Log en consola para macOS
     }
 }
 ```
 
-### 4️⃣ Testing de Notificaciones
+### **Tipos de Notificaciones**
 
-* `TestReminderView` permite crear notas con notificación en 10s para verificar que el plugin funciona.
-* Funciona mejor en un **dispositivo real iOS**, ya que el simulador no siempre muestra alertas.
-
----
-
-## ⚙️ Integración iOS/macOS
-
-* iOS: `TabView` + `NavigationStack`
-* macOS: `NavigationSplitView`
-* Vistas unificadas mediante `#if os(iOS) / #else / #endif`
-* `DailyNotesViewModel` funciona en ambas plataformas usando el mismo archivo.
-
----
-
-## 📝 Notas técnicas importantes
-
-1. **Permisos de notificaciones iOS**
+#### **📝 Notas Futuras**
 
 ```swift
-UNUserNotificationCenter.current().requestAuthorization(
-    options: [.alert, .sound, .badge]
-) { granted, error in ... }
+// En DailyNotesViewModel.addNote()
+if noteDate > today {
+    TaskDataObserverManager.shared.notify(
+        taskId: note.id,
+        title: "Nota: \(title)",
+        date: noteDate
+    )
+}
 ```
 
+#### **🏃‍♂️ Notas de Hábitos**
 
+```swift
+// En AddNoteView.saveNote()
+let notificationTitle = habit != nil ? 
+    "Hábito: \(habit!.title) - \(title)" : 
+    "Nota: \(title)"
+  
+TaskDataObserverManager.shared.notify(
+    taskId: note.id,
+    title: notificationTitle,
+    date: normalizedDate
+)
+```
 
-2. **SwiftData**
+#### **📅 Recordatorio de Hábitos Diarios**
 
-* Modelos anotados con `@Model`.
-* `ModelContainer(for: [DailyNote.self])` y `ModelContext(container)` permiten inicializar el ViewModel.
+```swift
+// En HabitListViewModel.scheduleHabitsNotification()
+func scheduleHabitsNotification(for date: Date, habits: [Habit]) {
+    let dayHabits = habits.filter { $0.scheduledDays.contains(weekday) }
+    let habitTitles = dayHabits.map { $0.title }.joined(separator: ", ")
+  
+    TaskDataObserverManager.shared.notify(
+        taskId: UUID(),
+        title: "Hoy tienes \(dayHabits.count) hábito(s): \(habitTitles)",
+        date: notificationDate // 9:00 AM del día
+    )
+}
+```
 
-3. **Estilos**
+### **Implementación de Alertas**
 
-* `ViewModifiers` para listas y botones:
+#### **iOS - UIAlertController**
 
-  * `.dailyNotesStyle()`
-  * `.dailyNotesListStyle()`
-  * `.dailyNotesToolbarButton()`
+```swift
+#if os(iOS)
+private func showAlert(title: String, message: String) {
+    guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+          let window = windowScene.windows.first else { return }
+  
+    let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+    alert.addAction(UIAlertAction(title: "OK", style: .default))
+  
+    if let topController = window.rootViewController?.topMostViewController() {
+        topController.present(alert, animated: true)
+    }
+}
+#endif
+```
 
----
+#### **macOS - Console Log**
 
+```swift
+#if os(macOS)
+print("🔔 Alerta en macOS: \(title) - \(message)")
+#endif
+```
 
+## 🧪 Testing de Notificaciones
 
-## 📌 Consejos
+### **TestReminderView**
 
-* Las notificaciones no se muestran en el simulador de iOS como alertas visuales, solo en la consola.
-* Para macOS, se requiere adaptar `ReminderPlugin` a `NSUserNotificationCenter` si se quieren notificaciones reales.
-* Mantener `DailyNotesViewModel` unificado permite usar el mismo código en iOS y macOS.
+Incluye botones para probar el sistema:
 
----
+- **"Test Plugin Directo"**: Prueba el plugin con alerta en 3s
+- **"Alerta en 3s/5s"**: Alertas programadas con DispatchQueue
+- **"Alerta Inmediata"**: Muestra alerta al instante
+- **"Test Hábitos Mañana"**: Programa notificación de hábitos para mañana
 
+### **Uso del Sistema**
+
+```swift
+// 1. Para programar una notificación
+TaskDataObserverManager.shared.notify(
+    taskId: UUID(),
+    title: "Mi recordatorio",
+    date: Date().addingTimeInterval(3600) // En 1 hora
+)
+
+// 2. El manager notifica a todos los plugins registrados
+// 3. ReminderPlugin programa la alerta
+// 4. La alerta se muestra en el momento programado
+```
+
+## 🏗️ Arquitectura del Proyecto
+
+```
+HabitApp/
+├── Application/           # Configuración principal
+├── Core/                 # Funcionalidad principal de hábitos
+│   ├── Models/          # Habit.swift
+│   ├── ViewModels/      # HabitListViewModel.swift
+│   └── Views/           # Vistas de hábitos
+├── feature/
+│   ├── DailyNotes/      # Sistema de notas
+│   ├── Goals/           # Objetivos (solo iOS)
+│   └── TestNoti/        # Testing de notificaciones
+├── infraestructure/
+│   └── Plugins/         # Sistema de plugins y notificaciones
+└── Utils/               # Extensiones y utilidades
+```
+
+## 🔧 Configuración
+
+### **Permisos iOS**
+
+```swift
+// En HabitApp.swift
+UNUserNotificationCenter.current().requestAuthorization(
+    options: [.alert, .sound, .badge]
+) { granted, error in
+    // Manejo de permisos
+}
+```
+
+### **Compilación Condicional**
+
+```swift
+#if os(iOS)
+// Código específico para iOS
+#else
+// Código específico para macOS
+#endif
+```
+
+## 📱 Plataformas Soportadas
+
+- **iOS 17.0+**
+- **macOS 14.0+**
+- **SwiftUI + SwiftData**
+
+## 🎯 Funcionalidades por Plataforma
+
+| Funcionalidad          | iOS | macOS |
+| ---------------------- | --- | ----- |
+| Hábitos               | ✅  | ✅    |
+| Notas Diarias          | ✅  | ✅    |
+| Objetivos              | ✅  | ❌    |
+| Notificaciones UIKit   | ✅  | ❌    |
+| Notificaciones Console | ❌  | ✅    |
+| Test Notificaciones    | ✅  | ✅    |

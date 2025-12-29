@@ -38,20 +38,23 @@ final class DailyNotesViewModel: ObservableObject {
     func addNote(title: String, content: String) {
         guard let modelContext else { return }  // <--- evitar crash
 
-          let note = DailyNote(title: title, content: content, date: selectedDate)
-          modelContext.insert(note)
-          saveContext()
-          loadNotes()
-          
-          // 🔔 Notificar plugins
-          PluginRegistry.shared.dataObservers.forEach { plugin in
-              plugin.onDataChanged(
-                  taskId: note.id,
-                  title: note.title,
-                  dueDate: note.date
-              )
-          }
-      }
+        let calendar = Calendar.current
+        let noteDate = calendar.startOfDay(for: selectedDate)
+        let note = DailyNote(title: title, content: content, date: noteDate)
+        modelContext.insert(note)
+        saveContext()
+        loadNotes()
+        
+        // Programar notificación si la nota es para una fecha futura
+        let today = calendar.startOfDay(for: Date())
+        if noteDate > today {
+            TaskDataObserverManager.shared.notify(
+                taskId: note.id,
+                title: "Nota: \(title)",
+                date: noteDate
+            )
+        }
+    }
       
       private func saveContext() {
           guard let modelContext else { return }  // <--- evitar crash

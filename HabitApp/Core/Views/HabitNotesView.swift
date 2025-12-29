@@ -3,18 +3,33 @@ import SwiftData
 
 struct HabitNotesView: View {
     let habit: Habit
+    let currentDate: Date
     @Environment(\.modelContext) private var modelContext
     @Query private var allNotes: [DailyNote]
     
     @State private var showingAddNote = false
     @StateObject private var notesViewModel: DailyNotesViewModel
+    private let calendar = Calendar.current
 
-    init(habit: Habit, modelContext: ModelContext) {
+    init(habit: Habit, currentDate: Date, modelContext: ModelContext) {
         self.habit = habit
+        self.currentDate = currentDate
         _notesViewModel = StateObject(wrappedValue: DailyNotesViewModel(modelContext: modelContext))
     }
 
     var body: some View {
+        #if os(iOS)
+        iosBody
+        #else
+        macBody
+        #endif
+    }
+}
+
+// MARK: - iOS UI
+#if os(iOS)
+extension HabitNotesView {
+    var iosBody: some View {
         NavigationStack {
             List {
                 ForEach(habitNotes.sorted { $0.date > $1.date }) { note in
@@ -69,13 +84,90 @@ struct HabitNotesView: View {
                 #endif
             }
             .sheet(isPresented: $showingAddNote) {
-                AddNoteView(habit: habit)
+                AddNoteView(habit: habit, noteDate: currentDate)
             }
         }
     }
+}
+#endif
+
+// MARK: - macOS UI
+#if os(macOS)
+extension HabitNotesView {
+    var macBody: some View {
+        VStack {
+            if habitNotes.isEmpty {
+                ContentUnavailableView(
+                    "Sin notas",
+                    systemImage: "note.text",
+                    description: Text("No hay notas para \(habit.title) en esta fecha")
+                )
+            } else {
+                List {
+                    ForEach(habitNotes.sorted { $0.date > $1.date }) { note in
+                        NavigationLink {
+                            NoteDetailView(note: note, viewModel: notesViewModel)
+                        } label: {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(note.title)
+                                        .font(.subheadline)
+                                        .fontWeight(.semibold)
+                                        .lineLimit(1)
+                                    if !note.content.isEmpty {
+                                        Text(note.content)
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                            .lineLimit(2)
+                                    }
+                                }
+                                Spacer()
+                                Text(note.date, format: .dateTime.day().month())
+                                    .font(.caption2)
+                                    .foregroundColor(.gray)
+                            }
+                            .padding(.vertical, 4)
+                        }
+                        .contextMenu {
+                            Button("Eliminar", role: .destructive) {
+                                modelContext.delete(note)
+                                try? modelContext.save()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .navigationTitle("Notas - \(habit.title)")
+        .toolbar {
+            ToolbarItem {
+                Button {
+                    showingAddNote = true
+                } label: {
+                    Image(systemName: "plus")
+                }
+            }
+        }
+        .sheet(isPresented: $showingAddNote) {
+            AddNoteView(habit: habit, noteDate: currentDate)
+        }
+        .frame(minWidth: 400, minHeight: 300)
+    }
+}
+#endif
+
+// MARK: - Helpers
+extension HabitNotesView {
 
     private var habitNotes: [DailyNote] {
-        allNotes.filter { $0.habit?.id == habit.id }
+        let startOfDay = calendar.startOfDay(for: currentDate)
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+        
+        return allNotes.filter { note in
+            note.habit?.id == habit.id &&
+            note.date >= startOfDay &&
+            note.date < endOfDay
+        }
     }
     
     private func deleteNotes(offsets: IndexSet) {

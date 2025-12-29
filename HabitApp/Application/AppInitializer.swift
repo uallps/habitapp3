@@ -14,9 +14,14 @@ struct AppInitializer: ViewModifier {
     func body(content: Content) -> some View {
         content
             .onAppear {
-                // Registramos el plugin SOLO una vez
-                let plugin = HabitGoalPlugin(context: modelContext)
-                TaskDataObserverManager.shared.register(plugin)
+                // Registramos los plugins SOLO una vez
+                let habitGoalPlugin = HabitGoalPlugin(context: modelContext)
+                let reminderPlugin = ReminderPlugin()
+                
+                TaskDataObserverManager.shared.register(habitGoalPlugin)
+                TaskDataObserverManager.shared.register(reminderPlugin)
+                
+                print("🔔 Plugins registrados: HabitGoal y Reminder")
             }
     }
 }
