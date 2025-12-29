@@ -90,4 +90,21 @@ final class HabitListViewModel: ObservableObject {
             print("Error creating sample habits: \(error)")
         }
     }
+    
+    func scheduleHabitsNotification(for date: Date, habits: [Habit]) {
+        let calendar = Calendar.current
+        let weekday = calendar.component(.weekday, from: date)
+        let dayHabits = habits.filter { $0.scheduledDays.contains(weekday) }
+        
+        if !dayHabits.isEmpty {
+            let habitTitles = dayHabits.map { $0.title }.joined(separator: ", ")
+            let notificationDate = calendar.date(byAdding: .hour, value: 9, to: calendar.startOfDay(for: date)) ?? date
+            
+            TaskDataObserverManager.shared.notify(
+                taskId: UUID(),
+                title: "Hoy tienes \(dayHabits.count) hábito(s): \(habitTitles)",
+                date: notificationDate
+            )
+        }
+    }
 }

@@ -36,6 +36,10 @@ struct TestReminderView: View {
             Button("Alerta Inmediata") {
                 showTestAlert()
             }
+            
+            Button("Test Hábitos Mañana") {
+                testHabitsNotification()
+            }
         }
         .padding()
 
@@ -65,6 +69,20 @@ struct TestReminderView: View {
     private func showTestAlert() {
         showAlert(title: "Test Inmediato", message: "Esta es una alerta inmediata")
         message = "Alerta mostrada ✅"
+    }
+    
+    private func testHabitsNotification() {
+        let viewModel = HabitListViewModel()
+        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date()) ?? Date()
+        
+        // Crear hábitos de prueba
+        let testHabits = [
+            Habit(title: "Ejercicio", scheduledDays: [Calendar.current.component(.weekday, from: tomorrow)]),
+            Habit(title: "Lectura", scheduledDays: [Calendar.current.component(.weekday, from: tomorrow)])
+        ]
+        
+        viewModel.scheduleHabitsNotification(for: tomorrow, habits: testHabits)
+        message = "Notificación de hábitos programada para mañana ⏰"
     }
     
     private func showAlert(title: String, message: String) {

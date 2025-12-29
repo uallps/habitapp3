@@ -45,8 +45,15 @@ final class DailyNotesViewModel: ObservableObject {
         saveContext()
         loadNotes()
         
-        // Las notas diarias no necesitan alertas automáticas
-        // Solo los hábitos con recordatorio las necesitan
+        // Programar notificación si la nota es para una fecha futura
+        let today = calendar.startOfDay(for: Date())
+        if noteDate > today {
+            TaskDataObserverManager.shared.notify(
+                taskId: note.id,
+                title: "Nota: \(title)",
+                date: noteDate
+            )
+        }
     }
       
       private func saveContext() {
