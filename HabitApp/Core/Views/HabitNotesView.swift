@@ -55,7 +55,7 @@ struct HabitNotesView: View {
                 }
             }
             .sheet(isPresented: $showingAddNote) {
-                AddNoteView(habit: habit)
+                AddNoteView(habit: habit, noteDate: Date())
             }
         }
     }

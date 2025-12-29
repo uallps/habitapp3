@@ -95,7 +95,7 @@ extension DailyNotesView {
                 }
             }
             .sheet(isPresented: $showingAddNote) {
-                AddNoteView(viewModel: viewModel)
+                AddNoteView(viewModel: viewModel, noteDate: viewModel.selectedDate)
             }
             .padding(.vertical)
             .background(Color(.systemGray6).ignoresSafeArea())
@@ -166,7 +166,7 @@ extension DailyNotesView {
             }
         }
         .sheet(isPresented: $showingAddNote) {
-            AddNoteView(viewModel: viewModel)
+            AddNoteView(viewModel: viewModel, noteDate: viewModel.selectedDate)
         }
         .frame(minWidth: 500, minHeight: 400)
     }
