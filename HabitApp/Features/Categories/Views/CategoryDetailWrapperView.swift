@@ -71,7 +71,7 @@ struct CategoryDetailWrapperView: View {
         // Inicializar estado de categoría.
 
         // Guardar nombre de la categoría siempre sin espacios y sin mayúsculas.
-        self._name = State(initialValue: category.name.trimmingCharacters(in: .whitespacesAndNewlines).underscoredCapitalized)
+        self._name = State(initialValue: category.name.trimmingCharacters(in: .whitespacesAndNewlines).togglingFirstLetterCase)
         self._selectedPriority = State(initialValue: category.priority)
         self._selectedColor = State(initialValue: category.color)
 
@@ -93,69 +93,82 @@ struct CategoryDetailWrapperView: View {
             self._selectionMode = State(initialValue: .emoji)
         }
     }
+    
+    var nameAndIcon: some View {
+        // MARK: - Name
+        Section(header: Text("Nombre")) {
+            TextField("Nombre de la categoría", text: $name)
+        }
+        
+        Section("Color") {
+            Button {
+                activeSheet = .colorPicker
+            } label: {
+                HStack {
+                    if selectedColor != nil {
+                        Circle()
+                            .fill(selectedColor ?? .red)
+                            .frame(width: 36, height: 36)
+                            .overlay(
+                                Circle().stroke(Color.black, lineWidth: 1)
+                            )
+                    }
+                    Text(selectedColor != nil ? "Color seleccionado" : "Selecciona color")
+                }
+            }
+        }
+        
+        Section("Tipo de icono") {
+            Picker("Selecciona tipo", selection: $selectionMode) {
+                ForEach(SelectionMode.allCases) { mode in
+                    Text(mode.rawValue).tag(mode as SelectionMode)
+                }
+            }
+            .pickerStyle(.segmented)
+        }
+    }
+    
+    var iconSelectionSection: some View {
+        switch selectionMode {
+        case .emoji:
+            // MARK: - Emoji Buttons
+            Section(header: Text("Emojis")) {
+                VStack(spacing: 12) {
+                    emojiButton(title: "Emoji 1", emoji: selectedIconOne.emoji, id: 1)
+                    emojiButton(title: "Emoji 2", emoji: selectedIconTwo.emoji, id: 2)
+                    emojiButton(title: "Emoji 3", emoji: selectedIconThree.emoji, id: 3)
+                }
+            }
+        case .image:
+            // MARK: - Image Picker (if needed)
+            UserImagesPickerView(
+                viewModel: userImageVM
+            )
+        }
+    }
+    
+    var prioritySection: some View {
+        // MARK: - Priority Picker
+        Section(header: Text("Prioridad")) {
+            Picker("Prioridad", selection: $selectedPriority) {
+                Text("Selecciona prioridad").tag(Priority?.none)
+                Text("Alta \(Priority.high.emoji)").tag(Priority?.some(.high))
+                Text("Media \(Priority.medium.emoji)").tag(Priority?.some(.medium))
+                Text("Baja \(Priority.low.emoji)").tag(Priority?.some(.low))
+                Text("Mixta \(Priority.mixed.emoji)").tag(Priority?.some(.mixed))
+            }
+            .pickerStyle(.menu)
+        }
+    }
+    
+    
+    
     var body: some View {
         NavigationStack {
             Form {
-                // MARK: - Name
-                Section(header: Text("Nombre")) {
-                    TextField("Nombre de la categoría", text: $name)
-                }
-
-                Section("Color") {
-                    Button {
-                        activeSheet = .colorPicker
-                    } label: {
-                        HStack {
-                            if selectedColor != nil {
-                                Circle()
-                                    .fill(selectedColor ?? .red)
-                                    .frame(width: 36, height: 36)
-                                    .overlay(
-                                        Circle().stroke(Color.black, lineWidth: 1)
-                                    )
-                            }
-                            Text(selectedColor != nil ? "Color seleccionado" : "Selecciona color")
-                        }
-                    }
-                }
-
-                Section("Tipo de icono") {
-                    Picker("Selecciona tipo", selection: $selectionMode) {
-                        ForEach(SelectionMode.allCases) { mode in
-                            Text(mode.rawValue).tag(mode as SelectionMode)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                }
-
-                switch selectionMode {
-                case .emoji:
-                    // MARK: - Emoji Buttons
-                    Section(header: Text("Emojis")) {
-                        VStack(spacing: 12) {
-                            emojiButton(title: "Emoji 1", emoji: selectedIconOne.emoji, id: 1)
-                            emojiButton(title: "Emoji 2", emoji: selectedIconTwo.emoji, id: 2)
-                            emojiButton(title: "Emoji 3", emoji: selectedIconThree.emoji, id: 3)
-                        }
-                    }
-                case .image:
-                    // MARK: - Image Picker (if needed)
-                    UserImagesPickerView(
-                        viewModel: userImageVM
-                    )
-                }
-
-                // MARK: - Priority Picker
-                Section(header: Text("Prioridad")) {
-                    Picker("Prioridad", selection: $selectedPriority) {
-                        Text("Selecciona prioridad").tag(Priority?.none)
-                        Text("Alta \(Priority.high.emoji)").tag(Priority?.some(.high))
-                        Text("Media \(Priority.medium.emoji)").tag(Priority?.some(.medium))
-                        Text("Baja \(Priority.low.emoji)").tag(Priority?.some(.low))
-                        Text("Mixta \(Priority.mixed.emoji)").tag(Priority?.some(.mixed))
-                    }
-                    .pickerStyle(.menu)
-                }
+                nameAndIcon
+                iconSelectionSection
+                prioritySection
 
                 // MARK: - Save Button
                 Section {
@@ -217,7 +230,7 @@ struct CategoryDetailWrapperView: View {
                     if category.subCategories.isEmpty {
                         Text("No hay subcategorías")
                     } else {
-                        ForEach(Array(category.subCategories.values), id: \.id).sorted(by: { $0.name < $1.name }) { subcategory in
+                        ForEach(Array(category.subCategories.values), id: \.id) { sub in
                             NavigationLink {
                                 CategoryDetailWrapperView(
                                     viewModel: viewModel,
@@ -225,8 +238,7 @@ struct CategoryDetailWrapperView: View {
                                     userImageVM: userImageVM,
                                     parent: parent ?? category
                                 )
-                            }
-                        } label: {
+                            } label: {
                                 HStack(spacing: 12) {
                                     Circle()
                                         .fill(sub.color)
@@ -239,7 +251,7 @@ struct CategoryDetailWrapperView: View {
                                 }
                                 .padding(.vertical, 6)
                       }
-
+                        }
                     // Botón para crear una nueva subcategoría (abre un editor vacío)
                     NavigationLink(isActive: $showAddSubcategory) {
                         // Nueva categoría vacía para ser editada como subcategoría

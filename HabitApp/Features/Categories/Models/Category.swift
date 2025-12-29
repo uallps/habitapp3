@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 
 @Model
-class Category: Identifiable, Hashable, Encodable, Decodable {
+class Category: Identifiable, Hashable, Encodable, Decodable, Comparable {
     
     @Attribute(.unique) var id: UUID
     var name: String    // Nombre de la categoría. Es único (Siempre se almacena en minúsculas y sin espacios, por lo que es irrelevante si el usuario usa mayúsculas o espacios)
@@ -28,6 +28,9 @@ class Category: Identifiable, Hashable, Encodable, Decodable {
         }
     }
     
+    static func < (lhs: Category, rhs: Category) -> Bool {
+        lhs.id < rhs.id
+    }
     var icon: UserImageSlot
     var priority: Priority
     

@@ -6,11 +6,11 @@ struct CategoryListView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 12) {
-                List(viewModel.categories) { category in
+                List(Array(viewModel.categories.values)) { category in
                     NavigationLink {
                         CategoryDetailWrapperView(
                             viewModel: viewModel,
-                            categorySet: category,
+                            category: category,
                             userImageVM: UserImagesViewModel()
                         )
                     } label: {
@@ -26,7 +26,7 @@ struct CategoryListView: View {
                     NavigationLink {
                         CategoryDetailWrapperView(
                             viewModel: viewModel,
-                            categorySet: CategorySet(
+                            category: Category(
                                 id: UUID(),
                                 name: "",
                                 icon: UserImageSlot(image: nil),
