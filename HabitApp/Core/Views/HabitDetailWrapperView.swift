@@ -68,7 +68,17 @@ extension HabitDetailWrapper {
                     
                     // 🔹 Botones
                     VStack(spacing: 12) {
-                        Button(action: saveHabit) {
+                        Button(action: {
+                            viewModel.addHabit(
+                                title: habit.title,
+                                dueDate: habit.dueDate,
+                                priority: habit.priority,
+                                reminderDate: habit.reminderDate,
+                                scheduledDays: habit.scheduledDays,
+                                context: modelContext
+                            )
+                            dismiss()
+                        }) {
                             HStack {
                                 Image(systemName: "checkmark")
                                 Text(isNew ? "Crear hábito" : "Guardar cambios")
@@ -84,7 +94,8 @@ extension HabitDetailWrapper {
                         
                         if !isNew {
                             Button(action: {
-                                deleteHabit()
+                                viewModel.deleteHabit(habit, context: modelContext)
+                                dismiss()
                             }) {
                                 HStack {
                                     Image(systemName: "trash")
@@ -153,7 +164,8 @@ extension HabitDetailWrapper {
                 
                 if !isNew {
                     Button("Eliminar") {
-                        deleteHabit()
+                        viewModel.deleteHabit(habit, context: modelContext)
+                        dismiss()
                     }
                     .buttonStyle(.borderedProminent)
                     .controlProminence(.increased)
@@ -161,7 +173,19 @@ extension HabitDetailWrapper {
                 }
                 
                 Button(isNew ? "Crear" : "Guardar") {
-                    saveHabit()
+                    if isNew {
+                        viewModel.addHabit(
+                            title: habit.title,
+                            dueDate: habit.dueDate,
+                            priority: habit.priority,
+                            reminderDate: habit.reminderDate,
+                            scheduledDays: habit.scheduledDays,
+                            context: modelContext
+                        )
+                    } else {
+                        viewModel.updateHabit(habit, context: modelContext)
+                    }
+                    dismiss()
                 }
                 .buttonStyle(.borderedProminent)
                 .keyboardShortcut(.defaultAction)
@@ -175,26 +199,3 @@ extension HabitDetailWrapper {
     }
 }
 #endif
-    
-    // MARK: - Funciones
-    private func saveHabit() {
-        if isNew {
-            viewModel.addHabit(
-                title: habit.title,
-                dueDate: habit.dueDate,
-                priority: habit.priority,
-                reminderDate: habit.reminderDate,
-                scheduledDays: habit.scheduledDays,
-                context: modelContext
-            )
-        } else {
-            viewModel.updateHabit(habit, context: modelContext)
-        }
-        dismiss()
-    }
-    
-    private func deleteHabit() {
-        viewModel.deleteHabit(habit, context: modelContext)
-        dismiss()
-    }
-}

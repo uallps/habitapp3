@@ -6,7 +6,9 @@
 //
 
 import SwiftUI
+#if os(iOS)
 import UIKit
+#endif
 
 struct TestReminderView: View {
     @State private var message = "Listo para probar alertas"
@@ -66,6 +68,7 @@ struct TestReminderView: View {
     }
     
     private func showAlert(title: String, message: String) {
+        #if os(iOS)
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let window = windowScene.windows.first else {
             print("No se pudo obtener la ventana")
@@ -78,5 +81,8 @@ struct TestReminderView: View {
         if let topController = window.rootViewController?.topMostViewController() {
             topController.present(alert, animated: true)
         }
+        #else
+        print("Alerta en macOS: \(title) - \(message)")
+        #endif
     }
 }

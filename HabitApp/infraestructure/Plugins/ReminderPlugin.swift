@@ -6,7 +6,9 @@
 //
 
 import SwiftUI
+#if os(iOS)
 import UIKit
+#endif
 
 struct ReminderPlugin: TaskDataObservingPlugin {
     
@@ -40,6 +42,7 @@ struct ReminderPlugin: TaskDataObservingPlugin {
     }
     
     private func showAlert(title: String, message: String) {
+        #if os(iOS)
         DispatchQueue.main.async {
             guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                   let window = windowScene.windows.first(where: { $0.isKeyWindow }) else {
@@ -60,9 +63,13 @@ struct ReminderPlugin: TaskDataObservingPlugin {
                 print("🔔 Alerta mostrada: \(message)")
             }
         }
+        #else
+        print("🔔 Alerta en macOS: \(title) - \(message)")
+        #endif
     }
 }
 
+#if os(iOS)
 extension UIViewController {
     func topMostViewController() -> UIViewController {
         if let presented = presentedViewController {
@@ -77,3 +84,4 @@ extension UIViewController {
         return self
     }
 }
+#endif
