@@ -11,6 +11,18 @@ struct HabitListView: View {
     private let weekdaySymbols = Calendar.current.shortStandaloneWeekdaySymbols
 
     var body: some View {
+        #if os(iOS)
+        iosBody
+        #else
+        macBody
+        #endif
+    }
+}
+
+// MARK: - iOS UI
+#if os(iOS)
+extension HabitListView {
+    var iosBody: some View {
         NavigationStack {
             VStack(spacing: 12) {
                 
@@ -92,8 +104,105 @@ struct HabitListView: View {
             }
         }
     }
-    
-    // MARK: - Helpers
+}
+#endif
+
+// MARK: - macOS UI
+#if os(macOS)
+extension HabitListView {
+    var macBody: some View {
+        NavigationSplitView {
+            VStack(spacing: 16) {
+                // Selector de días
+                HStack(spacing: 8) {
+                    ForEach(1...7, id: \.self) { index in
+                        let dayName = weekdaySymbols[index - 1]
+                        let isSelected = calendar.component(.weekday, from: currentDate) == index
+                        
+                        Button(action: {
+                            currentDate = dateForWeekday(index)
+                        }) {
+                            VStack(spacing: 4) {
+                                Text(dayName.prefix(2))
+                                    .font(.caption)
+                                    .fontWeight(.semibold)
+                                Text(shortDate(for: index))
+                                    .font(.caption2)
+                            }
+                            .foregroundColor(isSelected ? .white : .primary)
+                            .frame(width: 50, height: 40)
+                            .background(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .fill(isSelected ? Color.blue : Color.gray.opacity(0.2))
+                            )
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding()
+                
+                Divider()
+                
+                // Lista de hábitos
+                List(filteredHabits) { habit in
+                    HabitRowView(
+                        habit: habit,
+                        toggleCompletion: {
+                            viewModel.toggleCompletion(habit: habit, for: currentDate)
+                        },
+                        date: currentDate
+                    )
+                }
+            }
+            .navigationTitle("Hábitos")
+            .toolbar {
+                ToolbarItem {
+                    Button {
+                        showingNewHabitSheet = true
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+                }
+            }
+        } detail: {
+            VStack {
+                Text("Tareas para \(dayName(for: currentDate))")
+                    .font(.title2)
+                Text(currentDate, format: .dateTime.day().month().year())
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                
+                if filteredHabits.isEmpty {
+                    ContentUnavailableView(
+                        "Sin hábitos",
+                        systemImage: "checkmark.circle",
+                        description: Text("No hay hábitos programados para este día")
+                    )
+                } else {
+                    Text("\(filteredHabits.count) hábito(s) programado(s)")
+                        .foregroundColor(.secondary)
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        .sheet(isPresented: $showingNewHabitSheet) {
+            HabitDetailWrapper(
+                viewModel: viewModel,
+                habit: Habit(title: ""),
+                isNew: true
+            )
+        }
+        .onAppear {
+            if habits.isEmpty {
+                viewModel.createSampleHabits(context: modelContext)
+            }
+        }
+    }
+}
+#endif
+
+// MARK: - Helpers
+extension HabitListView {
     
     private var filteredHabits: [Habit] {
         let weekday = calendar.component(.weekday, from: currentDate)

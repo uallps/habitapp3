@@ -15,55 +15,166 @@ struct HabitDetailWrapper: View {
     }
 
     var body: some View {
-        VStack(spacing: 20) {
-            // 🔹 Título
-            TextField("Título del hábito", text: $habit.title)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding(.horizontal)
-            
-            // 🔹 Días de la semana
-            Text("Selecciona los días de la semana")
-                .font(.headline)
-            
-            WeekdaySelector(selectedDays: $habit.scheduledDays)
-                .padding(.horizontal)
-            
-            // 🔹 Prioridad
-            Text("Prioridad")
-                .font(.headline)
-                .padding(.top)
-            
-            Picker("Prioridad", selection: Binding(
-                get: { habit.priority ?? .medium },
-                set: { habit.priority = $0 }
-            )) {
-                ForEach(Priority.allCases, id: \.self) { priority in
-                    Text(priority.rawValue.capitalized).tag(priority)
+        #if os(iOS)
+        iosBody
+        #else
+        macBody
+        #endif
+    }
+}
+
+// MARK: - iOS UI
+#if os(iOS)
+extension HabitDetailWrapper {
+    var iosBody: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(spacing: 24) {
+                    // 🔹 Título
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Título")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                        TextField("Nombre del hábito", text: $habit.title)
+                            .textFieldStyle(.roundedBorder)
+                    }
+                    
+                    // 🔹 Días de la semana
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Días de la semana")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                        
+                        WeekdaySelector(selectedDays: $habit.scheduledDays)
+                    }
+                    
+                    // 🔹 Prioridad
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Prioridad")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                        
+                        Picker("Prioridad", selection: Binding(
+                            get: { habit.priority ?? .medium },
+                            set: { habit.priority = $0 }
+                        )) {
+                            ForEach(Priority.allCases, id: \.self) { priority in
+                                Text(priority.rawValue.capitalized).tag(priority)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                    }
+                    
+                    
+                    // 🔹 Botones
+                    VStack(spacing: 12) {
+                        Button(action: saveHabit) {
+                            HStack {
+                                Image(systemName: "checkmark")
+                                Text(isNew ? "Crear hábito" : "Guardar cambios")
+                            }
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.blue)
+                            .cornerRadius(12)
+                        }
+                        .disabled(habit.title.isEmpty)
+                        
+                        if !isNew {
+                            Button(action: {
+                                deleteHabit()
+                            }) {
+                                HStack {
+                                    Image(systemName: "trash")
+                                    Text("Eliminar hábito")
+                                }
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.red)
+                                .cornerRadius(12)
+                            }
+                        }
+                    }
+                }
+                .padding()
+            }
+            .navigationTitle(isNew ? "Nuevo hábito" : "Editar hábito")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancelar") {
+                        dismiss()
+                    }
                 }
             }
-            .pickerStyle(SegmentedPickerStyle())
-            .padding(.horizontal)
-            
-            Spacer()
-            
-            // 🔹 Botón Guardar
-            Button(action: saveHabit) {
-                Text("Guardar hábito")
-                    .font(.headline)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .foregroundColor(.white)
-                    .padding(.horizontal)
+        }
+    }
+}
+#endif
+
+// MARK: - macOS UI
+#if os(macOS)
+extension HabitDetailWrapper {
+    var macBody: some View {
+        VStack(spacing: 20) {
+            Form {
+                Section("Información del hábito") {
+                    TextField("Nombre del hábito", text: $habit.title)
+                    
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Días de la semana")
+                            .font(.headline)
+                        WeekdaySelector(selectedDays: $habit.scheduledDays)
+                    }
+                    
+                    Picker("Prioridad", selection: Binding(
+                        get: { habit.priority ?? .medium },
+                        set: { habit.priority = $0 }
+                    )) {
+                        ForEach(Priority.allCases, id: \.self) { priority in
+                            Text(priority.rawValue.capitalized).tag(priority)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                }
             }
-            .background(Color.blue)
-            .cornerRadius(10)
             
-            // 🔹 Botón Eliminar (solo si no es nuevo)
-       
+            HStack(spacing: 12) {
+                Button("Cancelar") {
+                    dismiss()
+                }
+                .keyboardShortcut(.cancelAction)
+                
+                Spacer()
+                
+                if !isNew {
+                    Button("Eliminar") {
+                        deleteHabit()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .controlProminence(.increased)
+                    .tint(.red)
+                }
+                
+                Button(isNew ? "Crear" : "Guardar") {
+                    saveHabit()
+                }
+                .buttonStyle(.borderedProminent)
+                .keyboardShortcut(.defaultAction)
+                .disabled(habit.title.isEmpty)
+            }
+            .padding()
         }
         .navigationTitle(isNew ? "Nuevo hábito" : "Editar hábito")
+        .frame(minWidth: 400, minHeight: 300)
         .padding()
     }
+}
+#endif
     
     // MARK: - Funciones
     private func saveHabit() {

@@ -120,9 +120,8 @@ extension DailyNotesView {
             )
             .datePickerStyle(.compact)
             .padding()
-            .background(Color.white)
+            .background(Color(.controlBackgroundColor))
             .cornerRadius(8)
-            .shadow(radius: 2)
             
             if viewModel.notes.isEmpty {
                 ContentUnavailableView(
@@ -130,14 +129,14 @@ extension DailyNotesView {
                     systemImage: "note.text",
                     description: Text("No hay notas para esta fecha")
                 )
-                .padding()
             } else {
                 List {
                     ForEach(viewModel.notes, id: \.id) { note in
-                        NavigationLink(destination: NoteDetailView(note: note, viewModel: viewModel)) {
+                        NavigationLink {
+                            NoteDetailView(note: note, viewModel: viewModel)
+                        } label: {
                             NoteRowView(note: note)
                         }
-                        .listRowInsets(EdgeInsets())
                         .contextMenu {
                             Button("Eliminar", role: .destructive) {
                                 viewModel.deleteNote(note)
@@ -150,25 +149,23 @@ extension DailyNotesView {
                         }
                     }
                 }
-                .dailyNotesListStyle()
             }
         }
-        .dailyNotesStyle()
         .navigationTitle("Notas Diarias")
         .toolbar {
-            ToolbarItemGroup {
+            ToolbarItem {
                 Button {
                     showingAddNote = true
                 } label: {
                     Image(systemName: "plus")
                 }
-                .dailyNotesToolbarButton()
             }
         }
         .sheet(isPresented: $showingAddNote) {
             AddNoteView(viewModel: viewModel, noteDate: viewModel.selectedDate)
         }
         .frame(minWidth: 500, minHeight: 400)
+        .padding()
     }
 }
 #endif
