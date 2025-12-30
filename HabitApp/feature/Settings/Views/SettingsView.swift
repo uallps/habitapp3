@@ -1,8 +1,10 @@
 import SwiftUI
+import SwiftDataW
 
 struct SettingsView: View {
-    @EnvironmentObject var appConfig: AppConfig
+    @Environment(\.modelContext) private var modelContext
     @State private var showingAbout = false
+    @State private var showingClearAlert = false
     
     var body: some View {
         #if os(iOS)
@@ -20,8 +22,14 @@ extension SettingsView {
         NavigationStack {
             List {
                 Section("Visualización") {
-                    Toggle("Mostrar fechas de vencimiento", isOn: $appConfig.showDueDates)
-                    Toggle("Mostrar prioridades", isOn: $appConfig.showPriorities)
+                    Toggle("Mostrar fechas de vencimiento", isOn: Binding(
+                        get: { AppConfig.showDueDates },
+                        set: { AppConfig.showDueDates = $0 }
+                    ))
+                    Toggle("Mostrar prioridades", isOn: Binding(
+                        get: { AppConfig.showPriorities },
+                        set: { AppConfig.showPriorities = $0 }
+                    ))
                 }
                 
                 Section("Notificaciones") {
@@ -31,16 +39,8 @@ extension SettingsView {
                 }
                 
                 Section("Datos") {
-                    Button("Exportar datos") {
-                        exportData()
-                    }
-                    
-                    Button("Importar datos") {
-                        importData()
-                    }
-                    
                     Button("Limpiar todos los datos", role: .destructive) {
-                        clearAllData()
+                        showingClearAlert = true
                     }
                 }
                 
@@ -61,6 +61,14 @@ extension SettingsView {
             .sheet(isPresented: $showingAbout) {
                 AboutView()
             }
+            .alert("Limpiar todos los datos", isPresented: $showingClearAlert) {
+                Button("Cancelar", role: .cancel) { }
+                Button("Limpiar", role: .destructive) {
+                    clearAllData()
+                }
+            } message: {
+                Text("Esta acción eliminará todos los hábitos, notas y objetivos. No se puede deshacer.")
+            }
         }
     }
 }
@@ -73,8 +81,14 @@ extension SettingsView {
         VStack(spacing: 20) {
             Form {
                 Section("Visualización") {
-                    Toggle("Mostrar fechas de vencimiento", isOn: $appConfig.showDueDates)
-                    Toggle("Mostrar prioridades", isOn: $appConfig.showPriorities)
+                    Toggle("Mostrar fechas de vencimiento", isOn: Binding(
+                        get: { AppConfig.showDueDates },
+                        set: { AppConfig.showDueDates = $0 }
+                    ))
+                    Toggle("Mostrar prioridades", isOn: Binding(
+                        get: { AppConfig.showPriorities },
+                        set: { AppConfig.showPriorities = $0 }
+                    ))
                 }
                 
                 Section("Notificaciones") {
@@ -84,20 +98,10 @@ extension SettingsView {
                 }
                 
                 Section("Datos") {
-                    HStack {
-                        Button("Exportar datos") {
-                            exportData()
-                        }
-                        
-                        Button("Importar datos") {
-                            importData()
-                        }
-                        
-                        Button("Limpiar datos") {
-                            clearAllData()
-                        }
-                        .foregroundColor(.red)
+                    Button("Limpiar todos los datos") {
+                        showingClearAlert = true
                     }
+                    .foregroundColor(.red)
                 }
                 
                 Section("Información") {
@@ -118,24 +122,34 @@ extension SettingsView {
         .sheet(isPresented: $showingAbout) {
             AboutView()
         }
+        .alert("Limpiar todos los datos", isPresented: $showingClearAlert) {
+            Button("Cancelar", role: .cancel) { }
+            Button("Limpiar", role: .destructive) {
+                clearAllData()
+            }
+        } message: {
+            Text("Esta acción eliminará todos los hábitos, notas y objetivos. No se puede deshacer.")
+        }
     }
 }
 #endif
 
 // MARK: - Functions
 extension SettingsView {
-    private func exportData() {
-        // TODO: Implementar exportación de datos
-        print("Exportando datos...")
-    }
-    
-    private func importData() {
-        // TODO: Implementar importación de datos
-        print("Importando datos...")
-    }
-    
     private func clearAllData() {
-        // TODO: Implementar limpieza de datos
-        print("Limpiando datos...")
+        do {
+            // Eliminar todos los hábitos
+            try modelContext.delete(model: Habit.self)
+            
+            // Eliminar todas las notas
+            try modelContext.delete(model: DailyNote.self)
+            
+            // Eliminar todos los objetivos
+            try modelContext.delete(model: Goal.self)
+            
+            try modelContext.save()
+        } catch {
+            print("Error clearing data: \(error)")
+        }
     }
 }
