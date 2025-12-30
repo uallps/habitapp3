@@ -7,6 +7,9 @@
     " " : {
 
     },
+    "¡Completado!" : {
+
+    },
     "¿Eliminar hábito?" : {
 
     },
@@ -14,6 +17,37 @@
 
     },
     "%lld" : {
+
+    },
+    "%lld / %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld / %2$lld"
+          }
+        }
+      }
+    },
+    "%lld días" : {
+
+    },
+    "%lld días completados" : {
+
+    },
+    "%lld días restantes" : {
+
+    },
+    "%lld%%" : {
+
+    },
+    "1.0.0" : {
+
+    },
+    "Acerca de" : {
+
+    },
+    "Acerca de HabitApp" : {
 
     },
     "Actualizado: %@ a las %@" : {
@@ -26,19 +60,52 @@
         }
       }
     },
+    "Actualizar Progreso" : {
+
+    },
+    "Agregar Hito" : {
+
+    },
     "Ajustes" : {
 
     },
-    "Ajustes (próximamente)" : {
+    "Alerta en 3s" : {
+
+    },
+    "Alerta en 5s" : {
+
+    },
+    "Alerta Inmediata" : {
 
     },
     "Añadir" : {
 
     },
+    "Arquitectura MVVM" : {
+
+    },
+    "Cambiar" : {
+
+    },
     "Cancelar" : {
 
     },
+    "Cerrar" : {
+
+    },
+    "Compatible con iOS y macOS" : {
+
+    },
+    "Configuración de Recordatorios" : {
+
+    },
+    "Configurar recordatorios" : {
+
+    },
     "Contenido" : {
+
+    },
+    "Crea tu primer objetivo para comenzar" : {
 
     },
     "Creado: %@ a las %@" : {
@@ -51,7 +118,19 @@
         }
       }
     },
-    "Crear nota con notificación en 10s" : {
+    "Crear hábito" : {
+
+    },
+    "Datos" : {
+
+    },
+    "Desarrollado con SwiftUI" : {
+
+    },
+    "Descripción" : {
+
+    },
+    "Descripción (opcional)" : {
 
     },
     "Detalle de Nota" : {
@@ -72,6 +151,15 @@
     "Eliminar" : {
 
     },
+    "Eliminar hábito" : {
+
+    },
+    "En Progreso" : {
+
+    },
+    "Esta acción eliminará todos los hábitos, notas y objetivos. No se puede deshacer." : {
+
+    },
     "Esta acción no se puede deshacer" : {
 
     },
@@ -81,10 +169,28 @@
     "Fecha" : {
 
     },
+    "Fecha de inicio:" : {
+
+    },
+    "Fecha límite" : {
+
+    },
+    "Fecha límite:" : {
+
+    },
     "Guardar" : {
 
     },
-    "Guardar hábito" : {
+    "Guardar cambios" : {
+
+    },
+    "Habilitar notificaciones" : {
+
+    },
+    "HabitApp" : {
+
+    },
+    "Hábito Asociado" : {
 
     },
     "Habitos" : {
@@ -96,10 +202,52 @@
     "Hello, world!" : {
 
     },
+    "Hito" : {
+
+    },
+    "Hitos" : {
+
+    },
+    "Hitos (opcional)" : {
+
+    },
+    "Hora de recordatorio" : {
+
+    },
+    "Información" : {
+
+    },
+    "Información del Objetivo" : {
+
+    },
+    "Limpiar" : {
+
+    },
+    "Limpiar todos los datos" : {
+
+    },
     "Marcar día completado" : {
 
     },
+    "Meta" : {
+
+    },
+    "Mostrar fechas de vencimiento" : {
+
+    },
+    "Mostrar prioridades" : {
+
+    },
+    "Ninguno" : {
+
+    },
+    "No hay hábitos disponibles" : {
+
+    },
     "No hay notas para esta fecha" : {
+
+    },
+    "Nombre del hábito" : {
 
     },
     "Notas" : {
@@ -111,10 +259,22 @@
     "Notas Diarias" : {
 
     },
+    "Notificaciones" : {
+
+    },
     "Nueva Nota" : {
 
     },
     "Nuevo hábito" : {
+
+    },
+    "Nuevo Objetivo" : {
+
+    },
+    "Objetivo: %lld días" : {
+
+    },
+    "Objetivos" : {
 
     },
     "Prioridad" : {
@@ -174,10 +334,7 @@
         }
       }
     },
-    "Prueba de ReminderPlugin" : {
-
-    },
-    "Selecciona los días de la semana" : {
+    "Selecciona un hábito para vincular con este objetivo" : {
 
     },
     "Seleccione una opción" : {
@@ -186,10 +343,25 @@
     "Sin notas" : {
 
     },
+    "Sin Objetivos" : {
+
+    },
+    "Sistema de notificaciones inteligentes" : {
+
+    },
     "Tareas para %@" : {
 
     },
+    "Test" : {
+
+    },
+    "Test Hábitos Mañana" : {
+
+    },
     "Test Notificaciones" : {
+
+    },
+    "Test Plugin Directo" : {
 
     },
     "Título" : {
@@ -201,7 +373,19 @@
     "Título del hábito" : {
 
     },
+    "Una aplicación para gestionar tus hábitos diarios y alcanzar tus objetivos." : {
+
+    },
     "Vence: %@" : {
+
+    },
+    "Versión" : {
+
+    },
+    "Versión 1.0.0" : {
+
+    },
+    "Visualización" : {
 
     }
   },
