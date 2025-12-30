@@ -9,6 +9,8 @@ class Category: Identifiable, Hashable, Encodable, Decodable, Comparable {
     
     var colorAssetName: String
     
+    var isSubcategory: Bool
+    
     var color: Color {
         switch colorAssetName.lowercased() {
         case "red": return .red
@@ -35,7 +37,7 @@ class Category: Identifiable, Hashable, Encodable, Decodable, Comparable {
     var priority: Priority
     
     enum CodingKeys: String, CodingKey {
-        case id, name, colorAssetName, icon, priority, subCategories
+        case id, name, colorAssetName, icon, priority, subCategories, isSubcategory
     }
     
     func encode(to encoder: Encoder) throws {
@@ -46,6 +48,7 @@ class Category: Identifiable, Hashable, Encodable, Decodable, Comparable {
         try container.encode(icon, forKey: .icon)
         try container.encode(priority, forKey: .priority)
         try container.encode(subCategories, forKey: .subCategories)
+        try container.encode(isSubcategory, forKey: .isSubcategory)
     }
     
     required init (from decoder: Decoder) throws {
@@ -55,6 +58,7 @@ class Category: Identifiable, Hashable, Encodable, Decodable, Comparable {
         colorAssetName = try container.decode(String.self, forKey: .colorAssetName)
         icon = try container.decode(UserImageSlot.self, forKey: .icon)
         priority = try container.decode(Priority.self, forKey: .priority)
+        isSubcategory = try container.decode(Bool.self, forKey: .isSubcategory)
     }
 
     var subCategories : [String: Category] = [:]
@@ -67,11 +71,13 @@ class Category: Identifiable, Hashable, Encodable, Decodable, Comparable {
         colorAssetName: String = "black",
         icon: UserImageSlot,
         priority: Priority,
+        isSubcategory: Bool
     ) {
         self.id = id
         self.name = name
         self.colorAssetName = colorAssetName
         self.icon = icon
         self.priority = priority
+        self.isSubcategory = isSubcategory
     }
 }

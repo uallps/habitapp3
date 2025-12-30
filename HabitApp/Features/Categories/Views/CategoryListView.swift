@@ -11,7 +11,8 @@ struct CategoryListView: View {
                         CategoryDetailWrapperView(
                             viewModel: viewModel,
                             category: category,
-                            userImageVM: UserImagesViewModel()
+                            userImageVM: UserImagesViewModel(),
+                            isSubcategory: category.isSubcategory
                         )
                     } label: {
                         CategoryRowView(category: category)
@@ -24,15 +25,18 @@ struct CategoryListView: View {
             .toolbar(content: {
                 ToolbarItem(placement: .automatic) {
                     NavigationLink {
+                        let category = Category(
+                            id: UUID(),
+                            name: "",
+                            icon: UserImageSlot(image: nil),
+                            priority: .low,
+                            isSubcategory: false
+                        )
                         CategoryDetailWrapperView(
                             viewModel: viewModel,
-                            category: Category(
-                                id: UUID(),
-                                name: "",
-                                icon: UserImageSlot(image: nil),
-                                priority: .low,
-                            ),
-                            userImageVM: UserImagesViewModel()
+                            category: category,
+                            userImageVM: UserImagesViewModel(),
+                            isSubcategory: category.isSubcategory
                         )
                     } label: {
                         Label("Añadir", systemImage: "plus")

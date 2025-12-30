@@ -55,15 +55,9 @@ struct CategoryRowView: View {
             }
             
             HStack() {
-                #if os(macOS)
                 Text(
-                    "Prioridad: " + category.priority.emoji
+                    "Pr: " + category.priority.emoji
                 )
-                #else
-                Text(
-                    "P: " + category.priority.emoji
-                )
-                #endif
             }
             
         }

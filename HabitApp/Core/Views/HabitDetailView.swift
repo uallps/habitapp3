@@ -73,7 +73,8 @@ struct HabitDetailView: View {
                                 CategoryDetailWrapperView(
                                     viewModel: categoryListVM,
                                     category: category,
-                                    userImageVM: userImageVM
+                                    userImageVM: userImageVM,
+                                    isSubcategory: category.isSubcategory
                                 )
                            } label: {
                                  CategoryRowView(category: category)

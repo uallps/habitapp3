@@ -30,6 +30,8 @@ struct CategoryDetailWrapperView: View {
 
     // MARK: - Category State
     @State private var name: String = ""
+    @State private var initialName: String = ""
+    private var isSubCategory : Bool
     @State private var selectedIconOne: Emoji = Emoji(emoji: "", name: "", id: "")
     @State private var selectedIconTwo: Emoji = Emoji(emoji: "", name: "", id: "")
     @State private var selectedIconThree: Emoji = Emoji(emoji: "", name: "", id: "")
@@ -62,13 +64,16 @@ struct CategoryDetailWrapperView: View {
 
     @State private var selectionMode: SelectionMode = .emoji
     
-    init(viewModel: CategoryListViewModel, category: Category, userImageVM: UserImagesViewModel, parent: Category? = nil) {
+    init(viewModel: CategoryListViewModel, category: Category, userImageVM: UserImagesViewModel, parent: Category? = nil, isSubcategory: Bool) {
         self.viewModel = viewModel
         self._category = State(initialValue: category)
         self.userImageVM = userImageVM
         self.parent = parent
+        self.isSubCategory = isSubcategory
 
         // Inicializar estado de categoría.
+        
+        self._initialName = State(initialValue: category.name.trimmingCharacters(in: .whitespacesAndNewlines).togglingFirstLetterCase)
 
         // Guardar nombre de la categoría siempre sin espacios y sin mayúsculas.
         self._name = State(initialValue: category.name.trimmingCharacters(in: .whitespacesAndNewlines).togglingFirstLetterCase)
@@ -168,6 +173,7 @@ struct CategoryDetailWrapperView: View {
     
     var body: some View {
         NavigationStack {
+            let noun = isSubCategory ? "subcategoría" : "categoría"
             Form {
                 nameAndIcon
                 iconSelectionSection
@@ -228,10 +234,30 @@ struct CategoryDetailWrapperView: View {
                         Button("OK", role: .cancel) { }
                     }
                 }
-
+                
                 Section(header: Text("Subcategorías")) {
                     if category.subCategories.isEmpty {
                         Text("No hay subcategorías")
+                                            // Botón para crear una nueva subcategoría (abre un editor vacío)
+                        NavigationLink {
+                            // Nueva categoría vacía para ser editada como subcategoría
+                            let newSub = Category(name: "", icon: UserImageSlot(image: nil), priority: .medium, isSubcategory: true)
+                            CategoryDetailWrapperView(
+                                viewModel: viewModel,
+                                category: newSub,
+                                userImageVM: userImageVM,
+                                parent: parent ?? category,
+                                isSubcategory: newSub.isSubcategory
+                            )
+                        } label: {
+                            EmptyView()
+                        }
+
+                        Button {
+                            showAddSubcategory = true
+                        } label: {
+                            Label("Añadir subcategoría", systemImage: "plus.circle")
+                        }
                     } else {
                         ForEach(Array(category.subCategories.values), id: \.id) { sub in
                             NavigationLink {
@@ -239,7 +265,8 @@ struct CategoryDetailWrapperView: View {
                                     viewModel: viewModel,
                                     category: sub,
                                     userImageVM: userImageVM,
-                                    parent: parent ?? category
+                                    parent: parent ?? category,
+                                    isSubcategory: true
                                 )
                             } label: {
                                 HStack(spacing: 12) {
@@ -255,31 +282,13 @@ struct CategoryDetailWrapperView: View {
                                 .padding(.vertical, 6)
                       }
                         }
-                    // Botón para crear una nueva subcategoría (abre un editor vacío)
-                    NavigationLink {
-                        // Nueva categoría vacía para ser editada como subcategoría
-                        let newSub = Category(name: "", icon: UserImageSlot(image: nil), priority: .medium)
-                        CategoryDetailWrapperView(
-                            viewModel: viewModel,
-                            category: newSub,
-                            userImageVM: userImageVM,
-                            parent: parent ?? category
-                        )
-                    } label: {
-                        EmptyView()
-                    }
 
-                    Button {
-                        showAddSubcategory = true
-                    } label: {
-                        Label("Añadir subcategoría", systemImage: "plus.circle")
-                    }
 
                     }
                 }
 
             }
-            .navigationTitle("Nueva categoría")
+            .navigationTitle( (initialName == "" ? "Nueva " : "Editar ") + noun )
         }
         .sheet(item: $activeSheet) { item in
             switch item {
