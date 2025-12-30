@@ -30,9 +30,9 @@ struct CategoryDetailWrapperView: View {
     @State private var name: String = ""
     @State private var initialName: String = ""
     private var isSubCategory : Bool
-    @State private var selectedIconOne: Emoji = Emoji(emoji: "", name: "", id: "")
-    @State private var selectedIconTwo: Emoji = Emoji(emoji: "", name: "", id: "")
-    @State private var selectedIconThree: Emoji = Emoji(emoji: "", name: "", id: "")
+    @State private var selectedIconOne: Emoji = Emoji(emoji: "", name: "")
+    @State private var selectedIconTwo: Emoji = Emoji(emoji: "", name: "")
+    @State private var selectedIconThree: Emoji = Emoji(emoji: "", name: "")
     @State private var newSub: Category?
     
     static let allColors: [Color] = [
@@ -81,19 +81,19 @@ struct CategoryDetailWrapperView: View {
 
         // Initialize icons
         if let emojis = category.icon.emojis, !emojis.isEmpty {
-            self._selectedIconOne = State(initialValue: emojis.indices.contains(0) ? emojis[0] : Emoji(emoji: "", name: "", id: ""))
-            self._selectedIconTwo = State(initialValue: emojis.indices.contains(1) ? emojis[1] : Emoji(emoji: "", name: "", id: ""))
-            self._selectedIconThree = State(initialValue: emojis.indices.contains(2) ? emojis[2] : Emoji(emoji: "", name: "", id: ""))
+            self._selectedIconOne = State(initialValue: emojis.indices.contains(0) ? emojis[0] : Emoji(emoji: "", name: ""))
+            self._selectedIconTwo = State(initialValue: emojis.indices.contains(1) ? emojis[1] : Emoji(emoji: "", name: ""))
+            self._selectedIconThree = State(initialValue: emojis.indices.contains(2) ? emojis[2] : Emoji(emoji: "", name: ""))
             self._selectionMode = State(initialValue: .emoji)
         } else if category.icon.image != nil {
-            self._selectedIconOne = State(initialValue: Emoji(emoji: "", name: "", id: ""))
-            self._selectedIconTwo = State(initialValue: Emoji(emoji: "", name: "", id: ""))
-            self._selectedIconThree = State(initialValue: Emoji(emoji: "", name: "", id: ""))
+            self._selectedIconOne = State(initialValue: Emoji(emoji: "", name: ""))
+            self._selectedIconTwo = State(initialValue: Emoji(emoji: "", name: ""))
+            self._selectedIconThree = State(initialValue: Emoji(emoji: "", name: ""))
             self._selectionMode = State(initialValue: .image)
         } else {
-            self._selectedIconOne = State(initialValue: Emoji(emoji: "", name: "", id: ""))
-            self._selectedIconTwo = State(initialValue: Emoji(emoji: "", name: "", id: ""))
-            self._selectedIconThree = State(initialValue: Emoji(emoji: "", name: "", id: ""))
+            self._selectedIconOne = State(initialValue: Emoji(emoji: "", name: ""))
+            self._selectedIconTwo = State(initialValue: Emoji(emoji: "", name: ""))
+            self._selectedIconThree = State(initialValue: Emoji(emoji: "", name: ""))
             self._selectionMode = State(initialValue: .emoji)
         }
     }
@@ -260,16 +260,9 @@ struct CategoryDetailWrapperView: View {
                                     isSubcategory: true
                                 )
                             } label: {
-                                HStack(spacing: 12) {
-                                    Circle()
-                                        .fill(sub.color)
-                                        .frame(width: 28, height: 28)
-                                        .overlay(Circle().stroke(Color.black.opacity(0.2), lineWidth: 1))
-                                    Text(sub.name)
-                                    Spacer()
-                                    Text(sub.priority.emoji)
-                                        .foregroundColor(.secondary)
-                                }
+                                CategoryRowView(
+                                    category: sub
+                                )
                                 .padding(.vertical, 6)
                       }
                         }
