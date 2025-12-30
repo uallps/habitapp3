@@ -61,9 +61,9 @@ struct HabitApp: App {
                 .tabItem {
                     Label("Test", systemImage: "bell")
                 }
-                // TAB 4: Ajustes (placeholder)
+                // TAB 5: Ajustes
                 NavigationStack {
-                    Text("Ajustes (próximamente)")
+                    SettingsView()
                 }
                 .tabItem {
                     Label("Ajustes", systemImage: "gearshape")
@@ -99,8 +99,8 @@ struct HabitApp: App {
                     DailyNotesView()
                 case "objetivos":
                     GoalsView()
-                    // TODO: case "ajustes":
-                    // TODO: SettingsView()
+                case "ajustes":
+                    SettingsView()
                 default:
                     Text("Seleccione una opción")
                 }

@@ -39,10 +39,101 @@ extension AddGoalView {
                 }
                 
                 Section("Hábito Asociado") {
-                    Picker("Seleccionar hábito", selection: $selectedHabit) {
-                        Text("Ninguno").tag(nil as Habit?)
-                        ForEach(habits) { habit in
-                            Text(habit.title).tag(habit as Habit?)
+                    if habits.isEmpty {
+                        Text("No hay hábitos disponibles")
+                            .foregroundColor(.secondary)
+                            .italic()
+                    } else {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Selecciona un hábito para vincular con este objetivo")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            
+                            if selectedHabit == nil {
+                                ForEach(habits) { habit in
+                                    Button {
+                                        selectedHabit = habit
+                                    } label: {
+                                        HStack {
+                                            VStack(alignment: .leading, spacing: 4) {
+                                                Text(habit.title)
+                                                    .font(.body)
+                                                    .foregroundColor(.primary)
+                                                
+                                                HStack {
+                                                    ForEach(habit.scheduledDays, id: \.self) { day in
+                                                        Text(dayName(for: day))
+                                                            .font(.caption2)
+                                                            .padding(.horizontal, 4)
+                                                            .padding(.vertical, 1)
+                                                            .background(Color.blue.opacity(0.2))
+                                                            .cornerRadius(3)
+                                                    }
+                                                }
+                                                
+                                                if let priority = habit.priority {
+                                                    Text("Prioridad: \(priority.rawValue.capitalized)")
+                                                        .font(.caption)
+                                                        .foregroundColor(priorityColor(for: priority))
+                                                }
+                                            }
+                                            
+                                            Spacer()
+                                            
+                                            Image(systemName: "chevron.right")
+                                                .font(.caption)
+                                                .foregroundColor(.gray)
+                                        }
+                                        .padding(.vertical, 8)
+                                    }
+                                    .buttonStyle(.plain)
+                                    
+                                    if habit.id != habits.last?.id {
+                                        Divider()
+                                    }
+                                }
+                                
+                                Button("Ninguno") {
+                                    selectedHabit = nil
+                                }
+                                .foregroundColor(.secondary)
+                                .padding(.top, 8)
+                            } else {
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(selectedHabit!.title)
+                                            .font(.headline)
+                                        
+                                        HStack {
+                                            ForEach(selectedHabit!.scheduledDays, id: \.self) { day in
+                                                Text(dayName(for: day))
+                                                    .font(.caption2)
+                                                    .padding(.horizontal, 6)
+                                                    .padding(.vertical, 2)
+                                                    .background(Color.blue.opacity(0.1))
+                                                    .cornerRadius(4)
+                                            }
+                                        }
+                                        
+                                        if let priority = selectedHabit!.priority {
+                                            Text("Prioridad: \(priority.rawValue.capitalized)")
+                                                .font(.caption)
+                                                .foregroundColor(priorityColor(for: priority))
+                                        }
+                                    }
+                                    
+                                    Spacer()
+                                    
+                                    Button("Cambiar") {
+                                        selectedHabit = nil
+                                    }
+                                    .font(.caption)
+                                    .foregroundColor(.blue)
+                                }
+                                .padding()
+                                .background(Color(.systemGray6))
+                                .cornerRadius(8)
+                            }
                         }
                     }
                 }
@@ -165,6 +256,19 @@ extension AddGoalView {
         modelContext.insert(goal)
         try? modelContext.save()
         dismiss()
+    }
+    
+    private func dayName(for weekday: Int) -> String {
+        let dayNames = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"]
+        return dayNames[weekday - 1]
+    }
+    
+    private func priorityColor(for priority: Priority) -> Color {
+        switch priority {
+        case .low: return .green
+        case .medium: return .orange
+        case .high: return .red
+        }
     }
 }
 
