@@ -168,7 +168,6 @@ extension HabitDetailWrapper {
                         dismiss()
                     }
                     .buttonStyle(.borderedProminent)
-                    .controlProminence(.increased)
                     .tint(.red)
                 }
                 

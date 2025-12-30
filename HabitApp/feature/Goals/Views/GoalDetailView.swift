@@ -8,6 +8,18 @@ struct GoalDetailView: View {
     @StateObject private var viewModel = GoalsViewModel()
     
     var body: some View {
+        #if os(iOS)
+        iosBody
+        #else
+        macBody
+        #endif
+    }
+}
+
+// MARK: - iOS UI
+#if os(iOS)
+extension GoalDetailView {
+    var iosBody: some View {
         ScrollView {
             VStack(spacing: 20) {
                 // Progress Card
@@ -50,7 +62,7 @@ struct GoalDetailView: View {
                     }
                 }
                 .padding()
-                .background(Color(.systemGray6))
+                .background(Color.gray.opacity(0.1))
                 .cornerRadius(16)
                 
                 // Description
@@ -63,7 +75,7 @@ struct GoalDetailView: View {
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding()
-                    .background(Color(.systemGray6))
+                    .background(Color.gray.opacity(0.1))
                     .cornerRadius(12)
                 }
                 
@@ -79,7 +91,7 @@ struct GoalDetailView: View {
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding()
-                    .background(Color(.systemGray6))
+                    .background(Color.gray.opacity(0.1))
                     .cornerRadius(12)
                 }
                 
@@ -106,7 +118,7 @@ struct GoalDetailView: View {
                         .buttonStyle(.borderedProminent)
                     }
                     .padding()
-                    .background(Color(.systemGray6))
+                    .background(Color.gray.opacity(0.1))
                     .cornerRadius(12)
                 }
                 
@@ -130,7 +142,7 @@ struct GoalDetailView: View {
                     }
                 }
                 .padding()
-                .background(Color(.systemGray6))
+                .background(Color.gray.opacity(0.1))
                 .cornerRadius(12)
             }
             .padding()
@@ -149,6 +161,202 @@ struct GoalDetailView: View {
         }
     }
 }
+#endif
+
+// MARK: - macOS UI
+#if os(macOS)
+extension GoalDetailView {
+    var macBody: some View {
+        ScrollView {
+            HStack(alignment: .top, spacing: 24) {
+                // Left Column - Main Info
+                VStack(alignment: .leading, spacing: 20) {
+                    // Progress Card
+                    VStack(spacing: 16) {
+                        HStack {
+                            Image(systemName: goal.isCompleted ? "checkmark.circle.fill" : "target")
+                                .foregroundColor(goal.isCompleted ? .green : .blue)
+                                .font(.title)
+                            Text(goal.isCompleted ? "¡Completado!" : "En Progreso")
+                                .font(.headline)
+                        }
+                        
+                        ZStack {
+                            Circle()
+                                .stroke(Color.gray.opacity(0.2), lineWidth: 12)
+                            
+                            Circle()
+                                .trim(from: 0, to: goal.progress)
+                                .stroke(goal.isCompleted ? Color.green : Color.blue, lineWidth: 12)
+                                .rotationEffect(.degrees(-90))
+                                .animation(.easeInOut, value: goal.progress)
+                            
+                            VStack {
+                                Text("\(Int(goal.progress * 100))%")
+                                    .font(.system(size: 20, weight: .bold))
+                                Text("\(goal.currentCount) / \(goal.targetCount)")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .frame(width: 100, height: 100)
+                        
+                        if !goal.isCompleted {
+                            Text("\(goal.daysRemaining) días restantes")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color(.controlBackgroundColor))
+                    .cornerRadius(12)
+                    
+                    // Description
+                    if !goal.goalDescription.isEmpty {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Descripción")
+                                .font(.headline)
+                            Text(goal.goalDescription)
+                                .foregroundColor(.secondary)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding()
+                        .background(Color(.controlBackgroundColor))
+                        .cornerRadius(8)
+                    }
+                }
+                .frame(maxWidth: 300)
+                
+                // Right Column - Details
+                VStack(alignment: .leading, spacing: 20) {
+                    // Associated Habit
+                    if let habit = goal.habit {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Hábito Asociado")
+                                .font(.headline)
+                            
+                            HStack {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(habit.title)
+                                        .font(.body)
+                                        .fontWeight(.medium)
+                                    Text("\(habit.doneDates.count) días completados")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                Spacer()
+                            }
+                            
+                            Button("Actualizar Progreso") {
+                                viewModel.updateGoalProgress(goal, habit: habit)
+                                viewModel.checkMilestones(goal)
+                                try? modelContext.save()
+                            }
+                            .buttonStyle(.borderedProminent)
+                        }
+                        .padding()
+                        .background(Color(.controlBackgroundColor))
+                        .cornerRadius(8)
+                    }
+                    
+                    // Milestones
+                    if !goal.milestones.isEmpty {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Hitos")
+                                .font(.headline)
+                            
+                            VStack(spacing: 8) {
+                                ForEach(goal.milestones.sorted { $0.targetValue < $1.targetValue }) { milestone in
+                                    MacMilestoneRow(milestone: milestone, currentCount: goal.currentCount)
+                                }
+                            }
+                        }
+                        .padding()
+                        .background(Color(.controlBackgroundColor))
+                        .cornerRadius(8)
+                    }
+                    
+                    // Info
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Información")
+                            .font(.headline)
+                        
+                        VStack(spacing: 8) {
+                            HStack {
+                                Text("Fecha de inicio:")
+                                    .foregroundColor(.secondary)
+                                Spacer()
+                                Text(goal.startDate, format: .dateTime.day().month().year())
+                            }
+                            
+                            HStack {
+                                Text("Fecha límite:")
+                                    .foregroundColor(.secondary)
+                                Spacer()
+                                Text(goal.targetDate, format: .dateTime.day().month().year())
+                            }
+                        }
+                    }
+                    .padding()
+                    .background(Color(.controlBackgroundColor))
+                    .cornerRadius(8)
+                }
+                .frame(maxWidth: 300)
+            }
+            .padding()
+        }
+        .navigationTitle(goal.title)
+        .toolbar {
+            ToolbarItem {
+                Button(role: .destructive) {
+                    viewModel.deleteGoal(goal, context: modelContext)
+                    dismiss()
+                } label: {
+                    Image(systemName: "trash")
+                }
+            }
+        }
+        .frame(minWidth: 700, minHeight: 500)
+    }
+}
+
+struct MacMilestoneRow: View {
+    let milestone: Milestone
+    let currentCount: Int
+    
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: milestone.isCompleted ? "checkmark.circle.fill" : "circle")
+                .foregroundColor(milestone.isCompleted ? .green : .gray)
+                .font(.body)
+            
+            VStack(alignment: .leading, spacing: 2) {
+                Text(milestone.title)
+                    .font(.body)
+                    .strikethrough(milestone.isCompleted)
+                
+                Text("\(milestone.targetValue) días")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            
+            Spacer()
+            
+            if milestone.isCompleted, let date = milestone.completedDate {
+                Text(date, format: .dateTime.day().month())
+                    .font(.caption)
+                    .foregroundColor(.green)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 2)
+                    .background(Color.green.opacity(0.1))
+                    .cornerRadius(4)
+            }
+        }
+        .padding(.vertical, 4)
+    }
+}
+#endif
 
 struct MilestoneRowView: View {
     let milestone: Milestone
@@ -178,7 +386,7 @@ struct MilestoneRowView: View {
             }
         }
         .padding()
-        .background(Color(.systemBackground))
+        .background(Color.gray.opacity(0.1))
         .cornerRadius(8)
     }
 }
