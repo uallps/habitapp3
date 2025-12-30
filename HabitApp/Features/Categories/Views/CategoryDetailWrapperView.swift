@@ -94,6 +94,7 @@ struct CategoryDetailWrapperView: View {
         }
     }
     
+    @ViewBuilder
     var nameAndIcon: some View {
         // MARK: - Name
         Section(header: Text("Nombre")) {
@@ -128,6 +129,7 @@ struct CategoryDetailWrapperView: View {
         }
     }
     
+    @ViewBuilder
     var iconSelectionSection: some View {
         switch selectionMode {
         case .emoji:
@@ -147,6 +149,7 @@ struct CategoryDetailWrapperView: View {
         }
     }
     
+    @ViewBuilder
     var prioritySection: some View {
         // MARK: - Priority Picker
         Section(header: Text("Prioridad")) {
