@@ -1,10 +1,3 @@
-//
-//  Habit.swift
-//  HabitApp
-//
-//  Created by Aula03 on 15/10/25.
-//
-
 import Foundation
 import SwiftData
 
@@ -24,24 +17,29 @@ class Habit {
     @Relationship(deleteRule: .cascade, inverse: \DailyNote.habit)
     var notes: [DailyNote] = []
     
-
-    
     @Relationship(deleteRule: .cascade, inverse: \Goal.habit)
     var goals: [Goal] = []
     
-    // MARK: - Streak Properties
+    // MARK: - Relación con Streak
+    // Añadimos la relación persistente para la línea de productos
+    @Relationship(deleteRule: .cascade, inverse: \Streak.habit)
+    var streak: Streak?
+    
+    // MARK: - Propiedades calculadas (Priorizan el modelo persistido)
     var currentStreak: Int {
-        calculateCurrentStreak()
+        streak?.currentCount ?? calculateCurrentStreak()
     }
     
     var longestStreak: Int {
-        calculateLongestStreak()
+        streak?.bestCount ?? calculateLongestStreak()
     }
     
     var streakStartDate: Date? {
-        guard currentStreak > 0 else { return nil }
-        let calendar = Calendar.current
-        return calendar.date(byAdding: .day, value: -(currentStreak - 1), to: Date())
+        if let lastDate = streak?.lastCompletionDate, currentStreak > 0 {
+            let calendar = Calendar.current
+            return calendar.date(byAdding: .day, value: -(currentStreak - 1), to: lastDate)
+        }
+        return nil
     }
 
     init(title: String,
@@ -61,6 +59,8 @@ class Habit {
         self.scheduledDays = scheduledDays
         self.createdAt = Date()
         self.updatedAt = Date()
+        // Inicializamos el objeto streak al crear el hábito
+        self.streak = Streak()
     }
     
     func markAsCompleted(for date: Date = Date()) {
@@ -70,6 +70,10 @@ class Habit {
         if !doneDates.contains(where: { calendar.isDate($0, inSameDayAs: today) }) {
             doneDates.append(today)
             updatedAt = Date()
+            
+            // Actualizamos la racha persistida
+            if streak == nil { streak = Streak() }
+            streak?.update(completionDate: today)
         }
     }
     
@@ -77,8 +81,20 @@ class Habit {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: date)
         
-        doneDates.removeAll { calendar.isDate($0, inSameDayAs: today) }
-        updatedAt = Date()
+        if doneDates.contains(where: { calendar.isDate($0, inSameDayAs: today) }) {
+            doneDates.removeAll { calendar.isDate($0, inSameDayAs: today) }
+            updatedAt = Date()
+            
+            // Si borramos una fecha, recalculamos para asegurar consistencia
+            syncStreakPersistence()
+        }
+    }
+    
+    private func syncStreakPersistence() {
+        if streak == nil { streak = Streak() }
+        streak?.currentCount = calculateCurrentStreak()
+        streak?.bestCount = calculateLongestStreak()
+        streak?.lastCompletionDate = doneDates.sorted().last
     }
     
     func isCompletedForDate(_ date: Date) -> Bool {
@@ -87,12 +103,18 @@ class Habit {
         return doneDates.contains { calendar.isDate($0, inSameDayAs: targetDate) }
     }
     
-    // MARK: - Streak Calculations
+    // MARK: - Lógica de cálculo (Fallback)
     private func calculateCurrentStreak() -> Int {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
         var streak = 0
         var currentDate = today
+        
+        // Si hoy no está hecho, miramos desde ayer
+        if !isCompletedForDate(today) {
+            guard let yesterday = calendar.date(byAdding: .day, value: -1, to: today) else { return 0 }
+            currentDate = yesterday
+        }
         
         while isCompletedForDate(currentDate) {
             streak += 1
@@ -106,32 +128,29 @@ class Habit {
     private func calculateLongestStreak() -> Int {
         let calendar = Calendar.current
         let sortedDates = doneDates.sorted()
-        
         guard !sortedDates.isEmpty else { return 0 }
         
-        var longestStreak = 1
-        var currentStreak = 1
+        var maxS = 0
+        var currentS = 0
+        var lastDate: Date?
         
-        for i in 1..<sortedDates.count {
-            let previousDate = calendar.startOfDay(for: sortedDates[i-1])
-            let currentDate = calendar.startOfDay(for: sortedDates[i])
-            
-            if let nextDay = calendar.date(byAdding: .day, value: 1, to: previousDate),
-               calendar.isDate(nextDay, inSameDayAs: currentDate) {
-                currentStreak += 1
-                longestStreak = max(longestStreak, currentStreak)
+        for date in sortedDates {
+            let current = calendar.startOfDay(for: date)
+            if let last = lastDate, let nextDay = calendar.date(byAdding: .day, value: 1, to: last), calendar.isDate(nextDay, inSameDayAs: current) {
+                currentS += 1
             } else {
-                currentStreak = 1
+                currentS = 1
             }
+            maxS = max(maxS, currentS)
+            lastDate = current
         }
-        
-        return longestStreak
+        return maxS
     }
 }
 
+// MARK: - Priority Enum (Mantenido para evitar errores de Scope)
 enum Priority: String, Codable, CaseIterable {
     case low, medium, high
-    
     
     var localized: String {
         switch self {
