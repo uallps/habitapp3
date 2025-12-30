@@ -37,6 +37,7 @@ class Category: Identifiable, Hashable, Encodable, Decodable, Comparable {
     enum CodingKeys: String, CodingKey {
         case id, name, colorAssetName, icon, priority, subCategories
     }
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)

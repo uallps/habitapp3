@@ -256,9 +256,9 @@ struct CategoryDetailWrapperView: View {
                       }
                         }
                     // Botón para crear una nueva subcategoría (abre un editor vacío)
-                    NavigationLink(isActive: $showAddSubcategory) {
+                    NavigationLink {
                         // Nueva categoría vacía para ser editada como subcategoría
-                        let newSub = Category(name: "", icon: UserImageSlot(), priority: .medium)
+                        let newSub = Category(name: "", icon: UserImageSlot(image: nil), priority: .medium)
                         CategoryDetailWrapperView(
                             viewModel: viewModel,
                             category: newSub,

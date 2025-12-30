@@ -44,7 +44,10 @@
     "Añadir" : {
 
     },
-    "Anual %@" : {
+    "Añadir hábito a categoría" : {
+
+    },
+    "Añadir subcategoría" : {
 
     },
     "Baja %@" : {
@@ -93,9 +96,6 @@
     "Detalles del hábito" : {
 
     },
-    "Diaria %@" : {
-
-    },
     "Días de la semana" : {
 
     },
@@ -117,10 +117,13 @@
     "Esta acción no se puede deshacer." : {
 
     },
+    "Features" : {
+
+    },
     "Fecha" : {
 
     },
-    "Frecuencia" : {
+    "General" : {
 
     },
     "Guardar" : {
@@ -150,13 +153,16 @@
     "Media %@" : {
 
     },
-    "Mensual %@" : {
-
-    },
     "Mixta %@" : {
 
     },
+    "No hay categorías disponibles. Crea al menos una categoría." : {
+
+    },
     "No hay notas para esta fecha" : {
+
+    },
+    "No hay subcategorías" : {
 
     },
     "Nombre" : {
@@ -266,9 +272,6 @@
     "Selecciona color" : {
 
     },
-    "Selecciona frecuencia" : {
-
-    },
     "Selecciona los días de la semana" : {
 
     },
@@ -281,10 +284,13 @@
     "Seleccione una opción" : {
 
     },
-    "Semanal %@" : {
+    "Settings" : {
 
     },
     "Sin notas" : {
+
+    },
+    "Subcategorías" : {
 
     },
     "Tareas para %@" : {
