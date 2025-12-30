@@ -33,7 +33,7 @@ struct CategoryDetailWrapperView: View {
     @State private var selectedIconOne: Emoji = Emoji(emoji: "", name: "", id: "")
     @State private var selectedIconTwo: Emoji = Emoji(emoji: "", name: "", id: "")
     @State private var selectedIconThree: Emoji = Emoji(emoji: "", name: "", id: "")
-    @State private var newSub: Category? = Category(name: "", icon: UserImageSlot(image: nil), priority: .medium, isSubcategory: true)
+    @State private var newSub: Category?
     
     static let allColors: [Color] = [
         .red, .orange, .yellow, .green, .mint, .teal,
@@ -237,7 +237,8 @@ struct CategoryDetailWrapperView: View {
                 Section(header: Text("Subcategorías")) {
                     if category.subCategories.isEmpty {
                             Text("No hay subcategorías")
-
+                            
+                        
                             Button {
                                 newSub = Category(
                                     name: "",
@@ -271,7 +272,14 @@ struct CategoryDetailWrapperView: View {
                                 }
                                 .padding(.vertical, 6)
                       }
-                        }.navigationDestination(item: $newSub) { sub in
+                        }
+
+
+                    }
+                }
+
+            }
+            .navigationDestination(item: $newSub) { sub in
                             CategoryDetailWrapperView(
                                 viewModel: viewModel,
                                 category: sub,
@@ -280,12 +288,6 @@ struct CategoryDetailWrapperView: View {
                                 isSubcategory: true
                             )
                         }
-
-
-                    }
-                }
-
-            }
             .navigationTitle( (initialName == "" ? "Nueva " : "Editar ") + noun )
         }
         .sheet(item: $activeSheet) { item in
