@@ -14,7 +14,7 @@
 			remoteGlobalIDString = 35EDF0CF2E9FF1C000D50221;
 			remoteInfo = HabitApp;
 		};
-		35EDF0DE2E9FF1C300D50221 /* PBXContainerItemProxy */ = {
+		35944D072F05A47D002892A5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 35EDF0C82E9FF1C000D50221 /* Project object */;
 			proxyType = 1;
@@ -32,8 +32,8 @@
 
 /* Begin PBXFileReference section */
 		358641772EF8414D0000C589 /* HabitAppUITestsXCTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HabitAppUITestsXCTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		35944D032F05A47D002892A5 /* HabitAppUnitTestsMacOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HabitAppUnitTestsMacOS.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		35EDF0D02E9FF1C000D50221 /* HabitApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HabitApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		35EDF0DD2E9FF1C300D50221 /* HabitAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HabitAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		35EDF0E72E9FF1C300D50221 /* HabitAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HabitAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -41,6 +41,16 @@
 		358641782EF8414D0000C589 /* HabitAppUITestsXCTest */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = HabitAppUITestsXCTest;
+			sourceTree = "<group>";
+		};
+		35944CF52F05A1EA002892A5 /* HabitApTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = HabitApTests;
+			sourceTree = "<group>";
+		};
+		35944D042F05A47D002892A5 /* HabitAppUnitTestsMacOS */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = HabitAppUnitTestsMacOS;
 			sourceTree = "<group>";
 		};
 		35EDF0D22E9FF1C000D50221 /* HabitApp */ = {
@@ -58,14 +68,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		35EDF0CD2E9FF1C000D50221 /* Frameworks */ = {
+		35944D002F05A47D002892A5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		35EDF0DA2E9FF1C300D50221 /* Frameworks */ = {
+		35EDF0CD2E9FF1C000D50221 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -87,6 +97,8 @@
 			children = (
 				35EDF0D22E9FF1C000D50221 /* HabitApp */,
 				358641782EF8414D0000C589 /* HabitAppUITestsXCTest */,
+				35944CF52F05A1EA002892A5 /* HabitApTests */,
+				35944D042F05A47D002892A5 /* HabitAppUnitTestsMacOS */,
 				35EDF0D12E9FF1C000D50221 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -95,9 +107,9 @@
 			isa = PBXGroup;
 			children = (
 				35EDF0D02E9FF1C000D50221 /* HabitApp.app */,
-				35EDF0DD2E9FF1C300D50221 /* HabitAppTests.xctest */,
 				35EDF0E72E9FF1C300D50221 /* HabitAppUITests.xctest */,
 				358641772EF8414D0000C589 /* HabitAppUITestsXCTest.xctest */,
+				35944D032F05A47D002892A5 /* HabitAppUnitTestsMacOS.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -128,6 +140,29 @@
 			productReference = 358641772EF8414D0000C589 /* HabitAppUITestsXCTest.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		35944D022F05A47D002892A5 /* HabitAppUnitTestsMacOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 35944D092F05A47D002892A5 /* Build configuration list for PBXNativeTarget "HabitAppUnitTestsMacOS" */;
+			buildPhases = (
+				35944CFF2F05A47D002892A5 /* Sources */,
+				35944D002F05A47D002892A5 /* Frameworks */,
+				35944D012F05A47D002892A5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				35944D082F05A47D002892A5 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				35944D042F05A47D002892A5 /* HabitAppUnitTestsMacOS */,
+			);
+			name = HabitAppUnitTestsMacOS;
+			packageProductDependencies = (
+			);
+			productName = HabitAppUnitTestsMacOS;
+			productReference = 35944D032F05A47D002892A5 /* HabitAppUnitTestsMacOS.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		35EDF0CF2E9FF1C000D50221 /* HabitApp */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 35EDF0F12E9FF1C300D50221 /* Build configuration list for PBXNativeTarget "HabitApp" */;
@@ -149,26 +184,6 @@
 			productName = HabitApp;
 			productReference = 35EDF0D02E9FF1C000D50221 /* HabitApp.app */;
 			productType = "com.apple.product-type.application";
-		};
-		35EDF0DC2E9FF1C300D50221 /* HabitAppTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 35EDF0F42E9FF1C300D50221 /* Build configuration list for PBXNativeTarget "HabitAppTests" */;
-			buildPhases = (
-				35EDF0D92E9FF1C300D50221 /* Sources */,
-				35EDF0DA2E9FF1C300D50221 /* Frameworks */,
-				35EDF0DB2E9FF1C300D50221 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				35EDF0DF2E9FF1C300D50221 /* PBXTargetDependency */,
-			);
-			name = HabitAppTests;
-			packageProductDependencies = (
-			);
-			productName = HabitAppTests;
-			productReference = 35EDF0DD2E9FF1C300D50221 /* HabitAppTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		35EDF0E62E9FF1C300D50221 /* HabitAppUITests */ = {
 			isa = PBXNativeTarget;
@@ -204,12 +219,12 @@
 						CreatedOnToolsVersion = 26.0;
 						TestTargetID = 35EDF0CF2E9FF1C000D50221;
 					};
-					35EDF0CF2E9FF1C000D50221 = {
-						CreatedOnToolsVersion = 26.0;
-					};
-					35EDF0DC2E9FF1C300D50221 = {
+					35944D022F05A47D002892A5 = {
 						CreatedOnToolsVersion = 26.0;
 						TestTargetID = 35EDF0CF2E9FF1C000D50221;
+					};
+					35EDF0CF2E9FF1C000D50221 = {
+						CreatedOnToolsVersion = 26.0;
 					};
 					35EDF0E62E9FF1C300D50221 = {
 						CreatedOnToolsVersion = 26.0;
@@ -232,9 +247,9 @@
 			projectRoot = "";
 			targets = (
 				35EDF0CF2E9FF1C000D50221 /* HabitApp */,
-				35EDF0DC2E9FF1C300D50221 /* HabitAppTests */,
 				35EDF0E62E9FF1C300D50221 /* HabitAppUITests */,
 				358641762EF8414D0000C589 /* HabitAppUITestsXCTest */,
+				35944D022F05A47D002892A5 /* HabitAppUnitTestsMacOS */,
 			);
 		};
 /* End PBXProject section */
@@ -247,14 +262,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		35EDF0CE2E9FF1C000D50221 /* Resources */ = {
+		35944D012F05A47D002892A5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		35EDF0DB2E9FF1C300D50221 /* Resources */ = {
+		35EDF0CE2E9FF1C000D50221 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -278,14 +293,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		35EDF0CC2E9FF1C000D50221 /* Sources */ = {
+		35944CFF2F05A47D002892A5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		35EDF0D92E9FF1C300D50221 /* Sources */ = {
+		35EDF0CC2E9FF1C000D50221 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -307,10 +322,10 @@
 			target = 35EDF0CF2E9FF1C000D50221 /* HabitApp */;
 			targetProxy = 3586417D2EF8414D0000C589 /* PBXContainerItemProxy */;
 		};
-		35EDF0DF2E9FF1C300D50221 /* PBXTargetDependency */ = {
+		35944D082F05A47D002892A5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 35EDF0CF2E9FF1C000D50221 /* HabitApp */;
-			targetProxy = 35EDF0DE2E9FF1C300D50221 /* PBXContainerItemProxy */;
+			targetProxy = 35944D072F05A47D002892A5 /* PBXContainerItemProxy */;
 		};
 		35EDF0E92E9FF1C300D50221 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -366,6 +381,44 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = HabitApp;
 				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		35944D0A2F05A47D002892A5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ual.HabitAppUnitTestsMacOS;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HabitApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/HabitApp";
+			};
+			name = Debug;
+		};
+		35944D0B2F05A47D002892A5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ual.HabitAppUnitTestsMacOS;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HabitApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/HabitApp";
 			};
 			name = Release;
 		};
@@ -553,46 +606,6 @@
 			};
 			name = Release;
 		};
-		35EDF0F52E9FF1C300D50221 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ual.HabitAppTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HabitApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/HabitApp";
-			};
-			name = Debug;
-		};
-		35EDF0F62E9FF1C300D50221 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ual.HabitAppTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HabitApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/HabitApp";
-			};
-			name = Release;
-		};
 		35EDF0F82E9FF1C300D50221 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -641,6 +654,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		35944D092F05A47D002892A5 /* Build configuration list for PBXNativeTarget "HabitAppUnitTestsMacOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				35944D0A2F05A47D002892A5 /* Debug */,
+				35944D0B2F05A47D002892A5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		35EDF0CB2E9FF1C000D50221 /* Build configuration list for PBXProject "HabitApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -655,15 +677,6 @@
 			buildConfigurations = (
 				35EDF0F22E9FF1C300D50221 /* Debug */,
 				35EDF0F32E9FF1C300D50221 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		35EDF0F42E9FF1C300D50221 /* Build configuration list for PBXNativeTarget "HabitAppTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				35EDF0F52E9FF1C300D50221 /* Debug */,
-				35EDF0F62E9FF1C300D50221 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
