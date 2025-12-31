@@ -8,6 +8,6 @@ class AppConfig: ObservableObject  {
     static var showPriorities : Bool = true
     @AppStorage("enableReminders")
     static var enableReminders: Bool = true
-
-    
+    @AppStorage("enableStreaks")
+    static var enableStreaks: Bool = true
 }

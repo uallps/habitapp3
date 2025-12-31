@@ -17,11 +17,12 @@ struct AppInitializer: ViewModifier {
                 // Registramos los plugins SOLO una vez
                 let habitGoalPlugin = HabitGoalPlugin(context: modelContext)
                 let reminderPlugin = ReminderPlugin()
+                let streakPlugin = StreakPlugin(context: modelContext)
                 
                 TaskDataObserverManager.shared.register(habitGoalPlugin)
                 TaskDataObserverManager.shared.register(reminderPlugin)
-                
-                print("🔔 Plugins registrados: HabitGoal y Reminder")
+                TaskDataObserverManager.shared.register(streakPlugin)
+                print("🔔 Plugins registrados: HabitGoal, Reminder y Streaks")
             }
     }
 }
