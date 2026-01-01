@@ -96,6 +96,7 @@ struct CategoryDetailWrapperView: View {
             self._selectedIconThree = State(initialValue: Emoji(emoji: "", name: ""))
             self._selectionMode = State(initialValue: .emoji)
         }
+
     }
     
     @ViewBuilder
@@ -190,7 +191,7 @@ struct CategoryDetailWrapperView: View {
 
                             switch(selectionMode) {
                             case .emoji:
-                             category.icon = UserImageSlot(
+                                category.icon = UserImageSlot(
                                     emojis: [
                                         selectedIconOne,
                                         selectedIconTwo,
@@ -198,7 +199,7 @@ struct CategoryDetailWrapperView: View {
                                     ]
                                 )
                             case .image:
-                             category.icon = UserImageSlot(
+                                category.icon = UserImageSlot(
                                     image: userImageVM.image
                                 )
                             }
@@ -253,7 +254,7 @@ struct CategoryDetailWrapperView: View {
                                     viewModel: viewModel,
                                     category: sub,
                                     userImageVM: userImageVM,
-                                    parent: parent ?? category,
+                                    parent: category,
                                     isSubcategory: true
                                 )
                             } label: {
@@ -274,7 +275,7 @@ struct CategoryDetailWrapperView: View {
                                 viewModel: viewModel,
                                 category: sub,
                                 userImageVM: userImageVM,
-                                parent: parent ?? category,
+                                parent: category,
                                 isSubcategory: true
                             )
                         }
