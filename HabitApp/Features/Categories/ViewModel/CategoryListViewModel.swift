@@ -3,47 +3,50 @@ import Combine
 
 class CategoryListViewModel: ObservableObject {
 
-    // String es el nombre de la categoría, que es único.
-    @Published var categories: [String: Category] = [:]
+    @Published var categories: [UUID: Category] = [:]
     
     func addCategory(category: Category) {
-        categories[category.name] = category
+        categories[category.id] = category
     }
 
     func addSubCategory(category: Category, subCategory: Category) {
-        categories[category.name]?.subCategories[subCategory.name] = subCategory
+        categories[category.id]?.subCategories[subCategory.name] = subCategory
     }
 
     func removeCategory(category: Category) {
-        categories.removeValue(forKey: category.name)
+        categories.removeValue(forKey: category.id)
     }
 
     func removeSubCategory(category: Category, subCategory: Category) {
-        categories[category.name]?.subCategories.removeValue(forKey: subCategory.name)
+        categories[category.id]?.subCategories.removeValue(forKey: subCategory.name)
     }
 
-    func categoryExists(name: String) -> Bool {
-        return categories[name] != nil && !name.isEmpty
+    func categoryExists(id: UUID) -> Bool {
+        return categories[id] != nil
     }
 
-    func updateCategory(oldName: String, newCategory: Category) {
-        // Eliminar la categoría antigua si el nombre ha cambiado.
-        if oldName != newCategory.name {
-            categories.removeValue(forKey: oldName)
+    func updateCategory(id: UUID, newCategory: Category) {
+        
+        if let category = categories[id] {
+            // Eliminar la categoría antigua si el nombre ha cambiado.
+            if category.name != newCategory.name {
+                categories.removeValue(forKey: id)
+            }
+            // Añadir o actualizar la categoría con el nuevo nombre.
+            categories[id] = newCategory
         }
-        // Añadir o actualizar la categoría con el nuevo nombre.
-        categories[newCategory.name] = newCategory
+
     }
     
-    func upsertCategoryOrSubcategory(categoryName: String, parent: Category?, category: Category) {
+    func upsertCategoryOrSubcategory(parent: Category?, category: Category) {
         if let parent = parent {
             addSubCategory(category: parent, subCategory: category)
         }else {
-                                    if categoryExists(name: categoryName) == false {
+            if categoryExists(id: category.id) == false {
                                 addCategory(category: category)
                             }else {
                                 // Actualizar categoría existente
-                            updateCategory(oldName: categoryName, newCategory: category)
+                                updateCategory(id: category.id, newCategory: category)
                             }
         }
     }}

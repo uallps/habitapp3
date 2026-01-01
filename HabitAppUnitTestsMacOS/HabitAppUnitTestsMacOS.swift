@@ -32,13 +32,16 @@ struct HabitAppUnitTestsMacOS {
         let categoryListVM = await CategoryListViewModel()
         
         await categoryListVM.upsertCategoryOrSubcategory(
-            categoryName: childOfParentCategory.name,
+            parent: nil,
+            category: parentCategory
+        )
+        
+        await categoryListVM.upsertCategoryOrSubcategory(
             parent: parentCategory,
             category: childOfParentCategory
         )
         
         await categoryListVM.upsertCategoryOrSubcategory(
-            categoryName: childOfChildCategory.name,
             parent: childOfParentCategory,
             category: childOfChildCategory
         )

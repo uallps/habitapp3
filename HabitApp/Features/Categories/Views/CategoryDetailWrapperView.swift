@@ -204,7 +204,6 @@ struct CategoryDetailWrapperView: View {
                             }
 
                             viewModel.upsertCategoryOrSubcategory(
-                                categoryName: oldCategoryName,
                                 parent: parent,
                                 category: category
                             )
