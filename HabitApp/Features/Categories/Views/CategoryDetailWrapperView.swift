@@ -236,8 +236,6 @@ struct CategoryDetailWrapperView: View {
                 Section(header: Text("Subcategorías")) {
                     if category.subCategories.isEmpty {
                             Text("No hay subcategorías")
-                            
-                        
                             Button {
                                 newSub = Category(
                                     name: "",

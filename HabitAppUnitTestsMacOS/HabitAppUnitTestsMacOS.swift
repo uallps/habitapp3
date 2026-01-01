@@ -37,22 +37,23 @@ struct HabitAppUnitTestsMacOS {
         )
         
         #expect (categoryListVM.categories.count == 1)
-
+        
         await categoryListVM.upsertCategoryOrSubcategory(
             parent: parentCategory,
             category: childOfParentCategory
         )
         
-        #expect (categoryListVM.categories.count == 1)
-
+        #expect (categoryListVM.categories.count == 2)
+        
         await categoryListVM.upsertCategoryOrSubcategory(
             parent: childOfParentCategory,
             category: childOfChildCategory
         )
         
-        #expect (categoryListVM.categories.count == 1)
+        #expect (categoryListVM.categories.count == 3)
         #expect (parentCategory.subCategories.count == 1)
-        #expect(parentCategory.subCategories[childOfParentCategory.name]?.subCategories.count == 1)
+        #expect(childOfParentCategory.subCategories.count == 1)
+        #expect(childOfChildCategory.subCategories.count == 0)
     }
 
 }

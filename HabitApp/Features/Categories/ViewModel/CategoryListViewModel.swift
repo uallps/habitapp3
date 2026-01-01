@@ -41,12 +41,13 @@ class CategoryListViewModel: ObservableObject {
     func upsertCategoryOrSubcategory(parent: Category?, category: Category) {
         if let parent = parent {
             addSubCategory(category: parent, subCategory: category)
-        }else {
+        }
+        
             if categoryExists(id: category.id) == false {
                                 addCategory(category: category)
                             }else {
                                 // Actualizar categoría existente
                                 updateCategory(id: category.id, newCategory: category)
-                            }
-        }
-    }}
+                            }    }}        
+        
+

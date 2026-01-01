@@ -6,7 +6,7 @@ struct CategoryListView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 12) {
-                List(Array(viewModel.categories.values)) { category in
+                List(Array(viewModel.categories.values).filter { !$0.isSubcategory }                ) { category in
                     NavigationLink {
                         CategoryDetailWrapperView(
                             viewModel: viewModel,
