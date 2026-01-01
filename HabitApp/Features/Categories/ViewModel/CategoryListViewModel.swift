@@ -34,4 +34,16 @@ class CategoryListViewModel: ObservableObject {
         // Añadir o actualizar la categoría con el nuevo nombre.
         categories[newCategory.name] = newCategory
     }
-}
+    
+    func upsertCategoryOrSubcategory(categoryName: String, parent: Category?, category: Category) {
+        if let parent = parent {
+            addSubCategory(category: parent, subCategory: category)
+        }else {
+                                    if categoryExists(name: categoryName) == false {
+                                addCategory(category: category)
+                            }else {
+                                // Actualizar categoría existente
+                            updateCategory(oldName: categoryName, newCategory: category)
+                            }
+        }
+    }}

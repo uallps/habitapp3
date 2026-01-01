@@ -203,7 +203,7 @@ struct CategoryDetailWrapperView: View {
                                 )
                             }
 
-                            upsertCategoryOrSubcategory(
+                            viewModel.upsertCategoryOrSubcategory(
                                 categoryName: oldCategoryName,
                                 parent: parent,
                                 category: category
@@ -328,19 +328,6 @@ struct CategoryDetailWrapperView: View {
             .cornerRadius(8)
         }
         .buttonStyle(.plain)
-    }
-
-    private func upsertCategoryOrSubcategory(categoryName: String, parent: Category?, category: Category) {
-        if let parent = parent {
-            viewModel.addSubCategory(category: parent, subCategory: category)
-        }else {
-                                    if viewModel.categoryExists(name: categoryName) == false {
-                                viewModel.addCategory(category: category)
-                            }else {
-                                // Actualizar categoría existente
-                                viewModel.updateCategory(oldName: categoryName, newCategory: category)
-                            }
-        }
     }
 
     enum ActiveSheet: Identifiable {
