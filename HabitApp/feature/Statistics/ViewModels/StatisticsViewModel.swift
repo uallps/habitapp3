@@ -17,6 +17,7 @@ final class StatisticsViewModel: ObservableObject {
     private var modelContext: ModelContext?
     private let service = StatisticsService()
     private var cancellables = Set<AnyCancellable>()
+    private var refreshTimer: Timer?
     
     // MARK: - Initialization
     
@@ -25,11 +26,16 @@ final class StatisticsViewModel: ObservableObject {
         setupObservers()
     }
     
+    deinit {
+        refreshTimer?.invalidate()
+    }
+    
     // MARK: - Configuration
     
     func configure(with context: ModelContext) {
         self.modelContext = context
         loadStatistics()
+        startAutoRefresh()
     }
     
     // MARK: - Private Methods
@@ -40,6 +46,16 @@ final class StatisticsViewModel: ObservableObject {
                 self?.loadStatistics()
             }
             .store(in: &cancellables)
+    }
+    
+    private func startAutoRefresh() {
+        // Refrescar cada 3 segundos para detectar cambios
+        refreshTimer?.invalidate()
+        refreshTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { [weak self] _ in
+            Task { @MainActor in
+                self?.loadStatistics()
+            }
+        }
     }
     
     func loadStatistics() {

@@ -18,32 +18,43 @@ struct StatisticsView: View {
                 .pickerStyle(.segmented)
                 .padding()
                 
-                // Selector de vista
-                Picker("Vista", selection: $selectedTab) {
-                    Text("General").tag(0)
-                    Text("Por Hábito").tag(1)
+                // Selector de vista (solo en rango semanal)
+                if viewModel.selectedRange == .week {
+                    Picker("Vista", selection: $selectedTab) {
+                        Text("General").tag(0)
+                        Text("Por Hábito").tag(1)
+                    }
+                    .pickerStyle(.segmented)
+                    .padding(.horizontal)
                 }
-                .pickerStyle(.segmented)
-                .padding(.horizontal)
                 
                 // Contenido
-                TabView(selection: $selectedTab) {
+                if viewModel.selectedRange == .day {
                     OverviewStatsView(
                         stats: viewModel.generalStats,
                         isLoading: viewModel.isLoading
                     )
-                    .tag(0)
-                    
-                    PerHabitStatsView(
-                        habitStats: viewModel.habitStats,
-                        isLoading: viewModel.isLoading
-                    )
-                    .tag(1)
+                } else {
+                    TabView(selection: $selectedTab) {
+                        OverviewStatsView(
+                            stats: viewModel.generalStats,
+                            isLoading: viewModel.isLoading
+                        )
+                        .tag(0)
+                        
+                        PerHabitStatsView(
+                            habitStats: viewModel.habitStats,
+                            isLoading: viewModel.isLoading
+                        )
+                        .tag(1)
+                    }
+                    .tabViewStyle(.page(indexDisplayMode: .never))
                 }
-                .tabViewStyle(.page(indexDisplayMode: .never))
             }
             .navigationTitle("Estadísticas")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .onAppear {
                 viewModel.configure(with: modelContext)
             }
