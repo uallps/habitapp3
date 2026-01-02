@@ -4,12 +4,18 @@ import SwiftData
 struct HabitDetailWrapper: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
-    @ObservedObject var viewModel: HabitListViewModel
+    
+    @ObservedObject var categoryListVM: CategoryListViewModel
+    @ObservedObject var userImageVM: UserImagesViewModel
+
+    @ObservedObject var habitListVM: HabitListViewModel
     @State var habit: Habit
     private let isNew: Bool
     
-    init(viewModel: HabitListViewModel, habit: Habit, isNew: Bool = true) {
-        self.viewModel = viewModel
+    init(habitListVM: HabitListViewModel, categoryListVM: CategoryListViewModel, userImageVM: UserImagesViewModel, habit: Habit, isNew: Bool = true) {
+        self.habitListVM = habitListVM
+        self.categoryListVM = categoryListVM
+        self.userImageVM = userImageVM
         self._habit = State(initialValue: habit)
         self.isNew = isNew
     }
@@ -43,6 +49,35 @@ struct HabitDetailWrapper: View {
             }
             .pickerStyle(SegmentedPickerStyle())
             .padding(.horizontal)
+            
+            Spacer()
+            
+            Section(header: Text("Añadir hábito a categoría")) {
+                if Array(categoryListVM.categories.values).isEmpty {
+                    Text("No hay categorías disponibles. Crea al menos una categoría.")
+                        .foregroundColor(.gray)
+
+                }else {
+                    List {
+                        ForEach(Array(categoryListVM.categories.values).sorted(by: { $0.name < $1.name })) { category in
+                           NavigationLink {
+                                CategoryDetailWrapperView(
+                                    viewModel: categoryListVM,
+                                    category: category,
+                                    userImageVM: userImageVM,
+                                    isSubcategory: category.isSubcategory
+                                )
+                           } label: {
+                                 CategoryRowView(category: category)
+
+                           }
+                           .buttonStyle(.plain)
+
+                        }
+                    }
+                    .frame(minHeight: 120, maxHeight: 300)
+                }
+            }
             
             Spacer()
             

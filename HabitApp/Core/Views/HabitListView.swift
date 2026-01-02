@@ -80,7 +80,9 @@ struct HabitListView: View {
             .sheet(isPresented: $showingNewHabitSheet) {
                 // Abrimos HabitDetailWrapper para crear un nuevo hábito
                 HabitDetailWrapper(
-                    viewModel: viewModel,
+                    habitListVM: HabitListViewModel(),
+                    categoryListVM: CategoryListViewModel(),
+                    userImageVM: UserImagesViewModel(),
                     habit: Habit(title: ""),
                     isNew: true
                 )

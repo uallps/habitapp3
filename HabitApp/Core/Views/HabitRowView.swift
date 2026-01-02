@@ -75,7 +75,13 @@ struct HabitRowView: View {
             .padding(.leading, 2)
         }
         .sheet(isPresented: $showingEditSheet) {
-            HabitDetailWrapper(viewModel: HabitListViewModel(), habit: habit, isNew: false)
+            HabitDetailWrapper(
+                habitListVM: HabitListViewModel(),
+                categoryListVM: CategoryListViewModel(),
+                userImageVM: UserImagesViewModel(),
+                habit: habit,
+                isNew: false
+            )
         }
         .alert("¿Eliminar hábito?", isPresented: $showingDeleteAlert) {
             Button("Eliminar", role: .destructive) {
