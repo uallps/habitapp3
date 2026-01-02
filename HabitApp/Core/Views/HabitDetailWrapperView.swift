@@ -4,20 +4,34 @@ import SwiftData
 struct HabitDetailWrapper: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
-    
-    @ObservedObject var categoryListVM: CategoryListViewModel
-    @ObservedObject var userImageVM: UserImagesViewModel
+    // IF CATEGORY IS TRUE
+    @StateObject var categoryListVM: CategoryListViewModel
+    @StateObject var userImageVM: UserImagesViewModel
+    // END IF
 
     @ObservedObject var habitListVM: HabitListViewModel
     @State var habit: Habit
     private let isNew: Bool
     
-    init(habitListVM: HabitListViewModel, categoryListVM: CategoryListViewModel, userImageVM: UserImagesViewModel, habit: Habit, isNew: Bool = true) {
+    init(habitListVM: HabitListViewModel, modelContext: ModelContext? = nil, isNew: Bool, habit: Habit) {
+        #if os(iOS)
+        let context = ModelContext(try! ModelContainer(for: DailyNote.self))
+        _categoryListVM = StateObject(wrappedValue: CategoryListViewModel(modelContext: context))
+        _userImageVM = StateObject(wrappedValue: UserImagesViewModel(modelContext: context))
+        #else
+        if let modelContext {
+            _categoryListVM = StateObject(wrappedValue: CategoryListViewModel(modelContext: modelContext))
+            _userImageVM = StateObject(wrappedValue: UserImagesViewModel(modelContext: modelContext))
+        } else {
+            let container = try! ModelContainer(for: DailyNote.self)
+            let context = ModelContext(container)
+            _categoryListVM = StateObject(wrappedValue: CategoryListViewModel(modelContext: modelContext))
+            _userImageVM = StateObject(wrappedValue: UserImagesViewModel(modelContext: modelContext))
+        }
+        #endif
         self.habitListVM = habitListVM
-        self.categoryListVM = categoryListVM
-        self.userImageVM = userImageVM
-        self._habit = State(initialValue: habit)
         self.isNew = isNew
+        self._habit = State(initialValue: habit)
     }
 
     var body: some View {

@@ -1,9 +1,35 @@
 import Foundation
 import Combine
+import SwiftData
 
 class CategoryListViewModel: ObservableObject {
 
     @Published var categories: [UUID: Category] = [:]
+    private var modelContext: ModelContext?
+
+    
+    init(modelContext: ModelContext? = nil) {
+        self.modelContext = modelContext
+        loadCategories()
+    }
+    
+    func loadCategories() {
+        guard let modelContext else { return }
+        let descriptor = FetchDescriptor<Category>(
+            sortBy: [SortDescriptor(\.name, order: .forward)]
+        )
+        
+        do {
+            let fetchedCategories = try modelContext.fetch(descriptor)
+            
+            // Transformar el array en un diccionario con clave por el UUID
+            categories = Dictionary(
+                uniqueKeysWithValues: fetchedCategories.map { ($0.id, $0) }
+            )
+        } catch {
+            print("Error loading categories: \(error)")
+        }
+    }
     
     func addCategory(category: Category) {
         categories[category.id] = category

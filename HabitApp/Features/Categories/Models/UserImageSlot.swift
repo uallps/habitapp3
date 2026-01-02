@@ -12,6 +12,9 @@ typealias PlatformImage = NSImage
 @Model
 class UserImageSlot: Encodable, Decodable {
     
+    @Attribute
+    var id: UUID = UUID()
+    
     enum CodingKeys: String, CodingKey {
         case imageData, emojis
     }

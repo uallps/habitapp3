@@ -81,10 +81,8 @@ struct HabitListView: View {
                 // Abrimos HabitDetailWrapper para crear un nuevo hábito
                 HabitDetailWrapper(
                     habitListVM: HabitListViewModel(),
-                    categoryListVM: CategoryListViewModel(),
-                    userImageVM: UserImagesViewModel(),
-                    habit: Habit(title: ""),
-                    isNew: true
+                    isNew: true,
+                    habit: Habit(title: "")
                 )
             }
         }
