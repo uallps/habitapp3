@@ -2,11 +2,11 @@ import SwiftUI
 
 struct CategoryDetailWrapperView: View {
     @Environment(\.dismiss) private var dismiss
-    @ObservedObject var viewModel: CategoryListViewModel
+    @StateObject var categoryListVM: CategoryListViewModel
     @State var category: Category
-
+    
     private let parent: Category?
-
+    
     @ObservedObject var userImageVM: UserImagesViewModel
 
     @State private var showAlert = false
@@ -64,7 +64,7 @@ struct CategoryDetailWrapperView: View {
     @State private var selectionMode: SelectionMode = .emoji
     
     init(viewModel: CategoryListViewModel, category: Category, userImageVM: UserImagesViewModel, parent: Category? = nil, isSubcategory: Bool) {
-        self.viewModel = viewModel
+        self.categoryListVM = viewModel
         self._category = State(initialValue: category)
         self.userImageVM = userImageVM
         self.parent = parent
@@ -204,7 +204,7 @@ struct CategoryDetailWrapperView: View {
                                 )
                             }
 
-                            viewModel.upsertCategoryOrSubcategory(
+                            categoryListVM.upsertCategoryOrSubcategory(
                                 parent: parent,
                                 category: category
                             )
@@ -251,7 +251,7 @@ struct CategoryDetailWrapperView: View {
                         ForEach(Array(category.subCategories.values), id: \.id) { sub in
                             NavigationLink {
                                 CategoryDetailWrapperView(
-                                    viewModel: viewModel,
+                                    viewModel: categoryListVM,
                                     category: sub,
                                     userImageVM: userImageVM,
                                     parent: category,
@@ -272,7 +272,7 @@ struct CategoryDetailWrapperView: View {
             }
             .navigationDestination(item: $newSub) { sub in
                             CategoryDetailWrapperView(
-                                viewModel: viewModel,
+                                viewModel: categoryListVM,
                                 category: sub,
                                 userImageVM: userImageVM,
                                 parent: category,

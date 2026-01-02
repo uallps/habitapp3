@@ -12,7 +12,32 @@ class AppConfig: ObservableObject  {
     // No debe considerarse una base de datos relacional como las bases de datos SQLite en apps de Android. Solo almacena datos pequeños
     // directamente en disco, sin relaciones entre ellos.
     // Básicamente, cualquier propiedad marcada con @AppStorage se lee o escribe según las circunstancias adecuadas.
+    
+    
+    // MARK: - Storage Provider
+    
+    private lazy var swiftDataProvider: SwiftDataStorageProvider = {
+        // Obtener modelos base
+        var schemas: [any PersistentModel.Type] = [Task.self]
+        
+        // Agregar modelos de plugins habilitados
+        schemas.append(contentsOf: PluginRegistry.shared.getEnabledModels(from: plugins))
+        
+        let schema = Schema(schemas)
+        print("📦 Schemas registrados: \(schemas)")
+        print("🔌 Plugins activos: \(plugins.filter { $0.isEnabled }.count)/\(plugins.count)")
+        
+        return SwiftDataStorageProvider(schema: schema)
+    }()
 
+    var storageProvider: StorageProvider {
+        switch storageType {
+        case .swiftData:
+            return swiftDataProvider
+        case .json:
+            return JSONStorageProvider.shared
+        }
+    }
     @AppStorage("showCategories")
     static var showCategories: Bool = true
     @AppStorage("showDueDates")
@@ -21,3 +46,10 @@ class AppConfig: ObservableObject  {
     static var showPriorities : Bool = true
     @AppStorage("enableReminders")
     static var enableReminders: Bool = true}
+
+enum StorageType: String, CaseIterable, Identifiable {
+    case swiftData = "SwiftData Storage"
+    case json = "JSON Storage"
+
+    var id: String { self.rawValue }
+}

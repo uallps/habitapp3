@@ -6,6 +6,12 @@ import SwiftData
 // HabitApp cumple con el protocolo App.
 struct HabitApp: App {
     @State private var selectedDetailView: String?
+    
+    private var storageProvider: StorageProvider {
+        AppConfig().storageProvider
+    }
+
+    @State private var selectedDetailView: String?
     init() {
         #if os(iOS)
         UNUserNotificationCenter.current().requestAuthorization(
@@ -56,7 +62,10 @@ struct HabitApp: App {
                 
                 // Tab 3: Categorías
                 NavigationStack {
-                    CategoryListView(viewModel: CategoryListViewModel())
+                    CategoryListView(
+                        storageProvider: SwiftDataStorageProvider(schema: <#Schema#>),
+                        viewModel: CategoryListViewModel()
+                    )
                 }
                 .tabItem {
                     Label("Categorías", systemImage: "folder")

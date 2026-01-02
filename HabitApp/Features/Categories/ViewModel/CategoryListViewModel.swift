@@ -5,29 +5,18 @@ import SwiftData
 class CategoryListViewModel: ObservableObject {
 
     @Published var categories: [UUID: Category] = [:]
-    private var modelContext: ModelContext?
 
+    private let storageProvider: StorageProvider
     
-    init(modelContext: ModelContext? = nil) {
-        self.modelContext = modelContext
-        loadCategories()
+    init(storageProvider: StorageProvider) {
+        self.storageProvider = storageProvider
     }
     
-    func loadCategories() {
-        guard let modelContext else { return }
-        let descriptor = FetchDescriptor<Category>(
-            sortBy: [SortDescriptor(\.name, order: .forward)]
-        )
-        
+    func loadCategories() async {
         do {
-            let fetchedCategories = try modelContext.fetch(descriptor)
-            
-            // Transformar el array en un diccionario con clave por el UUID
-            categories = Dictionary(
-                uniqueKeysWithValues: fetchedCategories.map { ($0.id, $0) }
-            )
+            categories = try await storageProvider.loadCategories()
         } catch {
-            print("Error loading categories: \(error)")
+            print("Error loading tasks: \(error)")
         }
     }
     
