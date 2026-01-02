@@ -51,7 +51,7 @@ final class StatisticsViewModel: ObservableObject {
     private func startAutoRefresh() {
         // Refrescar cada 3 segundos para detectar cambios
         refreshTimer?.invalidate()
-        refreshTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { [weak self] _ in
+        refreshTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
             Task { @MainActor in
                 self?.loadStatistics()
             }
