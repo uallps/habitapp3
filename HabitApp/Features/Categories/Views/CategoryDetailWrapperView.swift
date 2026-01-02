@@ -63,10 +63,10 @@ struct CategoryDetailWrapperView: View {
 
     @State private var selectionMode: SelectionMode = .emoji
     
-    init(viewModel: CategoryListViewModel, category: Category, userImageVM: UserImagesViewModel, parent: Category? = nil, isSubcategory: Bool) {
-        self.categoryListVM = viewModel
+    init(storageProvider: StorageProvider, category: Category, parent: Category? = nil, isSubcategory: Bool) {
+        self._categoryListVM = StateObject(wrappedValue: CategoryDetailWrapperViewModel(storageProvider: storageProvider))
+        self._userImageVM = StateObject(wrappedValue: UserImagesViewModel(storageProvider: storageProvider))
         self._category = State(initialValue: category)
-        self.userImageVM = userImageVM
         self.parent = parent
         self.isSubCategory = isSubcategory
 

@@ -6,6 +6,45 @@ class SwiftDataContext {
 }
 
 class SwiftDataStorageProvider: StorageProvider {
+    func addSubcategory(category: Category, subCategory: Category) async throws {
+        if subCategory.modelContext == nil {
+            context.insert(subCategory)
+        }
+
+        if !category.subCategories.contains(where: { $0.id == subCategory.id }) {
+            category.subCategories.append(subCategory)
+        }
+    }
+    
+    func removeCategory(category: Category) async throws {
+        context.delete(category)
+    }
+    
+    func removeSubCategory(category: Category, subCategory: Category) async throws {
+        if subCategory.modelContext != nil {
+            let index = category.subCategories.firstIndex(of: subCategory)
+            if index != nil {
+                category.subCategories.remove(at: index! )
+                context.delete(subCategory)
+            }
+        }
+    }
+    
+    func categoryExists(id: UUID) async throws -> Bool {
+        let categories = try await loadCategories()
+        return categories.contains(where: { $0.key == id } )
+    }
+    
+    func updateCategory(id: UUID, newCategory: Category) async throws {
+        let categories = try await loadCategories()
+        let oldCategory = categories[id]
+        
+    }
+    
+    func upsertCategoryOrSubcategory(parent: Category?, category: Category) async throws {
+        <#code#>
+    }
+    
 
     private let modelContainer: ModelContainer
     private let context: ModelContext
@@ -67,4 +106,22 @@ class SwiftDataStorageProvider: StorageProvider {
         }
         return categoriesMap
     }
+    
+    func addCategory(category: Category) async {
+        do {
+            let existingCategories = try await loadCategories()
+            let existingIds = Set(existingCategories.map { $0.key })
+
+            if existingIds.contains(category.id) {
+                // Category already exists
+                // Option 1: do nothing
+                // Option 2: update properties explicitly if needed
+            } else {
+                context.insert(category)
+            }
+        } catch {
+            print("Error saving category: \(error)")
+        }
+    }
+
 }

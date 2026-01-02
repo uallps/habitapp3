@@ -60,9 +60,11 @@ class Category: Identifiable, Hashable, Encodable, Decodable, Comparable {
         priority = try container.decode(Priority.self, forKey: .priority)
         isSubcategory = try container.decode(Bool.self, forKey: .isSubcategory)
     }
-
-    var subCategories : [String: Category] = [:]
-    var habits: [UUID: Habit] = [:]
+    
+    @Relationship(deleteRule: .cascade)
+    var subCategories : [Category] = []
+    @Relationship(deleteRule: .cascade)
+    var habits: [Habit] = []
     
     
     init(
@@ -79,5 +81,11 @@ class Category: Identifiable, Hashable, Encodable, Decodable, Comparable {
         self.icon = icon
         self.priority = priority
         self.isSubcategory = isSubcategory
+    }
+    
+    func apply(from other: Category) {
+        self.name = other.name
+        self.icon = other.icon
+        self.isSubcategory = other.isSubcategory
     }
 }
