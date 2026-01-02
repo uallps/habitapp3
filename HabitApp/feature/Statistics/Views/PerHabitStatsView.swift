@@ -79,7 +79,7 @@ struct HabitStatRow: View {
                         .padding(.horizontal)
                     
                     if !habit.periods.isEmpty {
-                        StatsChartView(periods: habit.periods)
+                        CompactHabitStatsView(periods: habit.periods)
                             .padding(.horizontal)
                     }
                 }

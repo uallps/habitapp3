@@ -12,15 +12,15 @@ struct StatsChartView: View {
                     VStack(spacing: 4) {
                         // Barra
                         ZStack(alignment: .bottom) {
-                            // Barra esperada (fondo)
+                            // Barra esperada (fondo - siempre 100%)
                             Rectangle()
                                 .fill(Color.gray.opacity(0.2))
-                                .frame(height: barHeight(for: period.expectedCount))
+                                .frame(height: barHeightForExpected())
                             
-                            // Barra completada (sobre)
+                            // Barra completada (porcentaje del esperado)
                             Rectangle()
                                 .fill(Color.blue)
-                                .frame(height: barHeight(for: period.completedCount))
+                                .frame(height: barHeight(for: period.completedCount, expected: period.expectedCount))
                         }
                         .frame(maxWidth: .infinity, maxHeight: maxHeight)
                         .cornerRadius(4)
@@ -53,9 +53,13 @@ struct StatsChartView: View {
         )
     }
     
-    private func barHeight(for count: Int) -> CGFloat {
-        let maxCount = periods.map { max($0.completedCount, $0.expectedCount) }.max() ?? 1
-        guard maxCount > 0 else { return 0 }
-        return CGFloat(count) / CGFloat(maxCount) * maxHeight
+    private func barHeight(for count: Int, expected: Int) -> CGFloat {
+        guard expected > 0 else { return 0 }
+        let percentage = Double(count) / Double(expected)
+        return CGFloat(percentage) * maxHeight
+    }
+    
+    private func barHeightForExpected() -> CGFloat {
+        return maxHeight
     }
 }

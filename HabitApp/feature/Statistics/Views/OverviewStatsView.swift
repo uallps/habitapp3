@@ -28,26 +28,35 @@ struct OverviewStatsView: View {
                         )
                     }
                     
-                    statCard(
-                        title: "Cumplimiento",
-                        value: "\(Int(stats.overallRate * 100))%",
-                        icon: "chart.bar.fill",
-                        color: .orange,
-                        fullWidth: true
-                    )
-                    
-                    // Gráfico
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Tendencia")
-                            .font(.headline)
+                    // Gráfico según rango
+                    if stats.range == .day {
+                        // Vista diaria: Donut chart
+                        DonutChartView(
+                            completed: stats.totalCompleted,
+                            expected: stats.totalExpected
+                        )
+                    } else {
+                        // Vista semanal: Cards + Barras
+                        statCard(
+                            title: "Cumplimiento",
+                            value: "\(Int(stats.overallRate * 100))%",
+                            icon: "chart.bar.fill",
+                            color: .orange,
+                            fullWidth: true
+                        )
                         
-                        if !stats.periods.isEmpty {
-                            StatsChartView(periods: stats.periods)
-                        } else {
-                            Text("Sin datos")
-                                .foregroundColor(.secondary)
-                                .frame(maxWidth: .infinity)
-                                .padding()
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Tendencia")
+                                .font(.headline)
+                            
+                            if !stats.periods.isEmpty {
+                                StatsChartView(periods: stats.periods)
+                            } else {
+                                Text("Sin datos")
+                                    .foregroundColor(.secondary)
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                            }
                         }
                     }
                 }
