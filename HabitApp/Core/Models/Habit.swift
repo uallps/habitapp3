@@ -20,28 +20,6 @@ class Habit {
     @Relationship(deleteRule: .cascade, inverse: \Goal.habit)
     var goals: [Goal] = []
     
-    // MARK: - Relación con Streak
-    // Añadimos la relación persistente para la línea de productos
-    @Relationship(deleteRule: .cascade, inverse: \Streak.habit)
-    var streak: Streak?
-    
-    // MARK: - Propiedades calculadas (Priorizan el modelo persistido)
-    var currentStreak: Int {
-        streak?.currentCount ?? calculateCurrentStreak()
-    }
-    
-    var longestStreak: Int {
-        streak?.bestCount ?? calculateLongestStreak()
-    }
-    
-    var streakStartDate: Date? {
-        if let lastDate = streak?.lastCompletionDate, currentStreak > 0 {
-            let calendar = Calendar.current
-            return calendar.date(byAdding: .day, value: -(currentStreak - 1), to: lastDate)
-        }
-        return nil
-    }
-
     init(title: String,
          doneDates: [Date] = [],
          isCompleted: Bool = false,
@@ -59,8 +37,6 @@ class Habit {
         self.scheduledDays = scheduledDays
         self.createdAt = Date()
         self.updatedAt = Date()
-        // Inicializamos el objeto streak al crear el hábito
-        self.streak = Streak()
     }
     
     func markAsCompleted(for date: Date = Date()) {
@@ -70,10 +46,6 @@ class Habit {
         if !doneDates.contains(where: { calendar.isDate($0, inSameDayAs: today) }) {
             doneDates.append(today)
             updatedAt = Date()
-            
-            // Actualizamos la racha persistida
-            if streak == nil { streak = Streak() }
-            streak?.update(completionDate: today)
         }
     }
     
@@ -84,9 +56,6 @@ class Habit {
         if doneDates.contains(where: { calendar.isDate($0, inSameDayAs: today) }) {
             doneDates.removeAll { calendar.isDate($0, inSameDayAs: today) }
             updatedAt = Date()
-            
-            // Si borramos una fecha, recalculamos para asegurar consistencia
-            syncStreakPersistence()
         }
     }
     

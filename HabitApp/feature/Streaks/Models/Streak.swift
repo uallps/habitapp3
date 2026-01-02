@@ -7,8 +7,6 @@ class Streak {
     var currentCount: Int
     var bestCount: Int
     var lastCompletionDate: Date?
-    
-    // Relación con el Hábito (opcional para que SwiftData gestione la integridad)
     var habit: Habit?
 
     init(currentCount: Int = 0, bestCount: Int = 0, lastCompletionDate: Date? = nil) {
@@ -18,7 +16,6 @@ class Streak {
         self.lastCompletionDate = lastCompletionDate
     }
 
-    /// Lógica interna para actualizar la racha
     func update(completionDate: Date) {
         let calendar = Calendar.current
         
