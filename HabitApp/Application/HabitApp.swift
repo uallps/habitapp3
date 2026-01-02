@@ -40,6 +40,14 @@ struct HabitApp: App {
                     Label("Notas", systemImage: "note.text")
                 }
                 
+                // TAB 3: Estadísticas
+                NavigationStack {
+                    StatisticsView()
+                }
+                .tabItem {
+                    Label("Estadísticas", systemImage: "chart.bar")
+                }
+                
                 // TAB 4: Objetivos
                 NavigationStack {
                     GoalsView()
