@@ -10,14 +10,14 @@ class DailyNote {
     var createdAt: Date
     var updatedAt: Date
     
-    var habit: Habit?
+    var habitId: UUID?
     
-    init(title: String, content: String, date: Date = Date(), habit: Habit? = nil) {
+    init(title: String, content: String, date: Date = Date(), habitId: UUID? = nil) {
         self.id = UUID()
         self.title = title
         self.content = content
         self.date = date
-        self.habit = habit
+        self.habitId = habitId
         self.createdAt = Date()
         self.updatedAt = Date()
     }

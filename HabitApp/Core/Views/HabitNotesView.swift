@@ -150,7 +150,7 @@ extension HabitNotesView {
         let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
         
         return allNotes.filter { note in
-            note.habit?.id == habit.id &&
+            note.habitId == habit.id &&
             note.date >= startOfDay &&
             note.date < endOfDay
         }

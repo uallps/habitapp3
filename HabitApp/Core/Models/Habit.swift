@@ -21,14 +21,6 @@ class Habit {
     var createdAt: Date
     var updatedAt: Date
     
-    @Relationship(deleteRule: .cascade, inverse: \DailyNote.habit)
-    var notes: [DailyNote] = []
-    
-
-    
-    @Relationship(deleteRule: .cascade, inverse: \Goal.habit)
-    var goals: [Goal] = []
-    
     // MARK: - Streak Properties
     var currentStreak: Int {
         calculateCurrentStreak()
