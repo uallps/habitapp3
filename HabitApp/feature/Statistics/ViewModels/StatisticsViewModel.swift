@@ -30,22 +30,21 @@ final class StatisticsViewModel: ObservableObject {
     func loadStatistics() {
         isLoading = true
         
-        Task {
-            do {
-                let habits = try await storageProvider.loadTasks()
-                
-                // Compute statistics
-                await MainActor.run {
-                    generalStats = service.computeGeneralStats(from: habits, range: selectedRange)
-                    habitStats = habits.map { service.computeHabitStats(for: $0, range: selectedRange) }
-                    isLoading = false
-                }
-            } catch {
-                await MainActor.run {
-                    print("Error loading habits for statistics: \(error)")
-                    isLoading = false
-                }
-            }
+        let descriptor = FetchDescriptor<Habit>(
+            sortBy: [SortDescriptor(\.createdAt)]
+        )
+        
+        do {
+            let habits = try storageProvider.context.fetch(descriptor)
+            
+            // Compute statistics
+            generalStats = service.computeGeneralStats(from: habits, range: selectedRange)
+            habitStats = habits.map { service.computeHabitStats(for: $0, range: selectedRange) }
+            
+            isLoading = false
+        } catch {
+            print("Error loading habits for statistics: \(error)")
+            isLoading = false
         }
     }
     
