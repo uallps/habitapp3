@@ -37,15 +37,13 @@ struct StatisticsView: View {
                 if viewModel.selectedRange == .day {
                     OverviewStatsView(
                         stats: viewModel.generalStats,
-                        isLoading: viewModel.isLoading,
-                        range: viewModel.selectedRange
+                        isLoading: viewModel.isLoading
                     )
                 } else {
                     TabView(selection: $selectedTab) {
                         OverviewStatsView(
                             stats: viewModel.generalStats,
-                            isLoading: viewModel.isLoading,
-                            range: viewModel.selectedRange
+                            isLoading: viewModel.isLoading
                         )
                         .tag(0)
                         

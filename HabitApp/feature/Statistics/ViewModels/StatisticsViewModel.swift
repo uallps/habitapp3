@@ -7,7 +7,7 @@ final class StatisticsViewModel: ObservableObject {
     
     // MARK: - Published Properties
     
-    @Published var selectedRange: TimeRange = .week
+    @Published var selectedRange: TimeRange = .day
     @Published var generalStats: GeneralStats?
     @Published var habitStats: [HabitStats] = []
     @Published var isLoading = false
