@@ -1,5 +1,6 @@
 import SwiftUI
 import Combine
+import SwiftData
 
 // ObservableObject es un protocolo que garantiza que esta clase tiene datos que, cuando cambian, desencadenan actualizaciones en la interfaz de usuario.
 // Concepto similar a los estados mutables en Jetpack Compose.
@@ -13,12 +14,14 @@ class AppConfig: ObservableObject  {
     // directamente en disco, sin relaciones entre ellos.
     // Básicamente, cualquier propiedad marcada con @AppStorage se lee o escribe según las circunstancias adecuadas.
     
+    // MARK: - Plugin Management
+    private var plugins: [FeaturePlugin] = []
     
     // MARK: - Storage Provider
     
     private lazy var swiftDataProvider: SwiftDataStorageProvider = {
         // Obtener modelos base
-        var schemas: [any PersistentModel.Type] = [Task.self]
+        var schemas: [any PersistentModel.Type] = [Habit.self]
         
         // Agregar modelos de plugins habilitados
         schemas.append(contentsOf: PluginRegistry.shared.getEnabledModels(from: plugins))
@@ -34,10 +37,14 @@ class AppConfig: ObservableObject  {
         switch storageType {
         case .swiftData:
             return swiftDataProvider
-        case .json:
-            return JSONStorageProvider.shared
+        //case .json:
+         //   return JSONStorageProvider.shared
         }
     }
+    
+    @AppStorage("storageType")
+    var storageType: StorageType = .swiftData
+    
     @AppStorage("showCategories")
     static var showCategories: Bool = true
     @AppStorage("showDueDates")
@@ -48,8 +55,8 @@ class AppConfig: ObservableObject  {
     static var enableReminders: Bool = true}
 
 enum StorageType: String, CaseIterable, Identifiable {
-    case swiftData = "SwiftData Storage"
-    case json = "JSON Storage"
+    case swiftData = "SwiftDataStorage"
+    //case json = "JSONStorage"
 
     var id: String { self.rawValue }
 }

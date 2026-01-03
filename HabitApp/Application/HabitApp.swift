@@ -62,8 +62,9 @@ struct HabitApp: App {
                 // Tab 3: Categorías
                 NavigationStack {
                     CategoryListView(
-                        storageProvider: SwiftDataStorageProvider(schema: <#Schema#>),
-                        viewModel: CategoryListViewModel()
+                        viewModel: CategoryListViewModel(
+                            storageProvider: storageProvider
+                        )
                     )
                 }
                 .tabItem {

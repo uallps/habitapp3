@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct PluginRegistry {
     static let shared = PluginRegistry()
@@ -18,5 +19,13 @@ struct PluginRegistry {
         // Aquí puedes agregar más plugins de datos
     ]
     
+    /// Obtiene todos los modelos de los plugins habilitados
+    /// - Parameter plugins: Array de instancias de plugins
+    /// - Returns: Array de tipos de modelos persistentes
+    func getEnabledModels(from plugins: [FeaturePlugin]) -> [any PersistentModel.Type] {
+        return plugins.flatMap { plugin in
+            plugin.isEnabled ? plugin.models : []
+        }
+    }
 
 }
