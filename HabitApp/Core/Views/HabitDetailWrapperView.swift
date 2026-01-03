@@ -8,32 +8,21 @@ struct HabitDetailWrapper: View {
     @StateObject var categoryListVM: CategoryListViewModel
     @StateObject var userImageVM: UserImagesViewModel
     // END IF
-
+    
+    @EnvironmentObject private var appConfig: AppConfig
+    
     @ObservedObject var habitListVM: HabitListViewModel
     @State var habit: Habit
     private let isNew: Bool
     
     init(habitListVM: HabitListViewModel, modelContext: ModelContext? = nil, isNew: Bool, habit: Habit) {
-        #if os(iOS)
-        let context = ModelContext(try! ModelContainer(for: DailyNote.self))
-        _categoryListVM = StateObject(wrappedValue: CategoryListViewModel(modelContext: context))
-        _userImageVM = StateObject(wrappedValue: UserImagesViewModel(modelContext: context))
-        #else
-        if let modelContext {
-            _categoryListVM = StateObject(wrappedValue: CategoryListViewModel(modelContext: modelContext))
-            _userImageVM = StateObject(wrappedValue: UserImagesViewModel(modelContext: modelContext))
-        } else {
-            let container = try! ModelContainer(for: DailyNote.self)
-            let context = ModelContext(container)
-            _categoryListVM = StateObject(wrappedValue: CategoryListViewModel(modelContext: modelContext))
-            _userImageVM = StateObject(wrappedValue: UserImagesViewModel(modelContext: modelContext))
-        }
-        #endif
+        _categoryListVM = StateObject(wrappedValue: CategoryListViewModel(storageProvider: appConfig.storageProvider))
+        _userImageVM = StateObject(wrappedValue: UserImagesViewModel())
         self.habitListVM = habitListVM
         self.isNew = isNew
         self._habit = State(initialValue: habit)
     }
-
+    
     var body: some View {
         VStack(spacing: 20) {
             // 🔹 Título
@@ -66,53 +55,58 @@ struct HabitDetailWrapper: View {
             
             Spacer()
             
-            Section(header: Text("Añadir hábito a categoría")) {
-                if Array(categoryListVM.categories.values).isEmpty {
-                    Text("No hay categorías disponibles. Crea al menos una categoría.")
-                        .foregroundColor(.gray)
-
-                }else {
-                    List {
-                        ForEach(Array(categoryListVM.categories.values).sorted(by: { $0.name < $1.name })) { category in
-                           NavigationLink {
-                                CategoryDetailWrapperView(
-                                    viewModel: categoryListVM,
-                                    category: category,
-                                    userImageVM: userImageVM,
-                                    isSubcategory: category.isSubcategory
-                                )
-                           } label: {
-                                 CategoryRowView(category: category)
-
-                           }
-                           .buttonStyle(.plain)
-
-                        }
-                    }
-                    .frame(minHeight: 120, maxHeight: 300)
-                }
-            }
-            
-            Spacer()
-            
-            // 🔹 Botón Guardar
-            Button(action: saveHabit) {
-                Text("Guardar hábito")
-                    .font(.headline)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .foregroundColor(.white)
-                    .padding(.horizontal)
-            }
-            .background(Color.blue)
-            .cornerRadius(10)
-            
-            // 🔹 Botón Eliminar (solo si no es nuevo)
-       
+            categorySection
         }
+        
+        Spacer()
+        
+        // 🔹 Botón Guardar
+        Button(action: saveHabit) {
+            Text("Guardar hábito")
+                .font(.headline)
+                .padding()
+                .frame(maxWidth: .infinity)
+                .foregroundColor(.white)
+                .padding(.horizontal)
+        }
+        .background(Color.blue)
+        .cornerRadius(10)
+        
+        // 🔹 Botón Eliminar (solo si no es nuevo)
+        
+    }
+
         .navigationTitle(isNew ? "Nuevo hábito" : "Editar hábito")
         .padding()
     }
+    
+    var categorySection: some View {
+        Section(header: Text("Añadir hábito a categoría")) {
+            if Array(categoryListVM.categories.values).isEmpty {
+                Text("No hay categorías disponibles. Crea al menos una categoría.")
+                    .foregroundColor(.gray)
+
+            }else {
+                List {
+                    ForEach(Array(categoryListVM.categories.values).sorted(by: { $0.name < $1.name })) { category in
+                       NavigationLink {
+                            CategoryDetailWrapperView(
+                                viewModel: categoryListVM,
+                                category: category,
+                                userImageVM: userImageVM,
+                                isSubcategory: category.isSubcategory
+                            )
+                       } label: {
+                             CategoryRowView(category: category)
+
+                       }
+                       .buttonStyle(.plain)
+
+                    }
+                }
+                .frame(minHeight: 120, maxHeight: 300)
+            }
+        }    }
     
     // MARK: - Funciones
     private func saveHabit() {

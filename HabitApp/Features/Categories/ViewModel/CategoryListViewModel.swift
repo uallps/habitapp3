@@ -53,11 +53,13 @@ class CategoryListViewModel: ObservableObject {
     }
     
     func categoryExists(id: UUID) async -> Bool {
+        var contains = false
         do {
-            return try await storageProvider.categoryExists(id: id)
+            contains = try await storageProvider.categoryExists(id: id)
         } catch {
             print("Error checking if category exists \(error)")
         }
+        return contains
     }
     
     func updateCategory(id: UUID, newCategory: Category) async {

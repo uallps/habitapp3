@@ -9,7 +9,9 @@ struct HabitListView: View {
     @State private var showingNewHabitSheet = false
     private let calendar = Calendar.current
     private let weekdaySymbols = Calendar.current.shortStandaloneWeekdaySymbols
-
+    
+    @EnvironmentObject private var AppConfig: AppConfig
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 12) {
@@ -80,7 +82,9 @@ struct HabitListView: View {
             .sheet(isPresented: $showingNewHabitSheet) {
                 // Abrimos HabitDetailWrapper para crear un nuevo hábito
                 HabitDetailWrapper(
-                    habitListVM: HabitListViewModel(),
+                    habitListVM: HabitListViewModel(
+                        storageProvider: AppConfig.storageProvider
+                    ),
                     isNew: true,
                     habit: Habit(title: "")
                 )

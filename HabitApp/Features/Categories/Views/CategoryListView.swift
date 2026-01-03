@@ -2,16 +2,16 @@ import SwiftUI
 
 struct CategoryListView: View {
     @ObservedObject var viewModel: CategoryListViewModel
-
+    @EnvironmentObject private var appConfig: AppConfig
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 12) {
                 List(Array(viewModel.categories.values).filter { !$0.isSubcategory }                ) { category in
                     NavigationLink {
                         CategoryDetailWrapperView(
-                            viewModel: viewModel,
+                            storageProvider: appConfig.storageProvider,
                             category: category,
-                            userImageVM: UserImagesViewModel(),
                             isSubcategory: category.isSubcategory
                         )
                     } label: {
@@ -33,9 +33,8 @@ struct CategoryListView: View {
                             isSubcategory: false
                         )
                         CategoryDetailWrapperView(
-                            viewModel: viewModel,
+                            storageProvider: appConfig.storageProvider,
                             category: category,
-                            userImageVM: UserImagesViewModel(),
                             isSubcategory: category.isSubcategory
                         )
                     } label: {

@@ -31,7 +31,9 @@ struct HabitApp: App {
                 // TAB 1: Hábitos
                 NavigationStack {
                     HabitListView(
-                        viewModel: HabitListViewModel()
+                        viewModel: HabitListViewModel(
+                            storageProvider: storageProvider
+                        )
                     )
                 }
                 .tabItem {

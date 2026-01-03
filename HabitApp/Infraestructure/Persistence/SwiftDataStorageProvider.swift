@@ -6,6 +6,13 @@ class SwiftDataContext {
 }
 
 class SwiftDataStorageProvider: StorageProvider {
+    func addHabitToCategory(habit: Habit, category: Category) async throws {
+        if !category.habits.contains(where: { $0.id == habit.id } ) {
+            category.habits.append(habit)
+        }
+        try context.save()
+    }
+    
     func addSubcategory(category: Category, subCategory: Category) async throws {
         if subCategory.modelContext == nil {
             context.insert(subCategory)
@@ -14,6 +21,8 @@ class SwiftDataStorageProvider: StorageProvider {
         if !category.subCategories.contains(where: { $0.id == subCategory.id }) {
             category.subCategories.append(subCategory)
         }
+        
+        try context.save()
     }
     
     func removeCategory(category: Category) async throws {

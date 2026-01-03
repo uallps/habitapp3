@@ -12,5 +12,6 @@ protocol StorageProvider {
     func categoryExists(id: UUID) async throws -> Bool
     func updateCategory(id: UUID, newCategory: Category) async throws
     func upsertCategoryOrSubcategory(parent: Category?, category: Category) async throws
+    func addHabitToCategory(habit: Habit, category: Category) async throws
     //END IF
 }
