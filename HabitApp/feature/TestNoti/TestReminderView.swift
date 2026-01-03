@@ -12,6 +12,7 @@ import UIKit
 
 struct TestReminderView: View {
     @State private var message = "Listo para probar alertas"
+    @EnvironmentObject private var appConfig: AppConfig
     
     var body: some View {
         VStack(spacing: 20) {
@@ -42,7 +43,6 @@ struct TestReminderView: View {
             }
         }
         .padding()
-
     }
     
     private func testReminderPlugin() {
@@ -72,10 +72,10 @@ struct TestReminderView: View {
     }
     
     private func testHabitsNotification() {
-        let viewModel = HabitListViewModel()
+        // ⭐ Pasar el storageProvider desde appConfig
+        let viewModel = HabitListViewModel(storageProvider: appConfig.storageProvider)
         let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date()) ?? Date()
         
-        // Crear hábitos de prueba
         let testHabits = [
             Habit(title: "Ejercicio", scheduledDays: [Calendar.current.component(.weekday, from: tomorrow)]),
             Habit(title: "Lectura", scheduledDays: [Calendar.current.component(.weekday, from: tomorrow)])

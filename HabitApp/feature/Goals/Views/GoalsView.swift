@@ -5,8 +5,14 @@ struct GoalsView: View {
     @Query private var goals: [Goal]
     @Query private var habits: [Habit]
     @Environment(\.modelContext) private var modelContext
-    @StateObject private var viewModel = GoalsViewModel()
+    @EnvironmentObject private var appConfig: AppConfig
+    @StateObject private var viewModel: GoalsViewModel
     @State private var showingAddGoal = false
+    
+    init() {
+        // Inicializar el viewModel con storageProvider
+        _viewModel = StateObject(wrappedValue: GoalsViewModel(storageProvider: AppConfig().storageProvider))
+    }
     
     var body: some View {
         #if os(iOS)

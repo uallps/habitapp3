@@ -1,30 +1,37 @@
-//
-//  HabitAppApp.swift
-//  HabitApp
-//
-//  Created by Aula03 on 15/10/25.
-//
-
 import SwiftUI
+import SwiftData
 
 @main
 struct HabitApp: App {
     @State private var selectedDetailView: String?
     @StateObject private var appConfig = AppConfig()
     
+    // Agregar el container aquí
+    let modelContainer: ModelContainer
+    
     private var storageProvider: StorageProvider {
         appConfig.storageProvider
     }
     
     init() {
+        // Inicializar el ModelContainer
+        let schema = Schema([Habit.self, DailyNote.self, Goal.self, Milestone.self])
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        
+        do {
+            self.modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
+        } catch {
+            fatalError("❌ Error inicializando ModelContainer: \(error)")
+        }
+        
         #if os(iOS)
         UNUserNotificationCenter.current().requestAuthorization(
             options: [.alert, .sound, .badge]
         ) { granted, error in
             if granted {
-                print("Permiso concedido para notificaciones")
+                print("✅ Permiso concedido para notificaciones")
             } else if let error = error {
-                print("Error solicitando permisos: \(error)")
+                print("❌ Error solicitando permisos: \(error)")
             }
         }
         #endif
@@ -56,6 +63,7 @@ struct HabitApp: App {
                     }
             }
             .environmentObject(appConfig)
+            .modelContainer(modelContainer)  // ⭐ AGREGAR ESTO
 
 #else
             NavigationSplitView {
@@ -89,7 +97,9 @@ struct HabitApp: App {
                 default:
                     Text("Seleccione una opción")
                 }
-            }.environmentObject(appConfig)
+            }
+            .environmentObject(appConfig)
+            .modelContainer(modelContainer)  // ⭐ AGREGAR ESTO
 #endif
         }
     }

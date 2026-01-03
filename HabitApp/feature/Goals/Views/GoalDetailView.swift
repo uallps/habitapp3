@@ -5,8 +5,14 @@ struct GoalDetailView: View {
     @Bindable var goal: Goal
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var viewModel = GoalsViewModel()
+    @EnvironmentObject private var appConfig: AppConfig
+    @StateObject private var viewModel: GoalsViewModel
     @State private var associatedHabit: Habit?
+    
+    init(goal: Goal) {
+        self._goal = Bindable(goal)
+        // Inicializar viewModel en init
+    }
     
     var body: some View {
         #if os(iOS)
