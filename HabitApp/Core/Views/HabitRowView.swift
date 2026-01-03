@@ -2,10 +2,10 @@ import SwiftUI
 import SwiftData
 struct HabitRowView: View {
 
-    @Environment(\.modelContext) private var modelContext
-
     let habit: Habit
     let toggleCompletion: () -> Void
+    let viewModel: HabitListViewModel
+    let storageProvider: StorageProvider
     var date: Date = Date()
     
     @State private var showingEditSheet = false
@@ -44,7 +44,7 @@ struct HabitRowView: View {
             
             // 🔹 Navegación a notas
             NavigationLink {
-                HabitNotesView(habit: habit, currentDate: date, modelContext: modelContext)
+                HabitNotesView(habit: habit, currentDate: date, storageProvider: storageProvider)
             } label: {
                 Image(systemName: "note.text")
                     .foregroundColor(.blue)
@@ -75,7 +75,7 @@ struct HabitRowView: View {
             .padding(.leading, 2)
         }
         .sheet(isPresented: $showingEditSheet) {
-            HabitDetailWrapper(viewModel: HabitListViewModel(), habit: habit, isNew: false)
+            HabitDetailWrapper(viewModel: viewModel, habit: habit, isNew: false)
         }
         .alert("¿Eliminar hábito?", isPresented: $showingDeleteAlert) {
             Button("Eliminar", role: .destructive) {
@@ -88,8 +88,7 @@ struct HabitRowView: View {
     }
     
     private func deleteHabit() {
-        modelContext.delete(habit)
-        try? modelContext.save()
+        viewModel.deleteHabit(habit)
     }
     
     private func priorityColor(for priority: Priority) -> Color {

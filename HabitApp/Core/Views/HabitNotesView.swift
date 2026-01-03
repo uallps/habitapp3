@@ -4,17 +4,18 @@ import SwiftData
 struct HabitNotesView: View {
     let habit: Habit
     let currentDate: Date
-    @Environment(\.modelContext) private var modelContext
+    let storageProvider: StorageProvider
     @Query private var allNotes: [DailyNote]
     
     @State private var showingAddNote = false
     @StateObject private var notesViewModel: DailyNotesViewModel
     private let calendar = Calendar.current
 
-    init(habit: Habit, currentDate: Date, modelContext: ModelContext) {
+    init(habit: Habit, currentDate: Date, storageProvider: StorageProvider) {
         self.habit = habit
         self.currentDate = currentDate
-        _notesViewModel = StateObject(wrappedValue: DailyNotesViewModel(modelContext: modelContext))
+        self.storageProvider = storageProvider
+        _notesViewModel = StateObject(wrappedValue: DailyNotesViewModel(storageProvider: storageProvider))
     }
 
     var body: some View {
@@ -116,8 +117,7 @@ extension HabitNotesView {
                         }
                         .contextMenu {
                             Button("Eliminar", role: .destructive) {
-                                modelContext.delete(note)
-                                try? modelContext.save()
+                                notesViewModel.deleteNote(note)
                             }
                         }
                     }
@@ -158,7 +158,8 @@ extension HabitNotesView {
     
     private func deleteNotes(offsets: IndexSet) {
         let sorted = habitNotes.sorted { $0.date > $1.date }
-        for i in offsets { modelContext.delete(sorted[i]) }
-        try? modelContext.save()
+        for i in offsets { 
+            notesViewModel.deleteNote(sorted[i])
+        }
     }
 }

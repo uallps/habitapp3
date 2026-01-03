@@ -21,6 +21,22 @@ class AppConfig: ObservableObject {
     @AppStorage("storageType")
     var storageType: StorageType = .swiftData
 
+    init() {
+        // Inicializar plugins cuando se crea AppConfig
+        setupPlugins()
+    }
+    
+    private func setupPlugins() {
+        // Usar el storageProvider en lugar de SwiftDataContext
+        let habitGoalPlugin = HabitGoalPlugin(storageProvider: storageProvider)
+        let reminderPlugin = ReminderPlugin()
+        
+        TaskDataObserverManager.shared.register(habitGoalPlugin)
+        TaskDataObserverManager.shared.register(reminderPlugin)
+        
+        print("🔔 Plugins registrados: HabitGoal y Reminder")
+    }
+
     // MARK: - Storage Provider
     
     private lazy var swiftDataProvider: SwiftDataStorageProvider = {

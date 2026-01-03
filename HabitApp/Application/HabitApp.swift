@@ -10,9 +10,10 @@ import SwiftUI
 @main
 struct HabitApp: App {
     @State private var selectedDetailView: String?
+    @StateObject private var appConfig = AppConfig()
     
     private var storageProvider: StorageProvider {
-        AppConfig().storageProvider
+        appConfig.storageProvider
     }
     
     init() {
@@ -33,45 +34,28 @@ struct HabitApp: App {
         WindowGroup{
 #if os(iOS)
             TabView {
-                NavigationStack {
-                    HabitListView(
-                        viewModel: HabitListViewModel()
-                    )
-                }
-                .tabItem {
-                    Label("Hábitos", systemImage: "checklist")
-                }
-
-                NavigationStack {
-                    DailyNotesView()
-                }
-                .tabItem {
-                    Label("Notas", systemImage: "note.text")
-                }
-                
-                NavigationStack {
-                    GoalsView()
-                }
-                .tabItem {
-                    Label("Objetivos", systemImage: "target")
-                }
-                
-                NavigationStack {
-                    TestReminderView()
-                }
-                .tabItem {
-                    Label("Test", systemImage: "bell")
-                }
-                
-                NavigationStack {
-                    SettingsView()
-                }
-                .tabItem {
-                    Label("Ajustes", systemImage: "gearshape")
-                }
+                HabitListView(storageProvider: storageProvider)
+                    .tabItem {
+                        Label("Hábitos", systemImage: "checklist")
+                    }
+                DailyNotesView()
+                    .tabItem {
+                        Label("Notas", systemImage: "note.text")
+                    }
+                GoalsView()
+                    .tabItem {
+                        Label("Objetivos", systemImage: "target")
+                    }
+                TestReminderView()
+                    .tabItem {
+                        Label("Test", systemImage: "bell")
+                    }
+                SettingsView()
+                    .tabItem {
+                        Label("Ajustes", systemImage: "gearshape")
+                    }
             }
-            .environmentObject(AppConfig())
-            .environment(\.modelContext, (storageProvider as! SwiftDataStorageProvider).context)
+            .environmentObject(appConfig)
 
 #else
             NavigationSplitView {
@@ -95,7 +79,7 @@ struct HabitApp: App {
             } detail: {
                 switch selectedDetailView {
                 case "habitos":
-                    HabitListView(viewModel: HabitListViewModel())
+                    HabitListView(storageProvider: storageProvider)
                 case "notas":
                     DailyNotesView()
                 case "objetivos":
@@ -105,9 +89,7 @@ struct HabitApp: App {
                 default:
                     Text("Seleccione una opción")
                 }
-            }.environmentObject(AppConfig())
-            .environment(\.modelContext, (storageProvider as! SwiftDataStorageProvider).context)
-            .setupApp()
+            }.environmentObject(appConfig)
 #endif
         }
     }

@@ -9,14 +9,14 @@ import SwiftData
 import Foundation
 
 final class HabitGoalPlugin: TaskDataObservingPlugin {
-    let context: ModelContext
+    let storageProvider: StorageProvider
 
-    init(context: ModelContext) {
-        self.context = context
+    init(storageProvider: StorageProvider) {
+        self.storageProvider = storageProvider
     }
 
     func onDataChanged(taskId: UUID, title: String, dueDate: Date?) {
-        guard let habit = try? context.fetch(FetchDescriptor<Habit>(predicate: #Predicate { $0.id == taskId })).first else { return }
+        guard let habit = try? storageProvider.context.fetch(FetchDescriptor<Habit>(predicate: #Predicate { $0.id == taskId })).first else { return }
 
         do {
             let habitId = habit.id
@@ -25,7 +25,7 @@ final class HabitGoalPlugin: TaskDataObservingPlugin {
                     goal.habitId == habitId
                 }
             )
-            let goals = try context.fetch(goalDescriptor)
+            let goals = try storageProvider.context.fetch(goalDescriptor)
             
             for goal in goals {
                 goal.updateProgress(count: habit.doneDates.count)
@@ -37,7 +37,7 @@ final class HabitGoalPlugin: TaskDataObservingPlugin {
                 }
             }
             
-            try context.save()
+            try storageProvider.context.save()
         } catch {
             print("Error updating goals: \(error)")
         }

@@ -8,13 +8,17 @@ import SwiftData
 import Combine 
 
 final class HabitListViewModel: ObservableObject {
+    private let storageProvider: StorageProvider
+    
+    init(storageProvider: StorageProvider) {
+        self.storageProvider = storageProvider
+    }
     
     func addHabit(title: String, 
                   dueDate: Date? = nil, 
                   priority: Priority? = nil, 
                   reminderDate: Date? = nil, 
-                  scheduledDays: [Int] = [],
-                  context: ModelContext) {
+                  scheduledDays: [Int] = []) {
         let habit = Habit(
             title: title,
             dueDate: dueDate,
@@ -22,10 +26,10 @@ final class HabitListViewModel: ObservableObject {
             reminderDate: reminderDate,
             scheduledDays: scheduledDays
         )
-        context.insert(habit)
+        storageProvider.context.insert(habit)
         
         do {
-            try context.save()
+            try storageProvider.context.save()
             
             // Notificar plugins si hay fecha de recordatorio
             if let reminderDate = reminderDate {
@@ -40,9 +44,9 @@ final class HabitListViewModel: ObservableObject {
         }
     }
     
-    func updateHabit(_ habit: Habit, context: ModelContext) {
+    func updateHabit(_ habit: Habit) {
         do {
-            try context.save()
+            try storageProvider.context.save()
         } catch {
             print("Error updating habit: \(error)")
         }
@@ -63,17 +67,17 @@ final class HabitListViewModel: ObservableObject {
         )
     }
     
-    func deleteHabit(_ habit: Habit, context: ModelContext) {
-        context.delete(habit)
+    func deleteHabit(_ habit: Habit) {
+        storageProvider.context.delete(habit)
         
         do {
-            try context.save()
+            try storageProvider.context.save()
         } catch {
             print("Error deleting habit: \(error)")
         }
     }
     
-    func createSampleHabits(context: ModelContext) {
+    func createSampleHabits() {
         let sampleHabits = [
             Habit(title: "Hacer ejercicio", priority: .high, scheduledDays: [2, 4, 6]),
             Habit(title: "Leer 30 minutos", priority: .medium, scheduledDays: [1, 2, 3, 4, 5, 6, 7]),
@@ -81,11 +85,11 @@ final class HabitListViewModel: ObservableObject {
         ]
         
         for habit in sampleHabits {
-            context.insert(habit)
+            storageProvider.context.insert(habit)
         }
         
         do {
-            try context.save()
+            try storageProvider.context.save()
         } catch {
             print("Error creating sample habits: \(error)")
         }

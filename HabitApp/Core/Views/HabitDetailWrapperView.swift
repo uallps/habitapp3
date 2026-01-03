@@ -74,8 +74,7 @@ extension HabitDetailWrapper {
                                 dueDate: habit.dueDate,
                                 priority: habit.priority,
                                 reminderDate: habit.reminderDate,
-                                scheduledDays: habit.scheduledDays,
-                                context: modelContext
+                                scheduledDays: habit.scheduledDays
                             )
                             dismiss()
                         }) {
@@ -94,7 +93,7 @@ extension HabitDetailWrapper {
                         
                         if !isNew {
                             Button(action: {
-                                viewModel.deleteHabit(habit, context: modelContext)
+                                viewModel.deleteHabit(habit)
                                 dismiss()
                             }) {
                                 HStack {
@@ -164,7 +163,7 @@ extension HabitDetailWrapper {
                 
                 if !isNew {
                     Button("Eliminar") {
-                        viewModel.deleteHabit(habit, context: modelContext)
+                        viewModel.deleteHabit(habit)
                         dismiss()
                     }
                     .buttonStyle(.borderedProminent)
@@ -178,11 +177,10 @@ extension HabitDetailWrapper {
                             dueDate: habit.dueDate,
                             priority: habit.priority,
                             reminderDate: habit.reminderDate,
-                            scheduledDays: habit.scheduledDays,
-                            context: modelContext
+                            scheduledDays: habit.scheduledDays
                         )
                     } else {
-                        viewModel.updateHabit(habit, context: modelContext)
+                        viewModel.updateHabit(habit)
                     }
                     dismiss()
                 }

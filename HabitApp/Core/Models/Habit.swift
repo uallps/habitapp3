@@ -12,14 +12,34 @@ import SwiftData
 class Habit {
     @Attribute(.unique) var id: UUID
     var title: String
-    @Attribute(.externalStorage) var doneDates: [Date]
+    var doneDatesString: String
     var isCompleted: Bool
     var dueDate: Date?
     var priority: Priority?
     var reminderDate: Date?
-    @Attribute(.externalStorage) var scheduledDays: [Int] // 1 = Domingo, 2 = Lunes, ..., 7 = Sábado
+    var scheduledDaysString: String
     var createdAt: Date
     var updatedAt: Date
+    
+    var doneDates: [Date] {
+        get {
+            doneDatesString.split(separator: ",").compactMap { 
+                Double($0).map { Date(timeIntervalSince1970: $0) }
+            }
+        }
+        set {
+            doneDatesString = newValue.map { String($0.timeIntervalSince1970) }.joined(separator: ",")
+        }
+    }
+    
+    var scheduledDays: [Int] {
+        get {
+            scheduledDaysString.split(separator: ",").compactMap { Int($0) }
+        }
+        set {
+            scheduledDaysString = newValue.map { String($0) }.joined(separator: ",")
+        }
+    }
     
     // MARK: - Streak Properties
     var currentStreak: Int {
@@ -45,12 +65,12 @@ class Habit {
          scheduledDays: [Int] = []) {
         self.id = UUID()
         self.title = title
-        self.doneDates = doneDates
+        self.doneDatesString = doneDates.map { String($0.timeIntervalSince1970) }.joined(separator: ",")
         self.isCompleted = isCompleted
         self.dueDate = dueDate
         self.priority = priority
         self.reminderDate = reminderDate
-        self.scheduledDays = scheduledDays
+        self.scheduledDaysString = scheduledDays.map { String($0) }.joined(separator: ",")
         self.createdAt = Date()
         self.updatedAt = Date()
     }
@@ -59,8 +79,10 @@ class Habit {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: date)
         
-        if !doneDates.contains(where: { calendar.isDate($0, inSameDayAs: today) }) {
-            doneDates.append(today)
+        var dates = doneDates
+        if !dates.contains(where: { calendar.isDate($0, inSameDayAs: today) }) {
+            dates.append(today)
+            doneDates = dates
             updatedAt = Date()
         }
     }
@@ -69,7 +91,9 @@ class Habit {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: date)
         
-        doneDates.removeAll { calendar.isDate($0, inSameDayAs: today) }
+        var dates = doneDates
+        dates.removeAll { calendar.isDate($0, inSameDayAs: today) }
+        doneDates = dates
         updatedAt = Date()
     }
     

@@ -2,13 +2,19 @@ import SwiftUI
 import SwiftData
 
 struct HabitListView: View {
-    @ObservedObject var viewModel: HabitListViewModel
+    let storageProvider: StorageProvider
     @Query private var habits: [Habit]
     @Environment(\.modelContext) private var modelContext
+    @StateObject private var viewModel: HabitListViewModel
     @State private var currentDate = Date()
     @State private var showingNewHabitSheet = false
     private let calendar = Calendar.current
     private let weekdaySymbols = Calendar.current.shortStandaloneWeekdaySymbols
+    
+    init(storageProvider: StorageProvider) {
+        self.storageProvider = storageProvider
+        self._viewModel = StateObject(wrappedValue: HabitListViewModel(storageProvider: storageProvider))
+    }
 
     var body: some View {
         #if os(iOS)
@@ -74,6 +80,8 @@ extension HabitListView {
                         toggleCompletion: {
                             viewModel.toggleCompletion(habit: habit, for: currentDate)
                         },
+                        viewModel: viewModel,
+                        storageProvider: storageProvider,
                         date: currentDate
                     )
                 }
@@ -100,7 +108,7 @@ extension HabitListView {
         }
         .onAppear {
             if habits.isEmpty {
-                viewModel.createSampleHabits(context: modelContext)
+                viewModel.createSampleHabits()
             }
         }
     }
@@ -150,6 +158,8 @@ extension HabitListView {
                         toggleCompletion: {
                             viewModel.toggleCompletion(habit: habit, for: currentDate)
                         },
+                        viewModel: viewModel,
+                        storageProvider: storageProvider,
                         date: currentDate
                     )
                 }
@@ -194,7 +204,7 @@ extension HabitListView {
         }
         .onAppear {
             if habits.isEmpty {
-                viewModel.createSampleHabits(context: modelContext)
+                viewModel.createSampleHabits()
             }
         }
     }
