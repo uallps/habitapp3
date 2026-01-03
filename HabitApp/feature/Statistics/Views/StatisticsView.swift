@@ -5,6 +5,7 @@ struct StatisticsView: View {
     @EnvironmentObject private var appConfig: AppConfig
     @StateObject private var viewModel: StatisticsViewModel
     @State private var selectedTab = 0
+    @State private var statisticsPlugin: StatisticsPlugin?
     
     init() {
         // La inicialización del ViewModel se hace con el storageProvider compartido
@@ -61,7 +62,15 @@ struct StatisticsView: View {
             .navigationBarTitleDisplayMode(.inline)
             #endif
             .onAppear {
+                // Cargar estadísticas inicialmente
                 viewModel.loadStatistics()
+                
+                // Registrar plugin para actualizaciones automáticas
+                if statisticsPlugin == nil {
+                    let plugin = StatisticsPlugin(viewModel: viewModel)
+                    statisticsPlugin = plugin
+                    PluginRegistry.shared.register(plugin: plugin)
+                }
             }
         }
     }
