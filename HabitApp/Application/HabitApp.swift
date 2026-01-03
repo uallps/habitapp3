@@ -5,7 +5,6 @@ import SwiftData
 
 // HabitApp cumple con el protocolo App.
 struct HabitApp: App {
-    @State private var selectedDetailView: String?
     
     private var storageProvider: StorageProvider {
         AppConfig().storageProvider
@@ -96,7 +95,11 @@ struct HabitApp: App {
                 // TODO: case "ajustes":
                 // TODO: SettingsView()
                 case "categorias":
-                    CategoryListView(viewModel: CategoryListViewModel())
+                    CategoryListView(
+                        viewModel: CategoryListViewModel(
+                            storageProvider: storageProvider
+                        )
+                    )
                 case "notas":
                     DailyNotesView()
                     // TODO: case "ajustes":

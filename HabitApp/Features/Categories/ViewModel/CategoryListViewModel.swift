@@ -28,47 +28,53 @@ class CategoryListViewModel: ObservableObject {
         }
     }
     
-    func addSubCategory(category: Category, subCategory: Category) {
-        categories[category.id]?.subCategories[subCategory.name] = subCategory
-    }
-    
-    func removeCategory(category: Category) {
-        categories.removeValue(forKey: category.id)
-    }
-    
-    func removeSubCategory(category: Category, subCategory: Category) {
-        categories[category.id]?.subCategories.removeValue(forKey: subCategory.name)
-    }
-    
-    func categoryExists(id: UUID) -> Bool {
-        return categories[id] != nil
-    }
-    
-    func updateCategory(id: UUID, newCategory: Category) {
-        
-        if let category = categories[id] {
-            // Eliminar la categoría antigua si el nombre ha cambiado.
-            if category.name != newCategory.name {
-                categories.removeValue(forKey: id)
+    func addSubcategory(category: Category, subCategory: Category) async {
+            do {
+                try await storageProvider.addSubcategory(category: category, subCategory: subCategory)
+            } catch {
+              print("Error adding subcategory \(error)")
             }
-            // Añadir o actualizar la categoría con el nuevo nombre.
-            categories[id] = newCategory
         }
-        
+    
+    func removeCategory(category: Category) async {
+        do {
+            try await storageProvider.removeCategory(category: category)
+        } catch {
+            print("Error removing category \(error)")
+        }
+    }
+    
+    func removeSubCategory(category: Category, subCategory: Category) async {
+        do {
+            try await storageProvider.removeSubCategory(category: category, subCategory: subCategory)
+        } catch {
+            print("Error removing subcategory \(error)")
+        }
+    }
+    
+    func categoryExists(id: UUID) async -> Bool {
+        do {
+            return try await storageProvider.categoryExists(id: id)
+        } catch {
+            print("Error checking if category exists \(error)")
+        }
+    }
+    
+    func updateCategory(id: UUID, newCategory: Category) async {
+        do {
+            try await storageProvider.updateCategory(id: id, newCategory: newCategory)
+        } catch {
+            print("Error updating category \(error)")
+        }
     }
     
     func upsertCategoryOrSubcategory(parent: Category?, category: Category) async {
-        if let parent = parent {
-            addSubCategory(category: parent, subCategory: category)
-        }
-        
-        if categoryExists(id: category.id) == false {
-            addCategory(category: category)
-        }else {
-            // Actualizar categoría existente
-            updateCategory(id: category.id, newCategory: category)
+        do {
+            try await storageProvider.upsertCategoryOrSubcategory(parent: parent, category: category)
+        } catch {
+            print("Error upserting category \(error)")
         }
     }
-}        
+}
         
 

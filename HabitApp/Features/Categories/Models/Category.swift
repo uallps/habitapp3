@@ -3,9 +3,22 @@ import SwiftData
 
 @Model
 class Category: Identifiable, Hashable, Encodable, Decodable, Comparable {
+
+    
+    func copyFrom(newCategory: Category) {
+        self.name = newCategory.name
+        self.colorAssetName = newCategory.colorAssetName
+        self.isSubcategory = newCategory.isSubcategory
+        self.icon = newCategory.icon
+        self.priority = newCategory.priority
+        self.subCategories = newCategory.subCategories
+        self.habits = newCategory.habits
+    }
+
+    
     
     @Attribute(.unique) var id: UUID
-    var name: String    // Nombre de la categoría. Es único (Siempre se almacena en minúsculas y sin espacios, por lo que es irrelevante si el usuario usa mayúsculas o espacios)
+    var name: String    // Nombre de la categoría. Siempre se almacena en minúsculas y sin espacios, por lo que es irrelevante si el usuario usa mayúsculas o espacios.
     
     var colorAssetName: String
     

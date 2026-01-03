@@ -38,11 +38,21 @@ class SwiftDataStorageProvider: StorageProvider {
     func updateCategory(id: UUID, newCategory: Category) async throws {
         let categories = try await loadCategories()
         let oldCategory = categories[id]
-        
+        oldCategory?.copyFrom(newCategory: newCategory)
+        try context.save()
     }
     
     func upsertCategoryOrSubcategory(parent: Category?, category: Category) async throws {
-        <#code#>
+        if let parent = parent {
+            try await addSubcategory(category: parent, subCategory: category)
+        }
+        
+        if try await categoryExists(id: category.id) == false {
+            await addCategory(category: category)
+        }else {
+            // Actualizar categoría existente
+            try await updateCategory(id: category.id, newCategory: category)
+        }
     }
     
 
