@@ -1,76 +1,77 @@
-//
-//  HabitAppApp.swift
-//  HabitApp
-//
-//  Created by Aula03 on 15/10/25.
-//
-
 import SwiftUI
 import SwiftData
 
 @main
 struct HabitApp: App {
     @State private var selectedDetailView: String?
+    @StateObject private var appConfig = AppConfig()
+    
+    // Agregar el container aquí
+    let modelContainer: ModelContainer
+    
+    private var storageProvider: StorageProvider {
+        appConfig.storageProvider
+    }
+    
     init() {
+        // Inicializar el ModelContainer
+        let schema = Schema([Habit.self, DailyNote.self, Goal.self, Milestone.self])
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        
+        do {
+            self.modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
+        } catch {
+            fatalError("❌ Error inicializando ModelContainer: \(error)")
+        }
+        
         #if os(iOS)
         UNUserNotificationCenter.current().requestAuthorization(
             options: [.alert, .sound, .badge]
         ) { granted, error in
             if granted {
-                print("Permiso concedido para notificaciones")
+                print("✅ Permiso concedido para notificaciones")
             } else if let error = error {
-                print("Error solicitando permisos: \(error)")
+                print("❌ Error solicitando permisos: \(error)")
             }
         }
-        
         #endif
     }
+    
     var body: some Scene {
         WindowGroup{
 #if os(iOS)
             TabView {
-                // TAB 1: Hábitos
-                NavigationStack {
-                    HabitListView(
-                        viewModel: HabitListViewModel()
-                    )
-                }
-                .tabItem {
-                    Label("Hábitos", systemImage: "checklist")
-                }
-
-                // TAB 2: Notas Diarias
-                NavigationStack {
-                    DailyNotesView()
-                }
-                .tabItem {
-                    Label("Notas", systemImage: "note.text")
-                }
+                HabitListView(storageProvider: storageProvider)
+                    .tabItem {
+                        Label("Hábitos", systemImage: "checklist")
+                    }
+                DailyNotesView()
+                    .tabItem {
+                        Label("Notas", systemImage: "note.text")
+                    }
                 
-                // TAB 4: Objetivos
+                // TAB 3: Estadísticas
                 NavigationStack {
-                    GoalsView()
+                    StatisticsView()
                 }
                 .tabItem {
-                    Label("Objetivos", systemImage: "target")
+                    Label("Estadísticas", systemImage: "chart.bar")
                 }
-                
-                NavigationStack {
-                    TestReminderView()
-                }
-                .tabItem {
-                    Label("Test", systemImage: "bell")
-                }
-                // TAB 5: Ajustes
-                NavigationStack {
-                    SettingsView()
-                }
-                .tabItem {
-                    Label("Ajustes", systemImage: "gearshape")
-                }
+                GoalsView()
+                    .tabItem {
+                        Label("Objetivos", systemImage: "target")
+                    }
+                TestReminderView()
+                    .tabItem {
+                        Label("Test", systemImage: "bell")
+                    }
+                SettingsView()
+                    .tabItem {
+                        Label("Ajustes", systemImage: "gearshape")
+                    }
             }
-            .environmentObject(AppConfig())
-            .setupApp()    
+            .environmentObject(appConfig)
+            .modelContainer(modelContainer)  // ⭐ AGREGAR ESTO
 
 #else
             NavigationSplitView {
@@ -94,7 +95,7 @@ struct HabitApp: App {
             } detail: {
                 switch selectedDetailView {
                 case "habitos":
-                    HabitListView(viewModel: HabitListViewModel())
+                    HabitListView(storageProvider: storageProvider)
                 case "notas":
                     DailyNotesView()
                 case "objetivos":
@@ -104,9 +105,10 @@ struct HabitApp: App {
                 default:
                     Text("Seleccione una opción")
                 }
-            }.environmentObject(AppConfig())
+            }
+            .environmentObject(appConfig)
+            .modelContainer(modelContainer)  // ⭐ AGREGAR ESTO
 #endif
         }
-        .modelContainer(for: [DailyNote.self, Habit.self, Goal.self, Milestone.self])
     }
 }

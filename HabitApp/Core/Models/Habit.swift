@@ -5,21 +5,47 @@ import SwiftData
 class Habit {
     @Attribute(.unique) var id: UUID
     var title: String
-    var doneDates: [Date]
-    var isCompleted: Bool
+    var doneDatesString: String = ""
+    var isCompleted: Bool = false
     var dueDate: Date?
-    var priority: Priority?
+    var priority: Priority? = nil
     var reminderDate: Date?
-    var scheduledDays: [Int] // 1 = Domingo, 2 = Lunes, ..., 7 = Sábado
-    var createdAt: Date
-    var updatedAt: Date
+    var scheduledDaysString: String = ""
+    var createdAt: Date = Date()
+    var updatedAt: Date = Date()
     
+<<<<<<< HEAD
     @Relationship(deleteRule: .cascade, inverse: \DailyNote.habit)
     var notes: [DailyNote] = []
     
     @Relationship(deleteRule: .cascade, inverse: \Goal.habit)
     var goals: [Goal] = []
     
+=======
+    //  Computed property para obtener las fechas completadas
+    var doneDates: [Date] {
+        guard !doneDatesString.isEmpty else { 
+            return [] 
+        }
+        
+        let dates = doneDatesString.split(separator: ",").compactMap { dateString -> Date? in
+            let trimmed = String(dateString).trimmingCharacters(in: .whitespaces)
+            
+            if let timeInterval = Double(trimmed) {
+                return Date(timeIntervalSince1970: timeInterval)
+            }
+            return nil
+        }
+        
+        return dates
+    }
+    
+    var scheduledDays: [Int] {
+        guard !scheduledDaysString.isEmpty else { return [] }
+        return scheduledDaysString.split(separator: ",").compactMap { Int($0) }
+    }
+
+>>>>>>> origin/core
     init(title: String,
          doneDates: [Date] = [],
          isCompleted: Bool = false,
@@ -29,30 +55,41 @@ class Habit {
          scheduledDays: [Int] = []) {
         self.id = UUID()
         self.title = title
-        self.doneDates = doneDates
+        self.doneDatesString = doneDates.map { String($0.timeIntervalSince1970) }.joined(separator: ",")
         self.isCompleted = isCompleted
         self.dueDate = dueDate
         self.priority = priority
         self.reminderDate = reminderDate
-        self.scheduledDays = scheduledDays
+        self.scheduledDaysString = scheduledDays.map { String($0) }.joined(separator: ",")
         self.createdAt = Date()
         self.updatedAt = Date()
     }
     
+    //  Marcar como completado para una fecha
     func markAsCompleted(for date: Date = Date()) {
         let calendar = Calendar.current
-        let today = calendar.startOfDay(for: date)
+        let targetDate = calendar.startOfDay(for: date)
         
-        if !doneDates.contains(where: { calendar.isDate($0, inSameDayAs: today) }) {
-            doneDates.append(today)
+        // Evitar duplicados
+        if !isCompletedForDate(targetDate) {
+            let timeString = String(targetDate.timeIntervalSince1970)
+            
+            if doneDatesString.isEmpty {
+                doneDatesString = timeString
+            } else {
+                doneDatesString += ",\(timeString)"
+            }
+            isCompleted = true
             updatedAt = Date()
         }
     }
     
+    //  Marcar como incompleto
     func markAsIncomplete(for date: Date = Date()) {
         let calendar = Calendar.current
-        let today = calendar.startOfDay(for: date)
+        let targetDate = calendar.startOfDay(for: date)
         
+<<<<<<< HEAD
         if doneDates.contains(where: { calendar.isDate($0, inSameDayAs: today) }) {
             doneDates.removeAll { calendar.isDate($0, inSameDayAs: today) }
             updatedAt = Date()
@@ -64,13 +101,22 @@ class Habit {
         streak?.currentCount = calculateCurrentStreak()
         streak?.bestCount = calculateLongestStreak()
         streak?.lastCompletionDate = doneDates.sorted().last
+=======
+        var dates = doneDates
+        dates.removeAll { calendar.isDate($0, inSameDayAs: targetDate) }
+        
+        doneDatesString = dates.map { String($0.timeIntervalSince1970) }.joined(separator: ",")
+        updatedAt = Date()
+>>>>>>> origin/core
     }
     
+    //  Verificar si está completado para una fecha
     func isCompletedForDate(_ date: Date) -> Bool {
         let calendar = Calendar.current
         let targetDate = calendar.startOfDay(for: date)
         return doneDates.contains { calendar.isDate($0, inSameDayAs: targetDate) }
     }
+<<<<<<< HEAD
     
     // MARK: - Lógica de cálculo (Fallback)
     private func calculateCurrentStreak() -> Int {
@@ -115,17 +161,26 @@ class Habit {
         }
         return maxS
     }
+=======
+>>>>>>> origin/core
 }
 
 // MARK: - Priority Enum (Mantenido para evitar errores de Scope)
 enum Priority: String, Codable, CaseIterable {
-    case low, medium, high
+    case low = "Baja"
+    case medium = "Media"
+    case high = "Alta"
     
+<<<<<<< HEAD
     var localized: String {
         switch self {
         case .low: return NSLocalizedString("priority_low", comment: "")
         case .medium: return NSLocalizedString("priority_medium", comment: "")
         case .high: return NSLocalizedString("priority_high", comment: "")
         }
+=======
+    var displayName: String {
+        self.rawValue
+>>>>>>> origin/core
     }
 }

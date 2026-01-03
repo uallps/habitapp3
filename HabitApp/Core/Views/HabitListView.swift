@@ -2,13 +2,19 @@ import SwiftUI
 import SwiftData
 
 struct HabitListView: View {
-    @ObservedObject var viewModel: HabitListViewModel
-    @Query private var habits: [Habit]
+    let storageProvider: StorageProvider
+    @Query(sort: \Habit.createdAt) private var habits: [Habit]
     @Environment(\.modelContext) private var modelContext
+    @StateObject private var viewModel: HabitListViewModel
     @State private var currentDate = Date()
     @State private var showingNewHabitSheet = false
     private let calendar = Calendar.current
     private let weekdaySymbols = Calendar.current.shortStandaloneWeekdaySymbols
+    
+    init(storageProvider: StorageProvider) {
+        self.storageProvider = storageProvider
+        self._viewModel = StateObject(wrappedValue: HabitListViewModel(storageProvider: storageProvider))
+    }
 
     var body: some View {
         #if os(iOS)
@@ -24,83 +30,164 @@ struct HabitListView: View {
 extension HabitListView {
     var iosBody: some View {
         NavigationStack {
-            VStack(spacing: 12) {
-                
-                // 🔹 Encabezado semanal
-                HStack(spacing: 10) {
-                    ForEach(1...7, id: \.self) { index in
-                        let dayName = weekdaySymbols[index - 1]
-                        let isSelected = calendar.component(.weekday, from: currentDate) == index
+            VStack(spacing: 0) {
+                // 🔹 Encabezado compacto
+                VStack(spacing: 8) {
+                    HStack {
+                        Text(monthYearString)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                         
-                        Button(action: {
-                            currentDate = dateForWeekday(index)
-                        }) {
-                            VStack {
-                                Text(dayName.prefix(2))
-                                    .font(.subheadline)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(isSelected ? .white : .primary)
-                                    .frame(width: 36, height: 36)
-                                    .background(
-                                        Circle()
-                                            .fill(isSelected ? Color.blue : Color.gray.opacity(0.2))
-                                    )
-                                Text(shortDate(for: index))
-                                    .font(.caption2)
-                                    .foregroundColor(.secondary)
-                            }
+                        Spacer()
+                        
+                        if !filteredHabits.isEmpty {
+                            Text("\(filteredHabits.count) tarea\(filteredHabits.count == 1 ? "" : "s")")
+                                .font(.caption2)
+                                .fontWeight(.medium)
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 3)
+                                .background(Color.blue)
+                                .cornerRadius(6)
                         }
-                        .buttonStyle(.plain)
                     }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 8)
+                    
+                    // Selector de días - MÁS COMPACTO
+                    HStack(spacing: 6) {
+                        ForEach(1...7, id: \.self) { index in
+                            let dayName = weekdaySymbols[index - 1]
+                            let isSelected = calendar.component(.weekday, from: currentDate) == index
+                            let isToday = calendar.component(.weekday, from: Date()) == index
+                            
+                            Button(action: {
+                                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                                    currentDate = dateForWeekday(index)
+                                }
+                            }) {
+                                VStack(spacing: 2) {
+                                    Text(String(dayName.prefix(1)))
+                                        .font(.caption2)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(isSelected ? .white : (isToday ? .blue : .secondary))
+                                    
+                                    Text(shortDate(for: index))
+                                        .font(.caption)
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(isSelected ? .white : .primary)
+                                    
+                                    if hasHabitsForDay(index) {
+                                        Circle()
+                                            .fill(isSelected ? Color.white : Color.blue)
+                                            .frame(width: 3, height: 3)
+                                    } else {
+                                        Circle()
+                                            .fill(Color.clear)
+                                            .frame(width: 3, height: 3)
+                                    }
+                                }
+                                .frame(maxWidth: .infinity, minHeight: 45)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .fill(isSelected ? Color.blue : (isToday ? Color.blue.opacity(0.1) : Color.gray.opacity(0.08)))
+                                )
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(isToday && !isSelected ? Color.blue.opacity(0.5) : Color.clear, lineWidth: 1)
+                                )
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.bottom, 8)
                 }
-                .padding(.vertical, 8)
+                .background(Color(.systemBackground))
+                .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 1)
                 
                 Divider()
                 
-                // 🔹 Día actual seleccionado
-                VStack(spacing: 2) {
-                    Text("Tareas para \(dayName(for: currentDate))")
-                        .font(.headline)
-                    Text(currentDate, format: .dateTime.day().month().year())
+                // 🔹 Día actual - MÁS COMPACTO
+                HStack {
+                    Text(dayName(for: currentDate))
                         .font(.subheadline)
+                        .fontWeight(.semibold)
+                    
+                    Text("·")
                         .foregroundColor(.secondary)
+                    
+                    Text(currentDate, format: .dateTime.day().month())
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    
+                    Spacer()
                 }
-                .padding(.bottom, 6)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .background(Color(.systemBackground))
                 
-                // 🔹 Lista de hábitos filtrados
-                List(filteredHabits) { habit in
-                    HabitRowView(
-                        habit: habit,
-                        toggleCompletion: {
-                            viewModel.toggleCompletion(habit: habit, for: currentDate)
-                        },
-                        date: currentDate
-                    )
+                Divider()
+                
+                // 🔹 Lista de hábitos (SIEMPRE dentro de List)
+                List {
+                    if filteredHabits.isEmpty {
+                        VStack(spacing: 16) {
+                            Image(systemName: habits.isEmpty ? "plus.circle" : "checkmark.circle")
+                                .font(.system(size: 48))
+                                .foregroundColor(.gray.opacity(0.5))
+                            
+                            Text(habits.isEmpty ? "Sin hábitos creados" : "Sin hábitos para hoy")
+                                .font(.headline)
+                            
+                            Text(habits.isEmpty ? "Crea tu primer hábito tocando el botón +" : "No hay hábitos programados")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 60)
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
+                    } else {
+                        ForEach(filteredHabits, id: \.id) { habit in
+                            HabitRowView(
+                                habit: habit,
+                                toggleCompletion: {
+                                    withAnimation {
+                                        viewModel.toggleCompletion(habit: habit, for: currentDate)
+                                    }
+                                },
+                                viewModel: viewModel,
+                                storageProvider: storageProvider,
+                                date: currentDate
+                            )
+                            .listRowInsets(EdgeInsets(top: 6, leading: 12, bottom: 6, trailing: 12))
+                            .listRowSeparator(.hidden)
+                        }
+                    }
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .listStyle(.plain)
             }
             .navigationTitle("Hábitos")
             .toolbar {
-                ToolbarItem(placement: .automatic) {
+                ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         showingNewHabitSheet = true
                     } label: {
-                        Label("Añadir", systemImage: "plus")
+                        Image(systemName: "plus.circle.fill")
+                            .font(.title3)
+                            .foregroundColor(.blue)
                     }
                 }
             }
             .sheet(isPresented: $showingNewHabitSheet) {
-                // Abrimos HabitDetailWrapper para crear un nuevo hábito
                 HabitDetailWrapper(
                     viewModel: viewModel,
                     habit: Habit(title: ""),
                     isNew: true
                 )
-            }
-        }
-        .onAppear {
-            if habits.isEmpty {
-                viewModel.createSampleHabits(context: modelContext)
             }
         }
     }
@@ -112,47 +199,128 @@ extension HabitListView {
 extension HabitListView {
     var macBody: some View {
         NavigationSplitView {
-            VStack(spacing: 16) {
-                // Selector de días
-                HStack(spacing: 8) {
+            VStack(spacing: 0) {
+                // Header compacto
+                HStack {
+                    Text(monthYearString)
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                    
+                    Spacer()
+                    
+                    if !filteredHabits.isEmpty {
+                        Text("\(filteredHabits.count)")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 3)
+                            .background(Color.blue)
+                            .cornerRadius(6)
+                    }
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .background(Color(.windowBackgroundColor))
+                
+                Divider()
+                
+                // Selector de días compacto
+                HStack(spacing: 4) {
                     ForEach(1...7, id: \.self) { index in
                         let dayName = weekdaySymbols[index - 1]
                         let isSelected = calendar.component(.weekday, from: currentDate) == index
+                        let isToday = calendar.component(.weekday, from: Date()) == index
                         
                         Button(action: {
-                            currentDate = dateForWeekday(index)
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                                currentDate = dateForWeekday(index)
+                            }
                         }) {
-                            VStack(spacing: 4) {
-                                Text(dayName.prefix(2))
+                            VStack(spacing: 2) {
+                                Text(String(dayName.prefix(1)))
+                                    .font(.caption2)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(isSelected ? .white : (isToday ? .blue : .secondary))
+                                
+                                Text(shortDate(for: index))
                                     .font(.caption)
                                     .fontWeight(.semibold)
-                                Text(shortDate(for: index))
-                                    .font(.caption2)
+                                    .foregroundColor(isSelected ? .white : .primary)
+                                
+                                if hasHabitsForDay(index) {
+                                    Circle()
+                                        .fill(isSelected ? Color.white : Color.blue)
+                                        .frame(width: 3, height: 3)
+                                } else {
+                                    Circle()
+                                        .fill(Color.clear)
+                                        .frame(width: 3, height: 3)
+                                }
                             }
-                            .foregroundColor(isSelected ? .white : .primary)
-                            .frame(width: 50, height: 40)
+                            .frame(maxWidth: .infinity, minHeight: 50)
                             .background(
-                                RoundedRectangle(cornerRadius: 8)
-                                    .fill(isSelected ? Color.blue : Color.gray.opacity(0.2))
+                                RoundedRectangle(cornerRadius: 6)
+                                    .fill(isSelected ? Color.blue : (isToday ? Color.blue.opacity(0.1) : Color.gray.opacity(0.08)))
+                            )
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 6)
+                                    .stroke(isToday && !isSelected ? Color.blue.opacity(0.5) : Color.clear, lineWidth: 1)
                             )
                         }
                         .buttonStyle(.plain)
                     }
                 }
-                .padding()
+                .padding(.horizontal, 8)
+                .padding(.vertical, 8)
+                .background(Color(.windowBackgroundColor))
                 
                 Divider()
                 
                 // Lista de hábitos
-                List(filteredHabits) { habit in
-                    HabitRowView(
-                        habit: habit,
-                        toggleCompletion: {
-                            viewModel.toggleCompletion(habit: habit, for: currentDate)
-                        },
-                        date: currentDate
-                    )
+                List {
+                    if filteredHabits.isEmpty {
+                        VStack(spacing: 16) {
+                            Image(systemName: habits.isEmpty ? "plus.circle" : "checkmark.circle")
+                                .font(.system(size: 48))
+                                .foregroundColor(.gray)
+                            
+                            Text(habits.isEmpty ? "Sin hábitos creados" : "Sin hábitos para hoy")
+                                .font(.headline)
+                            
+                            if habits.isEmpty {
+                                Button("Crear hábito de muestra") {
+                                    viewModel.createSampleHabits()
+                                }
+                                .buttonStyle(.borderedProminent)
+                            } else {
+                                Text("No hay hábitos programados")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 60)
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
+                    } else {
+                        ForEach(filteredHabits, id: \.id) { habit in
+                            HabitRowView(
+                                habit: habit,
+                                toggleCompletion: {
+                                    withAnimation {
+                                        viewModel.toggleCompletion(habit: habit, for: currentDate)
+                                    }
+                                },
+                                viewModel: viewModel,
+                                storageProvider: storageProvider,
+                                date: currentDate
+                            )
+                            .listRowInsets(EdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8))
+                        }
+                    }
                 }
+                .listStyle(.sidebar)
             }
             .navigationTitle("Hábitos")
             .toolbar {
@@ -160,12 +328,13 @@ extension HabitListView {
                     Button {
                         showingNewHabitSheet = true
                     } label: {
-                        Image(systemName: "plus")
+                        Image(systemName: "plus.circle.fill")
+                            .foregroundColor(.blue)
                     }
                 }
             }
         } detail: {
-            VStack {
+            VStack(spacing: 16) {
                 Text("Tareas para \(dayName(for: currentDate))")
                     .font(.title2)
                 Text(currentDate, format: .dateTime.day().month().year())
@@ -174,9 +343,9 @@ extension HabitListView {
                 
                 if filteredHabits.isEmpty {
                     ContentUnavailableView(
-                        "Sin hábitos",
-                        systemImage: "checkmark.circle",
-                        description: Text("No hay hábitos programados para este día")
+                        habits.isEmpty ? "Sin hábitos" : "Sin hábitos para hoy",
+                        systemImage: habits.isEmpty ? "plus.circle" : "checkmark.circle",
+                        description: Text(habits.isEmpty ? "Crea tu primer hábito" : "No hay hábitos programados")
                     )
                 } else {
                     Text("\(filteredHabits.count) hábito(s) programado(s)")
@@ -192,11 +361,6 @@ extension HabitListView {
                 isNew: true
             )
         }
-        .onAppear {
-            if habits.isEmpty {
-                viewModel.createSampleHabits(context: modelContext)
-            }
-        }
     }
 }
 #endif
@@ -207,6 +371,13 @@ extension HabitListView {
     private var filteredHabits: [Habit] {
         let weekday = calendar.component(.weekday, from: currentDate)
         return habits.filter { $0.scheduledDays.contains(weekday) }
+    }
+    
+    private var monthYearString: String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "es_ES")
+        formatter.dateFormat = "MMM yyyy"
+        return formatter.string(from: currentDate).capitalized
     }
     
     private func dayName(for date: Date) -> String {
@@ -233,5 +404,9 @@ extension HabitListView {
         let todayWeekday = calendar.component(.weekday, from: today)
         let diff = weekday - todayWeekday
         return calendar.date(byAdding: .day, value: diff, to: today) ?? today
+    }
+    
+    private func hasHabitsForDay(_ weekday: Int) -> Bool {
+        return habits.contains { $0.scheduledDays.contains(weekday) }
     }
 }

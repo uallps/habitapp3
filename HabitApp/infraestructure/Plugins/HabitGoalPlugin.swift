@@ -9,28 +9,52 @@ import SwiftData
 import Foundation
 
 final class HabitGoalPlugin: TaskDataObservingPlugin {
-    let context: ModelContext
+    let storageProvider: StorageProvider
 
-    init(context: ModelContext) {
-        self.context = context
+    init(storageProvider: StorageProvider) {
+        self.storageProvider = storageProvider
     }
 
     func onDataChanged(taskId: UUID, title: String, dueDate: Date?) {
-
-        guard let habit = try? context.fetch(FetchDescriptor<Habit>(predicate: #Predicate { $0.id == taskId })).first else { return }
-
-        // Para cada Goal asociado actualizamos progreso
-        for goal in habit.goals {
-            goal.updateProgress(count: habit.doneDates.count)
-
-            // Chequeo de hitos
-            for milestone in goal.milestones where !milestone.isCompleted {
-                if goal.currentCount >= milestone.targetValue {
-                    milestone.complete()
-                }
-            }
+        
+        //  Usar el contexto principal en lugar de crear uno nuevo
+        let context = storageProvider.context
+        
+        //  Forzar rollback y refetch desde el almacenamiento persistente
+        context.rollback()
+        
+        let descriptor = FetchDescriptor<Habit>(
+            predicate: #Predicate<Habit> { $0.id == taskId }
+        )
+        
+        guard let habit = try? context.fetch(descriptor).first else {
+            return
         }
 
-        try? context.save()
+        do {
+            let habitId = habit.id
+            print("🔍 Hábito encontrado: '\(habit.title)' - doneDatesString: '\(habit.doneDatesString)'")
+            
+            let goalDescriptor = FetchDescriptor<Goal>(
+                predicate: #Predicate<Goal> { goal in
+                    goal.habitId == habitId
+                }
+            )
+            let goals = try context.fetch(goalDescriptor)
+            
+           
+            for goal in goals {
+                goal.updateProgress(count: habit.doneDates.count)
+
+                for milestone in goal.milestones where !milestone.isCompleted {
+                    if goal.currentCount >= milestone.targetValue {
+                        milestone.complete()
+                    }
+                }
+            }
+            
+            try context.save()
+        } catch {
+        }
     }
 }

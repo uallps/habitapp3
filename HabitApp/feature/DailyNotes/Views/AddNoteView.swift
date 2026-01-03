@@ -107,7 +107,7 @@ extension AddNoteView {
             let calendar = Calendar.current
             let normalizedDate = calendar.startOfDay(for: noteDate)
             let note = DailyNote(title: title, content: content, date: normalizedDate)
-            note.habit = habit
+            note.habitId = habit?.id
             modelContext.insert(note)
             try? modelContext.save()
             

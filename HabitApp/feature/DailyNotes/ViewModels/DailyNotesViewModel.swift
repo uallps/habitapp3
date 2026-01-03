@@ -3,24 +3,22 @@ import SwiftData
 import Combine
 
 final class DailyNotesViewModel: ObservableObject {
-    private var modelContext: ModelContext?
+    private let storageProvider: StorageProvider
     @Published var notes: [DailyNote] = []
     @Published var selectedDate = Date()
     
-    init(modelContext: ModelContext? = nil) {
-        self.modelContext = modelContext
+    init(storageProvider: StorageProvider) {
+        self.storageProvider = storageProvider
         loadNotes()
     }
     
     func loadNotes() {
-        guard let modelContext else { return }  // <--- evitar crash
-
         let calendar = Calendar.current
         let startOfDay = calendar.startOfDay(for: selectedDate)
         let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
         
         let predicate = #Predicate<DailyNote> { note in
-            note.date >= startOfDay && note.date < endOfDay && note.habit == nil
+            note.date >= startOfDay && note.date < endOfDay && note.habitId == nil
         }
         
         let descriptor = FetchDescriptor<DailyNote>(
@@ -29,19 +27,17 @@ final class DailyNotesViewModel: ObservableObject {
         )
         
         do {
-            notes = try modelContext.fetch(descriptor)
+            notes = try storageProvider.context.fetch(descriptor)
         } catch {
             print("Error loading notes: \(error)")
         }
     }
     
     func addNote(title: String, content: String) {
-        guard let modelContext else { return }  // <--- evitar crash
-
         let calendar = Calendar.current
         let noteDate = calendar.startOfDay(for: selectedDate)
         let note = DailyNote(title: title, content: content, date: noteDate)
-        modelContext.insert(note)
+        storageProvider.context.insert(note)
         saveContext()
         loadNotes()
         
@@ -57,9 +53,7 @@ final class DailyNotesViewModel: ObservableObject {
     }
       
       private func saveContext() {
-          guard let modelContext else { return }  // <--- evitar crash
-
-          do { try modelContext.save() }
+          do { try storageProvider.context.save() }
           catch { print("Error guardando contexto: \(error)") }
       }
   
@@ -82,9 +76,7 @@ final class DailyNotesViewModel: ObservableObject {
 
     
     func deleteNote(_ note: DailyNote) {
-        guard let modelContext else { return }  // <--- evitar crash
-
-        modelContext.delete(note)
+        storageProvider.context.delete(note)
         saveContext()
         loadNotes()
     }

@@ -245,7 +245,7 @@ extension AddGoalView {
             description: description,
             targetCount: targetCount,
             targetDate: targetDate,
-            habit: selectedHabit
+            habitId: selectedHabit?.id
         )
         
         for milestoneInput in milestones where !milestoneInput.title.isEmpty {
