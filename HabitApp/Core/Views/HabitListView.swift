@@ -8,6 +8,7 @@ struct HabitListView: View {
     @StateObject private var viewModel: HabitListViewModel
     @State private var currentDate = Date()
     @State private var showingNewHabitSheet = false
+    @State private var refreshTrigger = UUID()  
     private let calendar = Calendar.current
     private let weekdaySymbols = Calendar.current.shortStandaloneWeekdaySymbols
     
@@ -88,11 +89,12 @@ extension HabitListView {
                     .padding(.top, 40)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
-                    List(filteredHabits) { habit in
+                    List(filteredHabits, id: \.id) { habit in
                         HabitRowView(
                             habit: habit,
                             toggleCompletion: {
                                 viewModel.toggleCompletion(habit: habit, for: currentDate)
+                                refreshTrigger = UUID()
                             },
                             viewModel: viewModel,
                             storageProvider: storageProvider,
@@ -120,15 +122,19 @@ extension HabitListView {
                 )
             }
         }
+        .id(refreshTrigger)  
         .onAppear {
             if habits.isEmpty {
                 print("📝 Creando hábitos de muestra...")
                 viewModel.createSampleHabits()
             }
         }
-        // ⭐ Refrescar cuando cambian los hábitos
+        //  Refrescar cuando cambian los hábitos
         .onChange(of: habits) { oldValue, newValue in
             print("🔄 Hábitos actualizados: \(newValue.count) hábitos")
+            for habit in newValue {
+                print("  - '\(habit.title)': \(habit.doneDates.count) días completados")
+            }
         }
     }
 }
@@ -181,11 +187,13 @@ extension HabitListView {
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
-                    List(filteredHabits) { habit in
+                    List(filteredHabits, id: \.id) { habit in
                         HabitRowView(
                             habit: habit,
                             toggleCompletion: {
                                 viewModel.toggleCompletion(habit: habit, for: currentDate)
+                                //  Forzar actualización
+                                refreshTrigger = UUID()
                             },
                             viewModel: viewModel,
                             storageProvider: storageProvider,
@@ -225,6 +233,7 @@ extension HabitListView {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        .id(refreshTrigger)  
         .sheet(isPresented: $showingNewHabitSheet) {
             HabitDetailWrapper(
                 viewModel: viewModel,
@@ -238,9 +247,12 @@ extension HabitListView {
                 viewModel.createSampleHabits()
             }
         }
-        // ⭐ Refrescar cuando cambian los hábitos
+        //  Refrescar cuando cambian los hábitos
         .onChange(of: habits) { oldValue, newValue in
             print("🔄 Hábitos actualizados: \(newValue.count) hábitos")
+            for habit in newValue {
+                print("  - '\(habit.title)': \(habit.doneDates.count) días completados")
+            }
         }
     }
 }

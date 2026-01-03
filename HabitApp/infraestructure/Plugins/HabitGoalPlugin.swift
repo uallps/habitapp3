@@ -16,17 +16,33 @@ final class HabitGoalPlugin: TaskDataObservingPlugin {
     }
 
     func onDataChanged(taskId: UUID, title: String, dueDate: Date?) {
-        guard let habit = try? storageProvider.context.fetch(FetchDescriptor<Habit>(predicate: #Predicate { $0.id == taskId })).first else { return }
+        
+        //  Usar el contexto principal en lugar de crear uno nuevo
+        let context = storageProvider.context
+        
+        //  Forzar rollback y refetch desde el almacenamiento persistente
+        context.rollback()
+        
+        let descriptor = FetchDescriptor<Habit>(
+            predicate: #Predicate<Habit> { $0.id == taskId }
+        )
+        
+        guard let habit = try? context.fetch(descriptor).first else {
+            return
+        }
 
         do {
             let habitId = habit.id
+            print("🔍 Hábito encontrado: '\(habit.title)' - doneDatesString: '\(habit.doneDatesString)'")
+            
             let goalDescriptor = FetchDescriptor<Goal>(
                 predicate: #Predicate<Goal> { goal in
                     goal.habitId == habitId
                 }
             )
-            let goals = try storageProvider.context.fetch(goalDescriptor)
+            let goals = try context.fetch(goalDescriptor)
             
+           
             for goal in goals {
                 goal.updateProgress(count: habit.doneDates.count)
 
@@ -37,9 +53,8 @@ final class HabitGoalPlugin: TaskDataObservingPlugin {
                 }
             }
             
-            try storageProvider.context.save()
+            try context.save()
         } catch {
-            print("Error updating goals: \(error)")
         }
     }
 }

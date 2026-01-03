@@ -12,48 +12,36 @@ import SwiftData
 class Habit {
     @Attribute(.unique) var id: UUID
     var title: String
-    var doneDatesString: String
-    var isCompleted: Bool
+    var doneDatesString: String = ""
+    var isCompleted: Bool = false
     var dueDate: Date?
-    var priority: Priority?
+    var priority: Priority? = nil
     var reminderDate: Date?
-    var scheduledDaysString: String
-    var createdAt: Date
-    var updatedAt: Date
+    var scheduledDaysString: String = ""
+    var createdAt: Date = Date()
+    var updatedAt: Date = Date()
     
+    //  Computed property para obtener las fechas completadas
     var doneDates: [Date] {
-        get {
-            doneDatesString.split(separator: ",").compactMap { 
-                Double($0).map { Date(timeIntervalSince1970: $0) }
+        guard !doneDatesString.isEmpty else { 
+            return [] 
+        }
+        
+        let dates = doneDatesString.split(separator: ",").compactMap { dateString -> Date? in
+            let trimmed = String(dateString).trimmingCharacters(in: .whitespaces)
+            
+            if let timeInterval = Double(trimmed) {
+                return Date(timeIntervalSince1970: timeInterval)
             }
+            return nil
         }
-        set {
-            doneDatesString = newValue.map { String($0.timeIntervalSince1970) }.joined(separator: ",")
-        }
+        
+        return dates
     }
     
     var scheduledDays: [Int] {
-        get {
-            scheduledDaysString.split(separator: ",").compactMap { Int($0) }
-        }
-        set {
-            scheduledDaysString = newValue.map { String($0) }.joined(separator: ",")
-        }
-    }
-    
-    // MARK: - Streak Properties
-    var currentStreak: Int {
-        calculateCurrentStreak()
-    }
-    
-    var longestStreak: Int {
-        calculateLongestStreak()
-    }
-    
-    var streakStartDate: Date? {
-        guard currentStreak > 0 else { return nil }
-        let calendar = Calendar.current
-        return calendar.date(byAdding: .day, value: -(currentStreak - 1), to: Date())
+        guard !scheduledDaysString.isEmpty else { return [] }
+        return scheduledDaysString.split(separator: ",").compactMap { Int($0) }
     }
 
     init(title: String,
@@ -75,76 +63,51 @@ class Habit {
         self.updatedAt = Date()
     }
     
+    //  Marcar como completado para una fecha
     func markAsCompleted(for date: Date = Date()) {
         let calendar = Calendar.current
-        let today = calendar.startOfDay(for: date)
+        let targetDate = calendar.startOfDay(for: date)
         
-        var dates = doneDates
-        if !dates.contains(where: { calendar.isDate($0, inSameDayAs: today) }) {
-            dates.append(today)
-            doneDates = dates
+        // Evitar duplicados
+        if !isCompletedForDate(targetDate) {
+            let timeString = String(targetDate.timeIntervalSince1970)
+            
+            if doneDatesString.isEmpty {
+                doneDatesString = timeString
+            } else {
+                doneDatesString += ",\(timeString)"
+            }
+            isCompleted = true
             updatedAt = Date()
         }
     }
     
+    //  Marcar como incompleto
     func markAsIncomplete(for date: Date = Date()) {
         let calendar = Calendar.current
-        let today = calendar.startOfDay(for: date)
+        let targetDate = calendar.startOfDay(for: date)
         
         var dates = doneDates
-        dates.removeAll { calendar.isDate($0, inSameDayAs: today) }
-        doneDates = dates
+        dates.removeAll { calendar.isDate($0, inSameDayAs: targetDate) }
+        
+        doneDatesString = dates.map { String($0.timeIntervalSince1970) }.joined(separator: ",")
         updatedAt = Date()
     }
     
+    //  Verificar si está completado para una fecha
     func isCompletedForDate(_ date: Date) -> Bool {
         let calendar = Calendar.current
         let targetDate = calendar.startOfDay(for: date)
         return doneDates.contains { calendar.isDate($0, inSameDayAs: targetDate) }
     }
-    
-    // MARK: - Streak Calculations
-    private func calculateCurrentStreak() -> Int {
-        let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
-        var streak = 0
-        var currentDate = today
-        
-        while isCompletedForDate(currentDate) {
-            streak += 1
-            guard let previousDay = calendar.date(byAdding: .day, value: -1, to: currentDate) else { break }
-            currentDate = previousDay
-        }
-        
-        return streak
-    }
-    
-    private func calculateLongestStreak() -> Int {
-        let calendar = Calendar.current
-        let sortedDates = doneDates.sorted()
-        
-        guard !sortedDates.isEmpty else { return 0 }
-        
-        var longestStreak = 1
-        var currentStreak = 1
-        
-        for i in 1..<sortedDates.count {
-            let previousDate = calendar.startOfDay(for: sortedDates[i-1])
-            let currentDate = calendar.startOfDay(for: sortedDates[i])
-            
-            if let nextDay = calendar.date(byAdding: .day, value: 1, to: previousDate),
-               calendar.isDate(nextDay, inSameDayAs: currentDate) {
-                currentStreak += 1
-                longestStreak = max(longestStreak, currentStreak)
-            } else {
-                currentStreak = 1
-            }
-        }
-        
-        return longestStreak
-    }
 }
 
 enum Priority: String, Codable, CaseIterable {
-    case low, medium, high
+    case low = "Baja"
+    case medium = "Media"
+    case high = "Alta"
+    
+    var displayName: String {
+        self.rawValue
+    }
 }

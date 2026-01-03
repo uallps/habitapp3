@@ -45,7 +45,14 @@ extension HabitDetailWrapper {
                             .font(.headline)
                             .foregroundColor(.primary)
                         
-                        WeekdaySelector(selectedDays: $habit.scheduledDays)
+                        WeekdaySelector(
+                            selectedDays: Binding(
+                                get: { habit.scheduledDays },
+                                set: { newDays in
+                                    habit.scheduledDaysString = newDays.map(String.init).joined(separator: ",")
+                                }
+                            )
+                        )
                     }
                     
                     // 🔹 Prioridad
@@ -65,17 +72,20 @@ extension HabitDetailWrapper {
                         .pickerStyle(.segmented)
                     }
                     
-                    
                     // 🔹 Botones
                     VStack(spacing: 12) {
                         Button(action: {
-                            viewModel.addHabit(
-                                title: habit.title,
-                                dueDate: habit.dueDate,
-                                priority: habit.priority,
-                                reminderDate: habit.reminderDate,
-                                scheduledDays: habit.scheduledDays
-                            )
+                            if isNew {
+                                viewModel.addHabit(
+                                    title: habit.title,
+                                    dueDate: habit.dueDate,
+                                    priority: habit.priority,
+                                    reminderDate: habit.reminderDate,
+                                    scheduledDays: habit.scheduledDays
+                                )
+                            } else {
+                                viewModel.updateHabit(habit)
+                            }
                             dismiss()
                         }) {
                             HStack {
@@ -138,7 +148,14 @@ extension HabitDetailWrapper {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Días de la semana")
                             .font(.headline)
-                        WeekdaySelector(selectedDays: $habit.scheduledDays)
+                        WeekdaySelector(
+                            selectedDays: Binding(
+                                get: { habit.scheduledDays },
+                                set: { newDays in
+                                    habit.scheduledDaysString = newDays.map(String.init).joined(separator: ",")
+                                }
+                            )
+                        )
                     }
                     
                     Picker("Prioridad", selection: Binding(

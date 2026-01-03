@@ -5,7 +5,7 @@
 
 import Foundation
 import SwiftData
-import Combine 
+import Combine
 
 final class HabitListViewModel: ObservableObject {
     private let storageProvider: StorageProvider
@@ -31,7 +31,7 @@ final class HabitListViewModel: ObservableObject {
         do {
             try storageProvider.context.save()
             
-            // ⭐ Notificar plugins si hay fecha de recordatorio
+            //  Notificar plugins si hay fecha de recordatorio
             if let reminderDate = reminderDate {
                 PluginRegistry.shared.notifyDataChanged(
                     taskId: habit.id,
@@ -40,7 +40,7 @@ final class HabitListViewModel: ObservableObject {
                 )
             }
         } catch {
-            print("❌ Error saving habit: \(error)")
+            print(" Error saving habit: \(error)")
         }
     }
     
@@ -48,7 +48,7 @@ final class HabitListViewModel: ObservableObject {
         do {
             try storageProvider.context.save()
         } catch {
-            print("❌ Error updating habit: \(error)")
+            print(" Error updating habit: \(error)")
         }
     }
     
@@ -59,21 +59,21 @@ final class HabitListViewModel: ObservableObject {
             habit.markAsCompleted(for: date)
         }
         
-        // ⭐ Guardar cambios inmediatamente
         do {
             try storageProvider.context.save()
-            print("✅ Hábito '\(habit.title)' guardado - Días completados: \(habit.doneDates.count)")
+            print(" Hábito '\(habit.title)' guardado - Días completados: \(habit.doneDates.count)")
+            
+            // ⭐ Esperar a que SwiftData sincronice completamente
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                PluginRegistry.shared.notifyDataChanged(
+                    taskId: habit.id,
+                    title: habit.title,
+                    dueDate: habit.dueDate
+                )
+            }
         } catch {
-            print("❌ Error saving habit: \(error)")
-            return
+            print(" Error saving habit: \(error)")
         }
-        
-        // ⭐ Notificar plugins DESPUÉS de guardar
-        PluginRegistry.shared.notifyDataChanged(
-            taskId: habit.id,
-            title: habit.title,
-            dueDate: habit.dueDate
-        )
     }
     
     func deleteHabit(_ habit: Habit) {
@@ -82,7 +82,7 @@ final class HabitListViewModel: ObservableObject {
         do {
             try storageProvider.context.save()
         } catch {
-            print("❌ Error deleting habit: \(error)")
+            print(" Error deleting habit: \(error)")
         }
     }
     
@@ -99,9 +99,9 @@ final class HabitListViewModel: ObservableObject {
         
         do {
             try storageProvider.context.save()
-            print("✅ Hábitos de muestra creados")
+            print(" Hábitos de muestra creados")
         } catch {
-            print("❌ Error creating sample habits: \(error)")
+            print(" Error creating sample habits: \(error)")
         }
     }
     

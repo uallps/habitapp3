@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+
 struct HabitRowView: View {
 
     let habit: Habit
@@ -10,6 +11,7 @@ struct HabitRowView: View {
     
     @State private var showingEditSheet = false
     @State private var showingDeleteAlert = false
+    @Environment(\.modelContext) private var modelContext 
     
     var body: some View {
         HStack {
@@ -88,7 +90,15 @@ struct HabitRowView: View {
     }
     
     private func deleteHabit() {
-        viewModel.deleteHabit(habit)
+       
+        modelContext.delete(habit)
+        
+        do {
+            try modelContext.save()
+            
+        } catch {
+            print("❌ Error: \(error)")
+        }
     }
     
     private func priorityColor(for priority: Priority) -> Color {
