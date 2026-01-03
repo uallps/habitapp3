@@ -6,11 +6,15 @@
 //
 
 import SwiftUI
-import SwiftData
 
 @main
 struct HabitApp: App {
     @State private var selectedDetailView: String?
+    
+    private var storageProvider: StorageProvider {
+        AppConfig().storageProvider
+    }
+    
     init() {
         #if os(iOS)
         UNUserNotificationCenter.current().requestAuthorization(
@@ -22,14 +26,13 @@ struct HabitApp: App {
                 print("Error solicitando permisos: \(error)")
             }
         }
-        
         #endif
     }
+    
     var body: some Scene {
         WindowGroup{
 #if os(iOS)
             TabView {
-                // TAB 1: Hábitos
                 NavigationStack {
                     HabitListView(
                         viewModel: HabitListViewModel()
@@ -39,7 +42,6 @@ struct HabitApp: App {
                     Label("Hábitos", systemImage: "checklist")
                 }
 
-                // TAB 2: Notas Diarias
                 NavigationStack {
                     DailyNotesView()
                 }
@@ -47,7 +49,6 @@ struct HabitApp: App {
                     Label("Notas", systemImage: "note.text")
                 }
                 
-                // TAB 4: Objetivos
                 NavigationStack {
                     GoalsView()
                 }
@@ -61,7 +62,7 @@ struct HabitApp: App {
                 .tabItem {
                     Label("Test", systemImage: "bell")
                 }
-                // TAB 5: Ajustes
+                
                 NavigationStack {
                     SettingsView()
                 }
@@ -70,7 +71,7 @@ struct HabitApp: App {
                 }
             }
             .environmentObject(AppConfig())
-            .setupApp()    
+            .environment(\.modelContext, (storageProvider as! SwiftDataStorageProvider).context)
 
 #else
             NavigationSplitView {
@@ -105,8 +106,9 @@ struct HabitApp: App {
                     Text("Seleccione una opción")
                 }
             }.environmentObject(AppConfig())
+            .environment(\.modelContext, (storageProvider as! SwiftDataStorageProvider).context)
+            .setupApp()
 #endif
         }
-        .modelContainer(for: [DailyNote.self, Habit.self, Goal.self, Milestone.self])
     }
 }

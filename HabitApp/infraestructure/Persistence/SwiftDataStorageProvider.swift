@@ -8,7 +8,7 @@ class SwiftDataContext {
 class SwiftDataStorageProvider: StorageProvider {
 
     private let modelContainer: ModelContainer
-    private let context: ModelContext
+    let context: ModelContext
 
     init(schema: Schema) {
         do {
@@ -21,7 +21,7 @@ class SwiftDataStorageProvider: StorageProvider {
     }
 
     func loadTasks() async throws -> [Habit] {
-        let descriptor = FetchDescriptor<Habit>() // Use FetchDescriptor
+        let descriptor = FetchDescriptor<Habit>()
         let tasks = try context.fetch(descriptor)
         return tasks
     }
@@ -31,15 +31,12 @@ class SwiftDataStorageProvider: StorageProvider {
         let existingIds = Set(existingTasks.map { $0.id })
         let newIds = Set(tasks.map { $0.id })
         
-        // Delete tasks not in the new list
         for existingTask in existingTasks where !newIds.contains(existingTask.id) {
             context.delete(existingTask)
         }
         
-        // Insert or update tasks
         for task in tasks {
             if existingIds.contains(task.id) {
-                // Task exists, assume it's updated (since it's the same object or properties changed)
             } else {
                 context.insert(task)
             }

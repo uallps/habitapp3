@@ -1,5 +1,5 @@
 import SwiftUI
-import SwiftDataW
+import SwiftData
 
 struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext

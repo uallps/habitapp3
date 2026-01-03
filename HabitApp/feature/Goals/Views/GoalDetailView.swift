@@ -6,6 +6,7 @@ struct GoalDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel = GoalsViewModel()
+    @State private var associatedHabit: Habit?
     
     var body: some View {
         #if os(iOS)
@@ -13,6 +14,26 @@ struct GoalDetailView: View {
         #else
         macBody
         #endif
+    }
+    
+    private func loadAssociatedHabit() {
+        guard let habitId = goal.habitId else {
+            associatedHabit = nil
+            return
+        }
+        
+        let descriptor = FetchDescriptor<Habit>(
+            predicate: #Predicate<Habit> { habit in
+                habit.id == habitId
+            }
+        )
+        
+        do {
+            associatedHabit = try modelContext.fetch(descriptor).first
+        } catch {
+            print("Error loading associated habit: \(error)")
+            associatedHabit = nil
+        }
     }
 }
 
@@ -96,7 +117,7 @@ extension GoalDetailView {
                 }
                 
                 // Associated Habit
-                if let habit = goal.habit {
+                if let habit = associatedHabit {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Hábito Asociado")
                             .font(.headline)
@@ -149,6 +170,9 @@ extension GoalDetailView {
         }
         .navigationTitle(goal.title)
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            loadAssociatedHabit()
+        }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(role: .destructive) {
@@ -231,7 +255,7 @@ extension GoalDetailView {
                 // Right Column - Details
                 VStack(alignment: .leading, spacing: 20) {
                     // Associated Habit
-                    if let habit = goal.habit {
+                    if let habit = associatedHabit {
                         VStack(alignment: .leading, spacing: 12) {
                             Text("Hábito Asociado")
                                 .font(.headline)
@@ -307,6 +331,9 @@ extension GoalDetailView {
             .padding()
         }
         .navigationTitle(goal.title)
+        .onAppear {
+            loadAssociatedHabit()
+        }
         .toolbar {
             ToolbarItem {
                 Button(role: .destructive) {

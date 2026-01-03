@@ -1,3 +1,4 @@
+import Foundation
 protocol DailyNoteStorageProvider {
     func loadNotes() async throws -> [DailyNote]
     func saveNotes(notes: [DailyNote]) async throws

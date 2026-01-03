@@ -12,12 +12,12 @@ import SwiftData
 class Habit {
     @Attribute(.unique) var id: UUID
     var title: String
-    var doneDates: [Date]
+    @Attribute(.externalStorage) var doneDates: [Date]
     var isCompleted: Bool
     var dueDate: Date?
     var priority: Priority?
     var reminderDate: Date?
-    var scheduledDays: [Int] // 1 = Domingo, 2 = Lunes, ..., 7 = Sábado
+    @Attribute(.externalStorage) var scheduledDays: [Int] // 1 = Domingo, 2 = Lunes, ..., 7 = Sábado
     var createdAt: Date
     var updatedAt: Date
     
