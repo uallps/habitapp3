@@ -81,7 +81,8 @@ struct HabitRowView: View {
                     storageProvider: appConfig.storageProvider
                 ),
                 isNew: false,
-                habit: habit
+                habit: habit,
+                storageProvider: appConfig.storageProvider
             )
         }
         .alert("¿Eliminar hábito?", isPresented: $showingDeleteAlert) {

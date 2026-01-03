@@ -86,7 +86,8 @@ struct HabitListView: View {
                         storageProvider: AppConfig.storageProvider
                     ),
                     isNew: true,
-                    habit: Habit(title: "")
+                    habit: Habit(title: ""),
+                    storageProvider: AppConfig.storageProvider
                 )
             }
         }

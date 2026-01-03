@@ -14,9 +14,37 @@ struct HabitDetailWrapper: View {
     @ObservedObject var habitListVM: HabitListViewModel
     @State var habit: Habit
     private let isNew: Bool
+
+        var categorySection: some View {
+        Section(header: Text("Añadir hábito a categoría")) {
+            if Array(categoryListVM.categories.values).isEmpty {
+                Text("No hay categorías disponibles. Crea al menos una categoría.")
+                    .foregroundColor(.gray)
+
+            }else {
+                List {
+                    ForEach(Array(categoryListVM.categories.values).sorted(by: { $0.name < $1.name })) { category in
+                       NavigationLink {
+                            CategoryDetailWrapperView(
+                                storageProvider: appConfig.storageProvider,
+                                category: category,
+                                isSubcategory: category.isSubcategory
+                            )
+                       } label: {
+                             CategoryRowView(category: category)
+
+                       }
+                       .buttonStyle(.plain)
+
+                    }
+                }
+                .frame(minHeight: 120, maxHeight: 300)
+            }
+        }    
+        }
     
-    init(habitListVM: HabitListViewModel, modelContext: ModelContext? = nil, isNew: Bool, habit: Habit) {
-        _categoryListVM = StateObject(wrappedValue: CategoryListViewModel(storageProvider: appConfig.storageProvider))
+    init(habitListVM: HabitListViewModel, modelContext: ModelContext? = nil, isNew: Bool, habit: Habit, storageProvider: StorageProvider) {
+        _categoryListVM = StateObject(wrappedValue: CategoryListViewModel(storageProvider: storageProvider))
         _userImageVM = StateObject(wrappedValue: UserImagesViewModel())
         self.habitListVM = habitListVM
         self.isNew = isNew
@@ -56,9 +84,8 @@ struct HabitDetailWrapper: View {
             Spacer()
             
             categorySection
-        }
-        
-        Spacer()
+
+                    Spacer()
         
         // 🔹 Botón Guardar
         Button(action: saveHabit) {
@@ -73,49 +100,24 @@ struct HabitDetailWrapper: View {
         .cornerRadius(10)
         
         // 🔹 Botón Eliminar (solo si no es nuevo)
-        
-    }
-
-        .navigationTitle(isNew ? "Nuevo hábito" : "Editar hábito")
-        .padding()
-    }
-    
-    var categorySection: some View {
-        Section(header: Text("Añadir hábito a categoría")) {
-            if Array(categoryListVM.categories.values).isEmpty {
-                Text("No hay categorías disponibles. Crea al menos una categoría.")
-                    .foregroundColor(.gray)
-
-            }else {
-                List {
-                    ForEach(Array(categoryListVM.categories.values).sorted(by: { $0.name < $1.name })) { category in
-                       NavigationLink {
-                            CategoryDetailWrapperView(
-                                viewModel: categoryListVM,
-                                category: category,
-                                userImageVM: userImageVM,
-                                isSubcategory: category.isSubcategory
-                            )
-                       } label: {
-                             CategoryRowView(category: category)
-
-                       }
-                       .buttonStyle(.plain)
-
-                    }
-                }
-                .frame(minHeight: 120, maxHeight: 300)
-            }
-        }    }
+        }      
+    .navigationTitle(isNew ? "Nuevo hábito" : "Editar hábito")
+    .padding()
+  }
     
     // MARK: - Funciones
     private func saveHabit() {
-        if isNew {
-            modelContext.insert(habit)
-        }
-        try? modelContext.save()
-        dismiss()
+        // Persist the habit using modelContext (SwiftData) or your storage provider
+        // Example (pseudo):
+         if isNew {
+             modelContext.insert(habit)
+         } else {
+             // modelContext will track changes to an existing model
+         }
+         try? modelContext.save()
     }
+
+    
     
     private func deleteHabit() {
         modelContext.delete(habit)
