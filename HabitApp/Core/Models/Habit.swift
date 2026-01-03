@@ -16,8 +16,8 @@ class Habit {
     
     //  Computed property para obtener las fechas completadas
     var doneDates: [Date] {
-        guard !doneDatesString.isEmpty else {
-            return []
+        guard !doneDatesString.isEmpty else { 
+            return [] 
         }
         
         let dates = doneDatesString.split(separator: ",").compactMap { dateString -> Date? in
