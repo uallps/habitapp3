@@ -36,7 +36,7 @@ struct HabitRowView: View {
                 }
                 
                 if AppConfig.showPriorities, let priority = habit.priority {
-                    Text("Prioridad: \(priority.localized.togglingFirstLetterCase)")
+                    Text("Prioridad: \(priority.rawValue.capitalized)")
                         .font(.caption)
                         .foregroundColor(priorityColor(for: priority))
                 }
