@@ -3,22 +3,12 @@ import SwiftData
 
 struct DailyNotesView: View {
     @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var appConfig: AppConfig
     @StateObject private var viewModel: DailyNotesViewModel
     @State private var showingAddNote = false
     
-    init(modelContext: ModelContext? = nil) {
-        #if os(iOS)
-        let context = ModelContext(try! ModelContainer(for: DailyNote.self))
-        _viewModel = StateObject(wrappedValue: DailyNotesViewModel(modelContext: context))
-        #else
-        if let modelContext {
-            _viewModel = StateObject(wrappedValue: DailyNotesViewModel(modelContext: modelContext))
-        } else {
-            let container = try! ModelContainer(for: DailyNote.self)
-            let context = ModelContext(container)
-            _viewModel = StateObject(wrappedValue: DailyNotesViewModel(modelContext: context))
-        }
-        #endif
+    init() {
+        _viewModel = StateObject(wrappedValue: DailyNotesViewModel(storageProvider: AppConfig().storageProvider))
     }
     
     var body: some View {

@@ -14,7 +14,7 @@ class Goal {
     var createdAt: Date
     var updatedAt: Date
     
-    var habit: Habit?
+    var habitId: UUID?
     
     @Relationship(deleteRule: .cascade, inverse: \Milestone.goal)
     var milestones: [Milestone] = []
@@ -23,7 +23,7 @@ class Goal {
          description: String = "",
          targetCount: Int,
          targetDate: Date,
-         habit: Habit? = nil) {
+         habitId: UUID? = nil) {
         self.id = UUID()
         self.title = title
         self.goalDescription = description
@@ -32,7 +32,7 @@ class Goal {
         self.startDate = Date()
         self.targetDate = targetDate
         self.isCompleted = false
-        self.habit = habit
+        self.habitId = habitId
         self.createdAt = Date()
         self.updatedAt = Date()
     }

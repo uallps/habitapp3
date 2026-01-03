@@ -3,8 +3,12 @@ import SwiftData
 import Combine
 
 final class GoalsViewModel: ObservableObject {
-    
+    private let storageProvider: StorageProvider
     @Published var goals: [Goal] = []
+    
+    init(storageProvider: StorageProvider) {
+        self.storageProvider = storageProvider
+    }
     
     func getActiveGoals(_ goals: [Goal]) -> [Goal] {
         return goals.filter { !$0.isCompleted }.sorted { $0.targetDate < $1.targetDate }
@@ -26,8 +30,12 @@ final class GoalsViewModel: ObservableObject {
         }
     }
     
-    func deleteGoal(_ goal: Goal, context: ModelContext) {
-        context.delete(goal)
-        try? context.save()
+    func deleteGoal(_ goal: Goal) {
+        storageProvider.context.delete(goal)
+        do {
+            try storageProvider.context.save()
+        } catch {
+            print("Error deleting goal: \(error)")
+        }
     }
 }

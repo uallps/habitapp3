@@ -12,36 +12,36 @@ import SwiftData
 class Habit {
     @Attribute(.unique) var id: UUID
     var title: String
-    var doneDates: [Date]
-    var isCompleted: Bool
+    var doneDatesString: String = ""
+    var isCompleted: Bool = false
     var dueDate: Date?
-    var priority: Priority?
+    var priority: Priority? = nil
     var reminderDate: Date?
-    var scheduledDays: [Int] // 1 = Domingo, 2 = Lunes, ..., 7 = Sábado
-    var createdAt: Date
-    var updatedAt: Date
+    var scheduledDaysString: String = ""
+    var createdAt: Date = Date()
+    var updatedAt: Date = Date()
     
-    @Relationship(deleteRule: .cascade, inverse: \DailyNote.habit)
-    var notes: [DailyNote] = []
-    
-
-    
-    @Relationship(deleteRule: .cascade, inverse: \Goal.habit)
-    var goals: [Goal] = []
-    
-    // MARK: - Streak Properties
-    var currentStreak: Int {
-        calculateCurrentStreak()
+    //  Computed property para obtener las fechas completadas
+    var doneDates: [Date] {
+        guard !doneDatesString.isEmpty else { 
+            return [] 
+        }
+        
+        let dates = doneDatesString.split(separator: ",").compactMap { dateString -> Date? in
+            let trimmed = String(dateString).trimmingCharacters(in: .whitespaces)
+            
+            if let timeInterval = Double(trimmed) {
+                return Date(timeIntervalSince1970: timeInterval)
+            }
+            return nil
+        }
+        
+        return dates
     }
     
-    var longestStreak: Int {
-        calculateLongestStreak()
-    }
-    
-    var streakStartDate: Date? {
-        guard currentStreak > 0 else { return nil }
-        let calendar = Calendar.current
-        return calendar.date(byAdding: .day, value: -(currentStreak - 1), to: Date())
+    var scheduledDays: [Int] {
+        guard !scheduledDaysString.isEmpty else { return [] }
+        return scheduledDaysString.split(separator: ",").compactMap { Int($0) }
     }
 
     init(title: String,
@@ -53,91 +53,61 @@ class Habit {
          scheduledDays: [Int] = []) {
         self.id = UUID()
         self.title = title
-        self.doneDates = doneDates
+        self.doneDatesString = doneDates.map { String($0.timeIntervalSince1970) }.joined(separator: ",")
         self.isCompleted = isCompleted
         self.dueDate = dueDate
         self.priority = priority
         self.reminderDate = reminderDate
-        self.scheduledDays = scheduledDays
+        self.scheduledDaysString = scheduledDays.map { String($0) }.joined(separator: ",")
         self.createdAt = Date()
         self.updatedAt = Date()
     }
     
+    //  Marcar como completado para una fecha
     func markAsCompleted(for date: Date = Date()) {
         let calendar = Calendar.current
-        let today = calendar.startOfDay(for: date)
+        let targetDate = calendar.startOfDay(for: date)
         
-        if !doneDates.contains(where: { calendar.isDate($0, inSameDayAs: today) }) {
-            doneDates.append(today)
+        // Evitar duplicados
+        if !isCompletedForDate(targetDate) {
+            let timeString = String(targetDate.timeIntervalSince1970)
+            
+            if doneDatesString.isEmpty {
+                doneDatesString = timeString
+            } else {
+                doneDatesString += ",\(timeString)"
+            }
+            isCompleted = true
             updatedAt = Date()
         }
     }
     
+    //  Marcar como incompleto
     func markAsIncomplete(for date: Date = Date()) {
         let calendar = Calendar.current
-        let today = calendar.startOfDay(for: date)
+        let targetDate = calendar.startOfDay(for: date)
         
-        doneDates.removeAll { calendar.isDate($0, inSameDayAs: today) }
+        var dates = doneDates
+        dates.removeAll { calendar.isDate($0, inSameDayAs: targetDate) }
+        
+        doneDatesString = dates.map { String($0.timeIntervalSince1970) }.joined(separator: ",")
         updatedAt = Date()
     }
     
+    //  Verificar si está completado para una fecha
     func isCompletedForDate(_ date: Date) -> Bool {
         let calendar = Calendar.current
         let targetDate = calendar.startOfDay(for: date)
         return doneDates.contains { calendar.isDate($0, inSameDayAs: targetDate) }
     }
-    
-    // MARK: - Streak Calculations
-    private func calculateCurrentStreak() -> Int {
-        let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
-        var streak = 0
-        var currentDate = today
-        
-        while isCompletedForDate(currentDate) {
-            streak += 1
-            guard let previousDay = calendar.date(byAdding: .day, value: -1, to: currentDate) else { break }
-            currentDate = previousDay
-        }
-        
-        return streak
-    }
-    
-    private func calculateLongestStreak() -> Int {
-        let calendar = Calendar.current
-        let sortedDates = doneDates.sorted()
-        
-        guard !sortedDates.isEmpty else { return 0 }
-        
-        var longestStreak = 1
-        var currentStreak = 1
-        
-        for i in 1..<sortedDates.count {
-            let previousDate = calendar.startOfDay(for: sortedDates[i-1])
-            let currentDate = calendar.startOfDay(for: sortedDates[i])
-            
-            if let nextDay = calendar.date(byAdding: .day, value: 1, to: previousDate),
-               calendar.isDate(nextDay, inSameDayAs: currentDate) {
-                currentStreak += 1
-                longestStreak = max(longestStreak, currentStreak)
-            } else {
-                currentStreak = 1
-            }
-        }
-        
-        return longestStreak
-    }
 }
 
 enum Priority: String, Codable, CaseIterable {
-    case low, medium, high
+    case low = "Baja"
+    case medium = "Media"
+    case high = "Alta"
     
-    
-    var localized: String {
-        switch self {
-        case .low: return NSLocalizedString("priority_low", comment: "")
-        case .medium: return NSLocalizedString("priority_medium", comment: "")
-        case .high: return NSLocalizedString("priority_high", comment: "")
-        }
+    var displayName: String {
+        self.rawValue
     }
 }
