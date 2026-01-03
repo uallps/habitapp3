@@ -3,6 +3,7 @@ import SwiftUI
 struct OverviewStatsView: View {
     let stats: GeneralStats?
     let isLoading: Bool
+    let range: TimeRange
     
     var body: some View {
         ScrollView {
@@ -29,7 +30,7 @@ struct OverviewStatsView: View {
                     }
                     
                     // Gráfico según rango
-                    if stats.range == .day {
+                    if range == .day {
                         // Vista diaria: Donut chart
                         DonutChartView(
                             completed: stats.totalCompleted,
