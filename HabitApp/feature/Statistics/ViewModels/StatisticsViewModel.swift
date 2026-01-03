@@ -14,28 +14,39 @@ final class StatisticsViewModel: ObservableObject {
     
     // MARK: - Private Properties
     
-    private var modelContext: ModelContext?
+    private let storageProvider: StorageProvider
     private let service = StatisticsService()
     private var cancellables = Set<AnyCancellable>()
-    private var refreshTimer: Timer?
     
     // MARK: - Initialization
     
-    init(modelContext: ModelContext? = nil) {
-        self.modelContext = modelContext
+    init(storageProvider: StorageProvider) {
+        self.storageProvider = storageProvider
         setupObservers()
-    }
-    
-    deinit {
-        refreshTimer?.invalidate()
     }
     
     // MARK: - Configuration
     
-    func configure(with context: ModelContext) {
-        self.modelContext = context
-        loadStatistics()
-        startAutoRefresh()
+    func loadStatistics() {
+        isLoading = true
+        
+        Task {
+            do {
+                let habits = try await storageProvider.loadTasks()
+                
+                // Compute statistics
+                await MainActor.run {
+                    generalStats = service.computeGeneralStats(from: habits, range: selectedRange)
+                    habitStats = habits.map { service.computeHabitStats(for: $0, range: selectedRange) }
+                    isLoading = false
+                }
+            } catch {
+                await MainActor.run {
+                    print("Error loading habits for statistics: \(error)")
+                    isLoading = false
+                }
+            }
+        }
     }
     
     // MARK: - Private Methods
@@ -46,39 +57,5 @@ final class StatisticsViewModel: ObservableObject {
                 self?.loadStatistics()
             }
             .store(in: &cancellables)
-    }
-    
-    private func startAutoRefresh() {
-        // Refrescar cada 3 segundos para detectar cambios
-        refreshTimer?.invalidate()
-        refreshTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
-            Task { @MainActor in
-                self?.loadStatistics()
-            }
-        }
-    }
-    
-    func loadStatistics() {
-        guard let modelContext else { return }
-        
-        isLoading = true
-        
-        // Fetch habits
-        let descriptor = FetchDescriptor<Habit>(
-            sortBy: [SortDescriptor(\.createdAt)]
-        )
-        
-        do {
-            let habits = try modelContext.fetch(descriptor)
-            
-            // Compute statistics
-            generalStats = service.computeGeneralStats(from: habits, range: selectedRange)
-            habitStats = habits.map { service.computeHabitStats(for: $0, range: selectedRange) }
-            
-            isLoading = false
-        } catch {
-            print("Error loading habits for statistics: \(error)")
-            isLoading = false
-        }
     }
 }

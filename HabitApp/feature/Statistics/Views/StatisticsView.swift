@@ -2,9 +2,14 @@ import SwiftUI
 import SwiftData
 
 struct StatisticsView: View {
-    @Environment(\.modelContext) private var modelContext
-    @StateObject private var viewModel = StatisticsViewModel()
+    @EnvironmentObject private var appConfig: AppConfig
+    @StateObject private var viewModel: StatisticsViewModel
     @State private var selectedTab = 0
+    
+    init() {
+        // La inicialización del ViewModel se hace con el storageProvider compartido
+        _viewModel = StateObject(wrappedValue: StatisticsViewModel(storageProvider: AppConfig().storageProvider))
+    }
     
     var body: some View {
         NavigationStack {
@@ -56,7 +61,7 @@ struct StatisticsView: View {
             .navigationBarTitleDisplayMode(.inline)
             #endif
             .onAppear {
-                viewModel.configure(with: modelContext)
+                viewModel.loadStatistics()
             }
         }
     }
