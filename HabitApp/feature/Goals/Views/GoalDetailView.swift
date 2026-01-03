@@ -11,7 +11,8 @@ struct GoalDetailView: View {
     
     init(goal: Goal) {
         self._goal = Bindable(goal)
-        // Inicializar viewModel en init
+        // Usar un closure vacío que se ejecutará cuando appConfig esté disponible
+        _viewModel = StateObject(wrappedValue: GoalsViewModel(storageProvider: AppConfig().storageProvider))
     }
     
     var body: some View {
@@ -182,7 +183,8 @@ extension GoalDetailView {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(role: .destructive) {
-                    viewModel.deleteGoal(goal, context: modelContext)
+                    modelContext.delete(goal)
+                    try? modelContext.save()
                     dismiss()
                 } label: {
                     Image(systemName: "trash")
@@ -343,7 +345,8 @@ extension GoalDetailView {
         .toolbar {
             ToolbarItem {
                 Button(role: .destructive) {
-                    viewModel.deleteGoal(goal, context: modelContext)
+                    modelContext.delete(goal)
+                    try? modelContext.save()
                     dismiss()
                 } label: {
                     Image(systemName: "trash")
