@@ -74,18 +74,33 @@ extension HabitListView {
                 .padding(.bottom, 6)
                 
                 // 🔹 Lista de hábitos filtrados
-                List(filteredHabits) { habit in
-                    HabitRowView(
-                        habit: habit,
-                        toggleCompletion: {
-                            viewModel.toggleCompletion(habit: habit, for: currentDate)
-                        },
-                        viewModel: viewModel,
-                        storageProvider: storageProvider,
-                        date: currentDate
-                    )
+                if filteredHabits.isEmpty {
+                    VStack(spacing: 12) {
+                        Image(systemName: "checkmark.circle")
+                            .font(.system(size: 48))
+                            .foregroundColor(.gray)
+                        Text("Sin hábitos para hoy")
+                            .font(.headline)
+                        Text("No hay hábitos programados para este día")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.top, 40)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    List(filteredHabits) { habit in
+                        HabitRowView(
+                            habit: habit,
+                            toggleCompletion: {
+                                viewModel.toggleCompletion(habit: habit, for: currentDate)
+                            },
+                            viewModel: viewModel,
+                            storageProvider: storageProvider,
+                            date: currentDate
+                        )
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .navigationTitle("Hábitos")
             .toolbar {
@@ -98,7 +113,6 @@ extension HabitListView {
                 }
             }
             .sheet(isPresented: $showingNewHabitSheet) {
-                // Abrimos HabitDetailWrapper para crear un nuevo hábito
                 HabitDetailWrapper(
                     viewModel: viewModel,
                     habit: Habit(title: ""),
@@ -108,8 +122,13 @@ extension HabitListView {
         }
         .onAppear {
             if habits.isEmpty {
+                print("📝 Creando hábitos de muestra...")
                 viewModel.createSampleHabits()
             }
+        }
+        // ⭐ Refrescar cuando cambian los hábitos
+        .onChange(of: habits) { oldValue, newValue in
+            print("🔄 Hábitos actualizados: \(newValue.count) hábitos")
         }
     }
 }
@@ -152,16 +171,27 @@ extension HabitListView {
                 Divider()
                 
                 // Lista de hábitos
-                List(filteredHabits) { habit in
-                    HabitRowView(
-                        habit: habit,
-                        toggleCompletion: {
-                            viewModel.toggleCompletion(habit: habit, for: currentDate)
-                        },
-                        viewModel: viewModel,
-                        storageProvider: storageProvider,
-                        date: currentDate
-                    )
+                if filteredHabits.isEmpty {
+                    VStack {
+                        Image(systemName: "checkmark.circle")
+                            .font(.system(size: 48))
+                            .foregroundColor(.gray)
+                        Text("Sin hábitos para hoy")
+                            .font(.headline)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    List(filteredHabits) { habit in
+                        HabitRowView(
+                            habit: habit,
+                            toggleCompletion: {
+                                viewModel.toggleCompletion(habit: habit, for: currentDate)
+                            },
+                            viewModel: viewModel,
+                            storageProvider: storageProvider,
+                            date: currentDate
+                        )
+                    }
                 }
             }
             .navigationTitle("Hábitos")
@@ -204,8 +234,13 @@ extension HabitListView {
         }
         .onAppear {
             if habits.isEmpty {
+                print("📝 Creando hábitos de muestra...")
                 viewModel.createSampleHabits()
             }
+        }
+        // ⭐ Refrescar cuando cambian los hábitos
+        .onChange(of: habits) { oldValue, newValue in
+            print("🔄 Hábitos actualizados: \(newValue.count) hábitos")
         }
     }
 }

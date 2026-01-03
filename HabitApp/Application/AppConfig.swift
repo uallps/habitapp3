@@ -22,35 +22,31 @@ class AppConfig: ObservableObject {
     var storageType: StorageType = .swiftData
 
     init() {
-        // Inicializar plugins cuando se crea AppConfig
         setupPlugins()
     }
     
     private func setupPlugins() {
-        // Usar el storageProvider en lugar de SwiftDataContext
-        let habitGoalPlugin = HabitGoalPlugin(storageProvider: storageProvider)
-        let reminderPlugin = ReminderPlugin()
+        let registry = PluginRegistry.shared
         
-        TaskDataObserverManager.shared.register(habitGoalPlugin)
-        TaskDataObserverManager.shared.register(reminderPlugin)
+        // ⭐ Registrar los plugins
+        registry.register(plugin: ReminderPlugin())
+        registry.register(plugin: HabitGoalPlugin(storageProvider: storageProvider))
         
-        print("🔔 Plugins registrados: HabitGoal y Reminder")
+        print("✅ Plugins registrados correctamente")
     }
 
     // MARK: - Storage Provider
     
     private lazy var swiftDataProvider: SwiftDataStorageProvider = {
-        let schemas: [any PersistentModel.Type] = [Habit.self, DailyNote.self, Goal.self, Milestone.self]
-        let schema = Schema(schemas)
-        print("📦 Schemas registrados: \(schemas)")
         return SwiftDataStorageProvider(schema: schema)
     }()
 
     var storageProvider: StorageProvider {
-        switch storageType {
-        case .swiftData:
-            return swiftDataProvider
-        }
+        return swiftDataProvider
+    }
+    
+    var schema: Schema {
+        Schema([Habit.self, DailyNote.self, Goal.self, Milestone.self])
     }
 }
 
