@@ -52,6 +52,7 @@ final class StatisticsViewModel: ObservableObject {
     
     private func setupObservers() {
         $selectedRange
+            .dropFirst()  // ← Ignora el valor inicial, solo cambios
             .sink { [weak self] _ in
                 self?.loadStatistics()
             }
