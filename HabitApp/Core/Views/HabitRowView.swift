@@ -88,7 +88,7 @@ struct HabitRowView: View {
             Text("Esta acción no se puede deshacer")
         }
     }
-    
+    // ¿Por que no se usa el de ViewModel?
     private func deleteHabit() {
        
         modelContext.delete(habit)

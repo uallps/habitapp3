@@ -11,6 +11,8 @@ struct HabitDetailWrapper: View {
     @State private var title: String
     @State private var selectedDays: [Int]
     @State private var priority: Priority
+    @State private var hasReminder: Bool = false
+    @State private var reminderDate: Date = Date()
     @State private var habitToEdit: Habit?
     
     init(viewModel: HabitListViewModel, habit: Habit, isNew: Bool = true) {
@@ -22,6 +24,8 @@ struct HabitDetailWrapper: View {
         _title = State(initialValue: habit.title)
         _selectedDays = State(initialValue: habit.scheduledDays)
         _priority = State(initialValue: habit.priority ?? .medium)
+        _hasReminder = State(initialValue: habit.isReminderEnabled != false)
+        _reminderDate = State(initialValue:  habit.reminderDate ?? Date())
     }
 
     var body: some View {
@@ -110,6 +114,27 @@ extension HabitDetailWrapper {
                         .cornerRadius(12)
                         .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
                         
+                        // 🔹 RECORDATORIOS
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack(spacing: 8) {
+                                Image(systemName: "bell.fill") // Icono de campana
+                                    .foregroundColor(.purple)
+                                Text("Recordatorio")
+                                    .font(.headline)
+                                    .fontWeight(.semibold)
+                            }
+                            
+                            // Aquí puedes meter tu Toggle o DatePicker
+                            Toggle("Activar recordatorio", isOn: $hasReminder) // Necesitarás crear este @State
+                            
+                            if hasReminder {
+                                DatePicker("Hora", selection: $reminderDate, displayedComponents: .hourAndMinute)
+                            }
+                        }
+                        .padding(16)
+                        .background(Color(.systemBackground))
+                        .cornerRadius(12)
+                        .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
                         // 🔹 Botones
                         VStack(spacing: 12) {
                             Button(action: saveHabit) {
