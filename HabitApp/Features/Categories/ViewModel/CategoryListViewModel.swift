@@ -3,8 +3,7 @@ import Combine
 import SwiftData
 
 class CategoryListViewModel: ObservableObject {
-    
-    @Published var categories: [UUID: Category] = [:]
+    var categories: [UUID:Category] = [:]
     
     let storageProvider: StorageProvider
     

@@ -105,7 +105,6 @@ struct HabitRowView: View {
         case .low: return .green
         case .medium: return .yellow
         case .high: return .red
-        case .mixed: return .pink
         }
     }
 }

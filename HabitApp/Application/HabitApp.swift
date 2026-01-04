@@ -64,10 +64,8 @@ struct HabitApp: App {
                 // Tab 3: Categorías
                 NavigationStack {
                     CategoryListView(
-                        viewModel: CategoryListViewModel(
                             storageProvider: storageProvider
                         )
-                    )
                 }
                 .tabItem {
                     Label("Categorías", systemImage: "folder")

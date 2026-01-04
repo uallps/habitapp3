@@ -1,10 +1,10 @@
 import SwiftUI
 
 struct CategoryListView: View {
-    @ObservedObject var categoryListVM: CategoryListViewModel
+    @StateObject var categoryListVM: CategoryListViewModel
     
     init(storageProvider: StorageProvider) {
-        categoryListVM = CategoryListViewModel(storageProvider: storageProvider)
+        _categoryListVM = StateObject(wrappedValue: CategoryListViewModel(storageProvider: storageProvider))
     }
     
     var body: some View {
@@ -45,6 +45,8 @@ struct CategoryListView: View {
                     }
                 }
             })
+        }.task {
+            await categoryListVM.loadCategories()
         }
     }
 }

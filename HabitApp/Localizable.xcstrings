@@ -153,9 +153,6 @@
     "Media %@" : {
 
     },
-    "Mixta %@" : {
-
-    },
     "No hay categorías disponibles. Crea al menos una categoría." : {
 
     },
@@ -242,23 +239,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "media"
-          }
-        }
-      }
-    },
-    "priority_mixed" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "mixed"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "mixto"
           }
         }
       }

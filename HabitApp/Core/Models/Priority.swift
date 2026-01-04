@@ -1,8 +1,8 @@
 import Foundation
 
 enum Priority: String, Hashable, Codable, CaseIterable {
-    case low, medium, high, mixed
-
+    case low, medium, high
+    
     // Optional: a color for SwiftUI
     var color: String {
         switch self {
@@ -12,28 +12,24 @@ enum Priority: String, Hashable, Codable, CaseIterable {
             return "Orange"
         case .low:
             return "Green"
-        case .mixed:
-            return "🎨"
         }
+    }
+        
+        var localized: String {
+            switch self {
+            case .low: return NSLocalizedString("priority_low", comment: "")
+            case .medium: return NSLocalizedString("priority_medium", comment: "")
+            case .high: return NSLocalizedString("priority_high", comment: "")
+            }
+        }
+        
+        // Optional: an emoji representation
+        var emoji: String {
+            switch self {
+            case .high: return "🔴"
+            case .medium: return "🟠"
+            case .low: return "🟢"
+            }
+        }
+    }
 
-    }
-    
-    var localized: String {
-        switch self {
-        case .low: return NSLocalizedString("priority_low", comment: "")
-        case .medium: return NSLocalizedString("priority_medium", comment: "")
-        case .high: return NSLocalizedString("priority_high", comment: "")
-        case .mixed: return NSLocalizedString("priority_mixed", comment: "")
-        }
-    }
-    
-    // Optional: an emoji representation
-    var emoji: String {
-        switch self {
-        case .high: return "🔴"
-        case .medium: return "🟠"
-        case .low: return "🟢"
-        case .mixed: return "🎨"
-        }
-    }
-}
