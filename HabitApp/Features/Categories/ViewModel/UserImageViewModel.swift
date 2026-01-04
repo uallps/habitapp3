@@ -6,27 +6,21 @@ import SwiftData
 @MainActor
 class UserImagesViewModel: ObservableObject {
     @Published var image: PlatformImage? = nil
-    private var modelContext: ModelContext?
+    let storageProvider: StorageProvider
 
     func assign(image: PlatformImage) {
         self.image = image
     }
     
-    init(modelContext: ModelContext? = nil) {
-        self.modelContext = modelContext
-        loadPickedImage()
+    init(storageProvider: StorageProvider) {
+        self.storageProvider = storageProvider
     }
     
-    func loadPickedImage() {
-        guard let modelContext else { return }
-        let descriptor = FetchDescriptor<UserImageSlot>(
-            sortBy: [SortDescriptor(\.id, order: .forward)]
-        )
-        
+    func loadPickedImage() async {
         do {
-            let fetchedImage = try modelContext.fetch(descriptor)
+            try await storageProvider.loadPickedImage()
         } catch {
-            print("Error loading categories: \(error)")
+            print("Error loading image \(error)")
         }
     }
     

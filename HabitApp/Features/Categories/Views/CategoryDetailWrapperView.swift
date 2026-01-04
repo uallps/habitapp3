@@ -7,7 +7,7 @@ struct CategoryDetailWrapperView: View {
     
     private let parent: Category?
     
-    @ObservedObject var userImageVM: UserImagesViewModel
+    @StateObject var userImageVM: UserImagesViewModel
 
     @State private var showAlert = false
     @State private var alertMessage = ""
@@ -64,12 +64,13 @@ struct CategoryDetailWrapperView: View {
     @State private var selectionMode: SelectionMode = .emoji
     
     init(storageProvider: StorageProvider, category: Category, parent: Category? = nil, isSubcategory: Bool) {
-        self._categoryListVM = StateObject(wrappedValue: CategoryDetailWrapperViewModel(storageProvider: storageProvider))
+        self._categoryListVM = StateObject(wrappedValue: CategoryListViewModel(storageProvider: storageProvider))
         self._userImageVM = StateObject(wrappedValue: UserImagesViewModel(storageProvider: storageProvider))
+
         self._category = State(initialValue: category)
         self.parent = parent
         self.isSubCategory = isSubcategory
-
+    
         // Inicializar estado de categoría.
         
         self._initialName = State(initialValue: category.name.trimmingCharacters(in: .whitespacesAndNewlines).togglingFirstLetterCase)
@@ -168,17 +169,9 @@ struct CategoryDetailWrapperView: View {
             .pickerStyle(.menu)
         }
     }
-    
-    
-    
-    var body: some View {
-        NavigationStack {
-            let noun = isSubCategory ? "subcategoría" : "categoría"
-            Form {
-                nameAndIcon
-                iconSelectionSection
-                prioritySection
 
+    @ViewBuilder
+    var saveSection: some View {
                 // MARK: - Save Button
                 Section {
                     Button {
@@ -203,12 +196,13 @@ struct CategoryDetailWrapperView: View {
                                     image: userImageVM.image
                                 )
                             }
-
-                            categoryListVM.upsertCategoryOrSubcategory(
-                                parent: parent,
-                                category: category
-                            )
-
+                            
+                            Task {
+                                await categoryListVM.upsertCategoryOrSubcategory(
+                                    parent: parent,
+                                    category: category
+                                )
+                            }
 
                             dismiss()
                         } else {
@@ -233,7 +227,10 @@ struct CategoryDetailWrapperView: View {
                         Button("OK", role: .cancel) { }
                     }
                 }
-                
+    }
+
+    @ViewBuilder
+    var subcategorySection: some View {
                 Section(header: Text("Subcategorías")) {
                     if category.subCategories.isEmpty {
                             Text("No hay subcategorías")
@@ -248,12 +245,11 @@ struct CategoryDetailWrapperView: View {
                                 Label("Añadir subcategoría", systemImage: "plus.circle")
                             }
                     } else {
-                        ForEach(Array(category.subCategories.values), id: \.id) { sub in
+                        ForEach(Array(category.subCategories), id: \.id) { sub in
                             NavigationLink {
                                 CategoryDetailWrapperView(
-                                    viewModel: categoryListVM,
+                                    storageProvider: categoryListVM.storageProvider,
                                     category: sub,
-                                    userImageVM: userImageVM,
                                     parent: category,
                                     isSubcategory: true
                                 )
@@ -268,13 +264,24 @@ struct CategoryDetailWrapperView: View {
 
                     }
                 }
-
+    }
+    
+    
+    
+    var body: some View {
+        NavigationStack {
+            let noun = isSubCategory ? "subcategoría" : "categoría"
+            Form {
+                nameAndIcon
+                iconSelectionSection
+                prioritySection
+                saveSection
+                subcategorySection
             }
             .navigationDestination(item: $newSub) { sub in
                             CategoryDetailWrapperView(
-                                viewModel: categoryListVM,
+                                storageProvider: categoryListVM.storageProvider,
                                 category: sub,
-                                userImageVM: userImageVM,
                                 parent: category,
                                 isSubcategory: true
                             )
@@ -308,6 +315,9 @@ struct CategoryDetailWrapperView: View {
                 default: EmojiSearchView(selectedIcon: $selectedIconThree)
                 }
             }
+        }
+        .task {
+            await self.userImageVM.loadPickedImage()
         }
     }
 

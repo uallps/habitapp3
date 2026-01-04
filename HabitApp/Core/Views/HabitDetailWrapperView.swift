@@ -45,7 +45,7 @@ struct HabitDetailWrapper: View {
     
     init(habitListVM: HabitListViewModel, modelContext: ModelContext? = nil, isNew: Bool, habit: Habit, storageProvider: StorageProvider) {
         _categoryListVM = StateObject(wrappedValue: CategoryListViewModel(storageProvider: storageProvider))
-        _userImageVM = StateObject(wrappedValue: UserImagesViewModel())
+        _userImageVM = StateObject(wrappedValue: UserImagesViewModel(storageProvider: storageProvider))
         self.habitListVM = habitListVM
         self.isNew = isNew
         self._habit = State(initialValue: habit)

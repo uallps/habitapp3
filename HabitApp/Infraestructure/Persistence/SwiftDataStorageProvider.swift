@@ -6,6 +6,18 @@ class SwiftDataContext {
 }
 
 class SwiftDataStorageProvider: StorageProvider {
+    func loadPickedImage() async throws {
+        let descriptor = FetchDescriptor<UserImageSlot>(
+            sortBy: [SortDescriptor(\.id, order: .forward)]
+        )
+        
+        do {
+            let fetchedImage = try context.fetch(descriptor)
+        } catch {
+            print("Error loading picked image: \(error)")
+        }
+    }
+    
     func addHabitToCategory(habit: Habit, category: Category) async throws {
         if !category.habits.contains(where: { $0.id == habit.id } ) {
             category.habits.append(habit)

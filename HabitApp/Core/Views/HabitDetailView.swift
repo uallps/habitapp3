@@ -71,7 +71,7 @@ struct HabitDetailView: View {
                         ForEach(Array(categoryListVM.categories.values).sorted(by: { $0.name < $1.name })) { category in
                            NavigationLink {
                                 CategoryDetailWrapperView(
-                                    storageProvider: appConfig.storageProvider,
+                                    storageProvider: categoryListVM.storageProvider,
                                     category: category,
                                     isSubcategory: category.isSubcategory
                                 )

@@ -43,7 +43,6 @@ struct UserImagesPickerView: View {
                     if panel.runModal() == .OK, let url = panel.url,
                        let nsImage = NSImage(contentsOf: url) {
                         viewModel.assign(image: nsImage)
-                        viewModel.pickedImages.append(nsImage)
                     }
                 } label: {
                     imageButton

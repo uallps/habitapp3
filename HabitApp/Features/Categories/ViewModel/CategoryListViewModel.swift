@@ -6,7 +6,7 @@ class CategoryListViewModel: ObservableObject {
     
     @Published var categories: [UUID: Category] = [:]
     
-    private let storageProvider: StorageProvider
+    let storageProvider: StorageProvider
     
     init(storageProvider: StorageProvider) {
         self.storageProvider = storageProvider

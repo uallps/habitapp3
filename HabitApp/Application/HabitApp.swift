@@ -94,14 +94,16 @@ struct HabitApp: App {
             } detail: {
                 switch selectedDetailView {
                 case "habitos":
-                    HabitListView(viewModel: HabitListViewModel())
+                    HabitListView(
+                        viewModel: HabitListViewModel(
+                            storageProvider: storageProvider
+                        )
+                    )
                 // TODO: case "ajustes":
                 // TODO: SettingsView()
                 case "categorias":
                     CategoryListView(
-                        viewModel: CategoryListViewModel(
-                            storageProvider: storageProvider
-                        )
+                        storageProvider: storageProvider
                     )
                 case "notas":
                     DailyNotesView()

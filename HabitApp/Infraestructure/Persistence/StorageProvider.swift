@@ -13,5 +13,6 @@ protocol StorageProvider {
     func updateCategory(id: UUID, newCategory: Category) async throws
     func upsertCategoryOrSubcategory(parent: Category?, category: Category) async throws
     func addHabitToCategory(habit: Habit, category: Category) async throws
+    func loadPickedImage() async throws
     //END IF
 }
