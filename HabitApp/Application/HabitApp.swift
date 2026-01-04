@@ -57,6 +57,9 @@ struct HabitApp: App {
                 NavigationStack {
                     Text("Ajustes (próximamente)")
                 }
+                //.task {
+                //    storageProvider.resetStorage()
+                //}
                 .tabItem {
                     Label("Ajustes", systemImage: "gearshape")
                 }
@@ -85,6 +88,9 @@ struct HabitApp: App {
                     NavigationLink(value: "ajustes") {
                         Label("Ajustes", systemImage: "gearshape")
                     }
+                    //.task {
+                    //    storageProvider.resetStorage()
+                    //}
                     NavigationLink(value: "categorias") {
                         Label("Categorias", systemImage: "folder")
                     }

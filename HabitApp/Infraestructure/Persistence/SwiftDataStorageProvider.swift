@@ -53,12 +53,15 @@ class SwiftDataStorageProvider: StorageProvider {
     
     func categoryExists(id: UUID) async throws -> Bool {
         let categories = try await loadCategories()
-        return categories.contains(where: { $0.key == id } )
+        return categories.contains(where: { $0.id == id } )
     }
     
     func updateCategory(id: UUID, newCategory: Category) async throws {
         let categories = try await loadCategories()
-        let oldCategory = categories[id]
+        let oldCategory = categories.first {
+            category in
+            category.id == id
+        }
         oldCategory?.copyFrom(newCategory: newCategory)
         try context.save()
     }
@@ -77,8 +80,8 @@ class SwiftDataStorageProvider: StorageProvider {
     }
     
 
-    private let modelContainer: ModelContainer
-    private let context: ModelContext
+    private var modelContainer: ModelContainer
+    private var context: ModelContext
 
     init(schema: Schema) {
         do {
@@ -118,30 +121,26 @@ class SwiftDataStorageProvider: StorageProvider {
         try context.save()
     }
     
-    func loadCategories() async throws -> [UUID : Category] {
+    @MainActor
+    func loadCategories() async throws -> [Category] {
         let descriptor = FetchDescriptor<Category>(
             sortBy: [SortDescriptor(\.name, order: .forward)]
         )
         
-        var categoriesMap: [UUID:Category] = [:]
+        var categories: [Category] = []
         
         do {
-            let fetchedCategories = try context.fetch(descriptor)
-            
-            // Transformar el array en un diccionario con clave por el UUID
-            categoriesMap = Dictionary(
-                uniqueKeysWithValues: fetchedCategories.map { ($0.id, $0) }
-            )
+            categories = try context.fetch(descriptor)
         } catch {
             print("Error loading categories: \(error)")
         }
-        return categoriesMap
+        return categories
     }
     
     func addCategory(category: Category) async {
         do {
             let existingCategories = try await loadCategories()
-            let existingIds = Set(existingCategories.map { $0.key })
+            let existingIds = Set(existingCategories.map { $0.id })
 
             if existingIds.contains(category.id) {
                 // Category already exists
@@ -154,5 +153,33 @@ class SwiftDataStorageProvider: StorageProvider {
             print("Error saving category: \(error)")
         }
     }
+    
+    // Este archivo existe para borrar toda la información de la base de datos local.
+    // Es especialmente útil cuando existe un conflicto en los esquemas de un ordenador MacOS.
 
-}
+    // Como es evidente, tiene sentido en un entorno de desarrollo y pruebas. A no ser que
+    //se quiera dejar una gran vulnerabilidad o trollear un poquito al usuario final, no
+    // debería de existir.
+        @MainActor
+        func resetStorage() {
+            // 1. Tear down old context and container
+            SwiftDataContext.shared = nil
+            // Note: Old modelContainer will be deallocated automatically
+            
+            // 2. Recreate a new container and context
+            do {
+                let newContainer = try ModelContainer(for: Schema()) // your app schema
+                let newContext = ModelContext(newContainer)
+                self.modelContainer = newContainer
+                self.context = newContext
+                SwiftDataContext.shared = newContext
+                print("✅ SwiftData storage reset complete.")
+            } catch {
+                print("❌ Failed to reset SwiftData storage: \(error)")
+            }
+        }
+    }
+
+
+
+

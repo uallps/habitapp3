@@ -62,13 +62,13 @@ struct HabitDetailView: View {
             }
 
             Section(header: Text("Añadir hábito a categoría")) {
-                if Array(categoryListVM.categories.values).isEmpty {
+                if Array(categoryListVM.categories).isEmpty {
                     Text("No hay categorías disponibles. Crea al menos una categoría.")
                         .foregroundColor(.gray)
 
                 }else {
                     List {
-                        ForEach(Array(categoryListVM.categories.values).sorted(by: { $0.name < $1.name })) { category in
+                        ForEach(Array(categoryListVM.categories).sorted(by: { $0.name < $1.name })) { category in
                            NavigationLink {
                                 CategoryDetailWrapperView(
                                     storageProvider: categoryListVM.storageProvider,
