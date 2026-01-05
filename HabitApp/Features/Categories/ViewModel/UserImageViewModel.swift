@@ -7,7 +7,7 @@ import SwiftData
 class UserImagesViewModel: ObservableObject {
     @Published var image: PlatformImage? = nil
     let storageProvider: StorageProvider
-
+    
     func assign(image: PlatformImage) {
         self.image = image
     }

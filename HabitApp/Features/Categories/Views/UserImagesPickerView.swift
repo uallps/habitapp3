@@ -7,6 +7,10 @@ struct UserImagesPickerView: View {
     #if os(iOS)
     @State private var pickedItem: PhotosPickerItem? = nil
     #endif
+        
+    init(storageProvider: StorageProvider) {
+        self._viewModel = StateObject(wrappedValue: UserImagesViewModel(storageProvider: storageProvider))
+    }
 
     var body: some View {
         NavigationStack {

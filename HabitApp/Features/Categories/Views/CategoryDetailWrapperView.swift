@@ -151,7 +151,7 @@ struct CategoryDetailWrapperView: View {
         case .image:
             // MARK: - Image Picker (if needed)
             UserImagesPickerView(
-                viewModel: userImageVM
+                storageProvider: categoryListVM.storageProvider
             )
         }
     }
