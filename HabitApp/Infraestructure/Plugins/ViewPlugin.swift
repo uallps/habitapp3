@@ -15,14 +15,14 @@ protocol ViewPlugin: FeaturePlugin {
     /// Provee una vista personalizada para mostrar en la fila de tarea
     /// - Parameter task: La tarea para la cual crear la vista
     /// - Returns: Una vista usando ViewBuilder
-    @ViewBuilder
-    func taskRowView(for task: Task) -> TaskRowContent
+   // @ViewBuilder
+   // func taskRowView(for task: Task) -> TaskRowContent
     
     /// Provee una vista personalizada para mostrar en el detalle de tarea
     /// - Parameter task: Binding a la tarea para la cual crear la vista
     /// - Returns: Una vista usando ViewBuilder
-    @ViewBuilder
-    func taskDetailView(for task: Binding<Task>) -> TaskDetailContent
+   // @ViewBuilder
+   // func taskDetailView(for task: Binding<Task>) -> TaskDetailContent
     
     /// Provee una vista de configuración para el plugin
     /// - Returns: Una vista de configuración usando ViewBuilder

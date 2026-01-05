@@ -7,6 +7,10 @@ class PluginRegistry {
     /// Instancia compartida del registro (Singleton)
     static let shared = PluginRegistry()
     
+    var dataObservers: [TaskDataObservingPlugin] = [
+        ReminderPlugin()
+        // Aquí puedes agregar más plugins de datos
+    ]
     /// Array de tipos de plugins registrados
     private(set) var registeredPlugins: [FeaturePlugin.Type] = []
     
