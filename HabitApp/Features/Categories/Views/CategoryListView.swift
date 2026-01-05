@@ -11,7 +11,7 @@ struct CategoryListView: View {
 
         NavigationStack {
             VStack(spacing: 12) {
-                List(Array(categoryListVM.categories).filter { !$0.isSubcategory }                ) { category in
+                List(categoryListVM.filteredCategories, id: \.id) { category in
                     NavigationLink {
                         CategoryDetailWrapperView(
                             storageProvider: categoryListVM.storageProvider,

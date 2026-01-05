@@ -3,7 +3,16 @@ import Combine
 import SwiftData
 
 class CategoryListViewModel: ObservableObject {
-    @Published var categories: [Category] = []
+    @Published var categories: [ObservableCategory] = []
+    
+    var filteredCategories : [Category] {
+        var categoriesArray: [Category] = []
+        for observedCategory in categories {
+            categoriesArray.append(observedCategory.category)
+        }
+        
+        return categoriesArray
+    }
     
     let storageProvider: StorageProvider
     
@@ -13,7 +22,15 @@ class CategoryListViewModel: ObservableObject {
     
     func loadCategories() async {
         do {
-            categories = try await storageProvider.loadCategories()
+            let fetchedCategories = try await storageProvider.loadCategories()
+            categories = []
+            for category in fetchedCategories {
+                categories.append(
+                    ObservableCategory(
+                        category: category
+                    )
+                )
+            }
         } catch {
             print("Error loading tasks: \(error)")
         }
