@@ -15,35 +15,7 @@ struct HabitDetailWrapper: View {
     @State var habit: Habit
     private let isNew: Bool
 
-        var categorySection: some View {
-        Section(header: Text("Añadir hábito a categoría")) {
-            if Array(categoryListVM.categories).isEmpty {
-                Text("No hay categorías disponibles. Crea al menos una categoría.")
-                    .foregroundColor(.gray)
 
-            }else {
-                List {
-                    ForEach(Array(categoryListVM.categories).sorted(by: { $0.name < $1.name })) { category in
-                       NavigationLink {
-                            CategoryDetailWrapperView(
-                                storageProvider: appConfig.storageProvider,
-                                category: category,
-                                isSubcategory: category.isSubcategory
-                            )
-                       } label: {
-                             CategoryRowView(category: category)
-
-                       }
-                       .buttonStyle(.plain)
-
-                    }
-                }
-                .frame(minHeight: 120, maxHeight: 300)
-            }
-        }.task {
-            await categoryListVM.loadCategories()
-        }
-        }
     
     init(habitListVM: HabitListViewModel, modelContext: ModelContext? = nil, isNew: Bool, habit: Habit, storageProvider: StorageProvider) {
         _categoryListVM = StateObject(wrappedValue: CategoryListViewModel(storageProvider: storageProvider))
@@ -85,7 +57,9 @@ struct HabitDetailWrapper: View {
             
             Spacer()
             
-            categorySection
+            HabitCategoryView(
+                storageProvider: categoryListVM.storageProvider
+            )
 
                     Spacer()
         
