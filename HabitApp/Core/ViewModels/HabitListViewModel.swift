@@ -23,6 +23,8 @@ final class HabitListViewModel: ObservableObject {
         )
         storageProvider.context.insert(habit)
         
+        NotificationManager.shared.scheduleNotification(for: habit)
+        
         do {
             try storageProvider.context.save()
             
@@ -42,6 +44,7 @@ final class HabitListViewModel: ObservableObject {
     func updateHabit(_ habit: Habit) {
         do {
             try storageProvider.context.save()
+            NotificationManager.shared.scheduleNotification(for: habit)
         } catch {
             print(" Error updating habit: \(error)")
         }
@@ -72,8 +75,8 @@ final class HabitListViewModel: ObservableObject {
     }
     
     func deleteHabit(_ habit: Habit) {
+        NotificationManager.shared.removeHabitNotifications(for: habit)
         storageProvider.context.delete(habit)
-        
         do {
             try storageProvider.context.save()
         } catch {

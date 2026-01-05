@@ -124,8 +124,18 @@ extension HabitDetailWrapper {
                                     .fontWeight(.semibold)
                             }
                             
-                            // Aquí puedes meter tu Toggle o DatePicker
-                            Toggle("Activar recordatorio", isOn: $hasReminder) // Necesitarás crear este @State
+                            
+                            Toggle("Activar recordatorio", isOn: $hasReminder)
+                                .onChange(of: hasReminder) { newValue in
+                                    if newValue {
+                                        NotificationManager.shared.requestAuthorization { granted in
+                                            if !granted {
+                                                print("Permiso denegado")
+                                            }
+                                            
+                                        }
+                                    }
+                                }
                             
                             if hasReminder {
                                 DatePicker("Hora", selection: $reminderDate, displayedComponents: .hourAndMinute)
@@ -338,7 +348,7 @@ extension HabitDetailWrapper {
                 title: title,
                 dueDate: nil,
                 priority: priority,
-                reminderDate: nil,
+                reminderDate: hasReminder ? reminderDate : nil,
                 scheduledDays: selectedDays
             )
         } else if let habitToEdit = habitToEdit {
@@ -346,6 +356,7 @@ extension HabitDetailWrapper {
             habitToEdit.title = title
             habitToEdit.scheduledDaysString = selectedDays.map { String($0) }.joined(separator: ",")
             habitToEdit.priority = priority
+            habitToEdit.reminderDate = hasReminder ? reminderDate : nil
             viewModel.updateHabit(habitToEdit)
         }
         

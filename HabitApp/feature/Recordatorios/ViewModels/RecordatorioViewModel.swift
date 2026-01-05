@@ -38,12 +38,7 @@ class RecordatorioViewModel {
                     self.habit.reminderDate = dateToSchedule
                 }
                 
-                // Use persistentModelID or a UUID property if available
-                self.notificationManager.scheduleNotification(
-                    id: self.habit.id.uuidString,
-                    title: self.habit.title,
-                    date: dateToSchedule
-                )
+                self.notificationManager.scheduleNotification(for: habit)
             } else {
                 // Revert toggle if permission denied
                 self.habit.isReminderEnabled = false
@@ -52,6 +47,6 @@ class RecordatorioViewModel {
     }
     
     private func cancelReminder() {
-        notificationManager.removeNotification(id: habit.id.uuidString)
+        notificationManager.removeHabitNotifications(for: habit)
     }
 }
