@@ -15,7 +15,7 @@ final class TaskDataObserverManager {
         plugins.append(plugin)
     }
 
-    func notify(taskId: UUID, title: String, date: Date?) {
-        plugins.forEach { $0.onDataChanged(taskId: taskId, title: title, dueDate: date) }
+    func notify(taskId: UUID, title: String, date: Date?, doneDates: [Date]?) {
+        plugins.forEach { $0.onDataChanged(taskId: taskId, title: title, dueDate: date, doneDates: doneDates) }
     }
 }

@@ -7,17 +7,11 @@ final class Streak {
     var currentCount: Int = 0
     var bestCount: Int = 0
     var lastUpdate: Date = Date()
-    
-    // RELACIÓN INVERTIDA:
-    // La Feature apunta al Core. Habit no sabe que esto existe.
     @Relationship var habit: Habit?
-    
+
     init(habit: Habit) {
         self.id = UUID()
         self.habit = habit
-        self.currentCount = 0
-        self.bestCount = 0
-        self.lastUpdate = Date()
     }
     
     /// Método principal para recalcular la racha basándose en los datos del Core

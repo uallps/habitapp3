@@ -17,6 +17,7 @@ final class DailyNotesViewModel: ObservableObject {
         let startOfDay = calendar.startOfDay(for: selectedDate)
         let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
         
+        // Cargamos notas que no pertenecen a un hábito específico (habitId == nil)
         let predicate = #Predicate<DailyNote> { note in
             note.date >= startOfDay && note.date < endOfDay && note.habitId == nil
         }
@@ -33,10 +34,12 @@ final class DailyNotesViewModel: ObservableObject {
         }
     }
     
-    func addNote(title: String, content: String) {
+    // ✅ Añadido parámetro opcional doneDates
+    func addNote(title: String, content: String, doneDates: [Date]? = nil) {
         let calendar = Calendar.current
         let noteDate = calendar.startOfDay(for: selectedDate)
         let note = DailyNote(title: title, content: content, date: noteDate)
+        
         storageProvider.context.insert(note)
         saveContext()
         loadNotes()
@@ -44,36 +47,38 @@ final class DailyNotesViewModel: ObservableObject {
         // Programar notificación si la nota es para una fecha futura
         let today = calendar.startOfDay(for: Date())
         if noteDate > today {
+            // ✅ Corregido: Usamos noteDate y pasamos doneDates
             TaskDataObserverManager.shared.notify(
                 taskId: note.id,
                 title: "Nota: \(title)",
-                date: noteDate
+                date: noteDate,
+                doneDates: doneDates
             )
         }
     }
       
-      private func saveContext() {
-          do { try storageProvider.context.save() }
-          catch { print("Error guardando contexto: \(error)") }
-      }
-  
+    private func saveContext() {
+        do {
+            try storageProvider.context.save()
+            // Forzamos que los cambios se procesen para que los plugins lean datos frescos
+            storageProvider.context.processPendingChanges()
+        } catch {
+            print("Error guardando contexto: \(error)")
+        }
+    }
 
-    
     func updateNote(_ note: DailyNote, title: String, content: String) {
-
         note.updateContent(title: title, content: content)
         saveContext()
         loadNotes()
     }
     
     func saveAndGoToNoteDate(_ note: DailyNote, title: String, content: String) {
-
         note.updateContent(title: title, content: content)
-        selectedDate = Calendar.current.startOfDay(for: note.date) // Ajusta la fecha al día de la nota
+        selectedDate = Calendar.current.startOfDay(for: note.date)
         saveContext()
         loadNotes()
     }
-
     
     func deleteNote(_ note: DailyNote) {
         storageProvider.context.delete(note)
@@ -85,7 +90,6 @@ final class DailyNotesViewModel: ObservableObject {
         let today = Calendar.current.startOfDay(for: Date())
         let maxDate = Calendar.current.date(byAdding: .month, value: 3, to: today)!
 
-        // Limitar rango permitido
         if date < today {
             selectedDate = today
         } else if date > maxDate {
@@ -95,7 +99,4 @@ final class DailyNotesViewModel: ObservableObject {
         }
         loadNotes()
     }
-
-    
- 
 }

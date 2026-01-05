@@ -1,114 +1,130 @@
+
 import SwiftUI
 import SwiftData
 
 @main
 struct HabitApp: App {
-    @State private var selectedDetailView: String?
+    // 1. Estados de navegación y configuración
+    @State private var selectedDetailView: String? = "habitos"
     @StateObject private var appConfig = AppConfig()
     
-    // Agregar el container aquí
+    // 2. Contenedor de SwiftData
     let modelContainer: ModelContainer
     
+    // Propiedad para acceder al provider definido en AppConfig
     private var storageProvider: StorageProvider {
         appConfig.storageProvider
     }
     
     init() {
-        // Inicializar el ModelContainer
-        let schema = Schema([Habit.self, DailyNote.self, Goal.self, Milestone.self])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        // Configuración del esquema con todos los modelos de la app
+        let schema = Schema([
+            Habit.self,
+            DailyNote.self,
+            Goal.self,
+            Milestone.self,
+            Streak.self
+        ])
+        
+        let modelConfiguration = ModelConfiguration(
+            schema: schema,
+            isStoredInMemoryOnly: false
+        )
         
         do {
             self.modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
+            print("✅ ModelContainer inicializado con éxito")
         } catch {
-            fatalError("❌ Error inicializando ModelContainer: \(error)")
+            fatalError("❌ Error al inicializar ModelContainer: \(error.localizedDescription)")
         }
         
+        // Permisos de notificaciones (solo iOS)
         #if os(iOS)
-        UNUserNotificationCenter.current().requestAuthorization(
-            options: [.alert, .sound, .badge]
-        ) { granted, error in
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, _ in
             if granted {
-                print("✅ Permiso concedido para notificaciones")
-            } else if let error = error {
-                print("❌ Error solicitando permisos: \(error)")
+                print("✅ Permisos de notificación concedidos")
             }
         }
         #endif
     }
     
     var body: some Scene {
-        WindowGroup{
-#if os(iOS)
-            TabView {
-                HabitListView(storageProvider: storageProvider)
-                    .tabItem {
-                        Label("Hábitos", systemImage: "checklist")
-                    }
-                DailyNotesView()
-                    .tabItem {
-                        Label("Notas", systemImage: "note.text")
-                    }
-                
-                // TAB 3: Estadísticas
-                NavigationStack {
-                    StatisticsView()
-                }
-                .tabItem {
-                    Label("Estadísticas", systemImage: "chart.bar")
-                }
-                GoalsView()
-                    .tabItem {
-                        Label("Objetivos", systemImage: "target")
-                    }
-                TestReminderView()
-                    .tabItem {
-                        Label("Test", systemImage: "bell")
-                    }
-                SettingsView()
-                    .tabItem {
-                        Label("Ajustes", systemImage: "gearshape")
-                    }
-            }
-            .environmentObject(appConfig)
-            .modelContainer(modelContainer)  // ⭐ AGREGAR ESTO
-
-#else
-            NavigationSplitView {
-                List(selection: $selectedDetailView) {
-                    NavigationLink(value: "habitos") {
-                        Label("Habitos", systemImage: "checklist")
-                    }
-                    NavigationLink(value: "notas") {
-                        Label("Notas Diarias", systemImage: "note.text")
-                    }
-                    NavigationLink(value: "rachas") {
-                        Label("Rachas", systemImage: "flame")
-                    }
-                    NavigationLink(value: "objetivos") {
-                        Label("Objetivos", systemImage: "target")
-                    }
-                    NavigationLink(value: "ajustes") {
-                        Label("Ajustes", systemImage: "gearshape")
-                    }
-                }
-            } detail: {
-                switch selectedDetailView {
-                case "habitos":
+        WindowGroup {
+            Group {
+                #if os(iOS)
+                // --- DISEÑO PARA IPHONE (TABS) ---
+                TabView {
                     HabitListView(storageProvider: storageProvider)
-                case "notas":
+                        .tabItem {
+                            Label("Hábitos", systemImage: "checklist")
+                        }
+                    
                     DailyNotesView()
-                case "objetivos":
+                        .tabItem {
+                            Label("Notas", systemImage: "note.text")
+                        }
+                    
+                    NavigationStack {
+                        StatisticsView()
+                    }
+                    .tabItem {
+                        Label("Estadísticas", systemImage: "chart.bar")
+                    }
+                    
                     GoalsView()
-                case "ajustes":
+                        .tabItem {
+                            Label("Objetivos", systemImage: "target")
+                        }
+                    
                     SettingsView()
-                default:
-                    Text("Seleccione una opción")
+                        .tabItem {
+                            Label("Ajustes", systemImage: "gearshape")
+                        }
                 }
+                #else
+                // --- DISEÑO PARA IPAD / MACOS (SIDEBAR) ---
+                NavigationSplitView {
+                    List(selection: $selectedDetailView) {
+                        NavigationLink(value: "habitos") {
+                            Label("Hábitos", systemImage: "checklist")
+                        }
+                        NavigationLink(value: "notas") {
+                            Label("Notas Diarias", systemImage: "note.text")
+                        }
+                        NavigationLink(value: "rachas") {
+                            Label("Rachas/Estadísticas", systemImage: "flame")
+                        }
+                        NavigationLink(value: "objetivos") {
+                            Label("Objetivos", systemImage: "target")
+                        }
+                        NavigationLink(value: "ajustes") {
+                            Label("Ajustes", systemImage: "gearshape")
+                        }
+                    }
+                    .navigationTitle("HabitApp")
+                } detail: {
+                    switch selectedDetailView {
+                    case "habitos":
+                        HabitListView(storageProvider: storageProvider)
+                    case "notas":
+                        DailyNotesView()
+                    case "rachas":
+                        StatisticsView()
+                    case "objetivos":
+                        GoalsView()
+                    case "ajustes":
+                        SettingsView()
+                    default:
+                        Text("Selecciona una opción en el menú lateral")
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                #endif
             }
-            .environmentObject(appConfig)
-            .modelContainer(modelContainer)  // ⭐ AGREGAR ESTO
-#endif
+            // --- MODIFICADORES GLOBALES (El orden es la clave) ---
+            .modelContainer(modelContainer)    // 1. Provee el contexto de base de datos
+            .setupApp()                        // 2. Ejecuta el AppInitializer (busca appConfig)
+            .environmentObject(appConfig)      // 3. Envuelve todo lo anterior con el objeto config
         }
     }
 }

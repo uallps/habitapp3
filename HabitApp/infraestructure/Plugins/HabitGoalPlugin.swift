@@ -15,7 +15,7 @@ final class HabitGoalPlugin: TaskDataObservingPlugin {
         self.storageProvider = storageProvider
     }
 
-    func onDataChanged(taskId: UUID, title: String, dueDate: Date?) {
+    func onDataChanged(taskId: UUID, title: String, dueDate: Date?, doneDates: [Date]?) {
         
         //  Usar el contexto principal en lugar de crear uno nuevo
         let context = storageProvider.context

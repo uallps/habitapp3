@@ -12,7 +12,7 @@ import UIKit
 
 struct ReminderPlugin: TaskDataObservingPlugin {
     
-    func onDataChanged(taskId: UUID, title: String, dueDate: Date?) {
+    func onDataChanged(taskId: UUID, title: String, dueDate: Date?, doneDates: [Date]?) {
         guard let dueDate else { 
             print("🔔 ReminderPlugin: No hay fecha para \(title)")
             return 

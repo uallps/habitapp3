@@ -42,6 +42,11 @@ struct HabitRowView: View {
                 }
             }
             
+            if AppConfig.enableStreaks {
+                StreakBadgeView(habitId: habit.id)
+                    .padding(.leading, 4)
+            }
+            
             Spacer()
             
             // 🔹 Navegación a notas

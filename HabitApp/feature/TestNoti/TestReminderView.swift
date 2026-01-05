@@ -49,12 +49,15 @@ struct TestReminderView: View {
         let plugin = ReminderPlugin()
         let futureDate = Date().addingTimeInterval(3)
         
+        // Creamos un array que contenga la fecha actual
+        let fechasCompletado = [Date()]
+        
         plugin.onDataChanged(
             taskId: UUID(),
             title: "Test desde Plugin",
-            dueDate: futureDate
+            dueDate: futureDate,
+            doneDates: fechasCompletado // Pasamos el array con la fecha de hoy
         )
-        
         message = "Plugin ejecutado - alerta en 3s ⏰"
     }
     

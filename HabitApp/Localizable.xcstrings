@@ -7,13 +7,13 @@
     " " : {
 
     },
-    "¡Completado!" : {
-
-    },
     "¿Eliminar hábito?" : {
 
     },
     "¿Eliminar nota?" : {
+
+    },
+    "·" : {
 
     },
     "%lld" : {
@@ -29,6 +29,19 @@
         }
       }
     },
+    "%lld Completados" : {
+
+    },
+    "%lld de %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld de %2$lld"
+          }
+        }
+      }
+    },
     "%lld días" : {
 
     },
@@ -37,6 +50,29 @@
     },
     "%lld días restantes" : {
 
+    },
+    "%lld Pendientes" : {
+
+    },
+    "%lld tarea%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld tarea%2$@"
+          }
+        }
+      }
+    },
+    "%lld/%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld/%2$lld"
+          }
+        }
+      }
     },
     "%lld%%" : {
 
@@ -60,9 +96,6 @@
         }
       }
     },
-    "Actualizar Progreso" : {
-
-    },
     "Agregar Hito" : {
 
     },
@@ -78,9 +111,6 @@
     "Alerta Inmediata" : {
 
     },
-    "Añadir" : {
-
-    },
     "Arquitectura MVVM" : {
 
     },
@@ -90,10 +120,16 @@
     "Cancelar" : {
 
     },
+    "Cargando..." : {
+
+    },
     "Cerrar" : {
 
     },
     "Compatible con iOS y macOS" : {
+
+    },
+    "Completado" : {
 
     },
     "Configuración de Recordatorios" : {
@@ -105,7 +141,10 @@
     "Contenido" : {
 
     },
-    "Crea tu primer objetivo para comenzar" : {
+    "Crea tu primer hábito tocando el botón +" : {
+
+    },
+    "Crea tu primer objetivo para comenzar a alcanzar tus metas" : {
 
     },
     "Creado: %@ a las %@" : {
@@ -127,19 +166,16 @@
     "Desarrollado con SwiftUI" : {
 
     },
-    "Descripción" : {
-
-    },
     "Descripción (opcional)" : {
 
     },
     "Detalle de Nota" : {
 
     },
-    "Detalles del hábito" : {
+    "Días de la semana" : {
 
     },
-    "Días de la semana" : {
+    "Días Restantes" : {
 
     },
     "Editar" : {
@@ -148,13 +184,16 @@
     "Editar hábito" : {
 
     },
+    "Ej: Hacer ejercicio" : {
+
+    },
     "Eliminar" : {
 
     },
     "Eliminar hábito" : {
 
     },
-    "En Progreso" : {
+    "Esperado" : {
 
     },
     "Esta acción eliminará todos los hábitos, notas y objetivos. No se puede deshacer." : {
@@ -166,16 +205,22 @@
     "Esta acción no se puede deshacer." : {
 
     },
+    "Estadísticas" : {
+
+    },
     "Fecha" : {
 
     },
-    "Fecha de inicio:" : {
+    "Fecha de Inicio" : {
 
     },
     "Fecha límite" : {
 
     },
-    "Fecha límite:" : {
+    "Fecha Objetivo" : {
+
+    },
+    "General" : {
 
     },
     "Guardar" : {
@@ -191,9 +236,6 @@
 
     },
     "Hábito Asociado" : {
-
-    },
-    "Habitos" : {
 
     },
     "Hábitos" : {
@@ -226,10 +268,10 @@
     "Limpiar todos los datos" : {
 
     },
-    "Marcar día completado" : {
+    "Meta" : {
 
     },
-    "Meta" : {
+    "Meta: %lld" : {
 
     },
     "Mostrar fechas de vencimiento" : {
@@ -241,13 +283,19 @@
     "Ninguno" : {
 
     },
+    "No hay datos disponibles" : {
+
+    },
+    "No hay hábitos con estadísticas" : {
+
+    },
     "No hay hábitos disponibles" : {
 
     },
-    "No hay notas para esta fecha" : {
+    "No hay hábitos programados" : {
 
     },
-    "Nombre del hábito" : {
+    "No hay notas para esta fecha" : {
 
     },
     "Notas" : {
@@ -275,6 +323,9 @@
 
     },
     "Objetivos" : {
+
+    },
+    "Por Hábito" : {
 
     },
     "Prioridad" : {
@@ -334,10 +385,25 @@
         }
       }
     },
+    "Rango" : {
+
+    },
     "Selecciona un hábito para vincular con este objetivo" : {
 
     },
-    "Seleccione una opción" : {
+    "Sin datos" : {
+
+    },
+    "Sin estadísticas" : {
+
+    },
+    "Sin hábitos" : {
+
+    },
+    "Sin hábitos creados" : {
+
+    },
+    "Sin hábitos para hoy" : {
 
     },
     "Sin notas" : {
@@ -352,7 +418,7 @@
     "Tareas para %@" : {
 
     },
-    "Test" : {
+    "Tendencia" : {
 
     },
     "Test Hábitos Mañana" : {
@@ -383,6 +449,9 @@
 
     },
     "Versión 1.0.0" : {
+
+    },
+    "Vista" : {
 
     },
     "Visualización" : {

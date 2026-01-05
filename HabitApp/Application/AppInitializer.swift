@@ -1,32 +1,35 @@
-//
-//  AppInitializer.swift
-//  HabitApp
-//
-//  Created by Aula03 on 10/12/25.
-//
-
 import SwiftUI
-import SwiftData
 
 struct AppInitializer: ViewModifier {
-    @Environment(\.modelContext) private var modelContext
+    // Obtenemos la configuración del entorno
+    @EnvironmentObject private var appConfig: AppConfig
     
+    // Estado para asegurar que solo se registre una vez
+    @State private var hasInitialized = false
+
     func body(content: Content) -> some View {
         content
             .onAppear {
-                // Registramos los plugins SOLO una vez
-                let habitGoalPlugin = HabitGoalPlugin(context: modelContext)
-                let reminderPlugin = ReminderPlugin()
-                let streakPlugin = StreakPlugin(context: modelContext)
+                // Si ya se inicializó, no hacemos nada
+                guard !hasInitialized else { return }
                 
-                TaskDataObserverManager.shared.register(habitGoalPlugin)
-                TaskDataObserverManager.shared.register(reminderPlugin)
-                TaskDataObserverManager.shared.register(streakPlugin)
-                print("🔔 Plugins registrados: HabitGoal, Reminder y Streaks")
+                let provider = appConfig.storageProvider
+                let registry = PluginRegistry.shared
+                
+                // --- REGISTRO DE PLUGINS ---
+                // Aquí conectamos todos los plugins al PluginRegistry
+                registry.register(plugin: ReminderPlugin())
+                registry.register(plugin: HabitGoalPlugin(storageProvider: provider))
+                registry.register(plugin: StreakPlugin(storageProvider: provider))
+                
+                print("🚀 AppInitializer: Plugins registrados correctamente en el Registro")
+                
+                hasInitialized = true
             }
     }
 }
 
+// Extensión para que sea fácil de usar en HabitApp.swift
 extension View {
     func setupApp() -> some View {
         self.modifier(AppInitializer())

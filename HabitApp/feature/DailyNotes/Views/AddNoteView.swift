@@ -96,31 +96,37 @@ extension AddNoteView {
 // MARK: - Funciones comunes
 extension AddNoteView {
     private func saveNote() {
-        if let viewModel = viewModel {
-            // Usar la fecha pasada directamente al viewModel
-            let calendar = Calendar.current
-            let normalizedDate = calendar.startOfDay(for: noteDate)
-            viewModel.selectedDate = normalizedDate
-            viewModel.addNote(title: title, content: content)
-        } else {
-            // Insertar nota directamente en el contexto
-            let calendar = Calendar.current
-            let normalizedDate = calendar.startOfDay(for: noteDate)
-            let note = DailyNote(title: title, content: content, date: normalizedDate)
-            note.habitId = habit?.id
-            modelContext.insert(note)
-            try? modelContext.save()
-            
-            // Programar notificación si la nota es para una fecha futura
-            let today = calendar.startOfDay(for: Date())
-            if normalizedDate > today {
-                let notificationTitle = habit != nil ? "Hábito: \(habit!.title) - \(title)" : "Nota: \(title)"
-                TaskDataObserverManager.shared.notify(
-                    taskId: note.id,
-                    title: notificationTitle,
-                    date: normalizedDate
-                )
+            if let viewModel = viewModel {
+                // Usar la fecha pasada directamente al viewModel
+                let calendar = Calendar.current
+                let normalizedDate = calendar.startOfDay(for: noteDate)
+                viewModel.selectedDate = normalizedDate
+                viewModel.addNote(title: title, content: content)
+                
+                // Nota: Si quieres que el viewModel también notifique a los plugins,
+                // deberías pasarle 'habit?.doneDates' a la función addNote del viewModel.
+            } else {
+                // Insertar nota directamente en el contexto
+                let calendar = Calendar.current
+                let normalizedDate = calendar.startOfDay(for: noteDate)
+                let note = DailyNote(title: title, content: content, date: normalizedDate)
+                note.habitId = habit?.id
+                modelContext.insert(note)
+                try? modelContext.save()
+                
+                // Programar notificación si la nota es para una fecha futura
+                let today = calendar.startOfDay(for: Date())
+                if normalizedDate > today {
+                    let notificationTitle = habit != nil ? "Hábito: \(habit!.title) - \(title)" : "Nota: \(title)"
+                    
+                    // ✅ LLAMADA ACTUALIZADA con doneDates
+                    TaskDataObserverManager.shared.notify(
+                        taskId: note.id,
+                        title: notificationTitle,
+                        date: normalizedDate,
+                        doneDates: habit?.doneDates // <--- Pasamos las fechas del hábito
+                    )
+                }
             }
         }
-    }
 }

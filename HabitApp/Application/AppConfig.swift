@@ -1,62 +1,31 @@
-//
-//  AppConfig.swift
-//  HabitApp
-//
-//  Created by Aula03 on 15/10/25.
-//
 import SwiftUI
 import SwiftData
 import Combine
 
-class AppConfig: ObservableObject {
-    @AppStorage("showDueDates")
-    static var showDueDates: Bool = true
+final class AppConfig: ObservableObject {
+    // 1. Propiedades ESTÁTICAS (Acceso global vía AppConfig.nombre)
+    // Ponemos todas las preferencias aquí para que no den error en las vistas
+    @AppStorage("showDueDates") static var showDueDates: Bool = true
+    @AppStorage("showPriorities") static var showPriorities: Bool = true
+    @AppStorage("enableReminders") static var enableReminders: Bool = true
+    @AppStorage("enableStreaks") static var enableStreaks: Bool = true
 
-    @AppStorage("showPriorities")
-    static var showPriorities: Bool = true
-
-    @AppStorage("enableReminders")
-    static var enableReminders: Bool = true
-<<<<<<< HEAD
-    @AppStorage("enableStreaks")
-    static var enableStreaks: Bool = true
-=======
-
-    @AppStorage("storageType")
-    var storageType: StorageType = .swiftData
-
-    init() {
-        setupPlugins()
-    }
-    
-    private func setupPlugins() {
-        let registry = PluginRegistry.shared
-        
-        // ⭐ Registrar los plugins
-        registry.register(plugin: ReminderPlugin())
-        registry.register(plugin: HabitGoalPlugin(storageProvider: storageProvider))
-        
-        print("✅ Plugins registrados correctamente")
+    // 2. Definición del Esquema (Instancia)
+    // Se usa internamente para inicializar la base de datos
+    var schema: Schema {
+        Schema([
+            Habit.self,
+            DailyNote.self,
+            Goal.self,
+            Milestone.self,
+            Streak.self
+        ])
     }
 
-    // MARK: - Storage Provider
-    
-    private lazy var swiftDataProvider: SwiftDataStorageProvider = {
+    // 3. El motor de almacenamiento (Instancia)
+    lazy var storageProvider: StorageProvider = {
         return SwiftDataStorageProvider(schema: schema)
     }()
-
-    var storageProvider: StorageProvider {
-        return swiftDataProvider
-    }
     
-    var schema: Schema {
-        Schema([Habit.self, DailyNote.self, Goal.self, Milestone.self])
-    }
->>>>>>> origin/core
-}
-
-enum StorageType: String, CaseIterable, Identifiable {
-    case swiftData = "SwiftData Storage"
-
-    var id: String { self.rawValue }
+    init() {}
 }
