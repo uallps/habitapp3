@@ -1,7 +1,9 @@
 import SwiftUI
+import _SwiftData_SwiftUI
 
 struct CategoryListView: View {
     @StateObject var categoryListVM: CategoryListViewModel
+    @Query var categoriesQuery: [Category]
     
     init(storageProvider: StorageProvider) {
         _categoryListVM = StateObject(wrappedValue: CategoryListViewModel(storageProvider: storageProvider))
@@ -11,7 +13,7 @@ struct CategoryListView: View {
 
         NavigationStack {
             VStack(spacing: 12) {
-                List(Array(categoryListVM.categories).filter { !$0.isSubcategory }                ) { category in
+                List(Array(categoriesQuery).filter { !$0.isSubcategory }                ) { category in
                     NavigationLink {
                         CategoryDetailWrapperView(
                             storageProvider: categoryListVM.storageProvider,
@@ -46,8 +48,6 @@ struct CategoryListView: View {
                     }
                 }
             })
-        }.task {
-            await categoryListVM.loadCategories()
         }
     }
 }

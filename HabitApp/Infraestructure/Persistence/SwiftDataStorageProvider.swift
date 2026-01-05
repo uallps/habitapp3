@@ -80,6 +80,7 @@ class SwiftDataStorageProvider: StorageProvider {
             // Actualizar categoría existente
             try await updateCategory(id: category.id, newCategory: category)
         }
+        try context.save()
     }
     
 
@@ -155,6 +156,7 @@ class SwiftDataStorageProvider: StorageProvider {
             } else {
                 context.insert(category)
             }
+            try context.save()
         } catch {
             print("Error saving category: \(error)")
         }
