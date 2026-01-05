@@ -197,12 +197,11 @@ struct CategoryDetailWrapperView: View {
                                 )
                             }
                             
-                            Task { @MainActor in
+                            Task {
                                 await categoryListVM.upsertCategoryOrSubcategory(
                                     parent: parent,
                                     category: category
                                 )
-                                await categoryListVM.loadCategories()
                             }
 
                             dismiss()
