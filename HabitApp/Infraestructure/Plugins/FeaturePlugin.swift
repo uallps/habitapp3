@@ -1,10 +1,3 @@
-//
-//  FeaturePlugin.swift
-//  TaskApp
-//
-//  Created by Francisco José García García on 12/11/25.
-//
-
 import Foundation
 import SwiftData
 

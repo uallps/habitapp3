@@ -88,6 +88,9 @@ class SwiftDataStorageProvider: StorageProvider {
 
     init(schema: Schema) {
         do {
+            // Schema conflict dev temp solution
+            //SwiftDataStorageProvider.resetStore(schema: schema)
+            //SwiftDataStorageProvider.deleteStoreFile()
             self.modelContainer = try ModelContainer(for: schema)
             self.context = ModelContext(self.modelContainer)
             SwiftDataContext.shared = self.context
@@ -181,7 +184,23 @@ class SwiftDataStorageProvider: StorageProvider {
                 print("❌ Failed to reset SwiftData storage: \(error)")
             }
         }
+    
+    static func resetStore(schema: Schema) {
+        do {
+            let container = try ModelContainer(for: schema)
+            try container.deleteAllData()
+            print("SwiftData store reset")
+        } catch {
+            print("SwiftData reset failed: \(error)")
+        }
     }
+    
+    static func deleteStoreFile() {
+        let url = URL.applicationSupportDirectory
+            .appending(path: "HabitApp.store")
+
+        try? FileManager.default.removeItem(at: url)
+    }}
 
 
 
