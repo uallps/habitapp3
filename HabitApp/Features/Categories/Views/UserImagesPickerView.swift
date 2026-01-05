@@ -31,6 +31,8 @@ struct UserImagesPickerView: View {
             }
 
             Spacer() // fill vertical space
+        }.task {
+            await viewModel.loadPickedImage()
         }
         .padding()
         #elseif os(macOS)
@@ -47,6 +49,9 @@ struct UserImagesPickerView: View {
                 } label: {
                     imageButton
                 }
+            }
+            .task {
+                await viewModel.loadPickedImage()
             }
         }
         #endif

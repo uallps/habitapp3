@@ -4,7 +4,8 @@ struct CategoryDetailWrapperView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject var categoryListVM: CategoryListViewModel
     @State var category: Category
-    
+    @State private var categoryExists: Bool = false
+    @State private var isCheckingCategoryExists: Bool = false
     private let parent: Category?
     
     @StateObject var userImageVM: UserImagesViewModel
@@ -233,6 +234,10 @@ struct CategoryDetailWrapperView: View {
                 Section(header: Text("Subcategorías")) {
                     if category.subCategories.isEmpty {
                             Text("No hay subcategorías")
+                        if !categoryExists || isCheckingCategoryExists {
+                            Text("Añade primero la categoría padre para añadir subcategorías")
+                        }
+                        
                             Button {
                                 newSub = Category(
                                     name: "",
@@ -242,7 +247,10 @@ struct CategoryDetailWrapperView: View {
                                 )
                             } label: {
                                 Label("Añadir subcategoría", systemImage: "plus.circle")
+                                    .foregroundColor(categoryExists ? .accentColor : .secondary)
+                                           .opacity(categoryExists ? 1.0 : 0.5)
                             }
+                            .disabled(!categoryExists || isCheckingCategoryExists)
                     } else {
                         ForEach(Array(category.subCategories), id: \.id) { sub in
                             NavigationLink {
@@ -262,6 +270,8 @@ struct CategoryDetailWrapperView: View {
 
 
                     }
+                }.task {
+                    categoryExists = await categoryListVM.categoryExists(id: category.id)
                 }
     }
     

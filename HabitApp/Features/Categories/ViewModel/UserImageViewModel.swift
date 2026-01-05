@@ -18,7 +18,7 @@ class UserImagesViewModel: ObservableObject {
     
     func loadPickedImage() async {
         do {
-            try await storageProvider.loadPickedImage()
+            self.image = try await storageProvider.loadPickedImage().image
         } catch {
             print("Error loading image \(error)")
         }

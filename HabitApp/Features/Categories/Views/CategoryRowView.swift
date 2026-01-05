@@ -56,7 +56,7 @@ struct CategoryRowView: View {
             
             HStack() {
                 Text(
-                    "Pr: " + category.priority.emoji
+                    "Prioridad: " + category.priority.emoji
                 )
             }
             
