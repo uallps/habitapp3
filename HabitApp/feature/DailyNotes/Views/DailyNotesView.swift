@@ -8,8 +8,11 @@ struct DailyNotesView: View {
     @StateObject private var viewModel: DailyNotesViewModel
     @State private var showingAddNote = false
     
-    init() {
-        _viewModel = StateObject(wrappedValue: DailyNotesViewModel(storageProvider: AppConfig().storageProvider))
+    private let storageProvider: StorageProvider
+    
+    init(storageProvider: StorageProvider) {
+        self.storageProvider = storageProvider
+        _viewModel = StateObject(wrappedValue: DailyNotesViewModel(storageProvider: storageProvider))
     }
     
     var body: some View {

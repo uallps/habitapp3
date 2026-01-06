@@ -4,10 +4,8 @@ import SwiftData
 @main
 struct HabitApp: App {
     @State private var selectedDetailView: String?
-    @StateObject private var appConfig = AppConfig()
-    
-    // Agregar el container aquí
     let modelContainer: ModelContainer
+    @StateObject private var appConfig: AppConfig
     
     private var storageProvider: StorageProvider {
         appConfig.storageProvider
@@ -18,11 +16,15 @@ struct HabitApp: App {
         let schema = Schema([Habit.self, DailyNote.self, Goal.self, Milestone.self])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         
+        let container: ModelContainer
         do {
-            self.modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
+            container = try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
             fatalError("❌ Error inicializando ModelContainer: \(error)")
         }
+        
+        self.modelContainer = container
+        self._appConfig = StateObject(wrappedValue: AppConfig(modelContainer: container))
         
         #if os(iOS)
         UNUserNotificationCenter.current().requestAuthorization(
@@ -45,13 +47,17 @@ struct HabitApp: App {
                     .tabItem {
                         Label("Hábitos", systemImage: "checklist")
                     }
-                DailyNotesView()
+                DailyNotesView(storageProvider: storageProvider)
                     .tabItem {
                         Label("Notas", systemImage: "note.text")
                     }
-                GoalsView()
+                GoalsView(storageProvider: storageProvider)
                     .tabItem {
                         Label("Objetivos", systemImage: "target")
+                    }
+                 StatisticsView()             
+                    .tabItem {
+                        Label("Estadísticas", systemImage: "chart.bar")
                     }
                 TestReminderView()
                     .tabItem {
@@ -89,9 +95,9 @@ struct HabitApp: App {
                 case "habitos":
                     HabitListView(storageProvider: storageProvider)
                 case "notas":
-                    DailyNotesView()
+                    DailyNotesView(storageProvider: storageProvider)
                 case "objetivos":
-                    GoalsView()
+                    GoalsView(storageProvider: storageProvider)
                 case "ajustes":
                     SettingsView()
                 default:

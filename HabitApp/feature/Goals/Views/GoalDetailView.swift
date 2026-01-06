@@ -12,9 +12,9 @@ struct GoalDetailView: View {
     @State private var refreshTrigger = UUID()
     @State private var timer: AnyCancellable?
     
-    init(goal: Goal) {
+    init(goal: Goal, storageProvider: StorageProvider) {
         self._goal = Bindable(goal)
-        _viewModel = StateObject(wrappedValue: GoalsViewModel(storageProvider: AppConfig().storageProvider))
+        _viewModel = StateObject(wrappedValue: GoalsViewModel(storageProvider: storageProvider))
     }
     
     var body: some View {
