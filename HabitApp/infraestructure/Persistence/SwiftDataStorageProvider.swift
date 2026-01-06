@@ -12,7 +12,7 @@ class SwiftDataStorageProvider: StorageProvider {
 
     init(modelContainer: ModelContainer) {
         self.modelContainer = modelContainer
-        self.context = ModelContext(modelContainer)
+        self.context = modelContainer.mainContext
         SwiftDataContext.shared = self.context
     }
 
