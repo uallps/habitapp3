@@ -12,6 +12,7 @@ struct StreakBadgeView: View {
     
     var body: some View {
         if let streak = streaks.first, streak.currentCount > 0 {
+            let hot = streak.currentCount > 4
             HStack(spacing: 4) {
                 Image(systemName: "flame.fill")
                     .symbolRenderingMode(.multicolor)
@@ -23,7 +24,7 @@ struct StreakBadgeView: View {
             }
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
-            .background(Color.orange.opacity(0.15))
+            .background((hot ? Color.red : Color.orange).opacity(0.15))
             .cornerRadius(8)
             .transition(.scale.combined(with: .opacity))
         }
