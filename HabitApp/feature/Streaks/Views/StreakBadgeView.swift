@@ -5,25 +5,27 @@ struct StreakBadgeView: View {
     @Query private var streaks: [Streak]
     
     init(habitId: UUID) {
-        let predicate = #Predicate<Streak> { $0.habit?.id == habitId }
+        // Buscamos solo la racha de este hábito específico
+        let predicate = #Predicate<Streak> { $0.habitId == habitId }
         _streaks = Query(filter: predicate)
     }
-
+    
     var body: some View {
         if let streak = streaks.first, streak.currentCount > 0 {
             HStack(spacing: 4) {
                 Image(systemName: "flame.fill")
-                    .foregroundColor(.orange)
-                    .symbolEffect(.bounce, value: streak.currentCount)
+                    .symbolRenderingMode(.multicolor)
+                    .symbolEffect(.bounce, value: streak.currentCount) // Animación al cambiar
                 
                 Text("\(streak.currentCount)")
-                    .font(.caption)
+                    .font(.system(.caption, design: .rounded))
                     .fontWeight(.bold)
             }
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
-            .background(Color.orange.opacity(0.1))
-            .cornerRadius(12)
+            .background(Color.orange.opacity(0.15))
+            .cornerRadius(8)
+            .transition(.scale.combined(with: .opacity))
         }
     }
 }
