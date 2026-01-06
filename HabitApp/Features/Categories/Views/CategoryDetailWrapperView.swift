@@ -263,7 +263,8 @@ struct CategoryDetailWrapperView: View {
                             } label: {
                                 CategoryRowView(
                                     storageProvider: categoryListVM.storageProvider,
-                                    category: sub
+                                    category: sub,
+                                    isCategoryParentView: true
                                 )
                                 .padding(.vertical, 6)
                       }

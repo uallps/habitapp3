@@ -81,7 +81,8 @@ var iOSBody: some View {
                     } label: {
                         CategoryRowView(
                             storageProvider: categoryListVM.storageProvider,
-                            category: category
+                            category: category,
+                            isCategoryParentView: true
                         )
                     }
                     

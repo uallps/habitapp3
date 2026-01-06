@@ -20,6 +20,22 @@ class CategoryListViewModel: ObservableObject {
         self.storageProvider = storageProvider
     }
     
+    func checkIfHabitIsInCategory(habit: Habit, category: Category) async {
+        do {
+            try await storageProvider.checkIfHabitIsInCategory(habit: habit, category: category)
+        } catch {
+            print("Error checking if habit is in category: \(error)")
+        }
+    }
+    
+    func addHabitToCategory(habit: Habit, category: Category) async {
+        do {
+            try await storageProvider.addHabitToCategory(habit: habit, category: category)
+        } catch {
+            print("Error adding habit to category: \(error)")
+        }
+    }
+    
     func loadCategories() async -> [Category] {
         var categories: [Category] = []
         do {

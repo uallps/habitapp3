@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 @Model
-class Habit: Encodable, Decodable {
+class Habit: Encodable, Decodable, IdentifiableModel {
     @Attribute(.unique) var id: UUID
     var title: String
     var doneDates: [Date]

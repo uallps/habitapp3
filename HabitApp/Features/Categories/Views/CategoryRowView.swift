@@ -3,13 +3,19 @@ import SwiftUI
 struct CategoryRowView: View {
     
     let category: Category
+    let habit: Habit?
     
     @StateObject var categoryListVM: CategoryListViewModel
     @State private var showingDeleteAlert = false
+    private var isCategoryParentView = false
+    @State private var isHabitAddedToCategory = false
     
-    init(storageProvider: StorageProvider, category: Category) {
+    init(storageProvider: StorageProvider, category: Category, isCategoryParentView: Bool, habit: Habit? = nil, isHabitAddedToCategory: Bool = false) {
         self._categoryListVM = StateObject(wrappedValue: CategoryListViewModel(storageProvider: storageProvider))
         self.category = category
+        self.isCategoryParentView = isCategoryParentView
+        self.habit = habit
+        self.isHabitAddedToCategory = false
     }
     
     var body: some View {
@@ -76,27 +82,46 @@ struct CategoryRowView: View {
                     
             Spacer()
             
-            Button {
-                showingDeleteAlert = true
-            } label: {
-                Image(systemName: "trash")
-                    .foregroundColor(.red)
-                    .font(.title3)
-            }
-            .buttonStyle(.borderless)
-            .alert("¿Eliminar categoría?", isPresented: $showingDeleteAlert) {
-                Button("Eliminar", role: .destructive) {
-                    Task { @MainActor in
-                        await categoryListVM.removeCategory(category: category)
+            if(isCategoryParentView) {
+                Button {
+                    showingDeleteAlert = true
+                } label: {
+                    Image(systemName: "trash")
+                        .foregroundColor(.red)
+                        .font(.title3)
+                }
+                .buttonStyle(.borderless)
+                .alert("¿Eliminar categoría?", isPresented: $showingDeleteAlert) {
+                    Button("Eliminar", role: .destructive) {
+                        Task { @MainActor in
+                            await categoryListVM.removeCategory(category: category)
+                        }
+                        showingDeleteAlert = false
                     }
-                    showingDeleteAlert = false
+                    Button("Cancelar", role: .cancel) {
+                        showingDeleteAlert = false
+                    }
+                } message: {
+                    Text("Esta acción no se puede deshacer. Se eliminarán subcategorías")
                 }
-                Button("Cancelar", role: .cancel) {
-                    showingDeleteAlert = false
+            } else {
+                if self.habit != nil && !isHabitAddedToCategory {
+                    Button {
+                        Task {
+                            await categoryListVM.addHabitToCategory(
+                                habit: habit!,
+                                category: category
+                            )
+                        }
+                        
+                    } label: {
+                        Label("Añadir a esta categoría", systemImage: "plus")
+                    }
                 }
-            } message: {
-                Text("Esta acción no se puede deshacer. Se eliminarán subcategorías")
+                
+
             }
+
         }
     }
 }

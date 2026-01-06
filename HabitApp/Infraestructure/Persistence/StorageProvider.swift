@@ -14,6 +14,8 @@ protocol StorageProvider {
     func upsertCategoryOrSubcategory(parent: Category?, category: Category) async throws
     func addHabitToCategory(habit: Habit, category: Category) async throws
     func loadPickedImage() async throws -> UserImageSlot
+    func checkIfHabitIsInCategory(habit: Habit, category: Category) async throws -> Bool
+    func deleteHabitFromCategory(habit: Habit, category: Category) async throws
     //END IF
     //DEV ONLY METHOD
     func resetStorage()

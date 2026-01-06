@@ -58,7 +58,8 @@ struct HabitDetailWrapper: View {
             Spacer()
             
             HabitCategoryView(
-                storageProvider: categoryListVM.storageProvider
+                storageProvider: categoryListVM.storageProvider,
+                habit: habit
             )
 
                     Spacer()

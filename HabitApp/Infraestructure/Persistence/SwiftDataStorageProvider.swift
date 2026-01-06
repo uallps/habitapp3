@@ -7,6 +7,35 @@ class SwiftDataContext {
 }
 
 class SwiftDataStorageProvider: StorageProvider {
+    
+    @MainActor
+    private func getRealInstanceHabit(_ habit: Habit) -> Habit? {
+        do {
+            let descriptor = FetchDescriptor<Habit>(
+                predicate: #Predicate { $0.id == habit.id },
+                sortBy: []
+            )
+            return try context.fetch(descriptor).first
+        } catch {
+            print("Error getting real instance of Habit: \(error)")
+            return nil
+        }
+    }
+    
+    @MainActor
+    private func getRealInstanceCategory(_ category: Category) -> Category? {
+        do {
+            let descriptor = FetchDescriptor<Category>(
+                predicate: #Predicate { $0.id == category.id },
+                sortBy: []
+            )
+            return try context.fetch(descriptor).first
+        } catch {
+            print("Error getting real instance of Category: \(error)")
+            return nil
+        }
+    }
+    @MainActor
     func loadPickedImage() async throws -> UserImageSlot {
         var fetchedImage: UserImageSlot? = nil
         let descriptor = FetchDescriptor<UserImageSlot>(
@@ -24,33 +53,81 @@ class SwiftDataStorageProvider: StorageProvider {
     
     @MainActor
     func addHabitToCategory(habit: Habit, category: Category) async throws {
-        if !category.habits.contains(where: { $0.id == habit.id } ) {
-            category.habits.append(habit)
+        let realCategory = self.getRealInstanceCategory(category)
+        if let realCategory {
+            if !realCategory.habits.contains(where: { $0.id == habit.id } ) {
+                realCategory.habits.append(habit)
+            }
+            try context.save()
+        } else {
+            print("Error adding habit to category: realCategory is nil")
         }
-        try context.save()
+
+    }
+    
+    @MainActor
+    func checkIfHabitIsInCategory(habit: Habit, category: Category) async throws -> Bool {
+        var contains = false
+        let realHabit = self.getRealInstanceHabit(habit)
+        let realCategory = self.getRealInstanceCategory(category)
+        if let realHabit {
+                if let realCategory {
+                    contains = realCategory.habits.contains(realHabit)
+                }else {
+                    print("Error checking if habit is in category, category is nil")
+                }
+        } else {
+            print("Error checking if habit is in category, habit is nil")
+        }
+        return contains
+    }
+    
+    @MainActor
+    func deleteHabitFromCategory(habit: Habit, category: Category) async throws {
+        let realHabit = self.getRealInstanceHabit(habit)
+        let realCategory = self.getRealInstanceCategory(category)
+        do {
+            if let realHabit {
+                if let realCategory {
+                    let index = realCategory.habits.firstIndex(of: realHabit)
+                    if let index {
+                        realCategory.habits.remove(at: index)
+                        try context.save()
+                    } else {
+                        print("Error deleting habit from category, index is nil")
+                    }
+                }else {
+                    print("Error deleting habit from category, category is nil")
+                }
+            } else {
+                print("Error checking deleting habit from category, habit is nil")
+            }
+        }catch {
+            print("Error deleting habit from category, \(error)")
+        }
+
     }
     
     @MainActor
     func addSubcategory(category: Category, subCategory: Category) async throws {
-        if subCategory.modelContext == nil {
-            context.insert(subCategory)
+        if let realCategory = self.getRealInstanceCategory(category) {
+            if subCategory.modelContext == nil {
+                context.insert(subCategory)
+            }
+            if !realCategory.subCategories.contains(where: { $0.id == subCategory.id }) {
+                category.subCategories.append(subCategory)
+            }
+            
+            try context.save()
+        } else {
+            print("Error adding subcategory, parent category is nil.")
         }
 
-        if !category.subCategories.contains(where: { $0.id == subCategory.id }) {
-            category.subCategories.append(subCategory)
-        }
-        
-        try context.save()
     }
     
     @MainActor
     func removeCategory(category: Category) async throws {
-        let descriptor = FetchDescriptor<Category>(
-            predicate: #Predicate { $0.id == category.id },
-            sortBy: []
-        )
-
-        if let trackedCategory = try context.fetch(descriptor).first {
+        if let trackedCategory = self.getRealInstanceCategory(category) {
             context.delete(trackedCategory)
             try context.save()
             print("Deleted category: \(trackedCategory.name)")
@@ -61,12 +138,22 @@ class SwiftDataStorageProvider: StorageProvider {
     
     @MainActor
     func removeSubCategory(category: Category, subCategory: Category) async throws {
-        if subCategory.modelContext != nil {
-            let index = category.subCategories.firstIndex(of: subCategory)
-            if index != nil {
-                category.subCategories.remove(at: index! )
-                context.delete(subCategory)
+        if let realCategory = self.getRealInstanceCategory(category) {
+            if let realSubcategory = self.getRealInstanceCategory(subCategory) {
+                let index = realCategory.subCategories.firstIndex(of: realSubcategory)
+                if index != nil {
+                    realCategory.subCategories.remove(at: index! )
+                    context.delete(realSubcategory)
+                    try context.save()
+                } else {
+                    print("Error removing subcategory, couldn't find realCategory on realCategory's categories")
+                }
+            } else {
+                print("Error removing subcategory, realSubcategory is nil")
             }
+
+        } else {
+            print("Error removing category, realCategory is nil")
         }
     }
     
@@ -82,8 +169,17 @@ class SwiftDataStorageProvider: StorageProvider {
             category in
             category.id == id
         }
-        oldCategory?.copyFrom(newCategory: newCategory)
-        try context.save()
+        if let oldCategory {
+            if let realOldCategory = self.getRealInstanceCategory(oldCategory) {
+                realOldCategory.copyFrom(newCategory: newCategory)
+                try context.save()
+            } else {
+                print("Couldn't update category, realOldCategory is nil")
+            }
+        } else {
+            print("Couldn't update category, oldCategory is nil")
+        }
+
     }
     
     @MainActor

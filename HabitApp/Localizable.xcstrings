@@ -50,7 +50,7 @@
     "Añadir" : {
 
     },
-    "Añadir hábito a categoría" : {
+    "Añadir a esta categoría" : {
 
     },
     "Añadir subcategoría" : {
@@ -97,12 +97,6 @@
 
     },
     "Detalle de Nota" : {
-
-    },
-    "Detalles del hábito" : {
-
-    },
-    "Días de la semana" : {
 
     },
     "Editar" : {
@@ -154,9 +148,6 @@
 
     },
     "Imagen" : {
-
-    },
-    "Marcar día completado" : {
 
     },
     "Media %@" : {
