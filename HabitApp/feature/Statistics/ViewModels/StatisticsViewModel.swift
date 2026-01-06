@@ -4,7 +4,6 @@ import Combine
 
 @MainActor
 final class StatisticsViewModel: ObservableObject {
-    
     // MARK: - Published Properties
     
     @Published var selectedRange: TimeRange = .week
@@ -14,28 +13,30 @@ final class StatisticsViewModel: ObservableObject {
     
     // MARK: - Private Properties
     
-    private var modelContext: ModelContext?
+    private let storageProvider: StorageProvider
     private let service = StatisticsService()
     private var cancellables = Set<AnyCancellable>()
-    private var refreshTimer: Timer?
     
     // MARK: - Initialization
     
-    init(modelContext: ModelContext? = nil) {
-        self.modelContext = modelContext
+    init(storageProvider: StorageProvider) {
+        self.storageProvider = storageProvider
         setupObservers()
+        // Register a plugin so the view model gets notified when other parts of the app change data
+        PluginRegistry.shared.register(plugin: StatisticsPlugin(viewModel: self))
     }
-    
-    deinit {
-        refreshTimer?.invalidate()
+
+    // Public API for external triggers (plugin) to force a refresh from storageProvider
+    func refresh() {
+        fetchHabitsAndLoad()
     }
-    
-    // MARK: - Configuration
-    
-    func configure(with context: ModelContext) {
-        self.modelContext = context
-        loadStatistics()
-        startAutoRefresh()
+
+    // MARK: - Public Helpers
+
+    func loadStatistics(from habits: [Habit]) {
+        // Compute statistics from a provided list
+        generalStats = service.computeGeneralStats(from: habits, range: selectedRange)
+        habitStats = habits.map { service.computeHabitStats(for: $0, range: selectedRange) }
     }
     
     // MARK: - Private Methods
@@ -43,24 +44,15 @@ final class StatisticsViewModel: ObservableObject {
     private func setupObservers() {
         $selectedRange
             .sink { [weak self] _ in
-                self?.loadStatistics()
+                // When range changes, re-fetch from storageProvider to ensure fresh data
+                guard let self = self else { return }
+                self.fetchHabitsAndLoad()
             }
             .store(in: &cancellables)
     }
-    
-    private func startAutoRefresh() {
-        // Refrescar cada 3 segundos para detectar cambios
-        refreshTimer?.invalidate()
-        refreshTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
-            Task { @MainActor in
-                self?.loadStatistics()
-            }
-        }
-    }
-    
-    func loadStatistics() {
-        guard let modelContext else { return }
-        
+
+    func fetchHabitsAndLoad() {
+        let context = storageProvider.context
         isLoading = true
         
         // Fetch habits
@@ -69,12 +61,9 @@ final class StatisticsViewModel: ObservableObject {
         )
         
         do {
-            let habits = try modelContext.fetch(descriptor)
-            
-            // Compute statistics
-            generalStats = service.computeGeneralStats(from: habits, range: selectedRange)
-            habitStats = habits.map { service.computeHabitStats(for: $0, range: selectedRange) }
-            
+            let habits = try context.fetch(descriptor)
+            // Use the unified load path to compute
+            loadStatistics(from: habits)
             isLoading = false
         } catch {
             print("Error loading habits for statistics: \(error)")

@@ -2,9 +2,13 @@ import SwiftUI
 import SwiftData
 
 struct StatisticsView: View {
-    @Environment(\.modelContext) private var modelContext
-    @StateObject private var viewModel = StatisticsViewModel()
+    @Query private var habits: [Habit]
+    @StateObject private var viewModel: StatisticsViewModel
     @State private var selectedTab = 0
+    
+    init(storageProvider: StorageProvider) {
+        _viewModel = StateObject(wrappedValue: StatisticsViewModel(storageProvider: storageProvider))
+    }
     
     var body: some View {
         NavigationStack {
@@ -17,7 +21,7 @@ struct StatisticsView: View {
                 }
                 .pickerStyle(.segmented)
                 .padding()
-                
+
                 // Selector de vista (solo en rango semanal)
                 if viewModel.selectedRange == .week {
                     Picker("Vista", selection: $selectedTab) {
@@ -27,7 +31,7 @@ struct StatisticsView: View {
                     .pickerStyle(.segmented)
                     .padding(.horizontal)
                 }
-                
+
                 // Contenido
                 if viewModel.selectedRange == .day {
                     OverviewStatsView(
@@ -56,7 +60,14 @@ struct StatisticsView: View {
             .navigationBarTitleDisplayMode(.inline)
             #endif
             .onAppear {
-                viewModel.configure(with: modelContext)
+                // Push current habits from @Query to the view model
+                viewModel.loadStatistics(from: habits)
+            }
+            .onChange(of: habits) { newHabits in
+                viewModel.loadStatistics(from: newHabits)
+            }
+            .onChange(of: viewModel.selectedRange) { _ in
+                viewModel.loadStatistics(from: habits)
             }
         }
     }
