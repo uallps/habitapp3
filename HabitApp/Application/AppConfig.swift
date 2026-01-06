@@ -20,8 +20,11 @@ class AppConfig: ObservableObject {
 
     @AppStorage("storageType")
     var storageType: StorageType = .swiftData
+    
+    private let modelContainer: ModelContainer
 
-    init() {
+    init(modelContainer: ModelContainer) {
+        self.modelContainer = modelContainer
         setupPlugins()
     }
     
@@ -38,15 +41,11 @@ class AppConfig: ObservableObject {
     // MARK: - Storage Provider
     
     private lazy var swiftDataProvider: SwiftDataStorageProvider = {
-        return SwiftDataStorageProvider(schema: schema)
+        return SwiftDataStorageProvider(modelContainer: modelContainer)
     }()
 
     var storageProvider: StorageProvider {
         return swiftDataProvider
-    }
-    
-    var schema: Schema {
-        Schema([Habit.self, DailyNote.self, Goal.self, Milestone.self])
     }
 }
 

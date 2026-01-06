@@ -4,10 +4,8 @@ import SwiftData
 @main
 struct HabitApp: App {
     @State private var selectedDetailView: String?
-    @StateObject private var appConfig = AppConfig()
-    
-    // Agregar el container aquí
     let modelContainer: ModelContainer
+    @StateObject private var appConfig: AppConfig
     
     private var storageProvider: StorageProvider {
         appConfig.storageProvider
@@ -20,6 +18,7 @@ struct HabitApp: App {
         
         do {
             self.modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
+            self._appConfig = StateObject(wrappedValue: AppConfig(modelContainer: modelContainer))
         } catch {
             fatalError("❌ Error inicializando ModelContainer: \(error)")
         }
