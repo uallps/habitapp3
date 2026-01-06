@@ -103,11 +103,15 @@ class Habit {
 }
 
 enum Priority: String, Codable, CaseIterable {
-    case low = "Baja"
-    case medium = "Media"
-    case high = "Alta"
+    case low
+    case medium
+    case high
     
     var displayName: String {
-        self.rawValue
+        switch self {
+        case .low: return "Baja"
+        case .medium: return "Media"
+        case .high: return "Alta"
+        }
     }
 }

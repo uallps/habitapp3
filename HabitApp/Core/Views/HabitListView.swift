@@ -323,7 +323,7 @@ extension HabitListView {
                 .listStyle(.sidebar)
             }
             .navigationTitle("Hábitos")
-            .navigationSplitViewColumnWidth(min: 300, ideal: 400, max: 500)
+            .navigationSplitViewColumnWidth(min: 280, ideal: 350, max: 450)
             .toolbar {
                 ToolbarItem {
                     Button {
@@ -354,7 +354,7 @@ extension HabitListView {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .navigationSplitViewColumnWidth(min: 350, ideal: 450, max: 600)
+            .navigationSplitViewColumnWidth(min: 300, ideal: 400, max: 500)
         }
         .sheet(isPresented: $showingNewHabitSheet) {
             HabitDetailWrapper(

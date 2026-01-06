@@ -72,7 +72,7 @@ extension AddGoalView {
                                                 }
                                                 
                                                 if let priority = habit.priority {
-                                                    Text("Prioridad: \(priority.rawValue.capitalized)")
+                                                    Text("Prioridad: \(priority.displayName)")
                                                         .font(.caption)
                                                         .foregroundColor(priorityColor(for: priority))
                                                 }
@@ -116,7 +116,7 @@ extension AddGoalView {
                                         }
                                         
                                         if let priority = selectedHabit!.priority {
-                                            Text("Prioridad: \(priority.rawValue.capitalized)")
+                                            Text("Prioridad: \(priority.displayName)")
                                                 .font(.caption)
                                                 .foregroundColor(priorityColor(for: priority))
                                         }
