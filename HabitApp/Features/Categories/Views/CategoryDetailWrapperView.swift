@@ -74,10 +74,10 @@ struct CategoryDetailWrapperView: View {
     
         // Inicializar estado de categoría.
         
-        self._initialName = State(initialValue: category.name.trimmingCharacters(in: .whitespacesAndNewlines).togglingFirstLetterCase)
+        self._initialName = State(initialValue: category.name)
 
-        // Guardar nombre de la categoría siempre sin espacios y sin mayúsculas.
-        self._name = State(initialValue: category.name.trimmingCharacters(in: .whitespacesAndNewlines).togglingFirstLetterCase)
+        // Guardar nombre de la categoría siempre sin espacios y en minúsculas.
+        self._name = State(initialValue: category.name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased().togglingFirstLetterCase)
         self._selectedPriority = State(initialValue: category.priority)
         self._selectedColor = State(initialValue: category.color)
 
@@ -178,7 +178,7 @@ struct CategoryDetailWrapperView: View {
                         if isCategoryValid {
                             let selectedColorName = CategoryDetailWrapperView.allColorsMap[selectedColor ?? Color.red]
                             let oldCategoryName = category.name
-                         category.name = name
+                            category.name = name
                          category.priority = selectedPriority ?? .medium
                          category.colorAssetName = selectedColorName ?? "red"
 
@@ -262,6 +262,7 @@ struct CategoryDetailWrapperView: View {
                                 )
                             } label: {
                                 CategoryRowView(
+                                    storageProvider: categoryListVM.storageProvider,
                                     category: sub
                                 )
                                 .padding(.vertical, 6)

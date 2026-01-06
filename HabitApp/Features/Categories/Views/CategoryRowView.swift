@@ -4,9 +4,18 @@ struct CategoryRowView: View {
     
     let category: Category
     
+    @StateObject var categoryListVM: CategoryListViewModel
+    @Environment(\.modelContext) private var modelContext
+    @State private var showingDeleteAlert = false
+    
+    init(storageProvider: StorageProvider, category: Category) {
+        self._categoryListVM = StateObject(wrappedValue: CategoryListViewModel(storageProvider: storageProvider))
+        self.category = category
+    }
+    
     var body: some View {
+        
         HStack {
-
             // El nombre de la categoría se almacena en minúsculas, pero se muestra con la primera letra en mayúsculas.
             Text(category.name.togglingFirstLetterCase)
             
@@ -55,11 +64,40 @@ struct CategoryRowView: View {
             }
             
             HStack() {
+                #if os(macOS)
                 Text(
                     "Prioridad: " + category.priority.emoji
                 )
+                #else
+                Text(
+                    "P:" + category.priority.emoji
+                )
+                #endif
             }
+                    
+            Spacer()
             
+            Button {
+                showingDeleteAlert = true
+            } label: {
+                Image(systemName: "trash")
+                    .foregroundColor(.red)
+                    .font(.title3)
+            }
+            .buttonStyle(.borderless)
+            .alert("¿Eliminar categoría?", isPresented: $showingDeleteAlert) {
+                Button("Eliminar", role: .destructive) {
+                    Task {
+                        await categoryListVM.removeCategory(category: category)
+                    }
+                    showingDeleteAlert = false
+                }
+                Button("Cancelar", role: .cancel) {
+                    showingDeleteAlert = false
+                }
+            } message: {
+                Text("Esta acción no se puede deshacer. Se eliminarán subcategorías")
+            }
         }
     }
 }

@@ -76,7 +76,10 @@ struct HabitDetailView: View {
                                     isSubcategory: category.isSubcategory
                                 )
                            } label: {
-                                 CategoryRowView(category: category)
+                                 CategoryRowView(
+                                    storageProvider: categoryListVM.storageProvider,
+                                    category: category
+                                 )
 
                            }
                            .buttonStyle(.plain)

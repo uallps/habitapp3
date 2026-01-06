@@ -42,6 +42,7 @@ class SwiftDataStorageProvider: StorageProvider {
     
     func removeCategory(category: Category) async throws {
         context.delete(category)
+        try context.save()
     }
     
     func removeSubCategory(category: Category, subCategory: Category) async throws {

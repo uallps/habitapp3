@@ -5,6 +5,15 @@ import SwiftData
 class CategoryListViewModel: ObservableObject {
     @Published var categories: [Category] = []
     
+    var selectedCategory: Category? = Category(
+        name: "",
+        icon: UserImageSlot(
+            emojis: []
+        ),
+        priority: .low,
+        isSubcategory: false
+    )
+    
     let storageProvider: StorageProvider
     
     init(storageProvider: StorageProvider) {
