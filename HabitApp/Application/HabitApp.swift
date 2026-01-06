@@ -55,10 +55,6 @@ struct HabitApp: App {
                     .tabItem {
                         Label("Objetivos", systemImage: "target")
                     }
-                 StatisticsView()             
-                    .tabItem {
-                        Label("Estadísticas", systemImage: "chart.bar")
-                    }
                 TestReminderView()
                     .tabItem {
                         Label("Test", systemImage: "bell")
@@ -79,9 +75,6 @@ struct HabitApp: App {
                     }
                     NavigationLink(value: "notas") {
                         Label("Notas Diarias", systemImage: "note.text")
-                    }
-                    NavigationLink(value: "rachas") {
-                        Label("Rachas", systemImage: "flame")
                     }
                     NavigationLink(value: "objetivos") {
                         Label("Objetivos", systemImage: "target")

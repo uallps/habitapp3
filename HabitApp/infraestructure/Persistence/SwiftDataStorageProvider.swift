@@ -10,14 +10,10 @@ class SwiftDataStorageProvider: StorageProvider {
     private let modelContainer: ModelContainer
     let context: ModelContext
 
-    init(schema: Schema) {
-        do {
-            self.modelContainer = try ModelContainer(for: schema)
-            self.context = ModelContext(self.modelContainer)
-            SwiftDataContext.shared = self.context
-        } catch {
-            fatalError("Failed to initialize storage provider: \(error)")
-       }
+    init(modelContainer: ModelContainer) {
+        self.modelContainer = modelContainer
+        self.context = ModelContext(modelContainer)
+        SwiftDataContext.shared = self.context
     }
 
     func loadTasks() async throws -> [Habit] {
