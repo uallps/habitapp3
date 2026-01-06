@@ -91,7 +91,7 @@ extension GoalDetailView {
             
             ScrollView {
                 VStack(spacing: 20) {
-                    // 🔹 Header con Progreso Circular
+                    //  Header con Progreso Circular
                     VStack(spacing: 20) {
                         HStack {
                             VStack(alignment: .leading, spacing: 4) {
@@ -154,7 +154,7 @@ extension GoalDetailView {
                             .shadow(color: Color.black.opacity(0.1), radius: 8, x: 0, y: 4)
                     )
                     
-                    // 🔹 Información de Fechas
+                    //  Información de Fechas
                     VStack(spacing: 16) {
                         HStack(spacing: 12) {
                             Image(systemName: "calendar")
@@ -220,7 +220,7 @@ extension GoalDetailView {
                     .background(Color(.systemGray6))
                     .cornerRadius(12)
                     
-                    // 🔹 Hábito Asociado
+                    //  Hábito Asociado
                     if let habit = associatedHabit {
                         VStack(alignment: .leading, spacing: 12) {
                             HStack(spacing: 8) {
@@ -281,7 +281,7 @@ extension GoalDetailView {
                         .cornerRadius(12)
                     }
                     
-                    // 🔹 Milestones
+                    //  Milestones
                     if !goal.milestones.isEmpty {
                         VStack(alignment: .leading, spacing: 12) {
                             HStack(spacing: 8) {
@@ -361,9 +361,9 @@ extension GoalDetailView {
             .ignoresSafeArea()
             
             ScrollView {
-                HStack(alignment: .top, spacing: 32) {
+                HStack(alignment: .top, spacing: 24) {
                     // Left Column
-                    VStack(alignment: .leading, spacing: 24) {
+                    VStack(alignment: .leading, spacing: 16) {
                         VStack(alignment: .leading, spacing: 8) {
                             HStack {
                                 VStack(alignment: .leading, spacing: 8) {
@@ -447,10 +447,10 @@ extension GoalDetailView {
                         
                         Spacer()
                     }
-                    .frame(maxWidth: 320)
+                    .frame(maxWidth: 280)
                     
                     // Right Column
-                    VStack(alignment: .leading, spacing: 24) {
+                    VStack(alignment: .leading, spacing: 16) {
                         // Progreso Circular
                         VStack(spacing: 16) {
                             HStack {
@@ -471,17 +471,17 @@ extension GoalDetailView {
                             
                             ZStack {
                                 Circle()
-                                    .stroke(Color.gray.opacity(0.2), lineWidth: 12)
+                                    .stroke(Color.gray.opacity(0.2), lineWidth: 10)
                                 
                                 Circle()
                                     .trim(from: 0, to: progressPercentage)
-                                    .stroke(progressColor, lineWidth: 12)
+                                    .stroke(progressColor, lineWidth: 10)
                                     .rotationEffect(.degrees(-90))
                                     .animation(.easeInOut(duration: 0.5), value: progressPercentage)
                                 
                                 VStack(spacing: 4) {
                                     Text("\(Int(progressPercentage * 100))%")
-                                        .font(.system(size: 32, weight: .bold))
+                                        .font(.system(size: 28, weight: .bold))
                                         .foregroundColor(progressColor)
                                     
                                     Text("\(actualCount) de \(goal.targetCount)")
@@ -489,9 +489,9 @@ extension GoalDetailView {
                                         .foregroundColor(.secondary)
                                 }
                             }
-                            .frame(height: 180)
+                            .frame(height: 140)
                         }
-                        .padding(20)
+                        .padding(16)
                         .background(
                             RoundedRectangle(cornerRadius: 12)
                                 .fill(Color(.controlBackgroundColor))
@@ -584,7 +584,7 @@ extension GoalDetailView {
                         Spacer()
                     }
                 }
-                .padding(32)
+                .padding(20)
             }
         }
         .navigationTitle(goal.title)
@@ -611,7 +611,7 @@ extension GoalDetailView {
                 }
             }
         }
-        .frame(minWidth: 900, minHeight: 600)
+        .frame(minWidth: 700, minHeight: 500)
     }
 }
 #endif

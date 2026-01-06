@@ -49,14 +49,6 @@ struct HabitApp: App {
                     .tabItem {
                         Label("Notas", systemImage: "note.text")
                     }
-                
-                // TAB 3: Estadísticas
-                NavigationStack {
-                    StatisticsView()
-                }
-                .tabItem {
-                    Label("Estadísticas", systemImage: "chart.bar")
-                }
                 GoalsView()
                     .tabItem {
                         Label("Objetivos", systemImage: "target")
@@ -71,7 +63,7 @@ struct HabitApp: App {
                     }
             }
             .environmentObject(appConfig)
-            .modelContainer(modelContainer)  // ⭐ AGREGAR ESTO
+            .modelContainer(modelContainer)  //  AGREGAR ESTO
 
 #else
             NavigationSplitView {
@@ -107,7 +99,7 @@ struct HabitApp: App {
                 }
             }
             .environmentObject(appConfig)
-            .modelContainer(modelContainer)  // ⭐ AGREGAR ESTO
+            .modelContainer(modelContainer)  //  AGREGAR ESTO
 #endif
         }
     }

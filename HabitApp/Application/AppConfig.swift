@@ -28,7 +28,7 @@ class AppConfig: ObservableObject {
     private func setupPlugins() {
         let registry = PluginRegistry.shared
         
-        // ⭐ Registrar los plugins
+        //  Registrar los plugins
         registry.register(plugin: ReminderPlugin())
         registry.register(plugin: HabitGoalPlugin(storageProvider: storageProvider))
         

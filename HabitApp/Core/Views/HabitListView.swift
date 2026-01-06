@@ -31,7 +31,7 @@ extension HabitListView {
     var iosBody: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                // 🔹 Encabezado compacto
+                //  Encabezado compacto
                 VStack(spacing: 8) {
                     HStack {
                         Text(monthYearString)
@@ -108,7 +108,7 @@ extension HabitListView {
                 
                 Divider()
                 
-                // 🔹 Día actual - MÁS COMPACTO
+                //  Día actual - MÁS COMPACTO
                 HStack {
                     Text(dayName(for: currentDate))
                         .font(.subheadline)
@@ -129,7 +129,7 @@ extension HabitListView {
                 
                 Divider()
                 
-                // 🔹 Lista de hábitos (SIEMPRE dentro de List)
+                //  Lista de hábitos (SIEMPRE dentro de List)
                 List {
                     if filteredHabits.isEmpty {
                         VStack(spacing: 16) {
@@ -140,11 +140,25 @@ extension HabitListView {
                             Text(habits.isEmpty ? "Sin hábitos creados" : "Sin hábitos para hoy")
                                 .font(.headline)
                             
-                            Text(habits.isEmpty ? "Crea tu primer hábito tocando el botón +" : "No hay hábitos programados")
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                                .multilineTextAlignment(.center)
-                                .padding(.horizontal)
+                            if habits.isEmpty {
+                                Text("Crea hábitos de ejemplo para empezar")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                    .multilineTextAlignment(.center)
+                                    .padding(.horizontal)
+                                
+                                Button("Crear hábitos de muestra") {
+                                    viewModel.createSampleHabits()
+                                }
+                                .buttonStyle(.borderedProminent)
+                                .padding(.top, 8)
+                            } else {
+                                Text("No hay hábitos programados para hoy")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                    .multilineTextAlignment(.center)
+                                    .padding(.horizontal)
+                            }
                         }
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 60)
@@ -198,7 +212,7 @@ extension HabitListView {
 #if os(macOS)
 extension HabitListView {
     var macBody: some View {
-        NavigationSplitView {
+        NavigationSplitView(columnVisibility: .constant(.all)) {
             VStack(spacing: 0) {
                 // Header compacto
                 HStack {
@@ -323,6 +337,7 @@ extension HabitListView {
                 .listStyle(.sidebar)
             }
             .navigationTitle("Hábitos")
+            .navigationSplitViewColumnWidth(min: 280, ideal: 350, max: 450)
             .toolbar {
                 ToolbarItem {
                     Button {
@@ -353,6 +368,7 @@ extension HabitListView {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .navigationSplitViewColumnWidth(min: 300, ideal: 400, max: 500)
         }
         .sheet(isPresented: $showingNewHabitSheet) {
             HabitDetailWrapper(

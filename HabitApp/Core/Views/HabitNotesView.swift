@@ -9,6 +9,7 @@ struct HabitNotesView: View {
     
     @State private var showingAddNote = false
     @StateObject private var notesViewModel: DailyNotesViewModel
+    @Environment(\.dismiss) private var dismiss
     private let calendar = Calendar.current
 
     init(habit: Habit, currentDate: Date, storageProvider: StorageProvider) {
@@ -96,7 +97,40 @@ extension HabitNotesView {
 #if os(macOS)
 extension HabitNotesView {
     var macBody: some View {
-        VStack {
+        VStack(spacing: 0) {
+            // Header
+            HStack {
+                Button {
+                    dismiss()
+                } label: {
+                    Label("Cerrar", systemImage: "xmark.circle.fill")
+                        .labelStyle(.iconOnly)
+                        .font(.title2)
+                        .foregroundColor(.secondary)
+                }
+                .buttonStyle(.plain)
+                .help("Cerrar ventana")
+                
+                Text("Notas - \(habit.title)")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .padding(.leading, 8)
+                
+                Spacer()
+                
+                Button {
+                    showingAddNote = true
+                } label: {
+                    Label("Nueva Nota", systemImage: "plus")
+                }
+                .buttonStyle(.borderedProminent)
+            }
+            .padding()
+            .background(Color(.windowBackgroundColor))
+            
+            Divider()
+            
+            // Content
             if habitNotes.isEmpty {
                 ContentUnavailableView(
                     "Sin notas",
@@ -138,21 +172,11 @@ extension HabitNotesView {
                 }
             }
         }
-        .navigationTitle("Notas - \(habit.title)")
-        .toolbar {
-            ToolbarItem {
-                Button {
-                    showingAddNote = true
-                } label: {
-                    Image(systemName: "plus")
-                }
-            }
-        }
         .sheet(isPresented: $showingAddNote) {
             AddNoteView(habit: habit, noteDate: currentDate)
         }
-        .frame(minWidth: 400, minHeight: 300)
-    }
+    .frame(minWidth: 350, minHeight: 280)  
+  }
 }
 #endif
 
