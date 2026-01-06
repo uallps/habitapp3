@@ -1,4 +1,5 @@
 import Foundation
+import _SwiftData_SwiftUI
 import SwiftData
 
 class SwiftDataContext {
@@ -21,6 +22,7 @@ class SwiftDataStorageProvider: StorageProvider {
         return fetchedImage ?? UserImageSlot(emojis: noImageArray)
     }
     
+    @MainActor
     func addHabitToCategory(habit: Habit, category: Category) async throws {
         if !category.habits.contains(where: { $0.id == habit.id } ) {
             category.habits.append(habit)
@@ -28,6 +30,7 @@ class SwiftDataStorageProvider: StorageProvider {
         try context.save()
     }
     
+    @MainActor
     func addSubcategory(category: Category, subCategory: Category) async throws {
         if subCategory.modelContext == nil {
             context.insert(subCategory)
@@ -40,11 +43,23 @@ class SwiftDataStorageProvider: StorageProvider {
         try context.save()
     }
     
+    @MainActor
     func removeCategory(category: Category) async throws {
-        context.delete(category)
-        try context.save()
+        let descriptor = FetchDescriptor<Category>(
+            predicate: #Predicate { $0.id == category.id },
+            sortBy: []
+        )
+
+        if let trackedCategory = try context.fetch(descriptor).first {
+            context.delete(trackedCategory)
+            try context.save()
+            print("Deleted category: \(trackedCategory.name)")
+        } else {
+            print("Category not found in context, cannot delete")
+        }
     }
     
+    @MainActor
     func removeSubCategory(category: Category, subCategory: Category) async throws {
         if subCategory.modelContext != nil {
             let index = category.subCategories.firstIndex(of: subCategory)
@@ -60,6 +75,7 @@ class SwiftDataStorageProvider: StorageProvider {
         return categories.contains(where: { $0.id == id } )
     }
     
+    @MainActor
     func updateCategory(id: UUID, newCategory: Category) async throws {
         let categories = try await loadCategories()
         let oldCategory = categories.first {
@@ -70,6 +86,7 @@ class SwiftDataStorageProvider: StorageProvider {
         try context.save()
     }
     
+    @MainActor
     func upsertCategoryOrSubcategory(parent: Category?, category: Category) async throws {
         if let parent = parent {
             try await addSubcategory(category: parent, subCategory: category)
@@ -101,12 +118,14 @@ class SwiftDataStorageProvider: StorageProvider {
        }
     }
 
+    @MainActor
     func loadHabits() async throws -> [Habit] {
         let descriptor = FetchDescriptor<Habit>() // Use FetchDescriptor
         let habits = try context.fetch(descriptor)
         return habits
     }
 
+    @MainActor
     func saveHabits(habits: [Habit]) async throws {
         let existingHabits = try await self.loadHabits()
         let existingIds = Set(existingHabits.map { $0.id })
@@ -145,6 +164,7 @@ class SwiftDataStorageProvider: StorageProvider {
         return categories
     }
     
+    @MainActor
     func addCategory(category: Category) async {
         do {
             let existingCategories = try await loadCategories()

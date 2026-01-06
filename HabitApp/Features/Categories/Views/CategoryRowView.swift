@@ -5,7 +5,6 @@ struct CategoryRowView: View {
     let category: Category
     
     @StateObject var categoryListVM: CategoryListViewModel
-    @Environment(\.modelContext) private var modelContext
     @State private var showingDeleteAlert = false
     
     init(storageProvider: StorageProvider, category: Category) {
@@ -17,7 +16,7 @@ struct CategoryRowView: View {
         
         HStack {
             // El nombre de la categoría se almacena en minúsculas, pero se muestra con la primera letra en mayúsculas.
-            Text(category.name.togglingFirstLetterCase)
+            Text(category.name)
             
             Circle()
                 .fill(category.color)
@@ -87,7 +86,7 @@ struct CategoryRowView: View {
             .buttonStyle(.borderless)
             .alert("¿Eliminar categoría?", isPresented: $showingDeleteAlert) {
                 Button("Eliminar", role: .destructive) {
-                    Task {
+                    Task { @MainActor in
                         await categoryListVM.removeCategory(category: category)
                     }
                     showingDeleteAlert = false

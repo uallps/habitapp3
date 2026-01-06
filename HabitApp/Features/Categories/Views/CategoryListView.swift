@@ -31,8 +31,10 @@ var iOSBody: some View {
                         isSubcategory: category.isSubcategory
                     )
                 } label: {
-                    CategoryRowView(storageProvider: categoryListVM.storageProvider,
-                                    category: category)
+                    CategoryRowView(
+                        storageProvider: categoryListVM.storageProvider,
+                        category: category
+                    )
                 }
                 
                 

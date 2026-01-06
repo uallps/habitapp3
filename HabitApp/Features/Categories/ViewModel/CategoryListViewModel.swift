@@ -20,12 +20,14 @@ class CategoryListViewModel: ObservableObject {
         self.storageProvider = storageProvider
     }
     
-    func loadCategories() async {
+    func loadCategories() async -> [Category] {
+        var categories: [Category] = []
         do {
             categories = try await storageProvider.loadCategories()
         } catch {
             print("Error loading tasks: \(error)")
         }
+        return categories
     }
     
     func addCategory(category: Category) async {
