@@ -64,7 +64,34 @@ extension AddNoteView {
 #if os(macOS)
 extension AddNoteView {
     var macBody: some View {
-        VStack {
+        VStack(spacing: 0) {
+            // Header
+            HStack {
+                Text("Nueva Nota")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                
+                Spacer()
+                
+                Button("Cancelar") {
+                    dismiss()
+                }
+                .keyboardShortcut(.cancelAction)
+                
+                Button("Guardar") {
+                    saveNote()
+                    dismiss()
+                }
+                .buttonStyle(.borderedProminent)
+                .keyboardShortcut(.defaultAction)
+                .disabled(title.isEmpty)
+            }
+            .padding()
+            .background(Color(.windowBackgroundColor))
+            
+            Divider()
+            
+            // Form
             Form {
                 Section("Título") {
                     TextField("Título de la nota", text: $title)
@@ -72,23 +99,12 @@ extension AddNoteView {
 
                 Section("Contenido") {
                     TextEditor(text: $content)
-                        .frame(minHeight: 150)
+                        .frame(minHeight: 200)
                 }
             }
+            .formStyle(.grouped)
         }
-        .navigationTitle("Nueva Nota")
-        .toolbar {
-            ToolbarItemGroup {
-                Button("Cancelar") { dismiss() }
-                Button("Guardar") {
-                    saveNote()
-                    dismiss()
-                }
-                .disabled(title.isEmpty)
-            }
-        }
-        .frame(minWidth: 400, minHeight: 300)
-        .padding()
+        .frame(minWidth: 500, minHeight: 400)
     }
 }
 #endif

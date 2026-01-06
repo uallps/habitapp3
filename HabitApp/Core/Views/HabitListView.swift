@@ -198,7 +198,7 @@ extension HabitListView {
 #if os(macOS)
 extension HabitListView {
     var macBody: some View {
-        NavigationSplitView {
+        NavigationSplitView(columnVisibility: .constant(.all)) {
             VStack(spacing: 0) {
                 // Header compacto
                 HStack {
@@ -323,6 +323,7 @@ extension HabitListView {
                 .listStyle(.sidebar)
             }
             .navigationTitle("Hábitos")
+            .navigationSplitViewColumnWidth(min: 300, ideal: 400, max: 500)
             .toolbar {
                 ToolbarItem {
                     Button {
@@ -353,6 +354,7 @@ extension HabitListView {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .navigationSplitViewColumnWidth(min: 350, ideal: 450, max: 600)
         }
         .sheet(isPresented: $showingNewHabitSheet) {
             HabitDetailWrapper(
