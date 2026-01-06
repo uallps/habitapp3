@@ -9,8 +9,11 @@ struct GoalsView: View {
     @StateObject private var viewModel: GoalsViewModel
     @State private var showingAddGoal = false
     
-    init() {
-        _viewModel = StateObject(wrappedValue: GoalsViewModel(storageProvider: AppConfig().storageProvider))
+    private let storageProvider: StorageProvider
+    
+    init(storageProvider: StorageProvider) {
+        self.storageProvider = storageProvider
+        _viewModel = StateObject(wrappedValue: GoalsViewModel(storageProvider: storageProvider))
     }
     
     var body: some View {
@@ -51,7 +54,8 @@ extension GoalsView {
                                 icon: "flame.fill",
                                 goals: viewModel.getActiveGoals(goals),
                                 habits: habits,
-                                isActive: true
+                                isActive: true,
+                                storageProvider: storageProvider
                             )
                         }
                         
@@ -61,7 +65,8 @@ extension GoalsView {
                                 icon: "checkmark.seal.fill",
                                 goals: viewModel.getCompletedGoals(goals),
                                 habits: habits,
-                                isActive: false
+                                isActive: false,
+                                storageProvider: storageProvider
                             )
                         }
                         
@@ -162,7 +167,7 @@ extension GoalsView {
                                         ], spacing: 20) {
                                             ForEach(viewModel.getActiveGoals(goals)) { goal in
                                                 NavigationLink {
-                                                    GoalDetailView(goal: goal)
+                                                    GoalDetailView(goal: goal, storageProvider: storageProvider)
                                                 } label: {
                                                     MacGoalCard(goal: goal, habit: getAssociatedHabit(for: goal), isActive: true)
                                                 }
@@ -188,7 +193,7 @@ extension GoalsView {
                                         ], spacing: 20) {
                                             ForEach(viewModel.getCompletedGoals(goals)) { goal in
                                                 NavigationLink {
-                                                    GoalDetailView(goal: goal)
+                                                    GoalDetailView(goal: goal, storageProvider: storageProvider)
                                                 } label: {
                                                     MacGoalCard(goal: goal, habit: getAssociatedHabit(for: goal), isActive: false)
                                                 }
@@ -345,6 +350,7 @@ struct GoalSection: View {
     let goals: [Goal]
     let habits: [Habit]
     let isActive: Bool
+    let storageProvider: StorageProvider
     
     private func getAssociatedHabit(for goal: Goal) -> Habit? {
         guard let habitId = goal.habitId else { return nil }
@@ -377,7 +383,7 @@ struct GoalSection: View {
             LazyVStack(spacing: 12) {
                 ForEach(goals) { goal in
                     NavigationLink {
-                        GoalDetailView(goal: goal)
+                        GoalDetailView(goal: goal, storageProvider: storageProvider)
                     } label: {
                         GoalRowView(goal: goal, habit: getAssociatedHabit(for: goal), isActive: isActive)
                     }
