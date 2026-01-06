@@ -88,9 +88,9 @@ final class HabitListViewModel: ObservableObject {
     
     func createSampleHabits() {
         let sampleHabits = [
-            Habit(title: "Hacer ejercicio", priority: .high, scheduledDays: [2, 4, 6]),
+            Habit(title: "Hacer ejercicio", priority: .high, scheduledDays: [1, 2, 3, 4, 5, 6, 7]),
             Habit(title: "Leer 30 minutos", priority: .medium, scheduledDays: [1, 2, 3, 4, 5, 6, 7]),
-            Habit(title: "Meditar", priority: .low, scheduledDays: [1, 7])
+            Habit(title: "Meditar", priority: .low, scheduledDays: [1, 2, 3, 4, 5, 6, 7])
         ]
         
         for habit in sampleHabits {

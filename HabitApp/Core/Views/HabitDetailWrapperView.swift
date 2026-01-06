@@ -204,11 +204,11 @@ extension HabitDetailWrapper {
                     
                     Spacer()
                 }
-                .padding(.horizontal, 24)
-                .padding(.top, 24)
+                .padding(.horizontal, 20)
+                .padding(.top, 20)
                 
                 // Form
-                VStack(spacing: 20) {
+                VStack(spacing: 16) {
                     // Título
                     VStack(alignment: .leading, spacing: 8) {
                         HStack(spacing: 8) {
@@ -223,9 +223,9 @@ extension HabitDetailWrapper {
                             .textFieldStyle(.roundedBorder)
                             .font(.body)
                     }
-                    .padding(16)
+                    .padding(12)
                     .background(Color(.controlBackgroundColor))
-                    .cornerRadius(12)
+                    .cornerRadius(10)
                     
                     // Días de la semana
                     VStack(alignment: .leading, spacing: 12) {
@@ -240,9 +240,9 @@ extension HabitDetailWrapper {
                         WeekdaySelector(selectedDays: $selectedDays)
                             .padding(.vertical, 4)
                     }
-                    .padding(16)
+                    .padding(12)
                     .background(Color(.controlBackgroundColor))
-                    .cornerRadius(12)
+                    .cornerRadius(10)
                     
                     // Prioridad
                     VStack(alignment: .leading, spacing: 12) {
@@ -261,11 +261,11 @@ extension HabitDetailWrapper {
                         }
                         .pickerStyle(.segmented)
                     }
-                    .padding(16)
+                    .padding(12)
                     .background(Color(.controlBackgroundColor))
-                    .cornerRadius(12)
+                    .cornerRadius(10)
                 }
-                .padding(.horizontal, 24)
+                .padding(.horizontal, 20)
                 
                 Spacer()
                 
@@ -295,11 +295,11 @@ extension HabitDetailWrapper {
                     .controlSize(.large)
                     .disabled(title.isEmpty || selectedDays.isEmpty)
                 }
-                .padding(.horizontal, 24)
-                .padding(.bottom, 24)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 20)
             }
         }
-        .frame(minWidth: 500, minHeight: 450)
+        .frame(minWidth: 450, minHeight: 380)
     }
 }
 #endif

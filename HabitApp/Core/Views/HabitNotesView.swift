@@ -137,7 +137,7 @@ extension HabitNotesView {
         .sheet(isPresented: $showingAddNote) {
             AddNoteView(habit: habit, noteDate: currentDate)
         }
-        .frame(minWidth: 400, minHeight: 300)
+        .frame(minWidth: 350, minHeight: 280)
     }
 }
 #endif
