@@ -103,15 +103,31 @@ class Habit {
 }
 
 enum Priority: String, Codable, CaseIterable {
-    case low
-    case medium
-    case high
+    case low = "Baja"
+    case medium = "Media"
+    case high = "Alta"
     
     var displayName: String {
-        switch self {
-        case .low: return "Baja"
-        case .medium: return "Media"
-        case .high: return "Alta"
+        return self.rawValue
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(String.self)
+        
+        // Handle both English and Spanish values for backward compatibility
+        switch rawValue {
+        case "Baja", "low":
+            self = .low
+        case "Media", "medium":
+            self = .medium
+        case "Alta", "high":
+            self = .high
+        default:
+            throw DecodingError.dataCorruptedError(
+                in: container,
+                debugDescription: "Cannot initialize Priority from invalid String value \(rawValue)"
+            )
         }
     }
 }

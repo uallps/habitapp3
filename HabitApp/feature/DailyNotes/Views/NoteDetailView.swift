@@ -29,26 +29,46 @@ struct NoteDetailView: View {
 #if os(iOS)
 extension NoteDetailView {
     var iosBody: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            contentView
-        }
-        .padding()
-        .navigationTitle("Detalle de Nota")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
-                editSaveButton
-                deleteButton
+        NavigationStack {
+            ZStack {
+                LinearGradient(
+                    gradient: Gradient(colors: [
+                        Color.blue.opacity(0.05),
+                        Color.purple.opacity(0.05)
+                    ]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
+                
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 20) {
+                        contentView
+                            .padding(20)
+                            .background(Color(.systemBackground))
+                            .cornerRadius(12)
+                            .shadow(color: Color.black.opacity(0.05), radius: 4)
+                    }
+                    .padding(16)
+                }
             }
-        }
-        .alert("¿Eliminar nota?", isPresented: $showDeleteAlert) {
-            Button("Cancelar", role: .cancel) { }
-            Button("Eliminar", role: .destructive) {
-                viewModel.deleteNote(note)
-                dismiss()
+            .navigationTitle("Detalle de Nota")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    editSaveButton
+                    deleteButton
+                }
             }
-        } message: {
-            Text("Esta acción no se puede deshacer.")
+            .alert("¿Eliminar nota?", isPresented: $showDeleteAlert) {
+                Button("Cancelar", role: .cancel) { }
+                Button("Eliminar", role: .destructive) {
+                    viewModel.deleteNote(note)
+                    dismiss()
+                }
+            } message: {
+                Text("Esta acción no se puede deshacer.")
+            }
         }
     }
 }
@@ -59,9 +79,11 @@ extension NoteDetailView {
     var macBody: some View {
         VStack(alignment: .leading, spacing: 16) {
             contentView
+                .padding(20)
+                .background(Color(.controlBackgroundColor))
+                .cornerRadius(12)
         }
         .padding()
-        .frame(minWidth: 400, minHeight: 300)
         .navigationTitle("Detalle de Nota")
         .toolbar {
             ToolbarItemGroup {
@@ -87,36 +109,81 @@ extension NoteDetailView {
     private var contentView: some View {
         Group {
             if isEditing {
-                TextField("Título", text: $title)
-                    .font(.title2)
-                    .textFieldStyle(.roundedBorder)
-                TextEditor(text: $content)
-                    .frame(minHeight: 200)
-                    .overlay(RoundedRectangle(cornerRadius: 8)
-                        .stroke(Color.gray.opacity(0.3), lineWidth: 1))
+                VStack(alignment: .leading, spacing: 12) {
+                    TextField("Título", text: $title)
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .textFieldStyle(.roundedBorder)
+                    
+                    TextEditor(text: $content)
+                        .frame(minHeight: 200)
+                        .overlay(RoundedRectangle(cornerRadius: 8)
+                            .stroke(Color.gray.opacity(0.3), lineWidth: 1))
+                }
             } else {
-                Text(note.title)
-                    .font(.title2)
-                    .fontWeight(.bold)
-                Text(note.content)
-                    .font(.body)
+                VStack(alignment: .leading, spacing: 12) {
+                    Text(note.title)
+                        .font(.title2)
+                        .fontWeight(.bold)
+                    
+                    Text(note.content)
+                        .font(.body)
+                        .lineSpacing(1.2)
+                }
             }
             
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Creado: \(note.createdAt, style: .date) a las \(note.createdAt, style: .time)")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                if note.updatedAt != note.createdAt {
-                    Text("Actualizado: \(note.updatedAt, style: .date) a las \(note.updatedAt, style: .time)")
+            Divider()
+                .padding(.vertical, 8)
+            
+            VStack(alignment: .leading, spacing: 6) {
+                HStack(spacing: 12) {
+                    Image(systemName: "calendar")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    
+                    Text("Creado: \(note.createdAt, style: .date) a las \(note.createdAt, style: .time)")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
+                
+                if note.updatedAt != note.createdAt {
+                    HStack(spacing: 12) {
+                        Image(systemName: "pencil")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        
+                        Text("Actualizado: \(note.updatedAt, style: .date) a las \(note.updatedAt, style: .time)")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
             }
+            .padding(12)
+            .background(Color.gray.opacity(0.05))
+            .cornerRadius(8)
+            
             Spacer()
         }
     }
     
     private var editSaveButton: some View {
+        #if os(iOS)
+        Group {
+            if isEditing {
+                Button("Guardar") {
+                    viewModel.updateNote(note, title: title, content: content)
+                    dismiss()
+                    isEditing.toggle()
+                }
+                .buttonStyle(.borderedProminent)
+            } else {
+                Button("Editar") {
+                    isEditing.toggle()
+                }
+                .buttonStyle(.bordered)
+            }
+        }
+        #else
         Button(isEditing ? "Guardar" : "Editar") {
             if isEditing {
                 viewModel.updateNote(note, title: title, content: content)
@@ -124,6 +191,8 @@ extension NoteDetailView {
             }
             isEditing.toggle()
         }
+        .buttonStyle(.bordered)
+        #endif
     }
     
     private var deleteButton: some View {
