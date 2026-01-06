@@ -34,9 +34,17 @@ struct HabitRowView: View {
             
             //  Información del hábito
             VStack(alignment: .leading) {
-                Text(habit.title)
-                    .strikethrough(habit.isCompletedForDate(date))
-                    .foregroundColor(habit.isCompletedForDate(date) ? .gray : .primary)
+                HStack(alignment: .center, spacing: 8) {
+                    Text(habit.title)
+                        .strikethrough(habit.isCompletedForDate(date))
+                        .foregroundColor(habit.isCompletedForDate(date) ? .gray : .primary)
+                    
+                    // 🔥 Badge de rachas
+                    if AppConfig.enableStreaks {
+                        StreakBadgeView(habitId: habit.id)
+                            .animation(.spring(), value: habit.doneDatesString)
+                    }
+                }
                 
                 if AppConfig.showDueDates, let dueDate = habit.dueDate {
                     Text("Vence: \(dueDate.formatted(date: .abbreviated, time: .shortened))")
@@ -110,18 +118,26 @@ struct HabitRowView: View {
             
             //  Información del hábito
             VStack(alignment: .leading) {
-                Text(habit.title)
-                    .strikethrough(habit.isCompletedForDate(date))
-                    .foregroundColor(habit.isCompletedForDate(date) ? .gray : .primary)
+                HStack(alignment: .center, spacing: 8) {
+                    Text(habit.title)
+                        .strikethrough(habit.isCompletedForDate(date))
+                        .foregroundColor(habit.isCompletedForDate(date) ? .gray : .primary)
+                    
+                    // 🔥 Badge de rachas
+                    if AppConfig.enableStreaks {
+                        StreakBadgeView(habitId: habit.id)
+                            .animation(.spring(), value: habit.doneDatesString)
+                    }
+                }
                 
                 if AppConfig.showDueDates, let dueDate = habit.dueDate {
-                    Text("Vence: \\(dueDate.formatted(date: .abbreviated, time: .shortened))")
+                    Text("Vence: \(dueDate.formatted(date: .abbreviated, time: .shortened))")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
                 
                 if AppConfig.showPriorities, let priority = habit.priority {
-                    Text("Prioridad: \\(priority.displayName)")
+                    Text("Prioridad: \(priority.displayName)")
                         .font(.caption)
                         .foregroundColor(priorityColor(for: priority))
                 }

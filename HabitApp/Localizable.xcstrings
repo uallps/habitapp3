@@ -19,12 +19,6 @@
     "%lld" : {
 
     },
-    "%lld Completados" : {
-
-    },
-    "%lld Pendientes" : {
-
-    },
     "%lld tarea%@" : {
       "localizations" : {
         "en" : {
@@ -34,19 +28,6 @@
           }
         }
       }
-    },
-    "%lld/%lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld/%2$lld"
-          }
-        }
-      }
-    },
-    "%lld%%" : {
-
     },
     "1.0.0" : {
 
@@ -85,16 +66,10 @@
     "Cancelar" : {
 
     },
-    "Cargando..." : {
-
-    },
     "Cerrar" : {
 
     },
     "Compatible con iOS y macOS" : {
-
-    },
-    "Completado" : {
 
     },
     "Configuración de Recordatorios" : {
@@ -155,25 +130,16 @@
     "Eliminar hábito" : {
 
     },
-    "Esperado" : {
-
-    },
-    "Esta acción eliminará el hábito y su historial de rachas." : {
-
-    },
     "Esta acción eliminará todos los hábitos, notas y objetivos. No se puede deshacer." : {
+
+    },
+    "Esta acción no se puede deshacer" : {
 
     },
     "Esta acción no se puede deshacer." : {
 
     },
-    "Estadísticas" : {
-
-    },
     "Fecha" : {
-
-    },
-    "General" : {
 
     },
     "Guardar" : {
@@ -212,12 +178,6 @@
     "Mostrar prioridades" : {
 
     },
-    "No hay datos disponibles" : {
-
-    },
-    "No hay hábitos con estadísticas" : {
-
-    },
     "No hay hábitos programados" : {
 
     },
@@ -240,12 +200,6 @@
 
     },
     "Nuevo hábito" : {
-
-    },
-    "Objetivos" : {
-
-    },
-    "Por Hábito" : {
 
     },
     "Prioridad" : {
@@ -305,15 +259,6 @@
         }
       }
     },
-    "Rango" : {
-
-    },
-    "Sin datos" : {
-
-    },
-    "Sin estadísticas" : {
-
-    },
     "Sin hábitos" : {
 
     },
@@ -330,9 +275,6 @@
 
     },
     "Tareas para %@" : {
-
-    },
-    "Tendencia" : {
 
     },
     "Test" : {
@@ -366,9 +308,6 @@
 
     },
     "Versión 1.0.0" : {
-
-    },
-    "Vista" : {
 
     },
     "Visualización" : {
