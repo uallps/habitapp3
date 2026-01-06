@@ -112,10 +112,20 @@ struct CategoryRowView: View {
                                 habit: habit!,
                                 category: category
                             )
+                            self.isHabitAddedToCategory = await categoryListVM.checkIfHabitIsInCategory(habit: habit!, category: category)
                         }
                         
                     } label: {
                         Label("Añadir a esta categoría", systemImage: "plus")
+                    }
+                }else if (isHabitAddedToCategory) {
+                    Button {
+                        Task {
+                            await categoryListVM.deleteHabitFromCategory(habit: habit!, category: category)
+                            self.isHabitAddedToCategory = await categoryListVM.checkIfHabitIsInCategory(habit: habit!, category: category)
+                        }
+                    } label: {
+                        Label("Eliminar de categoría", systemImage: "trash")
                     }
                 }
                 

@@ -20,11 +20,20 @@ class CategoryListViewModel: ObservableObject {
         self.storageProvider = storageProvider
     }
     
-    func checkIfHabitIsInCategory(habit: Habit, category: Category) async {
+    func checkIfHabitIsInCategory(habit: Habit, category: Category) async -> Bool {
         do {
-            try await storageProvider.checkIfHabitIsInCategory(habit: habit, category: category)
+            return try await storageProvider.checkIfHabitIsInCategory(habit: habit, category: category)
         } catch {
             print("Error checking if habit is in category: \(error)")
+            return false
+        }
+    }
+    
+    func deleteHabitFromCategory(habit: Habit, category: Category) async {
+        do {
+            try await storageProvider.deleteHabitFromCategory(habit: habit, category: category)
+        } catch {
+            print("Error deleting habit from category: \(error)")
         }
     }
     

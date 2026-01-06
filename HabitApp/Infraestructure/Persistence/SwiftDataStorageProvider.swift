@@ -68,7 +68,8 @@ class SwiftDataStorageProvider: StorageProvider {
     @MainActor
     func checkIfHabitIsInCategory(habit: Habit, category: Category) async throws -> Bool {
         var contains = false
-        let realHabit = self.getRealInstanceHabit(habit)
+        //let realHabit = self.getRealInstanceHabit(habit) TEMP UNTIL FIX WITH FRANCO
+        let realHabit: Habit? = habit
         let realCategory = self.getRealInstanceCategory(category)
         if let realHabit {
                 if let realCategory {

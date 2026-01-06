@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 @Model
-class Habit: Encodable, Decodable, IdentifiableModel {
+class Habit: Encodable, Decodable, Hashable {
     @Attribute(.unique) var id: UUID
     var title: String
     var doneDates: [Date]
@@ -19,6 +19,10 @@ class Habit: Encodable, Decodable, IdentifiableModel {
     
     enum CodingKeys: String, CodingKey {
         case id, title, doneDates, isCompleted, dueDate, priority, reminderDate, scheduledDays, createdAt, updatedAt
+    }
+    
+    static func == (lhs: Habit, rhs: Habit) -> Bool {
+        lhs.id == rhs.id
     }
     
     func encode(to encoder: Encoder) throws {
