@@ -57,9 +57,9 @@ struct HabitApp: App {
                 NavigationStack {
                     Text("Ajustes (próximamente)")
                 }
-                //.task {
-                //    storageProvider.resetStorage()
-                //}
+                .task {
+                    storageProvider.resetStorage()
+                }
                 .tabItem {
                     Label("Ajustes", systemImage: "gearshape")
                 }

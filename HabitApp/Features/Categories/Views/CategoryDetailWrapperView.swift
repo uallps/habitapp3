@@ -267,6 +267,7 @@ struct CategoryDetailWrapperView: View {
                                     isCategoryParentView: true
                                 )
                                 .padding(.vertical, 6)
+
                       }
                         }
 

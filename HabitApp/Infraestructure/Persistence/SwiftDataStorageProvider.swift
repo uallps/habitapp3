@@ -112,11 +112,14 @@ class SwiftDataStorageProvider: StorageProvider {
     @MainActor
     func addSubcategory(category: Category, subCategory: Category) async throws {
         if let realCategory = self.getRealInstanceCategory(category) {
-            if subCategory.modelContext == nil {
+            var realSubCategory = self.getRealInstanceCategory(subCategory)
+            if realSubCategory == nil {
                 context.insert(subCategory)
+                try context.save()
+                realSubCategory = subCategory
             }
             if !realCategory.subCategories.contains(where: { $0.id == subCategory.id }) {
-                category.subCategories.append(subCategory)
+                realCategory.subCategories.append(realSubCategory!)
             }
             
             try context.save()
@@ -194,8 +197,10 @@ class SwiftDataStorageProvider: StorageProvider {
         }else {
             // Actualizar categoría existente
             try await updateCategory(id: category.id, newCategory: category)
+            // Illegal attempt to map a relationship containing temporary objects to its identifiers.
+            // It should already have been saved by context.save on addSubcategory
         }
-        try context.save()
+        //try context.save() This is the real culprit to illegal attempt?
     }
     
 
