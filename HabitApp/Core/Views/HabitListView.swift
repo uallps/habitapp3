@@ -140,11 +140,25 @@ extension HabitListView {
                             Text(habits.isEmpty ? "Sin hábitos creados" : "Sin hábitos para hoy")
                                 .font(.headline)
                             
-                            Text(habits.isEmpty ? "Crea tu primer hábito tocando el botón +" : "No hay hábitos programados")
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                                .multilineTextAlignment(.center)
-                                .padding(.horizontal)
+                            if habits.isEmpty {
+                                Text("Crea hábitos de ejemplo para empezar")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                    .multilineTextAlignment(.center)
+                                    .padding(.horizontal)
+                                
+                                Button("Crear hábitos de muestra") {
+                                    viewModel.createSampleHabits()
+                                }
+                                .buttonStyle(.borderedProminent)
+                                .padding(.top, 8)
+                            } else {
+                                Text("No hay hábitos programados para hoy")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                    .multilineTextAlignment(.center)
+                                    .padding(.horizontal)
+                            }
                         }
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 60)
