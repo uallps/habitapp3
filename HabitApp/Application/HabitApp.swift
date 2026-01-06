@@ -1,130 +1,109 @@
-
 import SwiftUI
 import SwiftData
 
 @main
 struct HabitApp: App {
-    // 1. Estados de navegación y configuración
-    @State private var selectedDetailView: String? = "habitos"
-    @StateObject private var appConfig = AppConfig()
-    
-    // 2. Contenedor de SwiftData
+    @State private var selectedDetailView: String?
     let modelContainer: ModelContainer
+    @StateObject private var appConfig: AppConfig
     
-    // Propiedad para acceder al provider definido en AppConfig
     private var storageProvider: StorageProvider {
         appConfig.storageProvider
     }
     
     init() {
-        // Configuración del esquema con todos los modelos de la app
-        let schema = Schema([
-            Habit.self,
-            DailyNote.self,
-            Goal.self,
-            Milestone.self,
-            Streak.self
-        ])
+        // Inicializar el ModelContainer
+        let schema = Schema([Habit.self, DailyNote.self, Streak.self])
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         
-        let modelConfiguration = ModelConfiguration(
-            schema: schema,
-            isStoredInMemoryOnly: false
-        )
-        
+        let container: ModelContainer
         do {
-            self.modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
-            print("✅ ModelContainer inicializado con éxito")
+            container = try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
-            fatalError("❌ Error al inicializar ModelContainer: \(error.localizedDescription)")
+            fatalError("❌ Error inicializando ModelContainer: \(error)")
         }
         
-        // Permisos de notificaciones (solo iOS)
+        self.modelContainer = container
+        self._appConfig = StateObject(wrappedValue: AppConfig(modelContainer: container))
+        
         #if os(iOS)
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, _ in
+        UNUserNotificationCenter.current().requestAuthorization(
+            options: [.alert, .sound, .badge]
+        ) { granted, error in
             if granted {
-                print("✅ Permisos de notificación concedidos")
+                print("✅ Permiso concedido para notificaciones")
+            } else if let error = error {
+                print("❌ Error solicitando permisos: \(error)")
             }
         }
         #endif
     }
     
     var body: some Scene {
-        WindowGroup {
-            Group {
-                #if os(iOS)
-                // --- DISEÑO PARA IPHONE (TABS) ---
-                TabView {
-                    HabitListView(storageProvider: storageProvider)
-                        .tabItem {
-                            Label("Hábitos", systemImage: "checklist")
-                        }
-                    
-                    DailyNotesView()
-                        .tabItem {
-                            Label("Notas", systemImage: "note.text")
-                        }
-                    
-                    NavigationStack {
-                        StatisticsView()
+        WindowGroup{
+#if os(iOS)
+            TabView {
+                HabitListView(storageProvider: storageProvider)
+                    .tabItem {
+                        Label("Hábitos", systemImage: "checklist")
                     }
+                DailyNotesView(storageProvider: storageProvider)
+                    .tabItem {
+                        Label("Notas", systemImage: "note.text")
+                    }
+             
+                 StatisticsView()             
                     .tabItem {
                         Label("Estadísticas", systemImage: "chart.bar")
                     }
-                    
-                    GoalsView()
-                        .tabItem {
-                            Label("Objetivos", systemImage: "target")
-                        }
-                    
-                    SettingsView()
-                        .tabItem {
-                            Label("Ajustes", systemImage: "gearshape")
-                        }
-                }
-                #else
-                // --- DISEÑO PARA IPAD / MACOS (SIDEBAR) ---
-                NavigationSplitView {
-                    List(selection: $selectedDetailView) {
-                        NavigationLink(value: "habitos") {
-                            Label("Hábitos", systemImage: "checklist")
-                        }
-                        NavigationLink(value: "notas") {
-                            Label("Notas Diarias", systemImage: "note.text")
-                        }
-                        NavigationLink(value: "rachas") {
-                            Label("Rachas/Estadísticas", systemImage: "flame")
-                        }
-                        NavigationLink(value: "objetivos") {
-                            Label("Objetivos", systemImage: "target")
-                        }
-                        NavigationLink(value: "ajustes") {
-                            Label("Ajustes", systemImage: "gearshape")
-                        }
+                TestReminderView()
+                    .tabItem {
+                        Label("Test", systemImage: "bell")
                     }
-                    .navigationTitle("HabitApp")
-                } detail: {
-                    switch selectedDetailView {
-                    case "habitos":
-                        HabitListView(storageProvider: storageProvider)
-                    case "notas":
-                        DailyNotesView()
-                    case "rachas":
-                        StatisticsView()
-                    case "objetivos":
-                        GoalsView()
-                    case "ajustes":
-                        SettingsView()
-                    default:
-                        Text("Selecciona una opción en el menú lateral")
-                            .foregroundStyle(.secondary)
+                SettingsView()
+                    .tabItem {
+                        Label("Ajustes", systemImage: "gearshape")
                     }
-                }
-                #endif
             }
-            // --- MODIFICADORES GLOBALES (El orden es la clave) ---
-            .modelContainer(modelContainer)    // 1. Provee el contexto de base de datos
-            .setupApp()                        // 2. Ejecuta el AppInitializer (busca appConfig)
-            .environmentObject(appConfig)      // 3. Envuelve todo lo anterior con el objeto config
+            .environmentObject(appConfig)
+            .modelContainer(modelContainer)  //  AGREGAR ESTO
+
+#else
+            NavigationSplitView {
+                List(selection: $selectedDetailView) {
+                    NavigationLink(value: "habitos") {
+                        Label("Habitos", systemImage: "checklist")
+                    }
+                    NavigationLink(value: "notas") {
+                        Label("Notas Diarias", systemImage: "note.text")
+                    }
+                    NavigationLink(value: "rachas") {
+                        Label("Rachas", systemImage: "flame")
+                    }
+                    NavigationLink(value: "objetivos") {
+                        Label("Objetivos", systemImage: "target")
+                    }
+                    NavigationLink(value: "ajustes") {
+                        Label("Ajustes", systemImage: "gearshape")
+                    }
+                }
+            } detail: {
+                switch selectedDetailView {
+                case "habitos":
+                    HabitListView(storageProvider: storageProvider)
+                case "notas":
+                    DailyNotesView(storageProvider: storageProvider)
+                case "objetivos":
+                    GoalsView(storageProvider: storageProvider)
+                case "ajustes":
+                    SettingsView()
+                default:
+                    Text("Seleccione una opción")
+                }
+            }
+            .environmentObject(appConfig)
+            .modelContainer(modelContainer)  //  AGREGAR ESTO
+#endif
         }
     }
 }
