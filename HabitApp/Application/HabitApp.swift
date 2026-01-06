@@ -53,6 +53,10 @@ struct HabitApp: App {
                     .tabItem {
                         Label("Objetivos", systemImage: "target")
                     }
+                 StatisticsView()             
+                    .tabItem {
+                        Label("Estadísticas", systemImage: "chart.bar")
+                    }
                 TestReminderView()
                     .tabItem {
                         Label("Test", systemImage: "bell")
