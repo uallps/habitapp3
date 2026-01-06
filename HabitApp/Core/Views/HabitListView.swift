@@ -31,7 +31,7 @@ extension HabitListView {
     var iosBody: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                // 🔹 Encabezado compacto
+                //  Encabezado compacto
                 VStack(spacing: 8) {
                     HStack {
                         Text(monthYearString)
@@ -108,7 +108,7 @@ extension HabitListView {
                 
                 Divider()
                 
-                // 🔹 Día actual - MÁS COMPACTO
+                //  Día actual - MÁS COMPACTO
                 HStack {
                     Text(dayName(for: currentDate))
                         .font(.subheadline)
@@ -129,7 +129,7 @@ extension HabitListView {
                 
                 Divider()
                 
-                // 🔹 Lista de hábitos (SIEMPRE dentro de List)
+                //  Lista de hábitos (SIEMPRE dentro de List)
                 List {
                     if filteredHabits.isEmpty {
                         VStack(spacing: 16) {

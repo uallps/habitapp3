@@ -63,7 +63,7 @@ struct HabitApp: App {
                     }
             }
             .environmentObject(appConfig)
-            .modelContainer(modelContainer)  // ⭐ AGREGAR ESTO
+            .modelContainer(modelContainer)  //  AGREGAR ESTO
 
 #else
             NavigationSplitView {
@@ -99,7 +99,7 @@ struct HabitApp: App {
                 }
             }
             .environmentObject(appConfig)
-            .modelContainer(modelContainer)  // ⭐ AGREGAR ESTO
+            .modelContainer(modelContainer)  //  AGREGAR ESTO
 #endif
         }
     }

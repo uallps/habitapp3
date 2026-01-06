@@ -218,7 +218,7 @@ extension GoalsView {
             .sheet(isPresented: $showingAddGoal) {
                 AddGoalView(habits: habits)
             }
-            .frame(minWidth: 800, minHeight: 600)
+            .frame(minWidth: 600, minHeight: 400)
         }
     }
 }
@@ -249,7 +249,7 @@ struct MacGoalCard: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 8) {
                     Text(goal.title)
@@ -279,7 +279,7 @@ struct MacGoalCard: View {
                 }
             }
             
-            VStack(spacing: 8) {
+            VStack(spacing: 6) {
                 HStack {
                     Text("\(actualCount)")
                         .font(.title3)
@@ -319,16 +319,16 @@ struct MacGoalCard: View {
                             .foregroundColor(.orange)
                     }
                 }
-                .padding(8)
+                .padding(6)
                 .background(Color.yellow.opacity(0.08))
-                .cornerRadius(6)
+                .cornerRadius(4)
             }
         }
-        .padding(16)
+        .padding(12)
         .background(
-            RoundedRectangle(cornerRadius: 12)
+            RoundedRectangle(cornerRadius: 10)
                 .fill(Color(.controlBackgroundColor))
-                .shadow(color: Color.black.opacity(0.08), radius: 4, x: 0, y: 2)
+                .shadow(color: Color.black.opacity(0.06), radius: 3, x: 0, y: 1)
         )
         .overlay(
             RoundedRectangle(cornerRadius: 12)

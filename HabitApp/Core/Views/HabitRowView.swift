@@ -15,7 +15,7 @@ struct HabitRowView: View {
     
     var body: some View {
         HStack {
-            // 🔹 Botón para marcar completado
+            //  Botón para marcar completado
             Button(action: toggleCompletion) {
                 Image(systemName: habit.isCompletedForDate(date) ? "checkmark.circle.fill" : "circle")
                     .foregroundColor(habit.isCompletedForDate(date) ? .green : .gray)
@@ -23,7 +23,7 @@ struct HabitRowView: View {
             }
             .buttonStyle(.plain)
             
-            // 🔹 Información del hábito
+            //  Información del hábito
             VStack(alignment: .leading) {
                 Text(habit.title)
                     .strikethrough(habit.isCompletedForDate(date))
@@ -44,7 +44,7 @@ struct HabitRowView: View {
             
             Spacer()
             
-            // 🔹 Navegación a notas
+            //  Navegación a notas
             NavigationLink {
                 HabitNotesView(habit: habit, currentDate: date, storageProvider: storageProvider)
             } label: {
@@ -54,7 +54,7 @@ struct HabitRowView: View {
             }
             .buttonStyle(.plain)
             
-            // 🔹 Botón para editar
+            //  Botón para editar
             Button {
                 showingEditSheet = true
             } label: {
@@ -65,7 +65,7 @@ struct HabitRowView: View {
             .buttonStyle(.plain)
             .padding(.leading, 4)
             
-            // 🔹 Botón para eliminar
+            //  Botón para eliminar
             Button {
                 showingDeleteAlert = true
             } label: {
@@ -97,7 +97,7 @@ struct HabitRowView: View {
             try modelContext.save()
             
         } catch {
-            print("❌ Error: \(error)")
+            print(" Error: \(error)")
         }
     }
     

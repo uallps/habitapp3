@@ -63,7 +63,7 @@ final class HabitListViewModel: ObservableObject {
             try storageProvider.context.save()
             print(" Hábito '\(habit.title)' guardado - Días completados: \(habit.doneDates.count)")
             
-            // ⭐ Esperar a que SwiftData sincronice completamente
+            //  Esperar a que SwiftData sincronice completamente
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 PluginRegistry.shared.notifyDataChanged(
                     taskId: habit.id,
