@@ -19,36 +19,7 @@
     "%lld" : {
 
     },
-    "%lld / %lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld / %2$lld"
-          }
-        }
-      }
-    },
     "%lld Completados" : {
-
-    },
-    "%lld de %lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld de %2$lld"
-          }
-        }
-      }
-    },
-    "%lld días" : {
-
-    },
-    "%lld días completados" : {
-
-    },
-    "%lld días restantes" : {
 
     },
     "%lld Pendientes" : {
@@ -96,9 +67,6 @@
         }
       }
     },
-    "Agregar Hito" : {
-
-    },
     "Ajustes" : {
 
     },
@@ -112,9 +80,6 @@
 
     },
     "Arquitectura MVVM" : {
-
-    },
-    "Cambiar" : {
 
     },
     "Cancelar" : {
@@ -141,10 +106,10 @@
     "Contenido" : {
 
     },
-    "Crea tu primer hábito tocando el botón +" : {
+    "Crea hábitos de ejemplo para empezar" : {
 
     },
-    "Crea tu primer objetivo para comenzar a alcanzar tus metas" : {
+    "Crea tu primera nota tocando el botón +" : {
 
     },
     "Creado: %@ a las %@" : {
@@ -160,22 +125,19 @@
     "Crear hábito" : {
 
     },
+    "Crear hábitos de muestra" : {
+
+    },
     "Datos" : {
 
     },
     "Desarrollado con SwiftUI" : {
 
     },
-    "Descripción (opcional)" : {
-
-    },
     "Detalle de Nota" : {
 
     },
     "Días de la semana" : {
-
-    },
-    "Días Restantes" : {
 
     },
     "Editar" : {
@@ -196,10 +158,10 @@
     "Esperado" : {
 
     },
-    "Esta acción eliminará todos los hábitos, notas y objetivos. No se puede deshacer." : {
+    "Esta acción eliminará el hábito y su historial de rachas." : {
 
     },
-    "Esta acción no se puede deshacer" : {
+    "Esta acción eliminará todos los hábitos, notas y objetivos. No se puede deshacer." : {
 
     },
     "Esta acción no se puede deshacer." : {
@@ -209,15 +171,6 @@
 
     },
     "Fecha" : {
-
-    },
-    "Fecha de Inicio" : {
-
-    },
-    "Fecha límite" : {
-
-    },
-    "Fecha Objetivo" : {
 
     },
     "General" : {
@@ -235,22 +188,10 @@
     "HabitApp" : {
 
     },
-    "Hábito Asociado" : {
-
-    },
     "Hábitos" : {
 
     },
     "Hello, world!" : {
-
-    },
-    "Hito" : {
-
-    },
-    "Hitos" : {
-
-    },
-    "Hitos (opcional)" : {
 
     },
     "Hora de recordatorio" : {
@@ -259,19 +200,10 @@
     "Información" : {
 
     },
-    "Información del Objetivo" : {
-
-    },
     "Limpiar" : {
 
     },
     "Limpiar todos los datos" : {
-
-    },
-    "Meta" : {
-
-    },
-    "Meta: %lld" : {
 
     },
     "Mostrar fechas de vencimiento" : {
@@ -280,22 +212,16 @@
     "Mostrar prioridades" : {
 
     },
-    "Ninguno" : {
-
-    },
     "No hay datos disponibles" : {
 
     },
     "No hay hábitos con estadísticas" : {
 
     },
-    "No hay hábitos disponibles" : {
-
-    },
     "No hay hábitos programados" : {
 
     },
-    "No hay notas para esta fecha" : {
+    "No hay hábitos programados para hoy" : {
 
     },
     "Notas" : {
@@ -314,12 +240,6 @@
 
     },
     "Nuevo hábito" : {
-
-    },
-    "Nuevo Objetivo" : {
-
-    },
-    "Objetivo: %lld días" : {
 
     },
     "Objetivos" : {
@@ -388,9 +308,6 @@
     "Rango" : {
 
     },
-    "Selecciona un hábito para vincular con este objetivo" : {
-
-    },
     "Sin datos" : {
 
     },
@@ -409,9 +326,6 @@
     "Sin notas" : {
 
     },
-    "Sin Objetivos" : {
-
-    },
     "Sistema de notificaciones inteligentes" : {
 
     },
@@ -419,6 +333,9 @@
 
     },
     "Tendencia" : {
+
+    },
+    "Test" : {
 
     },
     "Test Hábitos Mañana" : {

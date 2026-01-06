@@ -56,7 +56,6 @@ struct TestReminderView: View {
             taskId: UUID(),
             title: "Test desde Plugin",
             dueDate: futureDate,
-            doneDates: fechasCompletado // Pasamos el array con la fecha de hoy
         )
         message = "Plugin ejecutado - alerta en 3s ⏰"
     }

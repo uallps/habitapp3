@@ -15,5 +15,5 @@ protocol TaskDataObservingPlugin {
     ///   - taskId: UUID de la nota o hábito
     ///   - title: Título del item
     ///   - dueDate: Fecha opcional asociada al item
-    func onDataChanged(taskId: UUID, title: String, dueDate: Date?, doneDates: [Date]?)
+    func onDataChanged(taskId: UUID, title: String, dueDate: Date?)
 }

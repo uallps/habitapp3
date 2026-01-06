@@ -37,7 +37,7 @@ class AppConfig: ObservableObject {
         //  Registrar los plugins
         registry.register(plugin: ReminderPlugin())
 
-        registry.register(plugin: StreakPlugin(storageProvider: provider))
+        registry.register(plugin: StreakPlugin(storageProvider: storageProvider))
 
         print("✅ Plugins registrados correctamente")
     }

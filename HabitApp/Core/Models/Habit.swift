@@ -1,3 +1,10 @@
+//
+//  Habit.swift
+//  HabitApp
+//
+//  Created by Aula03 on 15/10/25.
+//
+
 import Foundation
 import SwiftData
 
@@ -16,8 +23,8 @@ class Habit {
     
     //  Computed property para obtener las fechas completadas
     var doneDates: [Date] {
-        guard !doneDatesString.isEmpty else { 
-            return [] 
+        guard !doneDatesString.isEmpty else {
+            return []
         }
         
         let dates = doneDatesString.split(separator: ",").compactMap { dateString -> Date? in
@@ -95,13 +102,32 @@ class Habit {
     }
 }
 
-// MARK: - Priority Enum (Mantenido para evitar errores de Scope)
 enum Priority: String, Codable, CaseIterable {
     case low = "Baja"
     case medium = "Media"
     case high = "Alta"
     
     var displayName: String {
-        self.rawValue
+        return self.rawValue
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(String.self)
+        
+        // Handle both English and Spanish values for backward compatibility
+        switch rawValue {
+        case "Baja", "low":
+            self = .low
+        case "Media", "medium":
+            self = .medium
+        case "Alta", "high":
+            self = .high
+        default:
+            throw DecodingError.dataCorruptedError(
+                in: container,
+                debugDescription: "Cannot initialize Priority from invalid String value \(rawValue)"
+            )
+        }
     }
 }

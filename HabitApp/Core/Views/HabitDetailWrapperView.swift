@@ -7,7 +7,7 @@ struct HabitDetailWrapper: View {
     let viewModel: HabitListViewModel
     let isNew: Bool
     
-    // ⭐ Estados locales para evitar binding directo con @State var habit
+    //  Estados locales para evitar binding directo con @State var habit
     @State private var title: String
     @State private var selectedDays: [Int]
     @State private var priority: Priority
@@ -51,7 +51,7 @@ extension HabitDetailWrapper {
                 
                 ScrollView {
                     VStack(spacing: 24) {
-                        // 🔹 Título
+                        //  Título
                         VStack(alignment: .leading, spacing: 8) {
                             HStack(spacing: 8) {
                                 Image(systemName: "text.cursor")
@@ -70,7 +70,7 @@ extension HabitDetailWrapper {
                         .cornerRadius(12)
                         .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
                         
-                        // 🔹 Días de la semana
+                        //  Días de la semana
                         VStack(alignment: .leading, spacing: 12) {
                             HStack(spacing: 8) {
                                 Image(systemName: "calendar")
@@ -88,7 +88,7 @@ extension HabitDetailWrapper {
                         .cornerRadius(12)
                         .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
                         
-                        // 🔹 Prioridad
+                        //  Prioridad
                         VStack(alignment: .leading, spacing: 12) {
                             HStack(spacing: 8) {
                                 Image(systemName: "flag.fill")
@@ -110,7 +110,7 @@ extension HabitDetailWrapper {
                         .cornerRadius(12)
                         .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
                         
-                        // 🔹 Botones
+                        //  Botones
                         VStack(spacing: 12) {
                             Button(action: saveHabit) {
                                 HStack(spacing: 8) {
@@ -204,11 +204,11 @@ extension HabitDetailWrapper {
                     
                     Spacer()
                 }
-                .padding(.horizontal, 24)
-                .padding(.top, 24)
+                .padding(.horizontal, 20)
+                .padding(.top, 20)
                 
                 // Form
-                VStack(spacing: 20) {
+                VStack(spacing: 16) {
                     // Título
                     VStack(alignment: .leading, spacing: 8) {
                         HStack(spacing: 8) {
@@ -223,9 +223,9 @@ extension HabitDetailWrapper {
                             .textFieldStyle(.roundedBorder)
                             .font(.body)
                     }
-                    .padding(16)
+                    .padding(12)
                     .background(Color(.controlBackgroundColor))
-                    .cornerRadius(12)
+                    .cornerRadius(10)
                     
                     // Días de la semana
                     VStack(alignment: .leading, spacing: 12) {
@@ -240,9 +240,9 @@ extension HabitDetailWrapper {
                         WeekdaySelector(selectedDays: $selectedDays)
                             .padding(.vertical, 4)
                     }
-                    .padding(16)
+                    .padding(12)
                     .background(Color(.controlBackgroundColor))
-                    .cornerRadius(12)
+                    .cornerRadius(10)
                     
                     // Prioridad
                     VStack(alignment: .leading, spacing: 12) {
@@ -261,11 +261,11 @@ extension HabitDetailWrapper {
                         }
                         .pickerStyle(.segmented)
                     }
-                    .padding(16)
+                    .padding(12)
                     .background(Color(.controlBackgroundColor))
-                    .cornerRadius(12)
+                    .cornerRadius(10)
                 }
-                .padding(.horizontal, 24)
+                .padding(.horizontal, 20)
                 
                 Spacer()
                 
@@ -295,11 +295,11 @@ extension HabitDetailWrapper {
                     .controlSize(.large)
                     .disabled(title.isEmpty || selectedDays.isEmpty)
                 }
-                .padding(.horizontal, 24)
-                .padding(.bottom, 24)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 20)
             }
         }
-        .frame(minWidth: 500, minHeight: 450)
+        .frame(minWidth: 450, minHeight: 380)
     }
 }
 #endif
@@ -308,7 +308,7 @@ extension HabitDetailWrapper {
 extension HabitDetailWrapper {
     private func saveHabit() {
         if isNew {
-            // ✅ Crear nuevo hábito
+            //  Crear nuevo hábito
             viewModel.addHabit(
                 title: title,
                 dueDate: nil,
@@ -317,7 +317,7 @@ extension HabitDetailWrapper {
                 scheduledDays: selectedDays
             )
         } else if let habitToEdit = habitToEdit {
-            // ✅ Actualizar hábito existente
+            //  Actualizar hábito existente
             habitToEdit.title = title
             habitToEdit.scheduledDaysString = selectedDays.map { String($0) }.joined(separator: ",")
             habitToEdit.priority = priority

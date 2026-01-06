@@ -144,8 +144,6 @@ extension SettingsView {
             // Eliminar todas las notas
             try modelContext.delete(model: DailyNote.self)
             
-            // Eliminar todos los objetivos
-            try modelContext.delete(model: Goal.self)
             
             try modelContext.save()
         } catch {

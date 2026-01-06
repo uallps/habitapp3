@@ -9,19 +9,23 @@ final class StreakPlugin: TaskDataObservingPlugin {
     }
     
     @MainActor
-    func onDataChanged(taskId: UUID, title: String, dueDate: Date?, doneDates: [Date]?) {
-        guard let dates = doneDates else { return }
-        
+    func onDataChanged(taskId: UUID, title: String, dueDate: Date?) {
         let context = storageProvider.context
         
-        // 1. Calcular la racha con las fechas recibidas
-        let streakValue = calculateStreak(from: dates)
-        
-        // 2. Buscar si ya existe un objeto Streak para este hábito
-        let predicate = #Predicate<Streak> { $0.habitId == taskId }
-        let descriptor = FetchDescriptor<Streak>(predicate: predicate)
+        // 1. Buscar el hábito para obtener sus doneDates
+        let habitPredicate = #Predicate<Habit> { $0.id == taskId }
+        let habitDescriptor = FetchDescriptor<Habit>(predicate: habitPredicate)
         
         do {
+            guard let habit = try context.fetch(habitDescriptor).first else { return }
+            
+            // 2. Calcular la racha con las fechas del hábito
+            let streakValue = calculateStreak(from: habit.doneDates)
+            
+            // 3. Buscar si ya existe un objeto Streak para este hábito
+            let predicate = #Predicate<Streak> { $0.habitId == taskId }
+            let descriptor = FetchDescriptor<Streak>(predicate: predicate)
+            
             let existingStreaks = try context.fetch(descriptor)
             
             if let streakObj = existingStreaks.first {
@@ -33,7 +37,7 @@ final class StreakPlugin: TaskDataObservingPlugin {
                 context.insert(newStreak)
             }
             
-            // 3. Guardar cambios y procesar para que la UI se entere YA
+            // 4. Guardar cambios y procesar para que la UI se entere YA
             try context.save()
             context.processPendingChanges()
             
