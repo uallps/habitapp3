@@ -278,6 +278,30 @@ struct CategoryDetailWrapperView: View {
                 }
     }
     
+    @ViewBuilder
+    var habitListSection: some View {
+        Section(header: Text("Hábitos")) {
+            if category.habits.isEmpty {
+                Text("No has añadido hábitos a la categoría")
+            } else {
+                ForEach(category.habits, id: \.id) { habit in
+                    NavigationLink {
+                        HabitDetailWrapper(
+                            habitListVM: HabitListViewModel(storageProvider: categoryListVM.storageProvider),
+                            isNew: false,
+                            habit: habit,
+                            storageProvider: categoryListVM.storageProvider
+                        )
+                    }label: {
+                        HabitRowView(
+                            habit: habit,
+                            toggleCompletion: {}
+                        )
+                    }
+                }
+            }
+        }
+    }
     
     
     var body: some View {
@@ -289,6 +313,7 @@ struct CategoryDetailWrapperView: View {
                 prioritySection
                 saveSection
                 subcategorySection
+                habitListSection
             }
             .navigationDestination(item: $newSub) { sub in
                             CategoryDetailWrapperView(
