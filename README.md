@@ -193,7 +193,7 @@ TODO: Modificar con lo nuestro
 <img src="https://github.com/ifm562.png" width="80" style="border-radius:50%"/><br/>
 <strong>Ismael Fernández Méndez</strong><br/>
 <sub>🗂️ Categorías</sub><br/>
-<a href="https://github.com/ifm562">@ifm562</a>
+<a href="https://github.com/ifm562-ual">@ifm562-ual</a>
 </td>
 <td align="center" width="20%">
 <img src="https://github.com/dgp336.png" width="80" style="border-radius:50%"/><br/>
