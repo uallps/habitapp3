@@ -38,16 +38,13 @@
 <tr>
 <td width="50%">
 
-### 📝 Notas Diarias
-- Agrupación de hábitos
+### Objetivos y Metas
 
 </td>
 <td width="50%">
 
-### ❓ Característica Personal 2
+### Adicciones y Multilenguaje
 - Sugerencias de hábitos con GPT-4 Vision
-- Análisis inteligente de progreso
-- Recomendaciones personalizadas
 
 </td>
 </tr>
@@ -189,7 +186,7 @@ TODO: Modificar con lo nuestro
 <td align="center" width="20%">
 <img src="https://github.com/ifm562-ual.png" width="80" style="border-radius:50%"/><br/>
 <strong>Ismael Fernández Méndez</strong><br/>
-<sub>🗂️ Categorías</sub><br/>
+<sub>🗂️ Categorías, 🚬 Adicciones y 🌍 MultiLenguaje</sub><br/>
 <a href="https://github.com/ifm562-ual">@ifm562-ual</a>
 </td>
 <td align="center" width="20%">
