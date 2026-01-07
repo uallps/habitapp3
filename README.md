@@ -10,10 +10,7 @@
 
 <p align="center">
   <a href="https://github.com/uallps/habitapp1/actions/workflows/ios.yml">
-    <img src="https://github.com/uallps/habitapp1/actions/workflows/ios.yml/badge.svg" alt="iOS CI/CD"/>
-  </a>
-  <a href="https://github.com/uallps/habitapp1/actions/workflows/module-gamification.yml">
-    <img src="https://github.com/uallps/habitapp1/actions/workflows/module-gamification.yml/badge.svg" alt="Gamification"/>
+    <img src="https://github.com/uallps/habitapp1/actions/workflows/ios.yml/badge.svg" alt="CI/CD"/>
   </a>
   <img src="https://img.shields.io/badge/Swift-5.9-F05138?logo=swift&logoColor=white" alt="Swift"/>
   <img src="https://img.shields.io/badge/iOS-26+-007AFF?logo=apple&logoColor=white" alt="iOS"/>
@@ -190,7 +187,7 @@ TODO: Modificar con lo nuestro
 <a href="https://github.com/ualfsp323">@ualfsp323</a>
 </td>
 <td align="center" width="20%">
-<img src="https://github.com/ifm562.png" width="80" style="border-radius:50%"/><br/>
+<img src="https://github.com/ifm562-ual.png" width="80" style="border-radius:50%"/><br/>
 <strong>Ismael Fernández Méndez</strong><br/>
 <sub>🗂️ Categorías</sub><br/>
 <a href="https://github.com/ifm562-ual">@ifm562-ual</a>
