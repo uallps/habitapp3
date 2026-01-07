@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 @Model
-class Addiction: Habit {
+class Addiction: Habit, FeaturePlugin {
     // Describe la gravedad de la adicción
     var severity: AddictionSeverity
 
@@ -17,6 +17,10 @@ class Addiction: Habit {
     
     // Número de veces que el usuario ha recaído en la adicción
     var relapseCount: Int = 0
+
+    init(config: AppConfig) {
+
+    }
 
     
     // Optional initializer to add extra fields
