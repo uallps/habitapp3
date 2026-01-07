@@ -88,7 +88,7 @@
 <sub>Organiza tus hábitos y agrúpalos de manera personalizada</sub>
 </td>
 <td align="center" width="25%">
-<img src="https://cdn-icons-png.flaticon.com/512/3767/3767084.png" width="60"/><br/>
+<img src="https://i.redd.it/streak-flame-updated-v0-3n46sx7a0e9b1.png?width=283&format=png&auto=webp&s=74253ccd745fc4cf470e99c589921ce4d83c4d10" width="60"/><br/>
 <strong>Rachas</strong><br/>
 <sub>Motívate con tu propio progreso</sub>
 </td>
@@ -98,59 +98,16 @@
 <sub>La aplicación te recuerda lo que se te olvida</sub>
 </td>
 <td align="center" width="25%">
-<img src="https://img.icons8.com/3d-fluency/94/combo-chart.png" width="60"/><br/>
+<img src="https://cdn-icons-png.flaticon.com/512/5136/5136407.png" width="60"/><br/>
 <strong>Estadísticas</strong><br/>
 <sub>Visualiza tu progreso con gráficos detallados</sub>
-</td>
-</tr>
-<tr>
-<td align="center" width="25%">
-<img src="https://img.icons8.com/3d-fluency/94/trophy.png" width="60"/><br/>
-<strong>Logros y Trofeos</strong><br/>
-<sub>Desbloquea recompensas por tu esfuerzo</sub>
-</td>
-<td align="center" width="25%">
-<img src="https://img.icons8.com/3d-fluency/94/camera.png" width="60"/><br/>
-<strong>Fotos y 3D</strong><br/>
-<sub>Documenta tus hábitos visualmente</sub>
-</td>
-<td align="center" width="25%">
-<img src="https://img.icons8.com/3d-fluency/94/brain.png" width="60"/><br/>
-<strong>IA Integrada</strong><br/>
-<sub>Sugerencias personalizadas con GPT-4</sub>
-</td>
-<td align="center" width="25%">
-<img src="https://img.icons8.com/3d-fluency/94/gift.png" width="60"/><br/>
-<strong>Recompensas Diarias</strong><br/>
-<sub>XP bonus por login consecutivo</sub>
 </td>
 </tr>
 </table>
 
 ---
 
-## 📱 Capturas
-
-<p align="center">
-  <img src="docs/screenshots/habitsview.png" width="180" alt="Vista de Hábitos"/>
-  &nbsp;&nbsp;
-  <img src="docs/screenshots/dayoverview.png" width="180" alt="Resumen del Día"/>
-  &nbsp;&nbsp;
-  <img src="docs/screenshots/gamecenter.png" width="180" alt="Centro de Gamificación"/>
-</p>
-
-<p align="center">
-  <img src="docs/screenshots/aicameragenerated.png" width="180" alt="Cámara IA"/>
-  &nbsp;&nbsp;
-  <img src="docs/screenshots/photographerachievement.png" width="180" alt="Logro Desbloqueado"/>
-</p>
-
-<p align="center">
-  <sub>
-    <strong>De izquierda a derecha:</strong> Vista de hábitos • Resumen del día • Centro de gamificación<br/>
-    Cámara con IA • Logro desbloqueado
-  </sub>
-</p>
+## 📸 Capturas
 
 ---
 
@@ -160,46 +117,20 @@
 
 | Requisito | Versión |
 |-----------|---------|
-| macOS | Sequoia 26.0+ |
-| Xcode | 16.3+ |
-| iOS Deployment Target | 26.0+ |
-| Swift | 5.9+ |
+| macOS | Sequoia ? |
+| Xcode | ? |
+| iOS Deployment Target | ? |
+| Swift | ? |
 
 ### Pasos
 
-```bash
-# 1. Clonar el repositorio
-git clone https://github.com/uallps/habitapp1.git
-
-# 2. Navegar al directorio
-cd habitapp1
-
-# 3. Abrir en Xcode
-open HabitApp.xcodeproj
-
-# 4. Configurar credenciales (opcional)
-cp HabitApp/Config/Secrets.plist.example HabitApp/Config/Secrets.plist
-# Editar Secrets.plist con tus API keys
-
-# 5. Build & Run
-# ⌘ + R en Xcode
-```
-
-### Configuración de API Keys
-
-Para habilitar todas las funcionalidades, configura estas claves en `Secrets.plist`:
-
-| Clave | Descripción | Requerido |
-|-------|-------------|-----------|
-| `OpenAI_API_Key` | Para sugerencias de hábitos con IA | Opcional |
-| `AdMob_App_ID` | Para anuncios (versión gratuita) | Opcional |
-
 ---
 
-## 🏗 Arquitectura
+## 👷🏻‍♂️ Arquitectura
 
-HabitApp implementa una **arquitectura modular** basada en el **Plugin Pattern** que permite añadir funcionalidades sin modificar el núcleo.
+HabitApp3 utiliza el patrón arquitectónico **Model View ViewModel**, así como una **arquitectura modular** basada en el patrón **Plugin** que permite añadir funcionalidades sin modificar el núcleo.
 
+TODO: Modificar con lo nuestro
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                     🎯 HabitApp Core                         │
@@ -227,123 +158,9 @@ HabitApp implementa una **arquitectura modular** basada en el **Plugin Pattern**
 
 | Módulo | Autor | Estado | Descripción |
 |--------|-------|:------:|-------------|
-| 📢 **Anuncios** | Avilés | ✅ | Gestión de anuncios AdMob para versión gratuita |
-| 📸 **Media 3D** | Lucas | ✅ | Captura de fotos y modelos 3D con LiDAR |
-| 🤖 **IA para Hábitos** | Diego | ✅ | Sugerencias inteligentes con GPT-4 Vision |
-| 📊 **Recaps** | Jorge | ✅ | Resúmenes visuales tipo Instagram Stories |
-| 🌍 **Multilenguaje** | Nieto | ✅ | Internacionalización (Español/Inglés) |
-| 🎨 **Apariencia** | Avilés | ✅ | Modo claro/oscuro/automático |
-| 🎮 **Gamificación** | Lucas | ✅ | XP, niveles, logros, trofeos, rewards |
-
+|  |  |  |  |
 ---
 
-## 🎮 Gamificación
-
-El corazón de HabitApp es su **sistema de gamificación** que transforma la formación de hábitos en una experiencia motivadora y divertida.
-
-### 🏆 Sistema de Niveles
-
-<table>
-<tr>
-<th>Nivel</th>
-<th>Nombre</th>
-<th>XP Requerido</th>
-<th>Icono</th>
-</tr>
-<tr><td align="center">1</td><td>Novato</td><td>0 - 100</td><td>⭐</td></tr>
-<tr><td align="center">2</td><td>Aprendiz</td><td>100 - 300</td><td>⭐</td></tr>
-<tr><td align="center">3</td><td>Dedicado</td><td>300 - 600</td><td>⭐</td></tr>
-<tr><td align="center">4</td><td>Constante</td><td>600 - 1,000</td><td>⭐</td></tr>
-<tr><td align="center">5</td><td>Experto</td><td>1,000 - 1,500</td><td>⭐</td></tr>
-<tr><td align="center">6</td><td>Maestro</td><td>1,500 - 2,200</td><td>⭐</td></tr>
-<tr><td align="center">7</td><td>Leyenda</td><td>2,200 - 3,000</td><td>👑</td></tr>
-<tr><td align="center">8</td><td>Héroe</td><td>3,000 - 4,000</td><td>👑</td></tr>
-<tr><td align="center">9</td><td>Campeón</td><td>4,000 - 5,500</td><td>🏆</td></tr>
-<tr><td align="center">10</td><td>Inmortal</td><td>5,500+</td><td>🏆</td></tr>
-</table>
-
-### 💰 Cómo Ganar XP
-
-| Acción | XP | Descripción |
-|--------|:--:|-------------|
-| ✅ Completar hábito | +5 | Por cada hábito completado |
-| 🔥 Bonus de racha | +2-20 | +2 XP por cada día de racha (máx 10 días) |
-| 🏅 Desbloquear logro | +10-200 | Según rareza del logro |
-| 🏆 Obtener trofeo | +50-1000 | Según tier del trofeo |
-| 🎁 Recompensa diaria | +5-50 | Ciclo de 7 días |
-
-### 🏅 Logros (26 total)
-
-<table>
-<tr>
-<td align="center" width="16%">
-<strong>🔥 Rachas</strong><br/>
-<sub>6 logros</sub>
-</td>
-<td align="center" width="16%">
-<strong>✅ Completados</strong><br/>
-<sub>6 logros</sub>
-</td>
-<td align="center" width="16%">
-<strong>📅 Consistencia</strong><br/>
-<sub>4 logros</sub>
-</td>
-<td align="center" width="16%">
-<strong>🧭 Explorador</strong><br/>
-<sub>5 logros</sub>
-</td>
-<td align="center" width="16%">
-<strong>👥 Social</strong><br/>
-<sub>0 logros</sub>
-</td>
-<td align="center" width="16%">
-<strong>⭐ Especiales</strong><br/>
-<sub>5 logros</sub>
-</td>
-</tr>
-</table>
-
-### 🏆 Trofeos (10 total)
-
-| Tier | Cantidad | XP Bonus | Ejemplos |
-|------|:--------:|:--------:|----------|
-| 🥉 **Bronce** | 2 | +50 | Iniciado, Persistente |
-| 🥈 **Plata** | 2 | +100 | Dedicado, Inquebrantable |
-| 🥇 **Oro** | 2 | +200 | Maestro, Leyenda Viviente |
-| 💎 **Platino** | 2 | +400 | Élite, Coleccionista |
-| 💠 **Diamante** | 2 | +1000 | Inmortal, Perfección |
-
-### 🎁 Recompensas Diarias
-
-| Día | Recompensa | Día | Recompensa |
-|:---:|:----------:|:---:|:----------:|
-| 1 | 5 XP | 5 | 25 XP |
-| 2 | 10 XP | 6 | 30 XP |
-| 3 | 15 XP | 7 | **50 XP** 🎉 |
-| 4 | 20 XP | | |
-
-> 💡 **Tip:** ¡Cada semana completa de login consecutivo aumenta tu multiplicador de XP!
-
----
-
-## 🧪 Testing
-
-```bash
-# Ejecutar todos los tests
-xcodebuild test -project HabitApp.xcodeproj -scheme HabitApp -destination 'platform=iOS Simulator,name=iPhone 17'
-
-# Tests de gamificación específicamente
-xcodebuild test -project HabitApp.xcodeproj -scheme HabitApp -only-testing:HabitAppTests/GamificationTests
-```
-
-### Cobertura de Tests
-
-| Módulo | Tests | Estado |
-|--------|:-----:|:------:|
-| Core | 15 | ✅ |
-| Gamificación | 25+ | ✅ |
-| Stores | 10 | ✅ |
-| Views | 8 | ✅ |
 
 ---
 
@@ -351,27 +168,14 @@ xcodebuild test -project HabitApp.xcodeproj -scheme HabitApp -only-testing:Habit
 
 | Documento | Descripción |
 |-----------|-------------|
-| 📐 [Arquitectura Modular](docs/ARQUITECTURA_MODULAR.md) | Patrones de diseño y estructura del proyecto |
-| 🎮 [Módulo Gamificación](docs/modules/MODULO_GAMIFICACION.md) | Sistema completo de XP, niveles y logros |
-| 🎨 [Iconos Gamificación](docs/ICONOS_GAMIFICACION.md) | Prompts para generar iconos de logros y trofeos |
-| 📢 [Módulo Anuncios](docs/modules/MODULO_ANUNCIOS.md) | Integración con Google AdMob |
-| 📸 [Módulo Media 3D](docs/modules/MODULO_MEDIA3D.md) | Captura de fotos y modelos 3D |
-| 🤖 [Módulo IA](docs/modules/MODULO_AIHABIT.md) | Sugerencias con GPT-4 Vision |
-| 📊 [Módulo Recaps](docs/modules/MODULO_RECAPS.md) | Resúmenes visuales |
-| 🌍 [Módulo Idiomas](docs/modules/MODULO_LANGUAGE.md) | Internacionalización |
-| 🎨 [Módulo Apariencia](docs/modules/MODULO_APPEARANCE.md) | Temas y modo oscuro |
+|  |  |
+
 
 ---
 
 ## �� Roadmap
 
-- [x] **v1.0** - MVP: Gestión de hábitos, rachas, notificaciones
-- [x] **v1.1** - Arquitectura modular con Plugin Pattern
-- [x] **v1.2** - Sistema de gamificación completo
-- [x] **v1.3** - Integración con IA (GPT-4 Vision)
-- [ ] **v1.4** - Funciones sociales y comunidad
-- [ ] **v1.5** - Integración con Apple Health
-- [ ] **v2.0** - Sincronización en la nube
+- [] **v1.0** - MVP: Categorías, Rachas, Estadísticas, Notas Diarias y Recordatoeios
 
 ---
 
@@ -380,34 +184,34 @@ xcodebuild test -project HabitApp.xcodeproj -scheme HabitApp -only-testing:Habit
 <table>
 <tr>
 <td align="center" width="20%">
-<img src="https://github.com/aaf925.png" width="80" style="border-radius:50%"/><br/>
-<strong>Alejandro Avilés</strong><br/>
-<sub>📢 Ads & 🎨 Appearance</sub><br/>
-<a href="https://github.com/aaf925">@aaf925</a>
+<img src="https://github.com/ualfsp323.png" width="80" style="border-radius:50%"/><br/>
+<strong>Franco Sergio Pereyra</strong><br/>
+<sub>📝 Notas Diarias & 🎨 Appearance</sub><br/>
+<a href="https://github.com/ualfsp323">@ualfsp323</a>
 </td>
 <td align="center" width="20%">
-<img src="https://github.com/lbm410.png" width="80" style="border-radius:50%"/><br/>
-<strong>Lucas Barrientos</strong><br/>
-<sub>📸 Media 3D & 🎮 Gamification</sub><br/>
-<a href="https://github.com/lbm410">@lbm410</a>
+<img src="https://github.com/ifm562.png" width="80" style="border-radius:50%"/><br/>
+<strong>Ismael Fernández Méndez</strong><br/>
+<sub>🗂️ Categorías</sub><br/>
+<a href="https://github.com/ifm562">@ifm562</a>
 </td>
 <td align="center" width="20%">
-<img src="https://github.com/dcc0230.png" width="80" style="border-radius:50%"/><br/>
-<strong>Diego Castañeda</strong><br/>
-<sub>🤖 AI for Habits</sub><br/>
-<a href="https://github.com/dcc0230">@dcc0230</a>
+<img src="https://github.com/dgp336.png" width="80" style="border-radius:50%"/><br/>
+<strong>David Granados Pérez</strong><br/>
+<sub>🔥 Rachas</sub><br/>
+<a href="https://github.com/dgp336">@dgp336</a>
 </td>
 <td align="center" width="20%">
-<img src="https://github.com/jgm847.png" width="80" style="border-radius:50%"/><br/>
-<strong>Jorge González</strong><br/>
-<sub>📊 Recaps</sub><br/>
-<a href="https://github.com/jgm847">@jgm847</a>
+<img src="https://github.com/ualjfr498.png" width="80" style="border-radius:50%"/><br/>
+<strong>Juan José Fernández Requena</strong><br/>
+<sub>📊 Estadísticas</sub><br/>
+<a href="https://github.com/jgm847">@ualjfr498</a>
 </td>
 <td align="center" width="20%">
-<img src="https://github.com/anm020.png" width="80" style="border-radius:50%"/><br/>
-<strong>Antonio R. Nieto</strong><br/>
-<sub>�� Language</sub><br/>
-<a href="https://github.com/anm020">@anm020</a>
+<img src="https://github.com/dcf313.png" width="80" style="border-radius:50%"/><br/>
+<strong></strong><br/>
+<sub>🔔 Recordatorios</sub><br/>
+<a href="https://github.com/dcf313">@dcf313</a>
 </td>
 </tr>
 </table>
@@ -444,10 +248,9 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 
 ## 🙏 Agradecimientos
 
-- **Apple** por SwiftUI, RealityKit y las APIs de iOS
-- **OpenAI** por GPT-4 Vision
-- **Google** por AdMob SDK
-- **Icons8** por los iconos 3D Fluency
+- **Apple** por SwiftUI y SwiftData
+- **Universidad de Almería** por ofrecer los Mac para el desarrollo
+- Al equipo de HabitApp1 por tener un README tan profesional que ha inspirado este
 - A todos los profesores y compañeros de la **Universidad de Almería**
 
 ---
@@ -457,9 +260,9 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 </p>
 
 <p align="center">
-  <a href="https://github.com/uallps/habitapp1/issues">Reportar Bug</a> •
-  <a href="https://github.com/uallps/habitapp1/issues">Solicitar Feature</a> •
-  <a href="https://github.com/uallps/habitapp1/pulls">Contribuir</a>
+  <a href="https://github.com/uallps/habitapp3/issues">Reportar Bug</a> •
+  <a href="https://github.com/uallps/habitapp3/issues">Solicitar Feature</a> •
+  <a href="https://github.com/uallps/habitapp3/pulls">Contribuir</a>
 </p>
 
 <p align="center">
