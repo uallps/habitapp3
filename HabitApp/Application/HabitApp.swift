@@ -55,10 +55,6 @@ struct HabitApp: App {
                     .tabItem {
                         Label("Objetivos", systemImage: "target")
                     }
-                TestReminderView()
-                    .tabItem {
-                        Label("Test", systemImage: "bell")
-                    }
                 SettingsView()
                     .tabItem {
                         Label("Ajustes", systemImage: "gearshape")
