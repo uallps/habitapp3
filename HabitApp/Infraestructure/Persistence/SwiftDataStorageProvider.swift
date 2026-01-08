@@ -7,6 +7,206 @@ class SwiftDataContext {
 }
 
 class SwiftDataStorageProvider: StorageProvider {
+
+    @MainActor
+    private func getRealInstanceAddiction(_ addiction: Addiction) -> Addiction? {
+        do {
+            let descriptor = FetchDescriptor<Addiction>(
+                predicate: #Predicate { $0.id == addiction.id },
+                sortBy: []
+            )
+            return try context.fetch(descriptor).first
+        } catch {
+            print("Error getting real instance of Addiction: \(error)")
+            return nil
+        }
+    }
+
+    @MainActor
+    func addAddiction(_Addiction addiction: Addiction) async throws {
+        if getRealInstanceAddiction(addiction) == nil {
+            context.insert(addiction)
+            try context.save()
+        }
+    }
+
+    @MainActor
+    func updateAddiction(_Addiction addiction: Addiction) async throws {
+        if let realAddiction = getRealInstanceAddiction(addiction) {
+            realAddiction.title = addiction.title
+            realAddiction.severity = addiction.severity
+            realAddiction.triggers = addiction.triggers
+            realAddiction.preventionHabits = addiction.preventionHabits
+            realAddiction.compensatoryHabits = addiction.compensatoryHabits
+            realAddiction.relapseCount = addiction.relapseCount
+            try context.save()
+        } else {
+            print("Error updating addiction: realAddiction is nil")
+        }
+    }
+
+    @MainActor
+    func deleteAddiction(_Addiction addiction: Addiction) async throws {
+        if let realAddiction = getRealInstanceAddiction(addiction) {
+            context.delete(realAddiction)
+            try context.save()
+        } else {
+            print("Error deleting addiction: realAddiction is nil")
+        }
+    }
+
+    @MainActor
+    func createSampleAddictions() async throws {
+       //TODO: Implement sample addictions creation
+    }
+
+    @MainActor
+    func addCompensatoryHabit(to addiction: Addiction, habit: Habit) async throws {
+        guard let realAddiction = getRealInstanceAddiction(addiction) else {
+            print("Error adding compensatory habit: addiction is nil")
+            return
+        }
+
+        guard let realHabit = getRealInstanceHabit(habit) else {
+            print("Error adding compensatory habit: habit is nil")
+            return
+        }
+
+        if !realAddiction.compensatoryHabits.contains(where: { $0.id == habit.id }) {
+            realAddiction.compensatoryHabits.append(realHabit)
+            try context.save()
+        }
+    }
+
+    @MainActor
+    func addPreventionHabit(to addiction: Addiction, habit: Habit) async throws {
+        guard let realAddiction = getRealInstanceAddiction(addiction) else {
+            print("Error adding prevention habit: addiction is nil")
+            return
+        }
+
+        guard let realHabit = getRealInstanceHabit(habit) else {
+            print("Error adding prevention habit: habit is nil")
+            return
+        }
+
+        if !realAddiction.preventionHabits.contains(where: { $0.id == habit.id }) {
+            realAddiction.preventionHabits.append(realHabit)
+            try context.save()
+        }
+    }
+
+    @MainActor
+    func addTrigerHabit(to addiction: Addiction, habit: Habit) async throws {
+        guard let realAddiction = getRealInstanceAddiction(addiction) else {
+            print("Error adding trigger habit: addiction is nil")
+            return
+        }
+
+        guard let realHabit = getRealInstanceHabit(habit) else {
+            print("Error adding trigger habit: habit is nil")
+            return
+        }
+
+        if !realAddiction.triggers.contains(where: { $0.id == habit.id }) {
+            realAddiction.triggers.append(habit)
+            try context.save()
+        }
+    }
+
+    @MainActor
+func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async throws {
+    guard let realAddiction = getRealInstanceAddiction(addiction) else {
+        print("Error removing compensatory habit: addiction is nil")
+        return
+    }
+
+    if realAddiction.compensatoryHabits.id == habit.id {
+        // No-op replacement; decide if you want a nullable compensatory habit instead
+        print("Removed compensatory habit")
+    }
+
+    try context.save()
+}
+
+    @MainActor
+    func removePreventionHabit(from addiction: Addiction, habit: Habit) async throws {
+        guard let realAddiction = getRealInstanceAddiction(addiction) else {
+            print("Error removing prevention habit: addiction is nil")
+            return
+        }
+
+        if let index = realAddiction.preventionHabits.firstIndex(where: { $0.id == habit.id }) {
+            realAddiction.preventionHabits.remove(at: index)
+            try context.save()
+        }
+    }
+
+    @MainActor
+    func removeTriggerHabit(from addiction: Addiction, habit: Habit) async throws {
+        guard let realAddiction = getRealInstanceAddiction(addiction) else {
+            print("Error removing trigger habit: addiction is nil")
+            return
+        }
+
+        if let index = realAddiction.triggers.firstIndex(where: { $0.id == habit.id }) {
+            realAddiction.triggers.remove(at: index)
+            try context.save()
+        }
+    }
+
+    @MainActor
+    func associateTriggerHabit(to addiction: Addiction, habit: Habit) async throws {
+        guard let realAddiction = getRealInstanceAddiction(addiction) else {
+            print("Error associating trigger habit: addiction is nil")
+            return
+        }
+
+        // Optional guard: only allow known triggers
+        guard realAddiction.triggers.contains(where: { $0.id == habit.id }) else {
+            print("Habit is not a registered trigger for this addiction")
+            return
+        }
+
+        realAddiction.relapseCount += 1
+        try context.save()
+    }
+
+        @MainActor
+    func associateCompensatoryHabit(to addiction: Addiction, habit: Habit) async throws {
+        guard let realAddiction = getRealInstanceAddiction(addiction) else {
+            print("Error associating trigger habit: addiction is nil")
+            return
+        }
+
+        guard realAddiction.compensatory.contains(where: { $0.id == habit.id }) else {
+            print("Habit is not a registered compensatory habit for this addiction")
+            return
+        }
+
+        // TODO: LLAMAR A MARCAR HÁBITO COMO REALIZADO
+        try context.save()
+    }
+
+        @MainActor
+    func associatePreventionrHabit(to addiction: Addiction, habit: Habit) async throws {
+        guard let realAddiction = getRealInstanceAddiction(addiction) else {
+            print("Error associating trigger habit: addiction is nil")
+            return
+        }
+
+        // Optional guard: only allow known triggers
+        guard realAddiction.triggers.contains(where: { $0.id == habit.id }) else {
+            print("Habit is not a registered prevention habit for this addiction")
+            return
+        }
+
+        // TODO: LLAMAR A MARCAR HÁBITO COMO REALIZADO
+
+        realAddiction.relapseCount += 1
+        try context.save()
+    }
+
     
     @MainActor
     private func getRealInstanceHabit(_ habit: Habit) -> Habit? {

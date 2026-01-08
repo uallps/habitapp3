@@ -5,6 +5,9 @@ struct AddictionDetailWrapperView: View {
     @Environment(\.dismiss) private var dismiss
     let addictionListVM: AddictionListViewModel
 
+    @State private var showingRelapseAlert = false
+    @State private var selectedTrigger: Habit?
+
     @Query(sort: \.title, order: .forward) private var habitsQuery: [Habit]
     
     //  Estados locales para evitar binding directo con @State var habit
@@ -80,9 +83,11 @@ struct AddictionDetailWrapperView: View {
                                         HStack(
                                             Text(trigger.title)
 
-                                            //  Botón para marcar hábito a adicción. Significado: "Este hábito ha desencadenado mi adicción hoy"
+                                            //  Botón para marcar hábito a adicción. Significado: "He hecho este hábito que me puede hacer recaer"
                                             Button(action: 
-                                                    addictionListVM.associateTriggerHabit()
+                                                       selectedTrigger = trigger
+                                                        showingRelapseAlert = true
+                                                        // Ahora, ¿he recaído o no? Preguntar al usuario
                                             ) {
                                                 Image(systemName: habit.isCompletedForDate(date) ? "checkmark.circle.fill" : "circle")
                                                     .foregroundColor(habit.isCompletedForDate(date) ? .green : .gray)
@@ -120,6 +125,25 @@ struct AddictionDetailWrapperView: View {
                             }
 
                         }
+                                .alert("Posible recaída", isPresented: $showingRelapseAlert) {
+            Button("Sí, he recaído", role: .destructive) {
+                if let trigger = selectedTrigger {
+                    addictionListVM.associateTriggerHabit(
+                        to: adiction,
+                        habit: trigger,
+                    )
+                }
+            }
+
+            Button("No, solo fue un riesgo") {
+
+            }
+
+            Button("Cancelar", role: .cancel) { }
+        } message: {
+            Text("¿Este hábito desencadenó una recaída hoy?")
+        }
+
     }
 
     @ViewBuilder
@@ -202,7 +226,7 @@ struct AddictionDetailWrapperView: View {
                                             // Desasociar hábito compensatorio
                                             Button(action:
                                                 addictionListVM.removeCompensatoryHabit(
-                                                    
+
                                                 )
                                             ) {
                                                 Image(systemName: "minus.circle.fill")

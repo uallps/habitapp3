@@ -3,6 +3,9 @@ import SwiftData
 
 @Model
 class Addiction: FeaturePlugin, ViewPlugin {
+
+    @Attribute(.unique) var id: UUID = UUID()
+
     // Describe la gravedad de la adicción
     var severity: AddictionSeverity
 

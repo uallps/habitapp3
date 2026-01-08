@@ -18,6 +18,23 @@ protocol StorageProvider {
     func deleteHabitFromCategory(habit: Habit, category: Category) async throws
     //END IF
     //DEV ONLY METHOD
+    //IF ADDICTIONS
+    func addAddiction(_Addiction: Addiction) async throws
+    func updateAddiction(_Addiction: Addiction) async throws
+    func deleteAddiction(_Addiction: Addiction) async throws
+    func createSampleAddictions(to addiction: Addiction, habit: Habit) async throws
+    func addCompensatoryHabit(to addiction: Addiction, habit: Habit) async throws
+    func addPreventionHabit(to addiction: Addiction, habit: Habit) async throws
+    func addTrigerHabit(to addiction: Addiction, habit: Habit) async throws
+    func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async throws
+    func removePreventionHabit(from addiction: Addiction, habit: Habit) async throws
+    func removeTriggerHabit(from addiction: Addiction, habit: Habit) async throws
+    func associateCompensatoryHabit(to addiction: Addiction, habit: Habit) async throws
+    func associatePreventionHabit(to addiction: Addiction, habit: Habit) async throws
+    func associateTriggerHabit(to addiction: Addiction, habit: Habit) async throws
+    func associateCompensatoryHabit(to addiction: Addiction, habit: Habit) async throws
+    //
+    //END IF
     func resetStorage()
     //END DEV ONLY METHOD
 }
