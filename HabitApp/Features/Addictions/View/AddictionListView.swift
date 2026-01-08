@@ -173,7 +173,7 @@ extension HabitListView {
                 }
                 .listStyle(.plain)
             }
-            .navigationTitle("adicciones")
+            .navigationTitle("Adicciones")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
@@ -319,7 +319,7 @@ extension HabitListView {
                 }
                 .listStyle(.sidebar)
             }
-            .navigationTitle("adicciones")
+            .navigationTitle("Adicciones")
             .navigationSplitViewColumnWidth(min: 280, ideal: 350, max: 450)
             .toolbar {
                 ToolbarItem {
@@ -365,7 +365,7 @@ extension HabitListView {
 #endif
 
 // MARK: - Helpers
-extension HabitListView {
+extension AddictionListView {
     
     private var filteredAddictions: [Addiction] {
         let weekday = calendar.component(.weekday, from: currentDate)

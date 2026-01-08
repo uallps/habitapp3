@@ -3,22 +3,60 @@ import SwiftUI
 struct AddictionRowView: View {
     let addiction: Addiction
 
-    var body: some View {
+    @ViewBuilder
+    var iOSBody: some View {
         HStack {
+            commonBody
+                NavigationLink {
+                AddictionDetailWrapperView(
+
+                )
+            } label: {
+                Image(systemName: "note.text")
+                    .foregroundColor(.blue)
+                    .font(.title3)
+            }
+            .buttonStyle(.plain)
+        }
+    }
+
+@ViewBuilder
+var macOSBody: some View {
+    NavigationLink {
+        AddictionDetailWrapperView(
+
+        )
+    } label: {
+        HStack {
+            commonBody
+        }
+        .contentShape(Rectangle())
+    }
+    .buttonStyle(.plain)
+}
+
+
+    @ViewBuilder
+    var commonBody: some View {
+
             Text(addiction.name)
                 .font(.headline)
             Spacer()
-            Text("\(addiction.severity.rawValue) \(addiction.severity.emoji)")
+            Text("Severidad \(addiction.severity.rawValue) \(addiction.severity.emoji)")
                 .font(.subheadline)
                 .foregroundColor(.gray)
             Spacer()
             Text("Recaídas: \(addiction.relapseCount)")
                 .font(.subheadline)
                 .foregroundColor(.red)
-        }
-        .padding()
-        .background(Color.white)
-        .cornerRadius(8)
-        .shadow(radius: 2)
+
+    }
+
+    var body: some View {
+        #if os(iOS)
+        iOSBody
+        #else
+        macOSBody
+        #endif
     }
 }
