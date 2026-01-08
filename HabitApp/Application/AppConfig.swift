@@ -32,7 +32,6 @@ class AppConfig: ObservableObject {
         let registry = PluginRegistry.shared
         
         //  Registrar los plugins
-        registry.register(plugin: ReminderPlugin())
         registry.register(plugin: HabitGoalPlugin(storageProvider: storageProvider))
         
         print("✅ Plugins registrados correctamente")

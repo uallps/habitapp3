@@ -13,7 +13,74 @@
     "¿Eliminar nota?" : {
 
     },
+    "·" : {
+
+    },
     "%lld" : {
+
+    },
+    "%lld / %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld / %2$lld"
+          }
+        }
+      }
+    },
+    "%lld Completados" : {
+
+    },
+    "%lld de %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld de %2$lld"
+          }
+        }
+      }
+    },
+    "%lld días" : {
+
+    },
+    "%lld días completados" : {
+
+    },
+    "%lld Pendientes" : {
+
+    },
+    "%lld tarea%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld tarea%2$@"
+          }
+        }
+      }
+    },
+    "%lld/%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld/%2$lld"
+          }
+        }
+      }
+    },
+    "%lld%%" : {
+
+    },
+    "1.0.0" : {
+
+    },
+    "Acerca de" : {
+
+    },
+    "Acerca de HabitApp" : {
 
     },
     "Actualizado: %@ a las %@" : {
@@ -26,19 +93,58 @@
         }
       }
     },
+    "Agregar Hito" : {
+
+    },
     "Ajustes" : {
 
     },
-    "Ajustes (próximamente)" : {
+    "Alerta en 3s" : {
 
     },
-    "Añadir" : {
+    "Alerta en 5s" : {
+
+    },
+    "Alerta Inmediata" : {
+
+    },
+    "Arquitectura MVVM" : {
+
+    },
+    "Cambiar" : {
 
     },
     "Cancelar" : {
 
     },
+    "Cargando..." : {
+
+    },
+    "Cerrar" : {
+
+    },
+    "Compatible con iOS y macOS" : {
+
+    },
+    "Completado" : {
+
+    },
+    "Configuración de Recordatorios" : {
+
+    },
+    "Configurar recordatorios" : {
+
+    },
     "Contenido" : {
+
+    },
+    "Crea hábitos de ejemplo para empezar" : {
+
+    },
+    "Crea tu primer objetivo para comenzar a alcanzar tus metas" : {
+
+    },
+    "Crea tu primera nota tocando el botón +" : {
 
     },
     "Creado: %@ a las %@" : {
@@ -51,16 +157,28 @@
         }
       }
     },
-    "Crear nota con notificación en 10s" : {
+    "Crear hábito" : {
+
+    },
+    "Crear hábitos de muestra" : {
+
+    },
+    "Datos" : {
+
+    },
+    "Desarrollado con SwiftUI" : {
+
+    },
+    "Descripción (opcional)" : {
 
     },
     "Detalle de Nota" : {
 
     },
-    "Detalles del hábito" : {
+    "Días de la semana" : {
 
     },
-    "Días de la semana" : {
+    "Días Restantes" : {
 
     },
     "Editar" : {
@@ -69,7 +187,19 @@
     "Editar hábito" : {
 
     },
+    "Ej: Hacer ejercicio" : {
+
+    },
     "Eliminar" : {
+
+    },
+    "Eliminar hábito" : {
+
+    },
+    "Esperado" : {
+
+    },
+    "Esta acción eliminará todos los hábitos, notas y objetivos. No se puede deshacer." : {
 
     },
     "Esta acción no se puede deshacer" : {
@@ -78,13 +208,37 @@
     "Esta acción no se puede deshacer." : {
 
     },
+    "Estadísticas" : {
+
+    },
     "Fecha" : {
+
+    },
+    "Fecha de Inicio" : {
+
+    },
+    "Fecha límite" : {
+
+    },
+    "Fecha Objetivo" : {
+
+    },
+    "General" : {
 
     },
     "Guardar" : {
 
     },
-    "Guardar hábito" : {
+    "Guardar cambios" : {
+
+    },
+    "Habilitar notificaciones" : {
+
+    },
+    "HabitApp" : {
+
+    },
+    "Hábito Asociado" : {
 
     },
     "Habitos" : {
@@ -96,10 +250,55 @@
     "Hello, world!" : {
 
     },
-    "Marcar día completado" : {
+    "Hito" : {
 
     },
-    "No hay notas para esta fecha" : {
+    "Hitos" : {
+
+    },
+    "Hitos (opcional)" : {
+
+    },
+    "Hora de recordatorio" : {
+
+    },
+    "Información" : {
+
+    },
+    "Información del Objetivo" : {
+
+    },
+    "Limpiar" : {
+
+    },
+    "Limpiar todos los datos" : {
+
+    },
+    "Meta" : {
+
+    },
+    "Meta: %lld" : {
+
+    },
+    "Mostrar fechas de vencimiento" : {
+
+    },
+    "Mostrar prioridades" : {
+
+    },
+    "Ninguno" : {
+
+    },
+    "No hay datos disponibles" : {
+
+    },
+    "No hay hábitos con estadísticas" : {
+
+    },
+    "No hay hábitos disponibles" : {
+
+    },
+    "No hay hábitos programados para hoy" : {
 
     },
     "Notas" : {
@@ -111,13 +310,31 @@
     "Notas Diarias" : {
 
     },
+    "Notificaciones" : {
+
+    },
     "Nueva Nota" : {
 
     },
     "Nuevo hábito" : {
 
     },
+    "Nuevo Objetivo" : {
+
+    },
+    "Objetivo: %lld días" : {
+
+    },
+    "Objetivos" : {
+
+    },
+    "Por Hábito" : {
+
+    },
     "Prioridad" : {
+
+    },
+    "Prioridad: \\(priority.displayName)" : {
 
     },
     "Prioridad: %@" : {
@@ -174,22 +391,55 @@
         }
       }
     },
-    "Prueba de ReminderPlugin" : {
+    "Rango" : {
 
     },
-    "Selecciona los días de la semana" : {
+    "Selecciona un hábito para vincular con este objetivo" : {
 
     },
     "Seleccione una opción" : {
 
     },
+    "Sin datos" : {
+
+    },
+    "Sin estadísticas" : {
+
+    },
+    "Sin hábitos" : {
+
+    },
+    "Sin hábitos creados" : {
+
+    },
+    "Sin hábitos para hoy" : {
+
+    },
     "Sin notas" : {
+
+    },
+    "Sin Objetivos" : {
+
+    },
+    "Sistema de notificaciones inteligentes" : {
 
     },
     "Tareas para %@" : {
 
     },
+    "Tendencia" : {
+
+    },
+    "Test" : {
+
+    },
+    "Test Hábitos Mañana" : {
+
+    },
     "Test Notificaciones" : {
+
+    },
+    "Test Plugin Directo" : {
 
     },
     "Título" : {
@@ -201,7 +451,25 @@
     "Título del hábito" : {
 
     },
+    "Una aplicación para gestionar tus hábitos diarios y alcanzar tus objetivos." : {
+
+    },
+    "Vence: \\(dueDate.formatted(date: .abbreviated, time: .shortened))" : {
+
+    },
     "Vence: %@" : {
+
+    },
+    "Versión" : {
+
+    },
+    "Versión 1.0.0" : {
+
+    },
+    "Vista" : {
+
+    },
+    "Visualización" : {
 
     }
   },
