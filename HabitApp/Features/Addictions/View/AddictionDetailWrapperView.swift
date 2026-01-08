@@ -4,13 +4,23 @@ import SwiftData
 struct AddictionDetailWrapperView: View {
     @Environment(\.dismiss) private var dismiss
     let addictionListVM: AddictionListViewModel
+
+    @Query(sort: \.title, order: .forward) private var habitsQuery: [Habit]
     
     //  Estados locales para evitar binding directo con @State var habit
     @State private var title: String
     @State private var selectedDays: [Int]
     @State private var priority: Priority
+    @State private var severity: Addiction.AddictionSeverity
     @State private var addictionToEdit: Addiction?
+    @State private var hasAddedNewTrigger: Bool = false
+    @State private var hasAddedNewPreventionHabit: Bool = false
+    @State private var hasAddedNewCompensatoryHabit: Bool = false
+
+    @StateObject var habitListVM = HabitListViewModel()
     let isNew: Bool
+
+    @State private var showingNewHabitSheet = false
     
     init(addictionListVM: HabitListViewModel, addiction: Addiction, isNew: Bool = true) {
         self.addictionListVM = viewModel
@@ -29,6 +39,162 @@ struct AddictionDetailWrapperView: View {
         #else
         macBody
         #endif
+    }
+
+    @ViewBuilder
+    var addictionSeveritySection: some View {
+                        //  Severidad de la adicción
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack(spacing: 8) {
+                                Image(systemName: "flag.fill")
+                                    .foregroundColor(.red)
+                                Text("Severidad de la adicción")
+                                    .font(.headline)
+                                    .fontWeight(.semibold)
+                            }
+                            
+                            Picker("Severidad", selection: $severity) {
+                                ForEach(AddictionSeverity.allCases, id: \.self) { severity in
+                                    Text(severity.displayName).tag(priority)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                        }
+                        .padding(16)
+                        .background(Color(.systemBackground))
+                        .cornerRadius(12)
+                        .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
+
+                        Section() {
+                            
+                        }
+    }
+
+    @ViewBuilder
+    var triggerHabitsSection: some View {
+                                // Hábitos que desencadenan la adicción
+                        VStack(alignment: .leading, spacing: 12) {
+                            Section(header: Text("Hábitos desencadenantes asociados")) {
+                                if addictionToEdit?.triggers.isEmpty ?? true {
+                                    Text("No hay hábitos de prevención asociados.")
+                                        .foregroundColor(.secondary)
+                                } else {
+                                    ForEach(addictionToEdit?.triggers ?? []) { trigger in
+                                        HabitRowView(
+                                            habit: trigger,
+                                            toggleCompletion: {
+                                                withAnimation {
+                                                    habitListVM.toggleCompletion(habit: trigger, for: currentDate)
+                                                }
+                                            },
+                                            viewModel: habitListVM,
+                                            storageProvider: addictionListVM.storageProvider,
+                                            date: currentDate
+                                        )
+                                    }
+                                }
+                            }
+
+                            Section(header: Text("Añadir nuevo hábito desencadenante")) {
+                                ForEach(habitsQuery) { habit in
+                                    Button(action: {
+                                        Task {
+                                            hasAddedNewTrigger = await addictionListVM.addTriggerHabit(
+                                                
+                                            )
+                                        }
+                                    }
+                                    ) {
+                                        Text("Añadir \(habit.title)")
+                                    }
+                                }
+                            }
+
+                        }
+    }
+
+    @ViewBuilder
+    var preventionHabitsSection: some View {
+                                // Hábitos ppara prevenir la adicción
+                        VStack(alignment: .leading, spacing: 12) {
+                            Section(header: Text("Hábitos preventivos creados")) {
+                                if addictionToEdit?.preventionHabits.isEmpty ?? true {
+                                    Text("No hay hábitos de prevención asociados.")
+                                        .foregroundColor(.secondary)
+                                } else {
+                                    ForEach(addictionToEdit?.preventionHabits ?? []) { preventionHabit in
+                                        HabitRowView(
+                                            habit: preventionHabit,
+                                            toggleCompletion: {
+                                                withAnimation {
+                                                    habitListVM.toggleCompletion(habit: preventionHabit, for: currentDate)
+                                                }
+                                            },
+                                            viewModel: habitListVM,
+                                            storageProvider: addictionListVM.storageProvider,
+                                            date: currentDate
+                                        )
+                                    }
+                                }
+                            }
+
+                            Section(header: Text("Añadir nuevo hábito preventivo")) {
+                                ForEach(habitsQuery) { habit in
+                                    Button(action: {
+                                        Task {
+                                            hasAddedNewPreventionHabit = await addictionListVM.addPreventionHabit(
+                                                
+                                            )
+                                        }
+                                    }) {
+                                        Text("Añadir \(habit.title)")
+                                    }
+                                }
+                            }
+
+                        }
+    }
+
+    @ViewBuilder
+    var compensatoryHabitsSection: some View {
+                                // Hábitos que compensan la adicción
+                        VStack(alignment: .leading, spacing: 12) {
+                            Section(header: Text("Hábitos compensatorios creados")) {
+                                if addictionToEdit?.compensatoryHabits.isEmpty ?? true {
+                                    Text("No hay hábitos de compensatorios asociados.")
+                                        .foregroundColor(.secondary)
+                                } else {
+                                    ForEach(addictionToEdit?.compensatoryHabits ?? []) { compensatoryHabits in
+                                        HabitRowView(
+                                            habit: compensatoryHabits,
+                                            toggleCompletion: {
+                                                withAnimation {
+                                                    habitListVM.toggleCompletion(habit: compensatoryHabits, for: currentDate)
+                                                }
+                                            },
+                                            viewModel: habitListVM,
+                                            storageProvider: addictionListVM.storageProvider,
+                                            date: currentDate
+                                        )
+                                    }
+                                }
+                            }
+
+                            Section(header: Text("Añadir nuevo hábito compensatorio")) {
+                                ForEach(habitsQuery) { habit in
+                                    Button(action: {
+                                        Task {
+                                            hasAddedNewCompensatoryHabit = await addictionListVM.addCompensatoryHabit(
+
+                                            )
+                                        }
+                                    }) {
+                                        Text("Añadir \(habit.title)")
+                                    }
+                                }
+                            }
+
+                        }
     }
 }
 
@@ -108,7 +274,16 @@ extension HabitDetailWrapper {
                         .background(Color(.systemBackground))
                         .cornerRadius(12)
                         .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
-                        
+
+
+
+                        addictionSeveritySection
+                        triggerHabitsSection
+                        preventionHabitsSection
+                        compensatoryHabitsSection
+
+
+
                         //  Botones
                         VStack(spacing: 12) {
                             Button(action: saveHabit) {
@@ -265,6 +440,11 @@ extension HabitDetailWrapper {
                     .cornerRadius(10)
                 }
                 .padding(.horizontal, 20)
+
+                        addictionSeveritySection
+                        triggerHabitsSection
+                        preventionHabitsSection
+                        compensatoryHabitsSection
                 
                 Spacer()
                 
@@ -302,34 +482,3 @@ extension HabitDetailWrapper {
     }
 }
 #endif
-
-// MARK: - Helpers
-extension HabitDetailWrapper {
-    private func saveAddiction() {
-        if isNew {
-            //  Crear nuevo hábito
-            addictionListVM.addHabit(
-                title: title,
-                dueDate: nil,
-                priority: priority,
-                reminderDate: nil,
-                scheduledDays: selectedDays
-            )
-        } else if let habitToEdit = habitToEdit {
-            //  Actualizar hábito existente
-            addictionToEdit.title = title
-            addictionToEdit.scheduledDaysString = selectedDays.map { String($0) }.joined(separator: ",")
-            addictionToEdit.priority = priority
-            viewModel.updateHabit(habitToEdit)
-        }
-        
-        dismiss()
-    }
-    
-    private func deleteHabit() {
-        if let addictionToEdit = addictionToEdit {
-            viewModel.deleteHabit(addictionToEdit)
-            dismiss()
-        }
-    }
-}

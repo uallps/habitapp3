@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 @Model
-class Addiction: Habit, FeaturePlugin {
+class Addiction: Habit, FeaturePlugin, ViewPlugin {
     // Describe la gravedad de la adicción
     var severity: AddictionSeverity
 
