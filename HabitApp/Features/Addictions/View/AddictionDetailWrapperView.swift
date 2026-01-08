@@ -10,7 +10,6 @@ struct AddictionDetailWrapperView: View {
     //  Estados locales para evitar binding directo con @State var habit
     @State private var title: String
     @State private var selectedDays: [Int]
-    @State private var priority: Priority
     @State private var severity: Addiction.AddictionSeverity
     @State private var addictionToEdit: Addiction?
     @State private var hasAddedNewTrigger: Bool = false
@@ -28,9 +27,7 @@ struct AddictionDetailWrapperView: View {
         self.addictionToEdit = isNew ? nil : habit
         
         // Inicializar estados locales
-        _title = State(initialValue: habit.title)
-        _selectedDays = State(initialValue: habit.scheduledDays)
-        _priority = State(initialValue: habit.priority ?? .medium)
+        _title = State(initialValue: addiction.title)
     }
 
     var body: some View {
@@ -55,7 +52,7 @@ struct AddictionDetailWrapperView: View {
                             
                             Picker("Severidad", selection: $severity) {
                                 ForEach(AddictionSeverity.allCases, id: \.self) { severity in
-                                    Text(severity.displayName).tag(priority)
+                                    Text(severity.displayName).tag(severity)
                                 }
                             }
                             .pickerStyle(.segmented)
@@ -288,28 +285,6 @@ extension HabitDetailWrapper {
                         .background(Color(.systemBackground))
                         .cornerRadius(12)
                         .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
-                        
-                        //  Prioridad
-                        VStack(alignment: .leading, spacing: 12) {
-                            HStack(spacing: 8) {
-                                Image(systemName: "flag.fill")
-                                    .foregroundColor(.red)
-                                Text("Prioridad")
-                                    .font(.headline)
-                                    .fontWeight(.semibold)
-                            }
-                            
-                            Picker("Prioridad", selection: $priority) {
-                                ForEach(Priority.allCases, id: \.self) { priority in
-                                    Text(priority.displayName).tag(priority)
-                                }
-                            }
-                            .pickerStyle(.segmented)
-                        }
-                        .padding(16)
-                        .background(Color(.systemBackground))
-                        .cornerRadius(12)
-                        .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
 
 
 
@@ -449,27 +424,6 @@ extension HabitDetailWrapper {
                         
                         WeekdaySelector(selectedDays: $selectedDays)
                             .padding(.vertical, 4)
-                    }
-                    .padding(12)
-                    .background(Color(.controlBackgroundColor))
-                    .cornerRadius(10)
-                    
-                    // Prioridad
-                    VStack(alignment: .leading, spacing: 12) {
-                        HStack(spacing: 8) {
-                            Image(systemName: "flag.fill")
-                                .foregroundColor(.red)
-                            Text("Prioridad")
-                                .font(.headline)
-                                .fontWeight(.semibold)
-                        }
-                        
-                        Picker("Prioridad", selection: $priority) {
-                            ForEach(Priority.allCases, id: \.self) { priority in
-                                Text(priority.displayName).tag(priority)
-                            }
-                        }
-                        .pickerStyle(.segmented)
                     }
                     .padding(12)
                     .background(Color(.controlBackgroundColor))

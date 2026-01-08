@@ -2,9 +2,11 @@ import Foundation
 import SwiftData
 
 @Model
-class Addiction: Habit, FeaturePlugin, ViewPlugin {
+class Addiction: FeaturePlugin, ViewPlugin {
     // Describe la gravedad de la adicción
     var severity: AddictionSeverity
+
+    var title: String
 
     // Un triggers son hábitos que pueden provocar la recaída, pues son situaciones, emociones o entornos que aumentan el deseo de consumir la sustancia o realizar el comportamiento adictivo.
     // Deben ser por tanto, evitados o gestionados cuidadosamente.
@@ -23,31 +25,29 @@ class Addiction: Habit, FeaturePlugin, ViewPlugin {
     }
 
     
-    // Optional initializer to add extra fields
     init(title: String,
          severity: AddictionSeverity = .medium,
          triggers: [Habit] = [],
          preventionHabits: [Habit] = [],
-         compensatoryHabits: [Habit] = [],
-         doneDates: [Date] = [],
-         isCompleted: Bool = false,
-         dueDate: Date? = nil,
-         priority: Priority? = nil,
-         reminderDate: Date? = nil,
-         scheduledDays: [Int] = []) {
+         compensatoryHabits: [Habit] = []) {
         
         self.severity = severity
         self.triggers = triggers
-        super.init(title: title,
-                   doneDates: doneDates,
-                   isCompleted: isCompleted,
-                   dueDate: dueDate,
-                   priority: priority,
-                   reminderDate: reminderDate,
-                   scheduledDays: scheduledDays)
+        self.preventionHabits = preventionHabits
+        self.compensatoryHabits = compensatoryHabits
+        self.title = title
     }
 
     enum AddictionSeverity: String {
         low, medium, high
+
+        var emoji: String {
+            switch self {
+            case .high: return "🚬"
+            case .medium: return "📱"
+            case .low: return "☕️"
+            }
+        }
+
     }
 }
