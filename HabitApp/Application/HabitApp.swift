@@ -1,8 +1,15 @@
 import SwiftUI
 import SwiftData
 
-@main
+@main // Punto de entrada
+
+// HabitApp cumple con el protocolo App.
 struct HabitApp: App {
+    
+    private var storageProvider: StorageProvider {
+        AppConfig().storageProvider
+    }
+
     @State private var selectedDetailView: String?
     init() {
         #if os(iOS)
@@ -15,17 +22,18 @@ struct HabitApp: App {
                 print("Error solicitando permisos: \(error)")
             }
         }
-        
         #endif
     }
     var body: some Scene {
-        WindowGroup{
+        WindowGroup {
 #if os(iOS)
             TabView {
                 // TAB 1: Hábitos
                 NavigationStack {
                     HabitListView(
-                        viewModel: HabitListViewModel()
+                        viewModel: HabitListViewModel(
+                            storageProvider: storageProvider
+                        )
                     )
                 }
                 .tabItem {
@@ -49,9 +57,23 @@ struct HabitApp: App {
                 NavigationStack {
                     Text("Ajustes (próximamente)")
                 }
+                .task {
+                    storageProvider.resetStorage()
+                }
                 .tabItem {
                     Label("Ajustes", systemImage: "gearshape")
                 }
+                
+                // Tab 3: Categorías
+                NavigationStack {
+                    CategoryListView(
+                            storageProvider: storageProvider
+                        )
+                }
+                .tabItem {
+                    Label("Categorías", systemImage: "folder")
+                }
+                
             }
             .environmentObject(AppConfig())
 #else
@@ -66,11 +88,27 @@ struct HabitApp: App {
                     NavigationLink(value: "ajustes") {
                         Label("Ajustes", systemImage: "gearshape")
                     }
+                    .task {
+                        storageProvider.resetStorage()
+                    }
+                    NavigationLink(value: "categorias") {
+                        Label("Categorias", systemImage: "folder")
+                    }
                 }
             } detail: {
                 switch selectedDetailView {
                 case "habitos":
-                    HabitListView(viewModel: HabitListViewModel())
+                    HabitListView(
+                        viewModel: HabitListViewModel(
+                            storageProvider: storageProvider
+                        )
+                    )
+                // TODO: case "ajustes":
+                // TODO: SettingsView()
+                case "categorias":
+                    CategoryListView(
+                        storageProvider: storageProvider
+                    )
                 case "notas":
                     DailyNotesView()
                     // TODO: case "ajustes":
@@ -78,9 +116,16 @@ struct HabitApp: App {
                 default:
                     Text("Seleccione una opción")
                 }
-            }.environmentObject(AppConfig())
+            }
+            .environmentObject(AppConfig())
 #endif
         }
-        .modelContainer(for: [DailyNote.self, Habit.self])
+        // Register all @Model types here
+        .modelContainer(for: [
+            DailyNote.self,
+            Habit.self,
+            Category.self,
+            UserImageSlot.self
+        ])
     }
 }

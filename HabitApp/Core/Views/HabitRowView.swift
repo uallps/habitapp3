@@ -3,7 +3,8 @@ import SwiftData
 struct HabitRowView: View {
 
     @Environment(\.modelContext) private var modelContext
-
+    @EnvironmentObject private var appConfig: AppConfig
+    
     let habit: Habit
     let toggleCompletion: () -> Void
     var date: Date = Date()
@@ -75,7 +76,14 @@ struct HabitRowView: View {
             .padding(.leading, 2)
         }
         .sheet(isPresented: $showingEditSheet) {
-            HabitDetailWrapper(viewModel: HabitListViewModel(), habit: habit, isNew: false)
+            HabitDetailWrapper(
+                habitListVM: HabitListViewModel(
+                    storageProvider: appConfig.storageProvider
+                ),
+                isNew: false,
+                habit: habit,
+                storageProvider: appConfig.storageProvider
+            )
         }
         .alert("¿Eliminar hábito?", isPresented: $showingDeleteAlert) {
             Button("Eliminar", role: .destructive) {

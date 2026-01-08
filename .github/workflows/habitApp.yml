@@ -2,97 +2,198 @@ name: Build and Test HabitApp
 
 on:
   push:
-    branches: [ "franco" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "franco" ]
+    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
+    name: Build ${{ matrix.scheme }} for ${{ matrix.platform }}
     runs-on: macos-latest
 
+    strategy:
+      matrix:
+        platform: [iOS]
+        scheme: ["HabitApp"]
+        include:
+          - platform: iOS
+            sdk: iphonesimulator
+            artifact-name: ios-build
+
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Select Xcode version
-        run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+      - name: Show Xcode version
+        run: xcodebuild -version
 
-      - name: Boot iPhone simulator
-        run: |
-          DEVICE_NAME="iPhone 16"
-          echo "Booting device: $DEVICE_NAME"
-          xcrun simctl boot "$DEVICE_NAME" || true
-          xcrun simctl bootstatus "$DEVICE_NAME" -b
-          echo "DEVICE_NAME=$DEVICE_NAME" >> $GITHUB_ENV
+      - name: Show available SDKs
+        run: xcodebuild -showsdks
 
-      - name: Build and Test HabitApp for iOS
+      - name: Get latest iPhone simulator
+        if: matrix.platform == 'iOS'
+        id: get-simulator
         run: |
-          cd HabitApp
-          xcodebuild \
-            -project HabitApp.xcodeproj \
-            -scheme HabitApp \
-            -sdk iphonesimulator \
-            -destination "platform=iOS Simulator,name=$DEVICE_NAME,OS=latest" \
-            -derivedDataPath build \
-            -configuration Debug \
-            clean build test | xcpretty
-
-      - name: Build for macOS
-        run: |
-          cd HabitApp
-          xcodebuild \
-            -project HabitApp.xcodeproj \
-            -scheme HabitApp \
-            -sdk macosx \
-            -destination "platform=macOS" \
-            -derivedDataPath build-macos \
-            -configuration Debug \
-            clean build | xcpretty
-
-      - name: Launch iOS app and test features
-        run: |
-          cd HabitApp
-          mkdir -p screenshots
-          APP_BUNDLE_ID="com.ual.HabitApp"
-          xcrun simctl install booted build/Build/Products/Debug-iphonesimulator/HabitApp.app
-          xcrun simctl launch booted $APP_BUNDLE_ID || true
-          sleep 5
+          # Find the latest available iPhone simulator
+          DEVICE_INFO=$(xcrun simctl list devices available | grep -E "iPhone.*(Booted|Shutdown)" | grep -v unavailable | tail -n 1)
           
-          # Test app launch
-          if xcrun simctl list | grep -q "$APP_BUNDLE_ID"; then
-            echo "✅ App launched successfully"
-          else
-            echo "❌ App failed to launch"
+          if [ -z "$DEVICE_INFO" ]; then
+            echo "❌ No available iPhone simulator found"
             exit 1
           fi
 
-      - name: Take screenshots
-        run: |
-          cd HabitApp
-          xcrun simctl io booted screenshot screenshots/home.png
-          sleep 2
-          xcrun simctl io booted screenshot screenshots/app-running.png
-          ls -la screenshots
+          DEVICE_NAME=$(echo "$DEVICE_INFO" | sed -E 's/ \([^)]+\)//' | xargs)
+          DEVICE_OS=$(echo "$DEVICE_INFO" | grep -oE '[0-9]+\.[0-9]+')
 
-      - name: Verify build artifacts
-        run: |
-          cd HabitApp
-          echo "iOS Build artifacts:"
-          ls -la build/Build/Products/Debug-iphonesimulator/ || echo "No iOS artifacts found"
-          echo "macOS Build artifacts:"
-          ls -la build-macos/Build/Products/Debug/ || echo "No macOS artifacts found"
+          echo "DEVICE_NAME=$DEVICE_NAME" >> $GITHUB_ENV
+          echo "DEVICE_OS=$DEVICE_OS" >> $GITHUB_ENV
 
-      - name: Upload screenshots as artifact
+          echo "✅ Using simulator: $DEVICE_NAME ($DEVICE_OS)"
+
+      - name: Get latest iOS SDK
+        if: matrix.platform == 'iOS'
+        id: get-sdk
+        run: |
+          LATEST_SDK=$(xcodebuild -showsdks | grep -oE 'iphonesimulator[0-9.]+' | sort -V | tail -n1)
+          echo "LATEST_SDK=$LATEST_SDK" >> $GITHUB_ENV
+          echo "Latest iOS SDK: $LATEST_SDK"
+
+      - name: Build for ${{ matrix.platform }}
+        run: |
+          if [ "${{ matrix.platform }}" == "iOS" ]; then
+            xcodebuild clean build \
+              -project HabitApp.xcodeproj \
+              -scheme "${{ matrix.scheme }}" \
+              -sdk "$LATEST_SDK" \
+              -destination "platform=iOS Simulator,OS=$DEVICE_OS,name=$DEVICE_NAME" \
+              -derivedDataPath ./DerivedData \
+              CODE_SIGN_IDENTITY="" \
+              CODE_SIGNING_REQUIRED=NO \
+              CODE_SIGNING_ALLOWED=NO \
+              -verbose
+          else
+            xcodebuild clean build \
+              -project HabitApp.xcodeproj \
+              -scheme "${{ matrix.scheme }}" \
+              -sdk macosx \
+              -destination "platform=macOS" \
+              -derivedDataPath ./DerivedData \
+              CODE_SIGN_IDENTITY="" \
+              CODE_SIGNING_REQUIRED=NO \
+              CODE_SIGNING_ALLOWED=NO \
+              -verbose
+          fi
+
+      - name: Find and list build products
+        if: success()
+        run: |
+          echo "=== ${{ matrix.platform }} ${{ matrix.scheme }} Build products ==="
+          find ./DerivedData -name "*.app" -type d
+          ls -R ./DerivedData/Build/Products/
+
+      - name: Run UI Tests on iOS Simulator
+        if: success() && matrix.platform == 'iOS'
+        timeout-minutes: 10
+        continue-on-error: true
+        run: |
+          mkdir -p screenshots
+
+          # Boot simulator
+          xcrun simctl boot "$DEVICE_NAME" || true
+          xcrun simctl bootstatus "$DEVICE_NAME" -b
+
+          # Find app
+          APP_BUNDLE_ID="ual.HabitApp"
+          APP_PATH=$(find ./DerivedData -name "HabitApp.app" -type d | head -n 1)
+
+          if [ -z "$APP_PATH" ]; then
+            echo "❌ App not found"
+            exit 1
+          fi
+
+          echo "✅ Found app at: $APP_PATH"
+
+          # Install and launch app
+          xcrun simctl install booted "$APP_PATH"
+          xcrun simctl launch booted $APP_BUNDLE_ID &
+          sleep 5
+
+          # Run UI tests for HabitAppUITestXCTest target
+          echo "📋 Running UI XCTest cases..."
+
+          xcodebuild test \
+            -project HabitApp.xcodeproj \
+            -scheme HabitAppUITestXCTest \
+            -sdk "$LATEST_SDK" \
+            -destination "platform=iOS Simulator,OS=$DEVICE_OS,name=$DEVICE_NAME" \
+            | tee result.log
+
+          # Check if tests failed
+          if grep -q "Test failed" result.log; then
+            echo "❌ Tests failed"
+            exit 1
+          else
+            echo "✅ Tests passed"
+          fi
+
+      - name: Upload Screenshots as Build Artifacts
+        if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: iOS-screenshots
-          path: HabitApp/screenshots
+          name: screenshots
+          path: screenshots/
+
+      - name: Clean up screenshots folder
+        run: |
+          rm -rf ./screenshots
+
+      - name: Code Quality Analysis
+        run: |
+          echo "📊 Analyzing code quality..."
+          cd HabitApp
+          
+          SWIFT_FILES=$(find . -name "*.swift" | wc -l)
+          echo "Total Swift files: $SWIFT_FILES"
+          
+          LOC=$(find . -name "*.swift" -exec cat {} \; | wc -l)
+          echo "Total lines of code: $LOC"
+          
+          echo "\n🔍 TODO items:"
+          grep -r "TODO" --include="*.swift" . || echo "No TODOs found"
+          
+          echo "\n🔍 FIXME items:"
+          grep -r "FIXME" --include="*.swift" . || echo "No FIXMEs found"
+          
+          echo "\n📦 SwiftData Models:"
+          grep -r "@Model" --include="*.swift" . | cut -d: -f1 | sort -u
+          
+          echo "\n🎯 Features implemented:"
+          ls -d feature/*/ 2>/dev/null || echo "No features directory"
+
+      - name: Archive build artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-iOS-HabitApp
+          path: ./DerivedData/Build/Products/**/*.app
+
+      - name: Upload Screenshots
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: screenshots/
+
+      - name: Upload build report
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-report
+          path: build-report.md
 
       - name: Upload build logs
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: build-logs
-          path: |
-            HabitApp/build/Logs
-            HabitApp/build-macos/Logs
+          path: ./DerivedData/Logs

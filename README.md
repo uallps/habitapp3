@@ -5,7 +5,11 @@
 
 **HabitApp** es una aplicación de ejemplo en **SwiftUI + SwiftData** para iOS y macOS que permite gestionar hábitos, notas diarias y recordatorios locales. Está estructurada siguiendo un enfoque **MVVM** y soporta plugins para extender su funcionalidad.
 
----
+- **Recordatorios** *(Opcional)* — Asignado a David Casado Fernández. 
+- **Rachas (Streaks)** *(Opcional)* — Asignado a David Granados Pérez.
+- **Notas Diarias** *(Opcional)* — Asignado a Franco Sergio Pereyra.
+- **Categorías** *(Opcional)* — Asignado a Ismael Fernández Méndez.
+- **Estadísticas** *(Opcional)* — Asignado a Juan José Fernández Requena.
 
 ## 📁 Estructura del proyecto
 

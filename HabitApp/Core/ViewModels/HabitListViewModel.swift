@@ -4,7 +4,13 @@ import Combine
 
 final class HabitListViewModel: ObservableObject {
     
-    func addHabit(title: String, 
+    private let storageProvider: StorageProvider
+    
+    init(storageProvider: StorageProvider) {
+        self.storageProvider = storageProvider
+    }
+    
+    func addHabit(title: String,
                   dueDate: Date? = nil, 
                   priority: Priority? = nil, 
                   reminderDate: Date? = nil, 
@@ -23,6 +29,14 @@ final class HabitListViewModel: ObservableObject {
             try context.save()
         } catch {
             print("Error saving habit: \(error)")
+        }
+    }
+
+    func addHabitToCategory(habit: Habit, category: Category) async {
+        do {
+            try await storageProvider.addHabitToCategory(habit: habit, category: category)
+        } catch {
+            print("Error adding habit to category: \(error)")
         }
     }
     
