@@ -1,19 +1,16 @@
 import SwiftUI
 import SwiftData
 
-struct HabitListView: View {
-    let storageProvider: StorageProvider
-    @Query(sort: \Habit.createdAt) private var habits: [Habit]
-    @Environment(\.modelContext) private var modelContext
-    @StateObject private var viewModel: HabitListViewModel
+struct AddictionistView: View {
+    @Query(sort: \Addiction.createdAt) private var addictions: [Addiction]
+    @StateObject private var addictionListVM: AddictionListViewModel
     @State private var currentDate = Date()
-    @State private var showingNewHabitSheet = false
+    @State private var showingNewAddictionSheet = false
     private let calendar = Calendar.current
     private let weekdaySymbols = Calendar.current.shortStandaloneWeekdaySymbols
     
     init(storageProvider: StorageProvider) {
-        self.storageProvider = storageProvider
-        self._viewModel = StateObject(wrappedValue: HabitListViewModel(storageProvider: storageProvider))
+        self._addictionListVM = StateObject(wrappedValue: HabitListaddictionListVM(storageProvider: storageProvider))
     }
 
     var body: some View {
@@ -40,8 +37,8 @@ extension HabitListView {
                         
                         Spacer()
                         
-                        if !filteredHabits.isEmpty {
-                            Text("\(filteredHabits.count) tarea\(filteredHabits.count == 1 ? "" : "s")")
+                        if !filteredAddictions.isEmpty {
+                            Text("\(filteredAddictions.count) tarea\(filteredAddictions.count == 1 ? "" : "s")")
                                 .font(.caption2)
                                 .fontWeight(.medium)
                                 .foregroundColor(.white)
@@ -129,31 +126,31 @@ extension HabitListView {
                 
                 Divider()
                 
-                //  Lista de hábitos (SIEMPRE dentro de List)
+                //  Lista de adicciones (SIEMPRE dentro de List)
                 List {
-                    if filteredHabits.isEmpty {
+                    if filteredAddictions.isEmpty {
                         VStack(spacing: 16) {
-                            Image(systemName: habits.isEmpty ? "plus.circle" : "checkmark.circle")
+                            Image(systemName: addictions.isEmpty ? "plus.circle" : "checkmark.circle")
                                 .font(.system(size: 48))
                                 .foregroundColor(.gray.opacity(0.5))
                             
-                            Text(habits.isEmpty ? "Sin hábitos creados" : "Sin hábitos para hoy")
+                            Text(addictions.isEmpty ? "Sin adicciones creadas" : "Sin adicciones para hoy")
                                 .font(.headline)
                             
-                            if habits.isEmpty {
-                                Text("Crea hábitos de ejemplo para empezar")
+                            if addictions.isEmpty {
+                                Text("Crea adiciones de ejemplo para empezar")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                                     .multilineTextAlignment(.center)
                                     .padding(.horizontal)
                                 
-                                Button("Crear hábitos de muestra") {
-                                    viewModel.createSampleHabits()
+                                Button("Crear adicciones de muestra") {
+                                    addictionListVM.createSampleHabits()
                                 }
                                 .buttonStyle(.borderedProminent)
                                 .padding(.top, 8)
                             } else {
-                                Text("No hay hábitos programados para hoy")
+                                Text("No hay adicciones programadas para hoy")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                                     .multilineTextAlignment(.center)
@@ -165,17 +162,9 @@ extension HabitListView {
                         .listRowSeparator(.hidden)
                         .listRowBackground(Color.clear)
                     } else {
-                        ForEach(filteredHabits, id: \.id) { habit in
-                            HabitRowView(
-                                habit: habit,
-                                toggleCompletion: {
-                                    withAnimation {
-                                        viewModel.toggleCompletion(habit: habit, for: currentDate)
-                                    }
-                                },
-                                viewModel: viewModel,
-                                storageProvider: storageProvider,
-                                date: currentDate
+                        ForEach(filteredAddictions, id: \.id) { addiction in
+                            AddictionRowView(
+                                addiction: addiction
                             )
                             .listRowInsets(EdgeInsets(top: 6, leading: 12, bottom: 6, trailing: 12))
                             .listRowSeparator(.hidden)
@@ -184,11 +173,11 @@ extension HabitListView {
                 }
                 .listStyle(.plain)
             }
-            .navigationTitle("Hábitos")
+            .navigationTitle("Adicciones")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
-                        showingNewHabitSheet = true
+                        showingNewAddictionSheet = true
                     } label: {
                         Image(systemName: "plus.circle.fill")
                             .font(.title3)
@@ -196,14 +185,11 @@ extension HabitListView {
                     }
                 }
             }
-            .sheet(isPresented: $showingNewHabitSheet) {
-                HabitDetailWrapper(
-                    habitListVM: HabitListViewModel(
-                        storageProvider: AppConfig.storageProvider
-                    ),
-                    isNew: true,
-                    habit: Habit(title: ""),
-                    storageProvider: AppConfig.storageProvider
+            .sheet(isPresented: $showingNewAddictionSheet) {
+                AddictionDetailWrapperView(
+                    addictionListVM: addictionListVM,
+                    addiction: Addiction(title: ""),
+                    isNew: true
                 )
             }
         }
@@ -225,8 +211,8 @@ extension HabitListView {
                     
                     Spacer()
                     
-                    if !filteredHabits.isEmpty {
-                        Text("\(filteredHabits.count)")
+                    if !filteredAddictions.isEmpty {
+                        Text("\(filteredAddictions.count)")
                             .font(.caption)
                             .fontWeight(.semibold)
                             .foregroundColor(.white)
@@ -294,24 +280,24 @@ extension HabitListView {
                 
                 Divider()
                 
-                // Lista de hábitos
+                // Lista de adicciones
                 List {
-                    if filteredHabits.isEmpty {
+                    if filteredAddictions.isEmpty {
                         VStack(spacing: 16) {
-                            Image(systemName: habits.isEmpty ? "plus.circle" : "checkmark.circle")
+                            Image(systemName: addictions.isEmpty ? "plus.circle" : "checkmark.circle")
                                 .font(.system(size: 48))
                                 .foregroundColor(.gray)
                             
-                            Text(habits.isEmpty ? "Sin hábitos creados" : "Sin hábitos para hoy")
+                            Text(addictions.isEmpty ? "Sin adicciones creadas" : "Sin adicciones para hoy")
                                 .font(.headline)
                             
-                            if habits.isEmpty {
-                                Button("Crear hábito de muestra") {
-                                    viewModel.createSampleHabits()
+                            if addictions.isEmpty {
+                                Button("Crear addición de muestra") {
+                                    addictionListVM.createSampleHabits()
                                 }
                                 .buttonStyle(.borderedProminent)
                             } else {
-                                Text("No hay hábitos programados")
+                                Text("No hay adicciones programados")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                             }
@@ -321,30 +307,24 @@ extension HabitListView {
                         .listRowSeparator(.hidden)
                         .listRowBackground(Color.clear)
                     } else {
-                        ForEach(filteredHabits, id: \.id) { habit in
-                            HabitRowView(
-                                habit: habit,
-                                toggleCompletion: {
-                                    withAnimation {
-                                        viewModel.toggleCompletion(habit: habit, for: currentDate)
-                                    }
-                                },
-                                viewModel: viewModel,
-                                storageProvider: storageProvider,
-                                date: currentDate
+                        ForEach(filteredAddictions, id: \.id) { addiction in
+                            AddictionRowView(
+                                addiction: addiction
                             )
                             .listRowInsets(EdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8))
+                            .listRowSeparator(.hidden)
+
                         }
                     }
                 }
                 .listStyle(.sidebar)
             }
-            .navigationTitle("Hábitos")
+            .navigationTitle("Adicciones")
             .navigationSplitViewColumnWidth(min: 280, ideal: 350, max: 450)
             .toolbar {
                 ToolbarItem {
                     Button {
-                        showingNewHabitSheet = true
+                        showingNewAddictionSheet = true
                     } label: {
                         Image(systemName: "plus.circle.fill")
                             .foregroundColor(.blue)
@@ -359,24 +339,24 @@ extension HabitListView {
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                 
-                if filteredHabits.isEmpty {
+                if filteredAddictions.isEmpty {
                     ContentUnavailableView(
-                        habits.isEmpty ? "Sin hábitos" : "Sin hábitos para hoy",
-                        systemImage: habits.isEmpty ? "plus.circle" : "checkmark.circle",
-                        description: Text(habits.isEmpty ? "Crea tu primer hábito" : "No hay hábitos programados")
+                        addictions.isEmpty ? "Sin adicciones" : "Sin adicciones para hoy",
+                        systemImage: addictions.isEmpty ? "plus.circle" : "checkmark.circle",
+                        description: Text(addictions.isEmpty ? "Crea tu primera addición" : "No hay adicciones programadas")
                     )
                 } else {
-                    Text("\(filteredHabits.count) hábito(s) programado(s)")
+                    Text("\(filteredAddictions.count) addición(s) programado(s)")
                         .foregroundColor(.secondary)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .navigationSplitViewColumnWidth(min: 300, ideal: 400, max: 500)
         }
-        .sheet(isPresented: $showingNewHabitSheet) {
-            HabitDetailWrapper(
-                viewModel: viewModel,
-                habit: Habit(title: ""),
+        .sheet(isPresented: $showingNewAddictionSheet) {
+            AddictionDetailWrapperView(
+                addictionListVM: addictionListVM,
+                addiction: Addiction(title: ""),
                 isNew: true
             )
         }
@@ -385,11 +365,11 @@ extension HabitListView {
 #endif
 
 // MARK: - Helpers
-extension HabitListView {
+extension AddictionListView {
     
-    private var filteredHabits: [Habit] {
+    private var filteredAddictions: [Addiction] {
         let weekday = calendar.component(.weekday, from: currentDate)
-        return habits.filter { $0.scheduledDays.contains(weekday) }
+        return addictions.filter { $0.scheduledDays.contains(weekday) }
     }
     
     private var monthYearString: String {
@@ -426,6 +406,6 @@ extension HabitListView {
     }
     
     private func hasHabitsForDay(_ weekday: Int) -> Bool {
-        return habits.contains { $0.scheduledDays.contains(weekday) }
+        return addictions.contains { $0.scheduledDays.contains(weekday) }
     }
 }

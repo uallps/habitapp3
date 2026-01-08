@@ -2,7 +2,7 @@ name: Build and Test HabitApp
 
 on:
   push:
-    branches: [ "franco" ]
+    branches: [ "main" ]
   pull_request:
     branches: [ "franco" ]
   workflow_dispatch:
@@ -11,6 +11,15 @@ jobs:
   build:
     name: Build HabitApp for iOS
     runs-on: macos-latest
+
+    strategy:
+      matrix:
+        platform: [iOS]
+        scheme: ["HabitApp"]
+        include:
+          - platform: iOS
+            sdk: iphonesimulator
+            artifact-name: ios-build
 
     steps:
       - name: Checkout code

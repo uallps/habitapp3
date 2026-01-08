@@ -23,7 +23,27 @@ struct HabitDetailWrapper: View {
         _selectedDays = State(initialValue: habit.scheduledDays)
         _priority = State(initialValue: habit.priority ?? .medium)
     }
+    // IF CATEGORY IS TRUE
+    @StateObject var categoryListVM: CategoryListViewModel
+    @StateObject var userImageVM: UserImagesViewModel
+    // END IF
+    
+    @EnvironmentObject private var appConfig: AppConfig
+    
+    @ObservedObject var habitListVM: HabitListViewModel
+    @State var habit: Habit
+    private let isNew: Bool
 
+
+    
+    init(habitListVM: HabitListViewModel, modelContext: ModelContext? = nil, isNew: Bool, habit: Habit, storageProvider: StorageProvider) {
+        _categoryListVM = StateObject(wrappedValue: CategoryListViewModel(storageProvider: storageProvider))
+        _userImageVM = StateObject(wrappedValue: UserImagesViewModel(storageProvider: storageProvider))
+        self.habitListVM = habitListVM
+        self.isNew = isNew
+        self._habit = State(initialValue: habit)
+    }
+    
     var body: some View {
         #if os(iOS)
         iosBody
@@ -325,7 +345,49 @@ extension HabitDetailWrapper {
         }
         
         dismiss()
+            .pickerStyle(SegmentedPickerStyle())
+            .padding(.horizontal)
+            
+            Spacer()
+            
+            HabitCategoryView(
+                storageProvider: categoryListVM.storageProvider,
+                habit: habit
+            )
+
+                    Spacer()
+        
+        // 🔹 Botón Guardar
+        Button(action: saveHabit) {
+            Text("Guardar hábito")
+                .font(.headline)
+                .padding()
+                .frame(maxWidth: .infinity)
+                .foregroundColor(.white)
+                .padding(.horizontal)
+        }
+        .background(Color.blue)
+        .cornerRadius(10)
+        
+        // 🔹 Botón Eliminar (solo si no es nuevo)
+        }      
+    .navigationTitle(isNew ? "Nuevo hábito" : "Editar hábito")
+    .padding()
+  }
+    
+    // MARK: - Funciones
+    private func saveHabit() {
+        // Persist the habit using modelContext (SwiftData) or your storage provider
+        // Example (pseudo):
+         if isNew {
+             modelContext.insert(habit)
+         } else {
+             // modelContext will track changes to an existing model
+         }
+         try? modelContext.save()
     }
+
+    
     
     private func deleteHabit() {
         if let habitToEdit = habitToEdit {

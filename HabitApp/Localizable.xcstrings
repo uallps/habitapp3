@@ -7,13 +7,22 @@
     " " : {
 
     },
+    "¿Eliminar categoría?" : {
+
+    },
     "¿Eliminar hábito?" : {
 
     },
     "¿Eliminar nota?" : {
 
     },
+    "%@" : {
+
+    },
     "%lld" : {
+
+    },
+    "+" : {
 
     },
     "Actualizado: %@ a las %@" : {
@@ -32,10 +41,58 @@
     "Ajustes (próximamente)" : {
 
     },
+    "All" : {
+
+    },
+    "Alta" : {
+
+    },
+    "Alta %@" : {
+
+    },
+    "Añade primero la categoría padre para añadir subcategorías" : {
+
+    },
     "Añadir" : {
 
     },
+    "Añadir a esta categoría" : {
+
+    },
+    "Añadir subcategoría" : {
+
+    },
+    "Baja" : {
+
+    },
+    "Baja %@" : {
+
+    },
+    "Blue" : {
+
+    },
+    "Brown" : {
+
+    },
+    "Buscar emoji..." : {
+
+    },
     "Cancelar" : {
+
+    },
+    "Cargando emojis..." : {
+
+    },
+    "Categorias" : {
+
+    },
+    "Categorías" : {
+
+    },
+    "Color" : {
+
+    },
+    "Color seleccionado" : {
 
     },
     "Contenido" : {
@@ -54,13 +111,10 @@
     "Crear nota con notificación en 10s" : {
 
     },
+    "Cyan" : {
+
+    },
     "Detalle de Nota" : {
-
-    },
-    "Detalles del hábito" : {
-
-    },
-    "Días de la semana" : {
 
     },
     "Editar" : {
@@ -72,16 +126,43 @@
     "Eliminar" : {
 
     },
+    "Eliminar de categoría" : {
+
+    },
+    "Emojis" : {
+
+    },
     "Esta acción no se puede deshacer" : {
 
     },
     "Esta acción no se puede deshacer." : {
 
     },
+    "Esta acción no se puede deshacer. Se eliminarán subcategorías" : {
+
+    },
+    "Features" : {
+
+    },
     "Fecha" : {
 
     },
+    "Filter" : {
+
+    },
+    "General" : {
+
+    },
+    "Gray" : {
+
+    },
+    "Green" : {
+
+    },
     "Guardar" : {
+
+    },
+    "Guardar categoría" : {
 
     },
     "Guardar hábito" : {
@@ -96,10 +177,37 @@
     "Hello, world!" : {
 
     },
-    "Marcar día completado" : {
+    "Imagen" : {
+
+    },
+    "Indigo" : {
+
+    },
+    "Media" : {
+
+    },
+    "Media %@" : {
+
+    },
+    "Mint" : {
+
+    },
+    "No has añadido hábitos a la categoría" : {
+
+    },
+    "No hay categorías disponibles. Crea al menos una categoría." : {
 
     },
     "No hay notas para esta fecha" : {
+
+    },
+    "No hay subcategorías" : {
+
+    },
+    "Nombre" : {
+
+    },
+    "Nombre de la categoría" : {
 
     },
     "Notas" : {
@@ -117,10 +225,22 @@
     "Nuevo hábito" : {
 
     },
+    "OK" : {
+
+    },
+    "Orange" : {
+
+    },
+    "Pink" : {
+
+    },
     "Prioridad" : {
 
     },
     "Prioridad: %@" : {
+
+    },
+    "Priority" : {
 
     },
     "priority_high" : {
@@ -177,19 +297,46 @@
     "Prueba de ReminderPlugin" : {
 
     },
+    "Purple" : {
+
+    },
+    "Red" : {
+
+    },
+    "Selecciona color" : {
+
+    },
     "Selecciona los días de la semana" : {
+
+    },
+    "Selecciona prioridad" : {
+
+    },
+    "Selecciona tipo" : {
 
     },
     "Seleccione una opción" : {
 
     },
+    "Settings" : {
+
+    },
     "Sin notas" : {
+
+    },
+    "Subcategorías" : {
 
     },
     "Tareas para %@" : {
 
     },
+    "Teal" : {
+
+    },
     "Test Notificaciones" : {
+
+    },
+    "Tipo de icono" : {
 
     },
     "Título" : {
@@ -202,6 +349,9 @@
 
     },
     "Vence: %@" : {
+
+    },
+    "Yellow" : {
 
     }
   },

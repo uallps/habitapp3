@@ -1,8 +1,15 @@
 import SwiftUI
 import SwiftData
 
-@main
+@main // Punto de entrada
+
+// HabitApp cumple con el protocolo App.
 struct HabitApp: App {
+    
+    private var storageProvider: StorageProvider {
+        AppConfig().storageProvider
+    }
+
     @State private var selectedDetailView: String?
     let modelContainer: ModelContainer
     @StateObject private var appConfig: AppConfig
@@ -40,12 +47,20 @@ struct HabitApp: App {
     }
     
     var body: some Scene {
-        WindowGroup{
+        WindowGroup {
 #if os(iOS)
             TabView {
                 HabitListView(storageProvider: storageProvider)
                     .tabItem {
                         Label("Hábitos", systemImage: "checklist")
+                    }
+                CategoriesListView(storageProvider: storageProvider)
+                    .tabItem {
+                        Label("Categorías", systemImage: "folder")
+                    }
+                AddictionListView(storageProvider: storageProvider)
+                    .tabItem {
+                        Label("Adicciones", systemImage: "bandage")
                     }
                 DailyNotesView(storageProvider: storageProvider)
                     .tabItem {
@@ -88,6 +103,15 @@ struct HabitApp: App {
                     }
                     NavigationLink(value: "ajustes") {
                         Label("Ajustes", systemImage: "gearshape")
+                    }
+                    .task {
+                        storageProvider.resetStorage()
+                    }
+                    NavigationLink(value: "categorias") {
+                        Label("Categorias", systemImage: "folder")
+                    }
+                    NavigationLink(value: "adicciones") {
+                        Label("Adicciones", systemImage: "bandage")
                     }
                 }
             } detail: {
