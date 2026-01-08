@@ -80,16 +80,28 @@ struct AddictionDetailWrapperView: View {
                                         .foregroundColor(.secondary)
                                 } else {
                                     ForEach(addictionToEdit?.triggers ?? []) { trigger in
-                                        HabitRowView(
-                                            habit: trigger,
-                                            toggleCompletion: {
-                                                withAnimation {
-                                                    habitListVM.toggleCompletion(habit: trigger, for: currentDate)
-                                                }
-                                            },
-                                            viewModel: habitListVM,
-                                            storageProvider: addictionListVM.storageProvider,
-                                            date: currentDate
+                                        HStack(
+                                            Text(trigger.title)
+
+                                            //  Botón para marcar hábito a adicción. Significado: "Este hábito ha desencadenado mi adicción hoy"
+                                            Button(action: 
+                                                    addictionListVM.associateTriggerHabit()
+                                            ) {
+                                                Image(systemName: habit.isCompletedForDate(date) ? "checkmark.circle.fill" : "circle")
+                                                    .foregroundColor(habit.isCompletedForDate(date) ? .green : .gray)
+                                                    .font(.title3)
+                                            }
+                                            .buttonStyle(.plain)
+
+                                            // Desasociar hábito desencadenante
+                                            Button(action:
+                                                addictionListVM.removeTriggerHabit()
+                                            ) {
+                                                Image(systemName: "minus.circle.fill")
+                                                    .foregroundColor(.red)
+                                                    .font(.title3)
+                                            }
+                                            .buttonStyle(.plain)
                                         )
                                     }
                                 }
@@ -115,7 +127,7 @@ struct AddictionDetailWrapperView: View {
 
     @ViewBuilder
     var preventionHabitsSection: some View {
-                                // Hábitos ppara prevenir la adicción
+                                // Hábitos para prevenir la adicción
                         VStack(alignment: .leading, spacing: 12) {
                             Section(header: Text("Hábitos preventivos creados")) {
                                 if addictionToEdit?.preventionHabits.isEmpty ?? true {
@@ -123,16 +135,28 @@ struct AddictionDetailWrapperView: View {
                                         .foregroundColor(.secondary)
                                 } else {
                                     ForEach(addictionToEdit?.preventionHabits ?? []) { preventionHabit in
-                                        HabitRowView(
-                                            habit: preventionHabit,
-                                            toggleCompletion: {
-                                                withAnimation {
-                                                    habitListVM.toggleCompletion(habit: preventionHabit, for: currentDate)
-                                                }
-                                            },
-                                            viewModel: habitListVM,
-                                            storageProvider: addictionListVM.storageProvider,
-                                            date: currentDate
+                                        HStack(
+                                            Text(trigger.title)
+
+                                            //  Botón para marcar hábito a adicción. Significado: "Este hábito ha prevenido mi adicción hoy"
+                                            Button(action: 
+                                                    addictionListVM.associatePreventionHabit()
+                                            ) {
+                                                Image(systemName: habit.isCompletedForDate(date) ? "checkmark.circle.fill" : "circle")
+                                                    .foregroundColor(habit.isCompletedForDate(date) ? .green : .gray)
+                                                    .font(.title3)
+                                            }
+                                            .buttonStyle(.plain)
+
+                                            // Desasociar hábito preventivo
+                                            Button(action:
+                                                addictionListVM.removePreventionHabit()
+                                            ) {
+                                                Image(systemName: "minus.circle.fill")
+                                                    .foregroundColor(.red)
+                                                    .font(.title3)
+                                            }
+                                            .buttonStyle(.plain)
                                         )
                                     }
                                 }
@@ -165,16 +189,28 @@ struct AddictionDetailWrapperView: View {
                                         .foregroundColor(.secondary)
                                 } else {
                                     ForEach(addictionToEdit?.compensatoryHabits ?? []) { compensatoryHabits in
-                                        HabitRowView(
-                                            habit: compensatoryHabits,
-                                            toggleCompletion: {
-                                                withAnimation {
-                                                    habitListVM.toggleCompletion(habit: compensatoryHabits, for: currentDate)
-                                                }
-                                            },
-                                            viewModel: habitListVM,
-                                            storageProvider: addictionListVM.storageProvider,
-                                            date: currentDate
+                                        HStack(
+                                            Text(trigger.title)
+
+                                            //  Botón para marcar hábito a adicción. Significado: "He caído en mi adicción, pero este hábito me ha ayudado a compensarlo"
+                                            Button(action: 
+                                                    addictionListVM.associateCompensatoryHabit()
+                                            ) {
+                                                Image(systemName: habit.isCompletedForDate(date) ? "checkmark.circle.fill" : "circle")
+                                                    .foregroundColor(habit.isCompletedForDate(date) ? .green : .gray)
+                                                    .font(.title3)
+                                            }
+                                            .buttonStyle(.plain)
+
+                                            // Desasociar hábito compensatorio
+                                            Button(action:
+                                                addictionListVM.removeCompensatoryHabit()
+                                            ) {
+                                                Image(systemName: "minus.circle.fill")
+                                                    .foregroundColor(.red)
+                                                    .font(.title3)
+                                            }
+                                            .buttonStyle(.plain)
                                         )
                                     }
                                 }
