@@ -1,26 +1,60 @@
-
-//  HabitListViewModel.swift
-//  HabitApp
-//
-//
-
 import Foundation
-import Combine
+import SwiftData
+import Combine 
 
-class HabitListViewModel: ObservableObject {
-    @Published var habits: [Habit] = [
-        Habit(title: "Comprar leche", doneDays: [], dueDate: Date().addingTimeInterval(86400)),
-        Habit(title: "Hacer ejercicio", doneDays: [], priority: .high),
-        Habit(title: "Llamar a mamá", doneDays: [])
-    ]
+final class HabitListViewModel: ObservableObject {
     
-    func addHabit(habit: Habit) {
-        habits.append(habit)
+    private let storageProvider: StorageProvider
+    
+    init(storageProvider: StorageProvider) {
+        self.storageProvider = storageProvider
     }
     
-    func toggleCompletion(habit: Habit) {
-        if let index = habits.firstIndex(where: { $0.id == habit.id }) {
-            habits[index].isCompleted.toggle()
+    func addHabit(title: String,
+                  dueDate: Date? = nil, 
+                  priority: Priority? = nil, 
+                  reminderDate: Date? = nil, 
+                  scheduledDays: [Int] = [],
+                  context: ModelContext) {
+        let habit = Habit(
+            title: title,
+            dueDate: dueDate,
+            priority: priority,
+            reminderDate: reminderDate,
+            scheduledDays: scheduledDays
+        )
+        context.insert(habit)
+        
+        do {
+            try context.save()
+        } catch {
+            print("Error saving habit: \(error)")
+        }
+    }
+
+    func addHabitToCategory(habit: Habit, category: Category) async {
+        do {
+            try await storageProvider.addHabitToCategory(habit: habit, category: category)
+        } catch {
+            print("Error adding habit to category: \(error)")
+        }
+    }
+    
+    func toggleCompletion(habit: Habit, for date: Date = Date()) {
+        if habit.isCompletedForDate(date) {
+            habit.markAsIncomplete(for: date)
+        } else {
+            habit.markAsCompleted(for: date)
+        }
+    }
+    
+    func deleteHabit(_ habit: Habit, context: ModelContext) {
+        context.delete(habit)
+        
+        do {
+            try context.save()
+        } catch {
+            print("Error deleting habit: \(error)")
         }
     }
 }

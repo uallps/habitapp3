@@ -1,0 +1,29 @@
+@startuml
+
+usecase (Crear categoría) as CrCat
+usecase (Introducir icono) as IntIc
+usecase (Introducir imagen) as IntImg
+usecase (Introducir nombre) as IntNom
+usecase (Introducir prioridad) as IntPr
+usecase (Introducir subcategorías) as CrSubCat
+usecase (Introducir secuencia de emojis) as IntSecEmj
+usecase (Añadir hábito a categoría) as AnHabCat
+
+
+actor Usuario as Us
+
+Us --> CrCat
+Us --> CrSubCat
+Us --> AnHabCat
+
+CrCat <|-- CrSubCat
+
+CrCat <..  IntImg : extends
+CrCat <..  IntSecEmj : extends
+CrCat ..>  IntNom : include
+CrCat ..>  IntPr : include
+
+IntIc <|-- IntImg
+IntIc <|-- IntSecEmj 
+
+@enduml

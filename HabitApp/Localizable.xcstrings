@@ -1,0 +1,359 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "" : {
+
+    },
+    " " : {
+
+    },
+    "¿Eliminar categoría?" : {
+
+    },
+    "¿Eliminar hábito?" : {
+
+    },
+    "¿Eliminar nota?" : {
+
+    },
+    "%@" : {
+
+    },
+    "%lld" : {
+
+    },
+    "+" : {
+
+    },
+    "Actualizado: %@ a las %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Actualizado: %1$@ a las %2$@"
+          }
+        }
+      }
+    },
+    "Ajustes" : {
+
+    },
+    "Ajustes (próximamente)" : {
+
+    },
+    "All" : {
+
+    },
+    "Alta" : {
+
+    },
+    "Alta %@" : {
+
+    },
+    "Añade primero la categoría padre para añadir subcategorías" : {
+
+    },
+    "Añadir" : {
+
+    },
+    "Añadir a esta categoría" : {
+
+    },
+    "Añadir subcategoría" : {
+
+    },
+    "Baja" : {
+
+    },
+    "Baja %@" : {
+
+    },
+    "Blue" : {
+
+    },
+    "Brown" : {
+
+    },
+    "Buscar emoji..." : {
+
+    },
+    "Cancelar" : {
+
+    },
+    "Cargando emojis..." : {
+
+    },
+    "Categorias" : {
+
+    },
+    "Categorías" : {
+
+    },
+    "Color" : {
+
+    },
+    "Color seleccionado" : {
+
+    },
+    "Contenido" : {
+
+    },
+    "Creado: %@ a las %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Creado: %1$@ a las %2$@"
+          }
+        }
+      }
+    },
+    "Crear nota con notificación en 10s" : {
+
+    },
+    "Cyan" : {
+
+    },
+    "Detalle de Nota" : {
+
+    },
+    "Editar" : {
+
+    },
+    "Editar hábito" : {
+
+    },
+    "Eliminar" : {
+
+    },
+    "Eliminar de categoría" : {
+
+    },
+    "Emojis" : {
+
+    },
+    "Esta acción no se puede deshacer" : {
+
+    },
+    "Esta acción no se puede deshacer." : {
+
+    },
+    "Esta acción no se puede deshacer. Se eliminarán subcategorías" : {
+
+    },
+    "Features" : {
+
+    },
+    "Fecha" : {
+
+    },
+    "Filter" : {
+
+    },
+    "General" : {
+
+    },
+    "Gray" : {
+
+    },
+    "Green" : {
+
+    },
+    "Guardar" : {
+
+    },
+    "Guardar categoría" : {
+
+    },
+    "Guardar hábito" : {
+
+    },
+    "Habitos" : {
+
+    },
+    "Hábitos" : {
+
+    },
+    "Hello, world!" : {
+
+    },
+    "Imagen" : {
+
+    },
+    "Indigo" : {
+
+    },
+    "Media" : {
+
+    },
+    "Media %@" : {
+
+    },
+    "Mint" : {
+
+    },
+    "No has añadido hábitos a la categoría" : {
+
+    },
+    "No hay categorías disponibles. Crea al menos una categoría." : {
+
+    },
+    "No hay notas para esta fecha" : {
+
+    },
+    "No hay subcategorías" : {
+
+    },
+    "Nombre" : {
+
+    },
+    "Nombre de la categoría" : {
+
+    },
+    "Notas" : {
+
+    },
+    "Notas - %@" : {
+
+    },
+    "Notas Diarias" : {
+
+    },
+    "Nueva Nota" : {
+
+    },
+    "Nuevo hábito" : {
+
+    },
+    "OK" : {
+
+    },
+    "Orange" : {
+
+    },
+    "Pink" : {
+
+    },
+    "Prioridad" : {
+
+    },
+    "Prioridad: %@" : {
+
+    },
+    "Priority" : {
+
+    },
+    "priority_high" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "high"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "alta"
+          }
+        }
+      }
+    },
+    "priority_low" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "low"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "baja"
+          }
+        }
+      }
+    },
+    "priority_medium" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "medium"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "media"
+          }
+        }
+      }
+    },
+    "Prueba de ReminderPlugin" : {
+
+    },
+    "Purple" : {
+
+    },
+    "Red" : {
+
+    },
+    "Selecciona color" : {
+
+    },
+    "Selecciona los días de la semana" : {
+
+    },
+    "Selecciona prioridad" : {
+
+    },
+    "Selecciona tipo" : {
+
+    },
+    "Seleccione una opción" : {
+
+    },
+    "Settings" : {
+
+    },
+    "Sin notas" : {
+
+    },
+    "Subcategorías" : {
+
+    },
+    "Tareas para %@" : {
+
+    },
+    "Teal" : {
+
+    },
+    "Test Notificaciones" : {
+
+    },
+    "Tipo de icono" : {
+
+    },
+    "Título" : {
+
+    },
+    "Título de la nota" : {
+
+    },
+    "Título del hábito" : {
+
+    },
+    "Vence: %@" : {
+
+    },
+    "Yellow" : {
+
+    }
+  },
+  "version" : "1.1"
+}
