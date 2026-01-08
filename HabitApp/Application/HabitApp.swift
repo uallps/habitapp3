@@ -13,7 +13,7 @@ struct HabitApp: App {
     
     init() {
         // Inicializar el ModelContainer
-        let schema = Schema([Habit.self, DailyNote.self, Goal.self, Milestone.self])
+        let schema = Schema([Habit.self, DailyNote.self, Goal.self, Milestone.self,Streak.self])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         
         let container: ModelContainer

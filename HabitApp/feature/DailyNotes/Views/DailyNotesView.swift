@@ -218,7 +218,7 @@ extension DailyNotesView {
                             }
                         }
                     }
-                    .listStyle(.insetGrouped)
+                    .listStyle(.automatic)
                     .padding(.horizontal)
                 }
             }

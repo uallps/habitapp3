@@ -9,10 +9,10 @@ final class HabitListViewModel: ObservableObject {
         self.storageProvider = storageProvider
     }
     
-    func addHabit(title: String, 
-                  dueDate: Date? = nil, 
-                  priority: Priority? = nil, 
-                  reminderDate: Date? = nil, 
+    func addHabit(title: String,
+                  dueDate: Date? = nil,
+                  priority: Priority? = nil,
+                  reminderDate: Date? = nil,
                   scheduledDays: [Int] = []) {
         let habit = Habit(
             title: title,

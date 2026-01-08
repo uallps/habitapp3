@@ -196,7 +196,7 @@ extension HabitNotesView {
     
     private func deleteNotes(offsets: IndexSet) {
         let sorted = habitNotes.sorted { $0.date > $1.date }
-        for i in offsets { 
+        for i in offsets {
             notesViewModel.deleteNote(sorted[i])
         }
     }

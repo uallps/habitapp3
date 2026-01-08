@@ -18,6 +18,9 @@ class AppConfig: ObservableObject {
     @AppStorage("enableReminders")
     static var enableReminders: Bool = true
 
+    @AppStorage("enableStreaks")
+    static var enableStreaks: Bool = true
+
     @AppStorage("storageType")
     var storageType: StorageType = .swiftData
     
@@ -34,6 +37,9 @@ class AppConfig: ObservableObject {
         //  Registrar los plugins
         registry.register(plugin: HabitGoalPlugin(storageProvider: storageProvider))
         
+
+        registry.register(plugin: StreakPlugin(storageProvider: storageProvider))
+
         print("✅ Plugins registrados correctamente")
     }
 
