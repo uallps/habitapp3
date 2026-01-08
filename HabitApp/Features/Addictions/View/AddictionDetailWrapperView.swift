@@ -201,7 +201,9 @@ struct AddictionDetailWrapperView: View {
 
                                             // Desasociar hábito compensatorio
                                             Button(action:
-                                                addictionListVM.removeCompensatoryHabit()
+                                                addictionListVM.removeCompensatoryHabit(
+                                                    
+                                                )
                                             ) {
                                                 Image(systemName: "minus.circle.fill")
                                                     .foregroundColor(.red)

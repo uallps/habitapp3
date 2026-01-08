@@ -9,39 +9,17 @@ final class AddictionListViewModel: ObservableObject {
         self.storageProvider = storageProvider
     }
     
-    func addAddiction(title: String, 
-                  dueDate: Date? = nil, 
-                  priority: Priority? = nil, 
-                  reminderDate: Date? = nil, 
-                  scheduledDays: [Int] = []) {
-        let Addiction = Addiction(
-            title: title,
-            dueDate: dueDate,
-            priority: priority,
-            reminderDate: reminderDate,
-            scheduledDays: scheduledDays
-        )
-        storageProvider.context.insert(Addiction)
-        
+    func addAddiction(_Addiction: Addiction) async {        
         do {
-            try storageProvider.context.save()
-            
-            //  Notificar plugins si hay fecha de recordatorio
-            if let reminderDate = reminderDate {
-                PluginRegistry.shared.notifyDataChanged(
-                    taskId: Addiction.id,
-                    title: Addiction.title,
-                    dueDate: reminderDate
-                )
-            }
+            try await storageProvider.addAddiction(_Addiction)
         } catch {
             print(" Error saving Addiction: \(error)")
         }
     }
     
-    func updateAddiction(_ Addiction: Addiction) {
+    func updateAddiction(_ Addiction: Addiction) async {
         do {
-            try storageProvider.context.save()
+            try await storageProvider.updateAddiction(Addiction)
         } catch {
             print(" Error updating Addiction: \(error)")
         }
@@ -71,11 +49,9 @@ final class AddictionListViewModel: ObservableObject {
         }
     }
     
-    func deleteAddiction(_ Addiction: Addiction) {
-        storageProvider.context.delete(Addiction)
-        
+    func deleteAddiction(_ Addiction: Addiction) async {        
         do {
-            try storageProvider.context.save()
+            try await storageProvider.deleteAddiction(Addiction)
         } catch {
             print(" Error deleting Addiction: \(error)")
         }
@@ -87,33 +63,159 @@ final class AddictionListViewModel: ObservableObject {
             Addiction(title: "Comer chocolate", priority: .medium, scheduledDays: [ 2,  4, 5,  7]),
             Addiction(title: "Doomscrolling", priority: .low, scheduledDays: [1, 2,  5, 6, 7])
         ]
-        
-        for Addiction in sampleAddictions {
-            storageProvider.context.insert(Addiction)
-        }
-        
+
         do {
-            try storageProvider.context.save()
-            print(" Adicciones de muestra creados")
-        } catch {
+            for Addiction in sampleAddictions {
+                Task {
+                    await addAddiction(Addiction)
+                }
+            }
+        }catch {
             print(" Error creating sample Addictions: \(error)")
         }
-    }
-    
-    func scheduleAddictionsNotification(for date: Date, Addictions: [Addiction]) {
-        let calendar = Calendar.current
-        let weekday = calendar.component(.weekday, from: date)
-        let dayAddictions = Addictions.filter { $0.scheduledDays.contains(weekday) }
         
-        if !dayAddictions.isEmpty {
-            let AddictionTitles = dayAddictions.map { $0.title }.joined(separator: ", ")
-            let notificationDate = calendar.date(byAdding: .hour, value: 9, to: calendar.startOfDay(for: date)) ?? date
-            
-            PluginRegistry.shared.notifyDataChanged(
-                taskId: UUID(),
-                title: "Hoy tienes \(dayAddictions.count) adicción(s): \(AddictionTitles)",
-                dueDate: notificationDate
+
+    }
+
+    func addCompensatoryHabit(
+        to addiction: Addiction,
+        habit: Habit
+    ) async {
+        do {
+            try await storageProvider.addCompensatoryHabit(
+                to: addiction,
+                habit: habit
             )
+        } catch {
+            print(" Error adding compensatory habit: \(error)")
         }
     }
+
+    func addPreventionHabit(
+        to addiction: Addiction,
+        habit: Habit
+    ) async {
+        do {
+            try await storageProvider.addPreventionHabit(
+                to: addiction,
+                habit: habit
+            )
+        } catch {
+            print(" Error adding prevention habit: \(error)")
+        }
+    }
+
+    func addTriggerHabit(
+        to addiction: Addiction,
+        habit: Habit
+    ) async {
+        do {
+            try await storageProvider.addTriggerHabit(
+                to: addiction,
+                habit: habit
+            )
+        } catch {
+            print(" Error adding trigger habit: \(error)")
+        }
+    }
+
+
+    func removeCompensatoryHabit(
+        from addiction: Addiction,
+        habit: Habit
+    ) async {
+        do {
+            try storageProvider.removeCompensatoryHabit(
+                from: addiction,
+                habit: habit
+            )
+        } catch {
+            print(" Error removing compensatory habit: \(error)")
+        }
+    }
+
+    func removePreventionHabit(
+        from addiction: Addiction,
+        habit: Habit
+    ) async {
+        do {
+            try storageProvider.removePreventionHabit(
+                from: addiction,
+                habit: habit
+            )
+        } catch {
+            print(" Error removing prevention habit: \(error)")
+        }
+    }
+
+    func removeTriggerHabit(
+        from addiction: Addiction,
+        habit: Habit
+    ) async {
+        do {
+            try storageProvider.removeTriggerHabit(
+                from: addiction,
+                habit: habit
+            )
+        } catch {
+            print(" Error removing trigger habit: \(error)")
+        }
+    }
+
+    func associateCompensatoryHabit(
+        to addiction: Addiction,
+        habit: Habit
+    ) async {
+        do {
+            try storageProvider.associateCompensatoryHabit(
+                to: addiction,
+                habit: habit
+            )
+        } catch {
+            print(" Error associating compensatory habit: \(error)")
+        }
+    }
+
+    func associatePreventionHabit(
+        to addiction: Addiction,
+        habit: Habit
+    ) async {
+        do {
+            try storageProvider.associatePreventionHabit(
+                to: addiction,
+                habit: habit
+            )
+        } catch {
+            print(" Error associating prevention habit: \(error)")
+        }
+    }
+
+    func associateTriggerHabit(
+        to addiction: Addiction,
+        habit: Habit
+    ) async {
+        do {
+            try storageProvider.associateTriggerHabit(
+                to: addiction,
+                habit: habit
+            )
+        } catch {
+            print(" Error associating trigger habit: \(error)")
+        }
+    }
+
+    func associateCompensatoryHabit(
+        to addiction: Addiction,
+        habit: Habit
+    ) async {
+        do {
+            try storageProvider.associateCompensatoryHabit(
+                to: addiction,
+                habit: habit
+            )
+        } catch {
+            print(" Error associating compensatory habit: \(error)")
+        }
+    }
+
 }
