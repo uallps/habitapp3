@@ -9,70 +9,70 @@ final class AddictionListViewModel: ObservableObject {
         self.storageProvider = storageProvider
     }
     
-    func addAddiction(_Addiction: Addiction) async {        
+    func addAddiction(addiction: Addiction) async {
         do {
-            try await storageProvider.addAddiction(_Addiction)
+            try await storageProvider.addAddiction(addiction: addiction)
         } catch {
             print(" Error saving Addiction: \(error)")
         }
     }
     
-    func updateAddiction(_ Addiction: Addiction) async {
+    func updateAddiction(addiction: Addiction) async {
         do {
-            try await storageProvider.updateAddiction(Addiction)
+            try await storageProvider.updateAddiction(addiction: addiction)
         } catch {
             print(" Error updating Addiction: \(error)")
         }
     }
     
     func toggleCompletion(Addiction: Addiction, for date: Date = Date()) {
-        if Addiction.isCompletedForDate(date) {
-            Addiction.markAsIncomplete(for: date)
-        } else {
-            Addiction.markAsCompleted(for: date)
-        }
+        // if Addiction.isCompletedForDate(date) {
+        //     Addiction.markAsIncomplete(for: date)
+        // } else {
+        //     Addiction.markAsCompleted(for: date)
+        // }
         
-        do {
-            try storageProvider.context.save()
-            print(" Hábito '\(Addiction.title)' guardado - Días completados: \(Addiction.doneDates.count)")
+        // do {
+        //     try storageProvider.context.save()
+        //     print(" Hábito '\(Addiction.title)' guardado - Días completados: \(Addiction.doneDates.count)")
             
-            //  Esperar a que SwiftData sincronice completamente
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                PluginRegistry.shared.notifyDataChanged(
-                    taskId: Addiction.id,
-                    title: Addiction.title,
-                    dueDate: Addiction.dueDate
-                )
-            }
-        } catch {
-            print(" Error saving Addiction: \(error)")
-        }
+        //     //  Esperar a que SwiftData sincronice completamente
+        //     DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+        //         PluginRegistry.shared.notifyDataChanged(
+        //             taskId: Addiction.id,
+        //             title: Addiction.title,
+        //             dueDate: Addiction.dueDate
+        //         )
+        //     }
+        // } catch {
+        //     print(" Error saving Addiction: \(error)")
+        // }
     }
     
-    func deleteAddiction(_ Addiction: Addiction) async {        
+    func deleteAddiction(addiction: Addiction) async {
         do {
-            try await storageProvider.deleteAddiction(Addiction)
+            try await storageProvider.deleteAddiction(addiction:  addiction)
         } catch {
             print(" Error deleting Addiction: \(error)")
         }
     }
     
     func createSampleAddictions() {
-        let sampleAddictions = [
-            Addiction(title: "Fumar", priority: .high, scheduledDays: [1,  3, 4,  6, 7]),
-            Addiction(title: "Comer chocolate", priority: .medium, scheduledDays: [ 2,  4, 5,  7]),
-            Addiction(title: "Doomscrolling", priority: .low, scheduledDays: [1, 2,  5, 6, 7])
-        ]
+        // let sampleAddictions = [
+        //     Addiction(title: "Fumar", priority: .high, scheduledDays: [1,  3, 4,  6, 7]),
+        //     Addiction(title: "Comer chocolate", priority: .medium, scheduledDays: [ 2,  4, 5,  7]),
+        //     Addiction(title: "Doomscrolling", priority: .low, scheduledDays: [1, 2,  5, 6, 7])
+        // ]
 
-        do {
-            for Addiction in sampleAddictions {
-                Task {
-                    await addAddiction(Addiction)
-                }
-            }
-        }catch {
-            print(" Error creating sample Addictions: \(error)")
-        }
+        // do {
+        //     for Addiction in sampleAddictions {
+        //         Task {
+        //             await addAddiction(Addiction)
+        //         }
+        //     }
+        // }catch {
+        //     print(" Error creating sample Addictions: \(error)")
+        // }
         
 
     }
@@ -125,7 +125,7 @@ final class AddictionListViewModel: ObservableObject {
         habit: Habit
     ) async {
         do {
-            try storageProvider.removeCompensatoryHabit(
+            try await storageProvider.removeCompensatoryHabit(
                 from: addiction,
                 habit: habit
             )
@@ -139,7 +139,7 @@ final class AddictionListViewModel: ObservableObject {
         habit: Habit
     ) async {
         do {
-            try storageProvider.removePreventionHabit(
+            try await storageProvider.removePreventionHabit(
                 from: addiction,
                 habit: habit
             )
@@ -153,7 +153,7 @@ final class AddictionListViewModel: ObservableObject {
         habit: Habit
     ) async {
         do {
-            try storageProvider.removeTriggerHabit(
+            try await storageProvider.removeTriggerHabit(
                 from: addiction,
                 habit: habit
             )
@@ -167,7 +167,7 @@ final class AddictionListViewModel: ObservableObject {
         habit: Habit
     ) async {
         do {
-            try storageProvider.associateCompensatoryHabit(
+            try await storageProvider.associateCompensatoryHabit(
                 to: addiction,
                 habit: habit
             )
@@ -181,7 +181,7 @@ final class AddictionListViewModel: ObservableObject {
         habit: Habit
     ) async {
         do {
-            try storageProvider.associatePreventionHabit(
+            try await storageProvider.associatePreventionHabit(
                 to: addiction,
                 habit: habit
             )
@@ -195,26 +195,12 @@ final class AddictionListViewModel: ObservableObject {
         habit: Habit
     ) async {
         do {
-            try storageProvider.associateTriggerHabit(
+            try await storageProvider.associateTriggerHabit(
                 to: addiction,
                 habit: habit
             )
         } catch {
             print(" Error associating trigger habit: \(error)")
-        }
-    }
-
-    func associateCompensatoryHabit(
-        to addiction: Addiction,
-        habit: Habit
-    ) async {
-        do {
-            try storageProvider.associateCompensatoryHabit(
-                to: addiction,
-                habit: habit
-            )
-        } catch {
-            print(" Error associating compensatory habit: \(error)")
         }
     }
 

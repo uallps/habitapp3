@@ -10,7 +10,8 @@ struct AddictionRowView: View {
             commonBody
                 NavigationLink {
                 AddictionDetailWrapperView(
-                    addictionListVM: addictionListVM
+                    addictionListVM: addictionListVM,
+                    addiction: addiction
                 )
             } label: {
                 Image(systemName: "note.text")
@@ -25,7 +26,8 @@ struct AddictionRowView: View {
 var macOSBody: some View {
     NavigationLink {
         AddictionDetailWrapperView(
-            addictionListVM: addictionListVM
+            addictionListVM: addictionListVM,
+            addiction: addiction
         )
     } label: {
         HStack {
@@ -40,7 +42,7 @@ var macOSBody: some View {
     @ViewBuilder
     var commonBody: some View {
 
-            Text(addiction.name)
+            Text(addiction.title)
                 .font(.headline)
             Spacer()
             Text("Severidad \(addiction.severity.rawValue) \(addiction.severity.emoji)")

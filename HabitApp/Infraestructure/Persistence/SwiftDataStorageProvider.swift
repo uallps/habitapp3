@@ -7,7 +7,6 @@ class SwiftDataContext {
 }
 
 class SwiftDataStorageProvider: StorageProvider {
-
     private var modelContainer: ModelContainer
     private var context: ModelContext
 
@@ -32,6 +31,59 @@ class SwiftDataStorageProvider: StorageProvider {
         ///TODO
     }
     
+    @MainActor
+    func loadNotes(calendar: Calendar, startOfDay: Date, endOfDay: Date, selectedDate: Date) async throws -> [DailyNote] {
+        var notes: [DailyNote] = []
+        do {
+            let predicate = #Predicate<DailyNote> { note in
+                note.date >= startOfDay && note.date < endOfDay && note.habitId == nil
+            }
+            
+            let descriptor = FetchDescriptor<DailyNote>(
+                predicate: predicate,
+                sortBy: [SortDescriptor(\.createdAt, order: .reverse)]
+            )
+            notes = try context.fetch(descriptor)
+        } catch {
+            print("Error loading notes: \(error)")
+        }
+        return notes
+    }
+    
+    @MainActor
+    func addNote(title: String, content: String, selectedDate: Date, noteDate: Date) async throws -> DailyNote {
+        let note = DailyNote(title: title, content: content, date: noteDate)
+        context.insert(note)
+        do { try context.save() }
+        catch { print("Error guardando contexto: \(error)") }
+        //try await loadNotes(selectedDate: selectedDate)
+        return note
+    }
+    
+    @MainActor
+    func saveContext() async throws {
+        do { try context.save() }
+        catch { print("Error guardando contexto: \(error)") }
+   }
+    
+    // @MainActor
+    // func updateNote(_ note: DailyNote, title: String, content: String) async throws {
+    //     <#code#>
+    // }
+    
+    // @MainActor
+    // func saveAndGoToNoteDate(_ note: DailyNote, title: String, content: String) async throws {
+    //     <#code#>
+    // }
+    
+    @MainActor
+    func deleteNote(_ note: DailyNote) async throws {
+        do {
+            try context.delete(note)
+        } catch {
+            print("Error deleting note: \(error)")
+        }
+    }
 
     @MainActor
     private func getRealInstanceAddiction(_ addiction: Addiction) -> Addiction? {
@@ -44,6 +96,21 @@ class SwiftDataStorageProvider: StorageProvider {
         } catch {
             print("Error getting real instance of Addiction: \(error)")
             return nil
+        }
+    }
+    
+    @MainActor
+    func addTriggerHabit(to addiction: Addiction, habit: Habit) async throws {
+        ///TODO
+    }
+    
+    @MainActor
+    func deleteGoal(_ goal: Goal) async throws {
+        context.delete(goal)
+        do {
+            try context.save()
+        } catch {
+            print("Error deleting goal: \(error)")
         }
     }
     

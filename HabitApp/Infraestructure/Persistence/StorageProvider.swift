@@ -19,13 +19,13 @@ protocol StorageProvider {
     //END IF
     //DEV ONLY METHOD
     //IF ADDICTIONS
-    func addAddiction(_Addiction: Addiction) async throws
-    func updateAddiction(_Addiction: Addiction) async throws
-    func deleteAddiction(_Addiction: Addiction) async throws
+    func addAddiction(addiction: Addiction) async throws
+    func updateAddiction(addiction: Addiction) async throws
+    func deleteAddiction(addiction: Addiction) async throws
     func createSampleAddictions(to addiction: Addiction, habit: Habit) async throws
     func addCompensatoryHabit(to addiction: Addiction, habit: Habit) async throws
     func addPreventionHabit(to addiction: Addiction, habit: Habit) async throws
-    func addTrigerHabit(to addiction: Addiction, habit: Habit) async throws
+    func addTriggerHabit(to addiction: Addiction, habit: Habit) async throws
     func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async throws
     func removePreventionHabit(from addiction: Addiction, habit: Habit) async throws
     func removeTriggerHabit(from addiction: Addiction, habit: Habit) async throws
@@ -37,7 +37,16 @@ protocol StorageProvider {
     //END IF
     func resetStorage()
     //END DEV ONLY METHOD
-    //IF GOALPLUGIN
-    func onDataChanged(taskId: UUID, title: String, dueDate: Date?) async throws 
-    //END GOALPLUGIN
+    //IF GOAL
+    func onDataChanged(taskId: UUID, title: String, dueDate: Date?) async throws
+    func deleteGoal(_ goal: Goal) async throws
+    //END GOAL
+    //IF DAILYNOTES
+    func loadNotes(calendar: Calendar, startOfDay: Date, endOfDay: Date, selectedDate: Date) async throws -> [DailyNote]
+    func addNote(title: String, content: String, selectedDate: Date, noteDate: Date) async throws -> DailyNote
+    //func updateNote(_ note: DailyNote, title: String, content: String) async throws
+    //func saveAndGoToNoteDate(_ note: DailyNote, title: String, content: String) async throws
+    func deleteNote(_ note: DailyNote) async throws
+    //END DAILYNOTES
+    func saveContext() async throws
 }
