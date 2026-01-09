@@ -25,32 +25,9 @@ struct AddictionListView: View {
 // MARK: - iOS UI
 #if os(iOS)
 extension HabitListView {
-    var iosBody: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
-                //  Encabezado compacto
-                VStack(spacing: 8) {
-                    HStack {
-                        Text(monthYearString)
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        
-                        Spacer()
-                        
-                        if !filteredAddictions.isEmpty {
-                            Text("\(filteredAddictions.count) tarea\(filteredAddictions.count == 1 ? "" : "s")")
-                                .font(.caption2)
-                                .fontWeight(.medium)
-                                .foregroundColor(.white)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 3)
-                                .background(Color.blue)
-                                .cornerRadius(6)
-                        }
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.top, 8)
-                    
+
+    @ViewBuilder
+    var daySelectoriOS: some View {
                     // Selector de días - MÁS COMPACTO
                     HStack(spacing: 6) {
                         ForEach(1...7, id: \.self) { index in
@@ -99,34 +76,11 @@ extension HabitListView {
                     }
                     .padding(.horizontal, 12)
                     .padding(.bottom, 8)
-                }
-                .background(Color(.systemBackground))
-                .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 1)
-                
-                Divider()
-                
-                //  Día actual - MÁS COMPACTO
-                HStack {
-                    Text(dayName(for: currentDate))
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                    
-                    Text("·")
-                        .foregroundColor(.secondary)
-                    
-                    Text(currentDate, format: .dateTime.day().month())
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    
-                    Spacer()
-                }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
-                .background(Color(.systemBackground))
-                
-                Divider()
-                
-                //  Lista de adicciones (SIEMPRE dentro de List)
+    }
+
+    @ViewBuilder
+    var listSelectoriOS: some View {
+                        //  Lista de adicciones (SIEMPRE dentro de List)
                 List {
                     if filteredAddictions.isEmpty {
                         VStack(spacing: 16) {
@@ -172,6 +126,63 @@ extension HabitListView {
                     }
                 }
                 .listStyle(.plain)
+    }
+
+    var iosBody: some View {
+        NavigationStack {
+            VStack(spacing: 0) {
+                //  Encabezado compacto
+                VStack(spacing: 8) {
+                    HStack {
+                        Text(monthYearString)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        
+                        Spacer()
+                        
+                        if !filteredAddictions.isEmpty {
+                            Text("\(filteredAddictions.count) tarea\(filteredAddictions.count == 1 ? "" : "s")")
+                                .font(.caption2)
+                                .fontWeight(.medium)
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 3)
+                                .background(Color.blue)
+                                .cornerRadius(6)
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 8)
+                    
+                    daySelectoriOS
+                }
+                .background(Color(.systemBackground))
+                .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 1)
+                
+                Divider()
+                
+                //  Día actual - MÁS COMPACTO
+                HStack {
+                    Text(dayName(for: currentDate))
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                    
+                    Text("·")
+                        .foregroundColor(.secondary)
+                    
+                    Text(currentDate, format: .dateTime.day().month())
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    
+                    Spacer()
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .background(Color(.systemBackground))
+                
+                Divider()
+                
+                listSelectoriOS
             }
             .navigationTitle("Adicciones")
             .toolbar {
@@ -200,34 +211,8 @@ extension HabitListView {
 // MARK: - macOS UI
 #if os(macOS)
 extension AddictionListView {
-    var macBody: some View {
-        NavigationSplitView(columnVisibility: .constant(.all)) {
-            VStack(spacing: 0) {
-                // Header compacto
-                HStack {
-                    Text(monthYearString)
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                    
-                    Spacer()
-                    
-                    if !filteredAddictions.isEmpty {
-                        Text("\(filteredAddictions.count)")
-                            .font(.caption)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 3)
-                            .background(Color.blue)
-                            .cornerRadius(6)
-                    }
-                }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .background(Color(.windowBackgroundColor))
-                
-                Divider()
-                
+    @ViewBuilder
+    var daySelectorMacOS: some View {
                 // Selector de días compacto
                 HStack(spacing: 4) {
                     ForEach(1...7, id: \.self) { index in
@@ -277,10 +262,11 @@ extension AddictionListView {
                 .padding(.horizontal, 8)
                 .padding(.vertical, 8)
                 .background(Color(.windowBackgroundColor))
-                
-                Divider()
-                
-                // Lista de adicciones
+    }
+
+    @ViewBuilder
+    var listSelectorMacOS: some View {
+                        // Lista de adicciones
                 List {
                     if filteredAddictions.isEmpty {
                         VStack(spacing: 16) {
@@ -318,6 +304,41 @@ extension AddictionListView {
                     }
                 }
                 .listStyle(.sidebar)
+    }
+
+    var macBody: some View {
+        NavigationSplitView(columnVisibility: .constant(.all)) {
+            VStack(spacing: 0) {
+                // Header compacto
+                HStack {
+                    Text(monthYearString)
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                    
+                    Spacer()
+                    
+                    if !filteredAddictions.isEmpty {
+                        Text("\(filteredAddictions.count)")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 3)
+                            .background(Color.blue)
+                            .cornerRadius(6)
+                    }
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .background(Color(.windowBackgroundColor))
+                
+                Divider()
+                
+                daySelectorMacOS
+                
+                Divider()
+                
+                listSelectorMacOS
             }
             .navigationTitle("Adicciones")
             .navigationSplitViewColumnWidth(min: 280, ideal: 350, max: 450)
