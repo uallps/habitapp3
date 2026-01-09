@@ -10,7 +10,7 @@ struct AddictionListView: View {
     private let weekdaySymbols = Calendar.current.shortStandaloneWeekdaySymbols
     
     init(storageProvider: StorageProvider) {
-        self._addictionListVM = StateObject(wrappedValue: HabitListaddictionListVM(storageProvider: storageProvider))
+        self._addictionListVM = StateObject(wrappedValue: AddictionListViewModel(storageProvider: storageProvider))
     }
 
     var body: some View {
@@ -369,7 +369,7 @@ extension AddictionListView {
     
     private var filteredAddictions: [Addiction] {
         let weekday = calendar.component(.weekday, from: currentDate)
-        return addictions.filter { $0.scheduledDays.contains(weekday) }
+        return addictions.filter {  }
     }
     
     private var monthYearString: String {
@@ -405,7 +405,5 @@ extension AddictionListView {
         return calendar.date(byAdding: .day, value: diff, to: today) ?? today
     }
     
-    private func hasHabitsForDay(_ weekday: Int) -> Bool {
-        return addictions.contains { $0.scheduledDays.contains(weekday) }
-    }
+
 }
