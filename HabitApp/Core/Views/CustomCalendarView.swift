@@ -1,35 +1,10 @@
 import SwiftUI
 
 struct CustomCalendarView: View {
-    // El sistema Binding en SwiftUI es similar a los punteros en C o al manejo de estado en otros frameworks móviles como Jetpack Compose.
-
-    // Para compararlos:
-    // Puntero en C: "Te doy acceso a la memoria donde vive mi valor."
-    // Binding de SwiftUI: "Te doy acceso controlado de lectura/escritura a mi valor."
-    // (comportamiento similar a un puntero pero implementado con closures, no direcciones de memoria)
-
-    // State hoisting en Jetpack Compose: "Te doy el valor y una función para cambiarlo, y cuando el valor cambia el componente padre se vuelve a renderizar."
-
-    // SwiftUI es conceptualmente similar a pasar una "referencia a un valor", pero con tipado seguro, controlado y sin gestión manual de memoria.
-    
-    // ¿Qué es Binding en SwiftUI?
-    // Un Binding<Value> es una conexión bidireccional entre un valor y una vista que lee y escribe ese valor.
-    // El valor no se almacena en el @Binding en sí — pertenece a otro lugar (por ejemplo, a una variable @State, o a un @ObservedObject / @EnvironmentObject).
-    // Cuando el valor vinculado cambia (vía el Binding), SwiftUI actualizará las vistas que dependen de ese valor. Igual que en Jetpack Compose.
-    
-    // Es como un puntero en C, porque proporciona acceso a un valor que pertenece a otro sitio, pero es como el state hoisting de Jetpack Compose
-    // porque permite leer y escribir el valor, disparando actualizaciones de UI.
-    
-    // @Binding es un property wrapper que le dice a SwiftUI:
-    // "No poseo este valor. Solo tengo una referencia a él, y puedo leerlo o escribirlo, pero pertenece a otra parte. Solo recibí este parámetro y conozco el valor."
-
     @Binding var selectedDate: Date
-    
-    // Sin embargo, esta es una variable @State porque es interna a esta vista. Esta vista posee este valor.
-    // Podría pasarse desde este archivo a una vista hija de modo que si la vista hija lo cambia, esta vista se actualice.
-    // Básicamente: "Oye, yo poseo este valor, pero si necesitas cambiarlo puedo pasártelo para que lo cambies y yo me actualice."
-    @State private var displayedMonth: Date
     let doneDates: [Date]   // <-- Ahora recibe fechas directamente
+    
+    @State private var displayedMonth: Date
     
     private let calendar = Calendar.current
     private let daysInWeek = 7
@@ -58,7 +33,6 @@ struct CustomCalendarView: View {
         return days
     }
     
-    // Obtener el weekday del primer día del mes (1 = domingo, 7 = sábado)
     private var firstWeekday: Int {
         let components = calendar.dateComponents([.year, .month], from: displayedMonth)
         let firstOfMonth = calendar.date(from: components)!
@@ -67,7 +41,7 @@ struct CustomCalendarView: View {
     
     var body: some View {
         VStack {
-            // Encabezado de navegación del mes
+            // Header
             HStack {
                 Button(action: { changeMonth(by: -1) }) {
                     Image(systemName: "chevron.left")
@@ -82,7 +56,7 @@ struct CustomCalendarView: View {
             }
             .padding(.horizontal)
             
-            // Etiquetas de los días de la semana
+            // Weekdays
             let weekdaySymbols = calendar.shortStandaloneWeekdaySymbols
             HStack {
                 ForEach(weekdaySymbols, id: \.self) { day in
@@ -93,11 +67,11 @@ struct CustomCalendarView: View {
                 }
             }
             
-            // Rejilla de días con padding para el offset del primer weekday
             let columns = Array(repeating: GridItem(.flexible()), count: daysInWeek)
             
             LazyVGrid(columns: columns, spacing: 10) {
-                // Espacios vacíos iniciales para compensar el primer día de la semana
+                
+                // Empty spaces before first day
                 ForEach(0..<firstWeekday-1, id: \.self) { _ in
                     Text(" ").frame(width: 30, height: 30)
                 }
@@ -167,4 +141,3 @@ struct CustomCalendarView: View {
         }
     }
 }
-

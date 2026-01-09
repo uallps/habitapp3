@@ -198,12 +198,9 @@ extension HabitListView {
             }
             .sheet(isPresented: $showingNewHabitSheet) {
                 HabitDetailWrapper(
-                    habitListVM: HabitListViewModel(
-                        storageProvider: AppConfig.storageProvider
-                    ),
-                    isNew: true,
+                    viewModel: viewModel,
                     habit: Habit(title: ""),
-                    storageProvider: AppConfig.storageProvider
+                    isNew: true
                 )
             }
         }
