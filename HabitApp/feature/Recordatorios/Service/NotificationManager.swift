@@ -30,7 +30,8 @@ class NotificationManager {
     func scheduleNotification(for habit: Habit) {
         removeHabitNotifications(for: habit)
         
-        guard let reminderDate = habit.reminderDate, !habit.scheduledDays.isEmpty else {
+        guard let reminderDate = habit.reminderDate,
+              !habit.scheduledDays.isEmpty else {
             print("Hábito '\(habit.title)' sin recordatorio o sin dias asignados.")
             return
         }
@@ -68,6 +69,16 @@ class NotificationManager {
             }
         }
         
+    }
+    
+    func cancelNotificationForDate(for habit: Habit, date: Date) {
+            let calendar = Calendar.current
+            let weekday = calendar.component(.weekday, from: date)
+        
+            let uniqueID = "\(habit.id.uuidString)-\(weekday)"
+           
+            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [uniqueID])
+            print("Notificación cancelada para el hábito '\(habit.title)' el día \(weekday)")
     }
     
     func removeHabitNotifications(for habit: Habit) {

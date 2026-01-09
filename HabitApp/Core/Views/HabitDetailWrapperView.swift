@@ -145,6 +145,8 @@ extension HabitDetailWrapper {
                         .background(Color(.systemBackground))
                         .cornerRadius(12)
                         .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
+                        
+                        
                         // 🔹 Botones
                         VStack(spacing: 12) {
                             Button(action: saveHabit) {
@@ -302,8 +304,37 @@ extension HabitDetailWrapper {
                 }
                 .padding(.horizontal, 24)
                 
-                Spacer()
+                //Recordatorios
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "bell.fill")
+                            .foregroundColor(.purple)
+                        Text("Recordatorio")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                    }
+                    
+                    Toggle("Activar recordatorio", isOn: $hasReminder)
+                        .onChange(of: hasReminder) { newValue in
+                            if newValue {
+                                NotificationManager.shared.requestAuthorization { granted in
+                                    if !granted {
+                                        print("Permiso denegado")
+                                    }
+                                }
+                            }
+                        }
+                    
+                    if hasReminder {
+                        DatePicker("Hora", selection: $reminderDate, displayedComponents: .hourAndMinute)
+                    }
+                }
+                .padding(16)
+                .background(Color(.controlBackgroundColor)) // ✅ Añadido fondo nativo de Mac
+                .cornerRadius(12)
+                .padding(.horizontal, 24) // ✅ Añadido para alinear con el bloque de arriba
                 
+                Spacer()
                 // Botones
                 HStack(spacing: 12) {
                     Button("Cancelar") {

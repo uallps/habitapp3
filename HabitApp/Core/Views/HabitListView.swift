@@ -31,19 +31,7 @@ extension HabitListView {
     var iosBody: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                //PRUEBA - BORRAR SI LLEGA A CORE
-                Button("🕵️‍♂️ Depurar Notificaciones") {
-                    UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
-                        print("--- 🔔 HAY \(requests.count) NOTIFICACIONES PENDIENTES ---")
-                        for request in requests {
-                            if let trigger = request.trigger as? UNCalendarNotificationTrigger {
-                                let date = trigger.nextTriggerDate()?.formatted() ?? "Fecha desconocida"
-                                print("ID: \(request.identifier) | Título: \(request.content.title) | Sonará: \(date)")
-                            }
-                        }
-                        print("------------------------------------------------")
-                    }
-                }                // 🔹 Encabezado compacto
+                // 🔹 Encabezado compacto
                 VStack(spacing: 8) {
                     HStack {
                         Text(monthYearString)

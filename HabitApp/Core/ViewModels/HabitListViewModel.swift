@@ -27,18 +27,15 @@ final class HabitListViewModel: ObservableObject {
         
         do {
             try storageProvider.context.save()
-            
             //  Notificar plugins si hay fecha de recordatorio
             if let reminderDate = reminderDate {
                 PluginRegistry.shared.notifyDataChanged(
                     taskId: habit.id,
                     title: habit.title,
-                    dueDate: reminderDate
-                )
+                    dueDate: reminderDate)
             }
-        } catch {
-            print(" Error saving habit: \(error)")
-        }
+            } catch {
+            print(" Error saving habit: \(error)")        }
     }
     
     func updateHabit(_ habit: Habit) {
@@ -55,6 +52,7 @@ final class HabitListViewModel: ObservableObject {
             habit.markAsIncomplete(for: date)
         } else {
             habit.markAsCompleted(for: date)
+            NotificationManager.shared.cancelNotificationForDate(for: habit, date: date)
         }
         
         do {
