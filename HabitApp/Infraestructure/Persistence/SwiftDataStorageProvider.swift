@@ -88,13 +88,17 @@ class SwiftDataStorageProvider: StorageProvider {
     @MainActor
     private func getRealInstanceAddiction(_ addiction: Addiction) -> Addiction? {
         do {
+            let addictionID = addiction.id
+
             let descriptor = FetchDescriptor<Addiction>(
-                predicate: #Predicate { $0.id == addiction.id },
-                sortBy: []
+                predicate: #Predicate<Addiction> { storedAddiction in
+                    storedAddiction.id == addictionID
+                }
             )
+
             return try context.fetch(descriptor).first
         } catch {
-            print("Error getting real instance of Addiction: \(error)")
+            print("Error getting real instance of Habit: \(error)")
             return nil
         }
     }
@@ -344,16 +348,21 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
     @MainActor
     private func getRealInstanceHabit(_ habit: Habit) -> Habit? {
         do {
+            let habitID = habit.id
+
             let descriptor = FetchDescriptor<Habit>(
-                predicate: #Predicate { $0.id == habit.id },
-                sortBy: []
+                predicate: #Predicate<Habit> { storedHabit in
+                    storedHabit.id == habitID
+                },
             )
+
             return try context.fetch(descriptor).first
         } catch {
             print("Error getting real instance of Habit: \(error)")
             return nil
         }
     }
+
     
     @MainActor
     private func getRealInstanceCategory(_ category: Category) -> Category? {

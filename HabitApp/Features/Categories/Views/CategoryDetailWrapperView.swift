@@ -287,15 +287,18 @@ struct CategoryDetailWrapperView: View {
                 ForEach(category.habits, id: \.id) { habit in
                     NavigationLink {
                         HabitDetailWrapper(
-                            habitListVM: HabitListViewModel(storageProvider: categoryListVM.storageProvider),
-                            isNew: false,
+                            viewModel: HabitListViewModel(storageProvider: categoryListVM.storageProvider),
                             habit: habit,
-                            storageProvider: categoryListVM.storageProvider
+                            isNew: false
                         )
                     }label: {
                         HabitRowView(
                             habit: habit,
-                            toggleCompletion: {}
+                            toggleCompletion: {},
+                            viewModel: HabitListViewModel(
+                                storageProvider: categoryListVM.storageProvider
+                            ),
+                            storageProvider: categoryListVM.storageProvider
                         )
                     }
                 }

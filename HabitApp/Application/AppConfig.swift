@@ -49,6 +49,9 @@ class AppConfig: ObservableObject {
     
         @AppStorage("showGoals")
         static var enableGoals: Bool = true
+    
+        @AppStorage("showStreaks")
+        static var enableStreaks: Bool = true
 
     init() {
         // Descubrir y registrar plugins automáticamente

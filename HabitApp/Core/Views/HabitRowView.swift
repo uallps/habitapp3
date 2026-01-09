@@ -53,7 +53,7 @@ struct HabitRowView: View {
                 }
                 
                 if AppConfig.showPriorities, let priority = habit.priority {
-                    Text("Prioridad: \(priority.displayName)")
+                    Text("Prioridad: \(priority.localized)")
                         .font(.caption)
                         .foregroundColor(priorityColor(for: priority))
                 }
@@ -137,7 +137,7 @@ struct HabitRowView: View {
                 }
                 
                 if AppConfig.showPriorities, let priority = habit.priority {
-                    Text("Prioridad: \(priority.displayName)")
+                    Text("Prioridad: \(priority.localized)")
                         .font(.caption)
                         .foregroundColor(priorityColor(for: priority))
                 }

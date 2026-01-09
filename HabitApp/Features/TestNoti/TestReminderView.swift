@@ -46,7 +46,7 @@ struct TestReminderView: View {
     }
     
     private func testReminderPlugin() {
-        let plugin = ReminderPlugin()
+        let plugin = ReminderPlugin(config: appConfig)
         let futureDate = Date().addingTimeInterval(3)
         
         plugin.onDataChanged(

@@ -37,7 +37,7 @@ class Addiction {
         self.title = title
     }
 
-    enum AddictionSeverity: String {
+    enum AddictionSeverity: String, Codable {
         case low, medium, high
 
         var emoji: String {
