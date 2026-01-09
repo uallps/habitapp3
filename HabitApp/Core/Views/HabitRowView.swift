@@ -193,17 +193,8 @@ struct HabitRowView: View {
             Text("Esta acción no se puede deshacer")
         }
     }
-    // ¿Por que no se usa el de ViewModel?
     private func deleteHabit() {
-       
-        modelContext.delete(habit)
-        
-        do {
-            try modelContext.save()
-            
-        } catch {
-            print(" Error: \(error)")
-        }
+        viewModel.deleteHabit(habit)
     }
     
     private func priorityColor(for priority: Priority) -> Color {
