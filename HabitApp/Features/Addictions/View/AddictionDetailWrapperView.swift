@@ -8,7 +8,7 @@ struct AddictionDetailWrapperView: View {
     @State private var showingRelapseAlert = false
     @State private var selectedTrigger: Habit?
 
-    @Query(sort: \.name, order: .forward) private var habitsQuery: [Habit]
+    @Query(sort: \Habit.title, order: .forward) private var habitsQuery: [Habit]
     
     //  Estados locales para evitar binding directo con @State var habit
     @State private var title: String
@@ -19,7 +19,7 @@ struct AddictionDetailWrapperView: View {
     @State private var hasAddedNewPreventionHabit: Bool = false
     @State private var hasAddedNewCompensatoryHabit: Bool = false
 
-    @StateObject var habitListVM = HabitListViewModel()
+    @StateObject var habitListVM: HabitListViewModel
     let isNew: Bool
 
     @State private var showingNewHabitSheet = false
@@ -28,6 +28,8 @@ struct AddictionDetailWrapperView: View {
         self.addictionListVM = addictionListVM
         self.isNew = isNew
         self.addictionToEdit = isNew ? nil : addiction
+        
+        self._habitListVM = StateObject(wrappedValue: HabitListViewModel(storageProvider: addictionListVM.storageProvider.resetStorage()))
         
         // Inicializar estados locales
         _title = State(initialValue: addiction.title)
@@ -259,7 +261,7 @@ struct AddictionDetailWrapperView: View {
 
 // MARK: - iOS UI
 #if os(iOS)
-extension HabitDetailWrapper {
+extension AddictionDetailWrapperView {
     var iosBody: some View {
         NavigationStack {
             ZStack {
@@ -387,7 +389,7 @@ extension HabitDetailWrapper {
 
 // MARK: - macOS UI
 #if os(macOS)
-extension HabitDetailWrapper {
+extension AddictionDetailWrapperView {
     var macBody: some View {
         ZStack {
             LinearGradient(

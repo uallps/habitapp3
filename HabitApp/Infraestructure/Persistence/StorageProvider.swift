@@ -54,5 +54,10 @@ protocol StorageProvider {
     //func saveAndGoToNoteDate(_ note: DailyNote, title: String, content: String) async throws
     func deleteNote(_ note: DailyNote) async throws
     //END DAILYNOTES
+    
+    //IF STREAK
+    
+    //END IF
+    
     func saveContext() async throws
 }
