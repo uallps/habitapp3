@@ -22,7 +22,61 @@
     "%lld" : {
 
     },
+    "%lld / %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld / %2$lld"
+          }
+        }
+      }
+    },
+    "%lld completados" : {
+
+    },
+    "%lld Completados" : {
+
+    },
+    "%lld de %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld de %2$lld"
+          }
+        }
+      }
+    },
+    "%lld días" : {
+
+    },
+    "%lld días restantes" : {
+
+    },
+    "%lld hábito(s) programado(s)" : {
+
+    },
+    "%lld Pendientes" : {
+
+    },
+    "%lld/%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld/%2$lld"
+          }
+        }
+      }
+    },
+    "%lld%%" : {
+
+    },
     "+" : {
+
+    },
+    "Acerca de" : {
 
     },
     "Actualizado: %@ a las %@" : {
@@ -35,10 +89,22 @@
         }
       }
     },
+    "Adicciones" : {
+
+    },
+    "Agregar Hito" : {
+
+    },
     "Ajustes" : {
 
     },
-    "Ajustes (próximamente)" : {
+    "Alerta en 3s" : {
+
+    },
+    "Alerta en 5s" : {
+
+    },
+    "Alerta Inmediata" : {
 
     },
     "All" : {
@@ -62,6 +128,9 @@
     "Añadir subcategoría" : {
 
     },
+    "Arquitectura MVVM" : {
+
+    },
     "Baja" : {
 
     },
@@ -83,10 +152,19 @@
     "Cargando emojis..." : {
 
     },
+    "Cargando..." : {
+
+    },
     "Categorias" : {
 
     },
     "Categorías" : {
+
+    },
+    "Cerrar" : {
+
+    },
+    "Cerrar ventana" : {
 
     },
     "Color" : {
@@ -95,7 +173,31 @@
     "Color seleccionado" : {
 
     },
+    "Compatible con iOS y macOS" : {
+
+    },
+    "Completado" : {
+
+    },
+    "Configura los detalles de tu hábito" : {
+
+    },
+    "Configuración de Recordatorios" : {
+
+    },
+    "Configurar recordatorios" : {
+
+    },
     "Contenido" : {
+
+    },
+    "Crea tu primer hábito" : {
+
+    },
+    "Crea tu primer objetivo para comenzar a alcanzar tus metas" : {
+
+    },
+    "Crea tu primera nota haciendo clic en Nueva Nota" : {
 
     },
     "Creado: %@ a las %@" : {
@@ -108,19 +210,40 @@
         }
       }
     },
-    "Crear nota con notificación en 10s" : {
+    "Crear" : {
+
+    },
+    "Crear hábito de muestra" : {
 
     },
     "Cyan" : {
 
     },
+    "Datos" : {
+
+    },
+    "de %lld" : {
+
+    },
+    "Desarrollado con SwiftUI" : {
+
+    },
+    "Descripción (opcional)" : {
+
+    },
     "Detalle de Nota" : {
+
+    },
+    "Días de la semana" : {
 
     },
     "Editar" : {
 
     },
     "Editar hábito" : {
+
+    },
+    "Ej: Hacer ejercicio" : {
 
     },
     "Eliminar" : {
@@ -132,6 +255,12 @@
     "Emojis" : {
 
     },
+    "Esperado" : {
+
+    },
+    "Esta acción eliminará todos los hábitos, notas y objetivos. No se puede deshacer." : {
+
+    },
     "Esta acción no se puede deshacer" : {
 
     },
@@ -141,10 +270,13 @@
     "Esta acción no se puede deshacer. Se eliminarán subcategorías" : {
 
     },
-    "Features" : {
+    "Estadísticas" : {
 
     },
     "Fecha" : {
+
+    },
+    "Fecha límite" : {
 
     },
     "Filter" : {
@@ -165,7 +297,13 @@
     "Guardar categoría" : {
 
     },
-    "Guardar hábito" : {
+    "Habilitar notificaciones" : {
+
+    },
+    "HabitApp" : {
+
+    },
+    "Hábito Asociado" : {
 
     },
     "Habitos" : {
@@ -177,10 +315,37 @@
     "Hello, world!" : {
 
     },
+    "Hito" : {
+
+    },
+    "Hitos" : {
+
+    },
+    "Hitos (opcional)" : {
+
+    },
+    "Hora de recordatorio" : {
+
+    },
     "Imagen" : {
 
     },
     "Indigo" : {
+
+    },
+    "Información" : {
+
+    },
+    "Información del Objetivo" : {
+
+    },
+    "Inicio" : {
+
+    },
+    "Limpiar" : {
+
+    },
+    "Limpiar todos los datos" : {
 
     },
     "Media" : {
@@ -189,7 +354,22 @@
     "Media %@" : {
 
     },
+    "Meta" : {
+
+    },
+    "Meta: %lld" : {
+
+    },
     "Mint" : {
+
+    },
+    "Mostrar fechas de vencimiento" : {
+
+    },
+    "Mostrar prioridades" : {
+
+    },
+    "Ninguno" : {
 
     },
     "No has añadido hábitos a la categoría" : {
@@ -198,7 +378,16 @@
     "No hay categorías disponibles. Crea al menos una categoría." : {
 
     },
-    "No hay notas para esta fecha" : {
+    "No hay datos disponibles" : {
+
+    },
+    "No hay hábitos con estadísticas" : {
+
+    },
+    "No hay hábitos programados" : {
+
+    },
+    "No hay notas para %@ en esta fecha" : {
 
     },
     "No hay subcategorías" : {
@@ -219,10 +408,31 @@
     "Notas Diarias" : {
 
     },
+    "Notificaciones" : {
+
+    },
     "Nueva Nota" : {
 
     },
     "Nuevo hábito" : {
+
+    },
+    "Nuevo Objetivo" : {
+
+    },
+    "Objetivo" : {
+
+    },
+    "Objetivo: %lld días" : {
+
+    },
+    "Objetivos" : {
+
+    },
+    "Objetivos Activos" : {
+
+    },
+    "Objetivos Completados" : {
 
     },
     "OK" : {
@@ -232,6 +442,9 @@
 
     },
     "Pink" : {
+
+    },
+    "Por Hábito" : {
 
     },
     "Prioridad" : {
@@ -294,10 +507,16 @@
         }
       }
     },
-    "Prueba de ReminderPlugin" : {
+    "Progreso" : {
 
     },
     "Purple" : {
+
+    },
+    "Rachas" : {
+
+    },
+    "Rango" : {
 
     },
     "Red" : {
@@ -306,22 +525,40 @@
     "Selecciona color" : {
 
     },
-    "Selecciona los días de la semana" : {
-
-    },
     "Selecciona prioridad" : {
 
     },
     "Selecciona tipo" : {
 
     },
+    "Seleccionar hábito" : {
+
+    },
     "Seleccione una opción" : {
 
     },
-    "Settings" : {
+    "Sin datos" : {
+
+    },
+    "Sin estadísticas" : {
+
+    },
+    "Sin hábitos" : {
+
+    },
+    "Sin hábitos creados" : {
+
+    },
+    "Sin hábitos para hoy" : {
 
     },
     "Sin notas" : {
+
+    },
+    "Sin Objetivos" : {
+
+    },
+    "Sistema de notificaciones inteligentes" : {
 
     },
     "Subcategorías" : {
@@ -333,7 +570,16 @@
     "Teal" : {
 
     },
+    "Tendencia" : {
+
+    },
+    "Test Hábitos Mañana" : {
+
+    },
     "Test Notificaciones" : {
+
+    },
+    "Test Plugin Directo" : {
 
     },
     "Tipo de icono" : {
@@ -348,7 +594,19 @@
     "Título del hábito" : {
 
     },
+    "Una aplicación para gestionar tus hábitos diarios y alcanzar tus objetivos." : {
+
+    },
     "Vence: %@" : {
+
+    },
+    "Versión 1.0.0" : {
+
+    },
+    "Vista" : {
+
+    },
+    "Visualización" : {
 
     },
     "Yellow" : {

@@ -49,13 +49,9 @@ struct HabitApp: App {
                     .tabItem {
                         Label("Hábitos", systemImage: "checklist")
                     }
-                CategoriesListView(storageProvider: storageProvider)
+                CategoryListView(storageProvider: storageProvider)
                     .tabItem {
                         Label("Categorías", systemImage: "folder")
-                    }
-                AddictionListView(storageProvider: storageProvider)
-                    .tabItem {
-                        Label("Adicciones", systemImage: "bandage")
                     }
                 DailyNotesView(storageProvider: storageProvider)
                     .tabItem {
@@ -78,8 +74,8 @@ struct HabitApp: App {
                         Label("Ajustes", systemImage: "gearshape")
                     }
             }
-            .environmentObject(appConfig)
-            .modelContainer(modelContainer)  //  AGREGAR ESTO
+            .environmentObject(AppConfig())
+           // .modelContainer(modelContainer)  //  AGREGAR ESTO
 
 #else
             NavigationSplitView {
