@@ -37,7 +37,7 @@ class Addiction {
         self.title = title
     }
 
-    enum AddictionSeverity: String, Codable {
+    enum AddictionSeverity: String, Codable, CaseIterable, Hashable {
         case low, medium, high
 
         var emoji: String {
@@ -48,5 +48,12 @@ class Addiction {
             }
         }
 
+        var displayName: String {
+            switch self {
+            case .low: return "Baja"
+            case .medium: return "Media"
+            case .high: return "Alta"
+            }
+        }
     }
 }

@@ -10,7 +10,7 @@ struct AddictionDetailWrapperView: View {
 
     @Query(sort: \Habit.title, order: .forward) private var habitsQuery: [Habit]
     
-    //  Estados locales para evitar binding directo con @State var habit
+    // Estados locales
     @State private var title: String
     @State private var selectedDays: [Int]
     @State private var severity: Addiction.AddictionSeverity
@@ -27,12 +27,12 @@ struct AddictionDetailWrapperView: View {
     init(addictionListVM: AddictionListViewModel, addiction: Addiction, isNew: Bool = true) {
         self.addictionListVM = addictionListVM
         self.isNew = isNew
-        self.addictionToEdit = isNew ? nil : addiction
-        
-        self._habitListVM = StateObject(wrappedValue: HabitListViewModel(storageProvider: addictionListVM.storageProvider.resetStorage()))
-        
-        // Inicializar estados locales
-        _title = State(initialValue: addiction.title)
+        self._habitListVM = StateObject(wrappedValue: HabitListViewModel(storageProvider: addictionListVM.storageProvider))
+        self._title = State(initialValue: addiction.title)
+        self._severity = State(initialValue: addiction.severity)
+        // selectedDays is not part of Addiction model; keep it empty by default
+        self._selectedDays = State(initialValue: [])
+        self._addictionToEdit = State(initialValue: isNew ? nil : addiction)
     }
 
     var body: some View {
@@ -45,217 +45,253 @@ struct AddictionDetailWrapperView: View {
 
     @ViewBuilder
     var addictionSeveritySection: some View {
-                        //  Severidad de la adicción
-                        VStack(alignment: .leading, spacing: 12) {
-                            HStack(spacing: 8) {
-                                Image(systemName: "flag.fill")
-                                    .foregroundColor(.red)
-                                Text("Severidad de la adicción")
-                                    .font(.headline)
-                                    .fontWeight(.semibold)
-                            }
-                            
-                            Picker("Severidad", selection: $severity) {
-                                ForEach(AddictionSeverity.allCases, id: \.self) { severity in
-                                    Text(severity.displayName).tag(severity)
-                                }
-                            }
-                            .pickerStyle(.segmented)
-                        }
-                        .padding(16)
-                        .background(Color(.systemBackground))
-                        .cornerRadius(12)
-                        .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
-
-                        Section() {
-                            
-                        }
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 8) {
+                Image(systemName: "flag.fill")
+                    .foregroundColor(.red)
+                Text("Severidad de la adicción")
+                    .font(.headline)
+                    .fontWeight(.semibold)
+            }
+            
+            Picker("Severidad", selection: $severity) {
+                ForEach(Addiction.AddictionSeverity.allCases, id: \.self) { sev in
+                    Text(sev.displayName).tag(sev)
+                }
+            }
+            .pickerStyle(.segmented)
+        }
+        .padding(16)
+        #if os(iOS)
+        .background(Color(.systemBackground))
+        #endif
+        .cornerRadius(12)
+        .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
     }
 
     @ViewBuilder
     var triggerHabitsSection: some View {
-                                // Hábitos que desencadenan la adicción
-                        VStack(alignment: .leading, spacing: 12) {
-                            Section(header: Text("Hábitos desencadenantes asociados")) {
-                                if addictionToEdit?.triggers.isEmpty ?? true {
-                                    Text("No hay hábitos de prevención asociados.")
-                                        .foregroundColor(.secondary)
-                                } else {
-                                    ForEach(addictionToEdit?.triggers ?? []) { trigger in
-                                        HStack(
-                                            Text(trigger.title),
-
-                                            //  Botón para marcar hábito a adicción. Significado: "He hecho este hábito que me puede hacer recaer"
-                                            Button(action: 
-                                                       selectedTrigger = trigger,
-                                                        showingRelapseAlert = true
-                                                        // Ahora, ¿he recaído o no? Preguntar al usuario
-                                            ) {
-                                                Image(systemName: habit.isCompletedForDate(date) ? "checkmark.circle.fill" : "circle")
-                                                    .foregroundColor(habit.isCompletedForDate(date) ? .green : .gray)
-                                                    .font(.title3)
-                                            }
-                                            .buttonStyle(.plain),
-
-                                            // Desasociar hábito desencadenante
-                                            Button(action:
-                                                addictionListVM.removeTriggerHabit()
-                                            ) {
-                                                Image(systemName: "minus.circle.fill")
-                                                    .foregroundColor(.red)
-                                                    .font(.title3)
-                                            }
-                                            .buttonStyle(.plain)
-                                        )
-                                    }
-                                }
+        let today = Date()
+        VStack(alignment: .leading, spacing: 12) {
+            Section(header: Text("Hábitos desencadenantes asociados")) {
+                if addictionToEdit?.triggers.isEmpty ?? true {
+                    Text("No hay hábitos de prevención asociados.")
+                        .foregroundColor(.secondary)
+                } else {
+                    ForEach(addictionToEdit?.triggers ?? []) { trigger in
+                        HStack {
+                            Text(trigger.title)
+                            Spacer()
+                            // Botón para marcar hábito a adicción (posible recaída)
+                            Button(action: {
+                                selectedTrigger = trigger
+                                showingRelapseAlert = true
+                            }) {
+                                Image(systemName: trigger.isCompletedForDate(today) ? "checkmark.circle.fill" : "circle")
+                                    .foregroundColor(trigger.isCompletedForDate(today) ? .green : .gray)
+                                    .font(.title3)
                             }
+                            .buttonStyle(.plain)
 
-                            Section(header: Text("Añadir nuevo hábito desencadenante")) {
-                                ForEach(habitsQuery) { habit in
-                                    Button(action: {
-                                        Task {
-                                            hasAddedNewTrigger = await addictionListVM.addTriggerHabit(
-                                                
-                                            )
-                                        }
-                                    }
-                                    ) {
-                                        Text("Añadir \(habit.title)")
-                                    }
+                            // Desasociar hábito desencadenante
+                            Button(action: {
+                                guard let addiction = addictionToEdit else { return }
+                                Task {
+                                    await addictionListVM.removeTriggerHabit(from: addiction, habit: trigger)
                                 }
+                            }) {
+                                Image(systemName: "minus.circle.fill")
+                                    .foregroundColor(.red)
+                                    .font(.title3)
                             }
-
+                            .buttonStyle(.plain)
                         }
-                                .alert("Posible recaída", isPresented: $showingRelapseAlert) {
-            Button("Sí, he recaído", role: .destructive) {
-                if let trigger = selectedTrigger {
-                    addictionListVM.associateTriggerHabit(
-                        to: adiction,
-                        habit: trigger,
-                    )
+                    }
                 }
             }
 
-            Button("No, solo fue un riesgo") {
-
+            Section(header: Text("Añadir nuevo hábito desencadenante")) {
+                ForEach(habitsQuery) { habit in
+                    Button(action: {
+                        guard let addiction = addictionToEdit else { return }
+                        Task {
+                            await addictionListVM.addTriggerHabit(to: addiction, habit: habit)
+                            hasAddedNewTrigger = true
+                        }
+                    }) {
+                        Text("Añadir \(habit.title)")
+                    }
+                }
             }
-
+        }
+        .alert("Posible recaída", isPresented: $showingRelapseAlert) {
+            Button("Sí, he recaído", role: .destructive) {
+                if let trigger = selectedTrigger, let addiction = addictionToEdit {
+                    Task {
+                        await addictionListVM.associateTriggerHabit(to: addiction, habit: trigger)
+                    }
+                }
+            }
+            Button("No, solo fue un riesgo") {
+                // No-op
+            }
             Button("Cancelar", role: .cancel) { }
         } message: {
             Text("¿Este hábito desencadenó una recaída hoy?")
         }
-
     }
 
     @ViewBuilder
     var preventionHabitsSection: some View {
-                                // Hábitos para prevenir la adicción
-                        VStack(alignment: .leading, spacing: 12) {
-                            Section(header: Text("Hábitos preventivos creados")) {
-                                if addictionToEdit?.preventionHabits.isEmpty ?? true {
-                                    Text("No hay hábitos de prevención asociados.")
-                                        .foregroundColor(.secondary)
-                                } else {
-                                    ForEach(addictionToEdit?.preventionHabits ?? []) { preventionHabit in
-                                        HStack(
-                                            Text(trigger.title),
-
-                                            //  Botón para marcar hábito a adicción. Significado: "Este hábito ha prevenido mi adicción hoy"
-                                            Button(action: 
-                                                    addictionListVM.associatePreventionHabit()
-                                            ) {
-                                                Image(systemName: habit.isCompletedForDate(date) ? "checkmark.circle.fill" : "circle")
-                                                    .foregroundColor(habit.isCompletedForDate(date) ? .green : .gray)
-                                                    .font(.title3)
-                                            }
-                                            .buttonStyle(.plain),
-
-                                            // Desasociar hábito preventivo
-                                            Button(action:
-                                                addictionListVM.removePreventionHabit()
-                                            ) {
-                                                Image(systemName: "minus.circle.fill")
-                                                    .foregroundColor(.red)
-                                                    .font(.title3)
-                                            }
-                                            .buttonStyle(.plain)
-                                        )
-                                    }
+        let today = Date()
+        VStack(alignment: .leading, spacing: 12) {
+            Section(header: Text("Hábitos preventivos creados")) {
+                if addictionToEdit?.preventionHabits.isEmpty ?? true {
+                    Text("No hay hábitos de prevención asociados.")
+                        .foregroundColor(.secondary)
+                } else {
+                    ForEach(addictionToEdit?.preventionHabits ?? []) { preventionHabit in
+                        HStack {
+                            Text(preventionHabit.title)
+                            Spacer()
+                            // Botón para marcar hábito preventivo (asociación)
+                            Button(action: {
+                                guard let addiction = addictionToEdit else { return }
+                                Task {
+                                    await addictionListVM.associatePreventionHabit(to: addiction, habit: preventionHabit)
                                 }
+                            }) {
+                                Image(systemName: preventionHabit.isCompletedForDate(today) ? "checkmark.circle.fill" : "circle")
+                                    .foregroundColor(preventionHabit.isCompletedForDate(today) ? .green : .gray)
+                                    .font(.title3)
                             }
+                            .buttonStyle(.plain)
 
-                            Section(header: Text("Añadir nuevo hábito preventivo")) {
-                                ForEach(habitsQuery) { habit in
-                                    Button(action: {
-                                        Task {
-                                            hasAddedNewPreventionHabit = await addictionListVM.addPreventionHabit(
-                                                
-                                            )
-                                        }
-                                    }) {
-                                        Text("Añadir \(habit.title)")
-                                    }
+                            // Desasociar hábito preventivo
+                            Button(action: {
+                                guard let addiction = addictionToEdit else { return }
+                                Task {
+                                    await addictionListVM.removePreventionHabit(from: addiction, habit: preventionHabit)
                                 }
+                            }) {
+                                Image(systemName: "minus.circle.fill")
+                                    .foregroundColor(.red)
+                                    .font(.title3)
                             }
-
+                            .buttonStyle(.plain)
                         }
+                    }
+                }
+            }
+
+            Section(header: Text("Añadir nuevo hábito preventivo")) {
+                ForEach(habitsQuery) { habit in
+                    Button(action: {
+                        guard let addiction = addictionToEdit else { return }
+                        Task {
+                            await addictionListVM.addPreventionHabit(to: addiction, habit: habit)
+                            hasAddedNewPreventionHabit = true
+                        }
+                    }) {
+                        Text("Añadir \(habit.title)")
+                    }
+                }
+            }
+        }
     }
 
     @ViewBuilder
     var compensatoryHabitsSection: some View {
-                                // Hábitos que compensan la adicción
-                        VStack(alignment: .leading, spacing: 12) {
-                            Section(header: Text("Hábitos compensatorios creados")) {
-                                if addictionToEdit?.compensatoryHabits.isEmpty ?? true {
-                                    Text("No hay hábitos de compensatorios asociados.")
-                                        .foregroundColor(.secondary)
-                                } else {
-                                    ForEach(addictionToEdit?.compensatoryHabits ?? []) { compensatoryHabits in
-                                        HStack(
-                                            Text(trigger.title),
-
-                                            //  Botón para marcar hábito a adicción. Significado: "He caído en mi adicción, pero este hábito me ha ayudado a compensarlo"
-                                            Button(action: 
-                                                    addictionListVM.associateCompensatoryHabit()
-                                            ) {
-                                                Image(systemName: habit.isCompletedForDate(date) ? "checkmark.circle.fill" : "circle")
-                                                    .foregroundColor(habit.isCompletedForDate(date) ? .green : .gray)
-                                                    .font(.title3)
-                                            }
-                                            .buttonStyle(.plain),
-
-                                            // Desasociar hábito compensatorio
-                                            Button(action:
-                                                addictionListVM.removeCompensatoryHabit(
-
-                                                )
-                                            ) {
-                                                Image(systemName: "minus.circle.fill")
-                                                    .foregroundColor(.red)
-                                                    .font(.title3)
-                                            }
-                                            .buttonStyle(.plain)
-                                        )
-                                    }
+        let today = Date()
+        VStack(alignment: .leading, spacing: 12) {
+            Section(header: Text("Hábitos compensatorios creados")) {
+                if addictionToEdit?.compensatoryHabits.isEmpty ?? true {
+                    Text("No hay hábitos de compensatorios asociados.")
+                        .foregroundColor(.secondary)
+                } else {
+                    ForEach(addictionToEdit?.compensatoryHabits ?? []) { compensatoryHabit in
+                        HStack {
+                            Text(compensatoryHabit.title)
+                            Spacer()
+                            // Botón para marcar hábito compensatorio (asociación)
+                            Button(action: {
+                                guard let addiction = addictionToEdit else { return }
+                                Task {
+                                    await addictionListVM.associateCompensatoryHabit(to: addiction, habit: compensatoryHabit)
                                 }
+                            }) {
+                                Image(systemName: compensatoryHabit.isCompletedForDate(today) ? "checkmark.circle.fill" : "circle")
+                                    .foregroundColor(compensatoryHabit.isCompletedForDate(today) ? .green : .gray)
+                                    .font(.title3)
                             }
+                            .buttonStyle(.plain)
 
-                            Section(header: Text("Añadir nuevo hábito compensatorio")) {
-                                ForEach(habitsQuery) { habit in
-                                    Button(action: {
-                                        Task {
-                                            hasAddedNewCompensatoryHabit = await addictionListVM.addCompensatoryHabit(
-
-                                            )
-                                        }
-                                    }) {
-                                        Text("Añadir \(habit.title)")
-                                    }
+                            // Desasociar hábito compensatorio
+                            Button(action: {
+                                guard let addiction = addictionToEdit else { return }
+                                Task {
+                                    await addictionListVM.removeCompensatoryHabit(from: addiction, habit: compensatoryHabit)
                                 }
+                            }) {
+                                Image(systemName: "minus.circle.fill")
+                                    .foregroundColor(.red)
+                                    .font(.title3)
                             }
-
+                            .buttonStyle(.plain)
                         }
+                    }
+                }
+            }
+
+            Section(header: Text("Añadir nuevo hábito compensatorio")) {
+                ForEach(habitsQuery) { habit in
+                    Button(action: {
+                        guard let addiction = addictionToEdit else { return }
+                        Task {
+                            await addictionListVM.addCompensatoryHabit(to: addiction, habit: habit)
+                            hasAddedNewCompensatoryHabit = true
+                        }
+                    }) {
+                        Text("Añadir \(habit.title)")
+                    }
+                }
+            }
+        }
+    }
+
+    // MARK: - Actions
+
+    private func saveAddiction() {
+        Task {
+            if let existing = addictionToEdit, !isNew {
+                existing.title = title
+                existing.severity = severity
+                await addictionListVM.updateAddiction(addiction: existing)
+            } else {
+                let newAddiction = Addiction(
+                    title: title,
+                    severity: severity,
+                    triggers: [],
+                    preventionHabits: [],
+                    compensatoryHabits: []
+                )
+                await addictionListVM.addAddiction(addiction: newAddiction)
+                addictionToEdit = newAddiction
+            }
+            await MainActor.run {
+                dismiss()
+            }
+        }
+    }
+
+    private func deleteAddiction() {
+        guard let addiction = addictionToEdit else { return }
+        Task {
+            await addictionListVM.deleteAddiction(addiction: addiction)
+            await MainActor.run {
+                dismiss()
+            }
+        }
     }
 }
 
@@ -314,18 +350,14 @@ extension AddictionDetailWrapperView {
                         .cornerRadius(12)
                         .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
 
-
-
                         addictionSeveritySection
                         triggerHabitsSection
                         preventionHabitsSection
                         compensatoryHabitsSection
 
-
-
                         //  Botones
                         VStack(spacing: 12) {
-                            Button(action: saveHabit) {
+                            Button(action: saveAddiction) {
                                 HStack(spacing: 8) {
                                     Image(systemName: "checkmark.circle.fill")
                                     Text(isNew ? "Crear adicción" : "Guardar cambios")
@@ -344,10 +376,10 @@ extension AddictionDetailWrapperView {
                                 .cornerRadius(12)
                                 .shadow(color: Color.blue.opacity(0.3), radius: 4, x: 0, y: 2)
                             }
-                            .disabled(title.isEmpty || selectedDays.isEmpty)
-                            
+                            .disabled(title.isEmpty)
+
                             if !isNew {
-                                Button(action: deleteHabit) {
+                                Button(action: deleteAddiction) {
                                     HStack(spacing: 8) {
                                         Image(systemName: "trash.fill")
                                         Text("Eliminar adicción")
@@ -459,10 +491,10 @@ extension AddictionDetailWrapperView {
                 }
                 .padding(.horizontal, 20)
 
-                        addictionSeveritySection
-                        triggerHabitsSection
-                        preventionHabitsSection
-                        compensatoryHabitsSection
+                addictionSeveritySection
+                triggerHabitsSection
+                preventionHabitsSection
+                compensatoryHabitsSection
                 
                 Spacer()
                 
@@ -477,7 +509,7 @@ extension AddictionDetailWrapperView {
                     
                     if !isNew {
                         Button("Eliminar") {
-                            deleteHabit()
+                            deleteAddiction()
                         }
                         .buttonStyle(.borderedProminent)
                         .tint(.red)
@@ -490,7 +522,7 @@ extension AddictionDetailWrapperView {
                     .buttonStyle(.borderedProminent)
                     .keyboardShortcut(.defaultAction)
                     .controlSize(.large)
-                    .disabled(title.isEmpty || selectedDays.isEmpty)
+                    .disabled(title.isEmpty)
                 }
                 .padding(.horizontal, 20)
                 .padding(.bottom, 20)

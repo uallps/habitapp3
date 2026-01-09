@@ -3,7 +3,7 @@ import SwiftData
 import Combine
 
 final class AddictionListViewModel: ObservableObject {
-    private let storageProvider: StorageProvider
+    let storageProvider: StorageProvider
     
     init(storageProvider: StorageProvider) {
         self.storageProvider = storageProvider
