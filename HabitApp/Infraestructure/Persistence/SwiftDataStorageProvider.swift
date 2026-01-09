@@ -8,6 +8,21 @@ class SwiftDataContext {
 
 class SwiftDataStorageProvider: StorageProvider {
     
+    private var modelContainer: ModelContainer
+    private var context: ModelContext
+
+    init(schema: Schema) {
+        do {
+            // Schema conflict dev temp solution
+            //SwiftDataStorageProvider.resetStore(schema: schema)
+            //SwiftDataStorageProvider.deleteStoreFile()
+            self.modelContainer = try ModelContainer(for: schema)
+            self.context = ModelContext(self.modelContainer)
+            SwiftDataContext.shared = self.context
+        } catch {
+            fatalError("Failed to initialize storage provider: \(error)")
+       }
+    }
     func createSampleAddictions(to addiction: Addiction, habit: Habit) async throws {
         ///TODO
     }
@@ -130,10 +145,10 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
         return
     }
 
-    if realAddiction.compensatoryHabits.id == habit.id {
+    //if realAddiction.compensatoryHabits.id == habit.id {
         // No-op replacement; decide if you want a nullable compensatory habit instead
         print("Removed compensatory habit")
-    }
+    //}
 
     try context.save()
 }
@@ -188,10 +203,10 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
             return
         }
 
-        guard realAddiction.compensatory.contains(where: { $0.id == habit.id }) else {
+        //guard realAddiction.compensatory.contains(where: { $0.id == habit.id }) else {
             print("Habit is not a registered compensatory habit for this addiction")
-            return
-        }
+           // return
+       // }
 
         // TODO: LLAMAR A MARCAR HÁBITO COMO REALIZADO
         try context.save()
@@ -410,23 +425,6 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
             // It should already have been saved by context.save on addSubcategory
         }
         //try context.save() This is the real culprit to illegal attempt?
-    }
-    
-
-    private var modelContainer: ModelContainer
-    private var context: ModelContext
-
-    init(schema: Schema) {
-        do {
-            // Schema conflict dev temp solution
-            //SwiftDataStorageProvider.resetStore(schema: schema)
-            //SwiftDataStorageProvider.deleteStoreFile()
-            self.modelContainer = try ModelContainer(for: schema)
-            self.context = ModelContext(self.modelContainer)
-            SwiftDataContext.shared = self.context
-        } catch {
-            fatalError("Failed to initialize storage provider: \(error)")
-       }
     }
 
     func loadTasks() async throws -> [Habit] {

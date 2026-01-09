@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 
 struct SettingsView: View {
-    @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var appConfig: AppConfig
     @State private var showingAbout = false
     @State private var showingClearAlert = false
     

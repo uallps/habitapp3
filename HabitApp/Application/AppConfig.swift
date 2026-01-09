@@ -29,7 +29,7 @@ class AppConfig: ObservableObject {
         
         private lazy var swiftDataProvider: SwiftDataStorageProvider = {
             // Obtener modelos base
-            var schemas: [any PersistentModel.Type] = [Habit.self]
+            var schemas: [any PersistentModel.Type] = [Habit.self, Category.self]
             
             // Agregar modelos de plugins habilitados
             schemas.append(contentsOf: PluginRegistry.shared.getEnabledModels(from: plugins))
@@ -67,12 +67,12 @@ class AppConfig: ObservableObject {
     @AppStorage("storageType")
     var storageType: StorageType = .swiftData
     
-    private let modelContainer: ModelContainer
+   // private let modelContainer: ModelContainer
     
-    init(modelContainer: ModelContainer) {
-        self.modelContainer = modelContainer
-        setupPlugins()
-    }
+    //init(modelContainer: ModelContainer) {
+     //   self.modelContainer = modelContainer
+       // setupPlugins()
+    //}
     
     private func setupPlugins() {
         let registry = PluginRegistry.shared
@@ -86,12 +86,15 @@ class AppConfig: ObservableObject {
     
     // MARK: - Storage Provider
     
-    private lazy var swiftDataProvider: SwiftDataStorageProvider = {
-        return SwiftDataStorageProvider(modelContainer: modelContainer)
-    }()
+    //private lazy var swiftDataProvider: SwiftDataStorageProvider = {
+     //   return SwiftDataStorageProvider(modelContainer: modelContainer)
+   // }()
     
     var storageProvider: StorageProvider {
-        return swiftDataProvider
+        switch storageType {
+            case .swiftData:
+                return swiftDataStorageProvider
+            }
     }
     enum StorageType: String, CaseIterable, Identifiable {
         case swiftData = "SwiftDataStorage"
