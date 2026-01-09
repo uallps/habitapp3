@@ -11,7 +11,9 @@ struct HabitApp: App {
     }
 
     @State private var selectedDetailView: String?
-    //let modelContainer: ModelContainer
+    
+    // Necesario para Query
+    let modelContainer: ModelContainer
     
     init() {
         // Inicializar el ModelContainer
@@ -101,9 +103,9 @@ struct HabitApp: App {
                     NavigationLink(value: "categorias") {
                         Label("Categorias", systemImage: "folder")
                     }
-                    NavigationLink(value: "adicciones") {
-                        Label("Adicciones", systemImage: "bandage")
-                    }
+                    //NavigationLink(value: "adicciones") {
+                   //     Label("Adicciones", systemImage: "bandage")
+                    //}
                 }
             } detail: {
                 switch selectedDetailView {
@@ -115,6 +117,10 @@ struct HabitApp: App {
                     GoalsView(storageProvider: storageProvider)
                 case "ajustes":
                     SettingsView()
+                case "categorias":
+                    CategoryListView(storageProvider: storageProvider)
+                //case "rachas":
+                    //StreakBadgeView()
                 default:
                     Text("Seleccione una opción")
                 }
