@@ -8,7 +8,7 @@
 import SwiftData
 import Foundation
 
-final class HabitGoalPlugin: TaskDataObservingPlugin {
+final class HabitGoalPlugin: HabitDataObservingPlugin {
     let storageProvider: StorageProvider
 
     init(storageProvider: StorageProvider) {
@@ -33,7 +33,7 @@ final class HabitGoalPlugin: TaskDataObservingPlugin {
 
         do {
             let habitId = habit.id
-            print("🔍 Hábito encontrado: '\(habit.title)' - doneDatesString: '\(habit.doneDatesString)'")
+           
             
             let goalDescriptor = FetchDescriptor<Goal>(
                 predicate: #Predicate<Goal> { goal in

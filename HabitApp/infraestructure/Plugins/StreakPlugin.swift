@@ -1,7 +1,7 @@
 import Foundation
 import SwiftData
 
-final class StreakPlugin: TaskDataObservingPlugin {
+final class StreakPlugin: HabitDataObservingPlugin {
     private let storageProvider: StorageProvider
     
     init(storageProvider: StorageProvider) {
@@ -10,7 +10,6 @@ final class StreakPlugin: TaskDataObservingPlugin {
     
     @MainActor
     func onDataChanged(taskId: UUID, title: String, dueDate: Date?) {
-        print("🔥 StreakPlugin disparado para '\(title)'")
         let context = storageProvider.context
      
         // 1. Buscar el hábito para obtener sus doneDates
@@ -19,15 +18,12 @@ final class StreakPlugin: TaskDataObservingPlugin {
         
         do {
             guard let habit = try context.fetch(habitDescriptor).first else {
-                print("⚠️ StreakPlugin: No se encontró hábito con id \(taskId)")
                 return
             }
             
-            print("📊 Hábito '\(habit.title)' tiene \(habit.doneDates.count) días completados")
             
             // 2. Calcular la racha con las fechas del hábito
             let streakValue = calculateStreak(from: habit.doneDates)
-            print("🔢 Racha calculada: \(streakValue)")
             
             // 3. Buscar si ya existe un objeto Streak para este hábito
             let predicate = #Predicate<Streak> { $0.habitId == taskId }
@@ -38,21 +34,17 @@ final class StreakPlugin: TaskDataObservingPlugin {
             if let streakObj = existingStreaks.first {
                 streakObj.currentCount = streakValue
                 streakObj.lastUpdate = Date()
-                print("✅ Racha actualizada: \(streakValue)")
             } else {
                 let newStreak = Streak(habitId: taskId)
                 newStreak.currentCount = streakValue
                 context.insert(newStreak)
-                print("✨ Nueva racha creada: \(streakValue)")
             }
             
             // 4. Guardar cambios y procesar para que la UI se entere YA
             try context.save()
             context.processPendingChanges()
-            print("💾 Racha guardada exitosamente")
             
         } catch {
-            print("❌ StreakPlugin Error: \(error)")
         }
     }
     

@@ -1,7 +1,7 @@
 import Foundation
 
 /// Plugin that notifies the StatisticsViewModel about data changes elsewhere in the app.
-final class StatisticsPlugin: TaskDataObservingPlugin {
+final class StatisticsPlugin: HabitDataObservingPlugin {
     weak var viewModel: StatisticsViewModel?
 
     init(viewModel: StatisticsViewModel) {

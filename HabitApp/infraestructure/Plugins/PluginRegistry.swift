@@ -9,11 +9,11 @@ import Foundation
 final class PluginRegistry {
     static let shared = PluginRegistry()
     
-    private var plugins: [TaskDataObservingPlugin] = []
+    private var plugins: [HabitDataObservingPlugin] = []
     
     private init() {}
     
-    func register(plugin: TaskDataObservingPlugin) {
+    func register(plugin: HabitDataObservingPlugin) {
         plugins.append(plugin)
         print("✅ Plugin registrado: \(type(of: plugin))")
     }

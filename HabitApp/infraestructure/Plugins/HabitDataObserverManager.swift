@@ -5,13 +5,13 @@
 //  Created by Aula03 on 10/12/25.
 //
 import Foundation
-final class TaskDataObserverManager {
-    static let shared = TaskDataObserverManager()
+final class HabitDataObserverManager {
+    static let shared = HabitDataObserverManager()
     private init() {}
 
-    private var plugins: [TaskDataObservingPlugin] = []
+    private var plugins: [HabitDataObservingPlugin] = []
 
-    func register(_ plugin: TaskDataObservingPlugin) {
+    func register(_ plugin: HabitDataObservingPlugin) {
         plugins.append(plugin)
     }
 

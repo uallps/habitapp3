@@ -44,7 +44,7 @@ final class DailyNotesViewModel: ObservableObject {
         // Programar notificación si la nota es para una fecha futura
         let today = calendar.startOfDay(for: Date())
         if noteDate > today {
-            TaskDataObserverManager.shared.notify(
+            HabitDataObserverManager.shared.notify(
                 taskId: note.id,
                 title: "Nota: \(title)",
                 date: noteDate
