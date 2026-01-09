@@ -11,6 +11,8 @@ struct HabitDetailWrapper: View {
     @State private var title: String
     @State private var selectedDays: [Int]
     @State private var priority: Priority
+    @State private var hasReminder: Bool = false
+    @State private var reminderDate: Date = Date()
     @State private var habitToEdit: Habit?
     
     init(viewModel: HabitListViewModel, habit: Habit, isNew: Bool = true) {
@@ -22,6 +24,8 @@ struct HabitDetailWrapper: View {
         _title = State(initialValue: habit.title)
         _selectedDays = State(initialValue: habit.scheduledDays)
         _priority = State(initialValue: habit.priority ?? .medium)
+        _hasReminder = State(initialValue: habit.isReminderEnabled != false)
+        _reminderDate = State(initialValue:  habit.reminderDate ?? Date())
     }
 
     var body: some View {
@@ -110,7 +114,40 @@ extension HabitDetailWrapper {
                         .cornerRadius(12)
                         .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
                         
-                        //  Botones
+                        // 🔹 RECORDATORIOS
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack(spacing: 8) {
+                                Image(systemName: "bell.fill") // Icono de campana
+                                    .foregroundColor(.purple)
+                                Text("Recordatorio")
+                                    .font(.headline)
+                                    .fontWeight(.semibold)
+                            }
+                            
+                            
+                            Toggle("Activar recordatorio", isOn: $hasReminder)
+                                .onChange(of: hasReminder) { newValue in
+                                    if newValue {
+                                        NotificationManager.shared.requestAuthorization { granted in
+                                            if !granted {
+                                                print("Permiso denegado")
+                                            }
+                                            
+                                        }
+                                    }
+                                }
+                            
+                            if hasReminder {
+                                DatePicker("Hora", selection: $reminderDate, displayedComponents: .hourAndMinute)
+                            }
+                        }
+                        .padding(16)
+                        .background(Color(.systemBackground))
+                        .cornerRadius(12)
+                        .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
+                        
+                        
+                        // 🔹 Botones
                         VStack(spacing: 12) {
                             Button(action: saveHabit) {
                                 HStack(spacing: 8) {
@@ -267,8 +304,37 @@ extension HabitDetailWrapper {
                 }
                 .padding(.horizontal, 20)
                 
-                Spacer()
+                //Recordatorios
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "bell.fill")
+                            .foregroundColor(.purple)
+                        Text("Recordatorio")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                    }
+                    
+                    Toggle("Activar recordatorio", isOn: $hasReminder)
+                        .onChange(of: hasReminder) { newValue in
+                            if newValue {
+                                NotificationManager.shared.requestAuthorization { granted in
+                                    if !granted {
+                                        print("Permiso denegado")
+                                    }
+                                }
+                            }
+                        }
+                    
+                    if hasReminder {
+                        DatePicker("Hora", selection: $reminderDate, displayedComponents: .hourAndMinute)
+                    }
+                }
+                .padding(16)
+                .background(Color(.controlBackgroundColor)) // ✅ Añadido fondo nativo de Mac
+                .cornerRadius(12)
+                .padding(.horizontal, 24) // ✅ Añadido para alinear con el bloque de arriba
                 
+                Spacer()
                 // Botones
                 HStack(spacing: 12) {
                     Button("Cancelar") {
@@ -313,7 +379,7 @@ extension HabitDetailWrapper {
                 title: title,
                 dueDate: nil,
                 priority: priority,
-                reminderDate: nil,
+                reminderDate: hasReminder ? reminderDate : nil,
                 scheduledDays: selectedDays
             )
         } else if let habitToEdit = habitToEdit {
@@ -321,6 +387,7 @@ extension HabitDetailWrapper {
             habitToEdit.title = title
             habitToEdit.scheduledDaysString = selectedDays.map { String($0) }.joined(separator: ",")
             habitToEdit.priority = priority
+            habitToEdit.reminderDate = hasReminder ? reminderDate : nil
             viewModel.updateHabit(habitToEdit)
         }
         

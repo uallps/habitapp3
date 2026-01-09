@@ -6,6 +6,7 @@
 //
 import SwiftUI
 import SwiftData
+import Combine
 
 // Responsabilidad: composición de dependencias (persistencia, plugins).
 final class AppDependencies: ObservableObject {
