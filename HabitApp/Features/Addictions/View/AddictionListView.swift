@@ -1,8 +1,8 @@
 import SwiftUI
 import SwiftData
 
-struct AddictionistView: View {
-    @Query(sort: \Addiction.createdAt) private var addictions: [Addiction]
+struct AddictionListView: View {
+    @Query(sort: \Addiction.id) private var addictions: [Addiction]
     @StateObject private var addictionListVM: AddictionListViewModel
     @State private var currentDate = Date()
     @State private var showingNewAddictionSheet = false
@@ -199,7 +199,7 @@ extension HabitListView {
 
 // MARK: - macOS UI
 #if os(macOS)
-extension HabitListView {
+extension AddictionListView {
     var macBody: some View {
         NavigationSplitView(columnVisibility: .constant(.all)) {
             VStack(spacing: 0) {

@@ -7,6 +7,15 @@ class SwiftDataContext {
 }
 
 class SwiftDataStorageProvider: StorageProvider {
+    
+    func createSampleAddictions(to addiction: Addiction, habit: Habit) async throws {
+        ///TODO
+    }
+    
+    func associatePreventionHabit(to addiction: Addiction, habit: Habit) async throws {
+        ///TODO
+    }
+    
 
     @MainActor
     private func getRealInstanceAddiction(_ addiction: Addiction) -> Addiction? {

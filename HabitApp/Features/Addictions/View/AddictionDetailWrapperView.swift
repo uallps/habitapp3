@@ -81,11 +81,11 @@ struct AddictionDetailWrapperView: View {
                                 } else {
                                     ForEach(addictionToEdit?.triggers ?? []) { trigger in
                                         HStack(
-                                            Text(trigger.title)
+                                            Text(trigger.title),
 
                                             //  Botón para marcar hábito a adicción. Significado: "He hecho este hábito que me puede hacer recaer"
                                             Button(action: 
-                                                       selectedTrigger = trigger
+                                                       selectedTrigger = trigger,
                                                         showingRelapseAlert = true
                                                         // Ahora, ¿he recaído o no? Preguntar al usuario
                                             ) {
@@ -93,7 +93,7 @@ struct AddictionDetailWrapperView: View {
                                                     .foregroundColor(habit.isCompletedForDate(date) ? .green : .gray)
                                                     .font(.title3)
                                             }
-                                            .buttonStyle(.plain)
+                                            .buttonStyle(.plain),
 
                                             // Desasociar hábito desencadenante
                                             Button(action:
@@ -157,7 +157,7 @@ struct AddictionDetailWrapperView: View {
                                 } else {
                                     ForEach(addictionToEdit?.preventionHabits ?? []) { preventionHabit in
                                         HStack(
-                                            Text(trigger.title)
+                                            Text(trigger.title),
 
                                             //  Botón para marcar hábito a adicción. Significado: "Este hábito ha prevenido mi adicción hoy"
                                             Button(action: 
@@ -167,7 +167,7 @@ struct AddictionDetailWrapperView: View {
                                                     .foregroundColor(habit.isCompletedForDate(date) ? .green : .gray)
                                                     .font(.title3)
                                             }
-                                            .buttonStyle(.plain)
+                                            .buttonStyle(.plain),
 
                                             // Desasociar hábito preventivo
                                             Button(action:
@@ -211,7 +211,7 @@ struct AddictionDetailWrapperView: View {
                                 } else {
                                     ForEach(addictionToEdit?.compensatoryHabits ?? []) { compensatoryHabits in
                                         HStack(
-                                            Text(trigger.title)
+                                            Text(trigger.title),
 
                                             //  Botón para marcar hábito a adicción. Significado: "He caído en mi adicción, pero este hábito me ha ayudado a compensarlo"
                                             Button(action: 
@@ -221,7 +221,7 @@ struct AddictionDetailWrapperView: View {
                                                     .foregroundColor(habit.isCompletedForDate(date) ? .green : .gray)
                                                     .font(.title3)
                                             }
-                                            .buttonStyle(.plain)
+                                            .buttonStyle(.plain),
 
                                             // Desasociar hábito compensatorio
                                             Button(action:
