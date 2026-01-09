@@ -2,6 +2,7 @@ import SwiftUI
 
 struct AddictionRowView: View {
     let addiction: Addiction
+    let addictionListVM: AddictionListViewModel
 
     @ViewBuilder
     var iOSBody: some View {
@@ -9,7 +10,7 @@ struct AddictionRowView: View {
             commonBody
                 NavigationLink {
                 AddictionDetailWrapperView(
-
+                    addictionListVM: addictionListVM
                 )
             } label: {
                 Image(systemName: "note.text")
@@ -24,7 +25,7 @@ struct AddictionRowView: View {
 var macOSBody: some View {
     NavigationLink {
         AddictionDetailWrapperView(
-
+            addictionListVM: addictionListVM
         )
     } label: {
         HStack {

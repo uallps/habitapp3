@@ -32,9 +32,12 @@ protocol StorageProvider {
     func associateCompensatoryHabit(to addiction: Addiction, habit: Habit) async throws
     func associatePreventionHabit(to addiction: Addiction, habit: Habit) async throws
     func associateTriggerHabit(to addiction: Addiction, habit: Habit) async throws
-    func associateCompensatoryHabit(to addiction: Addiction, habit: Habit) async throws
+    //func associateCompensatoryHabit(to addiction: Addiction, habit: Habit) async throws
     //
     //END IF
     func resetStorage()
     //END DEV ONLY METHOD
+    //IF GOALPLUGIN
+    func onDataChanged(taskId: UUID, title: String, dueDate: Date?) async throws 
+    //END GOALPLUGIN
 }

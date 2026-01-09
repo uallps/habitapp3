@@ -46,6 +46,9 @@ class AppConfig: ObservableObject {
         
         @AppStorage("enableReminders")
         static var enableReminders: Bool = true
+    
+        @AppStorage("showGoals")
+        static var enableGoals: Bool = true
 
     init() {
         // Descubrir y registrar plugins automáticamente

@@ -7,7 +7,7 @@ class SwiftDataContext {
 }
 
 class SwiftDataStorageProvider: StorageProvider {
-    
+
     private var modelContainer: ModelContainer
     private var context: ModelContext
 
@@ -23,10 +23,11 @@ class SwiftDataStorageProvider: StorageProvider {
             fatalError("Failed to initialize storage provider: \(error)")
        }
     }
+    @MainActor
     func createSampleAddictions(to addiction: Addiction, habit: Habit) async throws {
         ///TODO
     }
-    
+    @MainActor
     func associatePreventionHabit(to addiction: Addiction, habit: Habit) async throws {
         ///TODO
     }
@@ -45,7 +46,48 @@ class SwiftDataStorageProvider: StorageProvider {
             return nil
         }
     }
-
+    
+    @MainActor
+    func onDataChanged(taskId: UUID, title: String, dueDate: Date?) async throws {
+        //  Forzar rollback y refetch desde el almacenamiento persistente
+        context.rollback()
+        
+        let descriptor = FetchDescriptor<Habit>(
+            predicate: #Predicate<Habit> { $0.id == taskId }
+        )
+        
+        guard let habit = try? context.fetch(descriptor).first else {
+            return
+        }
+        
+        do {
+            let habitId = habit.id
+            print("🔍 Hábito encontrado: '\(habit.title)' - doneDatesString: '\(habit.doneDatesString)'")
+            
+            let goalDescriptor = FetchDescriptor<Goal>(
+                predicate: #Predicate<Goal> { goal in
+                    goal.habitId == habitId
+                }
+            )
+            let goals = try context.fetch(goalDescriptor)
+            
+            
+            for goal in goals {
+                goal.updateProgress(count: habit.doneDates.count)
+                
+                for milestone in goal.milestones where !milestone.isCompleted {
+                    if goal.currentCount >= milestone.targetValue {
+                        milestone.complete()
+                    }
+                }
+            }
+            
+            try context.save()
+        } catch {
+            print("Error onDataChanged: \(error)")
+        }
+    }
+    
     @MainActor
     func addAddiction(_Addiction addiction: Addiction) async throws {
         if getRealInstanceAddiction(addiction) == nil {

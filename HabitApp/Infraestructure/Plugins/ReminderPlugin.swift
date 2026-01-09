@@ -1,14 +1,9 @@
-//
-//  ReminderPlugin.swift
-//  HabitApp
-//
-//  Created by Aula03 on 22/11/25.
-//
-
 import SwiftUI
 #if os(iOS)
 import UIKit
 #endif
+
+import SwiftData
 
 class ReminderPlugin: TaskDataObservingPlugin {
     var models: [any PersistentModel.Type]
@@ -17,7 +12,7 @@ class ReminderPlugin: TaskDataObservingPlugin {
     
     required init(config: AppConfig) {
         self.isEnabled = AppConfig.enableReminders
-        
+        self.models = []
     }
     
     
@@ -40,13 +35,13 @@ class ReminderPlugin: TaskDataObservingPlugin {
     
     private func scheduleAlert(title: String, delay: TimeInterval) {
         DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-            showAlert(title: "Recordatorio", message: title)
+            self.showAlert(title: "Recordatorio", message: title)
         }
     }
     
     private func showImmediateAlert(title: String) {
         DispatchQueue.main.async {
-            showAlert(title: "Recordatorio", message: title)
+            self.showAlert(title: "Recordatorio", message: title)
         }
     }
     

@@ -24,10 +24,10 @@ struct AddictionDetailWrapperView: View {
 
     @State private var showingNewHabitSheet = false
     
-    init(addictionListVM: HabitListViewModel, addiction: Addiction, isNew: Bool = true) {
-        self.addictionListVM = viewModel
+    init(addictionListVM: AddictionListViewModel, addiction: Addiction, isNew: Bool = true) {
+        self.addictionListVM = addictionListVM
         self.isNew = isNew
-        self.addictionToEdit = isNew ? nil : habit
+        self.addictionToEdit = isNew ? nil : addiction
         
         // Inicializar estados locales
         _title = State(initialValue: addiction.title)
