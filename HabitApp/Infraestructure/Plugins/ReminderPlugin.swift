@@ -10,7 +10,16 @@ import SwiftUI
 import UIKit
 #endif
 
-struct ReminderPlugin: TaskDataObservingPlugin {
+class ReminderPlugin: TaskDataObservingPlugin {
+    var models: [any PersistentModel.Type]
+    
+    var isEnabled: Bool
+    
+    required init(config: AppConfig) {
+        self.isEnabled = AppConfig.enableReminders
+        
+    }
+    
     
     func onDataChanged(taskId: UUID, title: String, dueDate: Date?) {
         guard let dueDate else { 

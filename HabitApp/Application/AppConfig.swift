@@ -1,33 +1,16 @@
-//
-//  AppConfig.swift
-//  HabitApp
-//
-//  Created by Aula03 on 15/10/25.
-//
 import SwiftUI
 import SwiftData
 import Combine
 import SwiftData
 
 class AppConfig: ObservableObject {
-    // ObservableObject es un protocolo que garantiza que esta clase tiene datos que, cuando cambian, desencadenan actualizaciones en la interfaz de usuario.
-    // Concepto similar a los estados mutables en Jetpack Compose.
-    class AppConfig: ObservableObject  {
-        
-        // @AppStorage conecta automáticamente una propiedad con UserDefaults.
-        
-        // UserDefaults en Swift (y en desarrollo iOS/macOS) es un sistema simple de almacenamiento clave-valor que permite a tu app
-        // persistir pequeñas cantidades de datos entre ejecuciones.
-        // No debe considerarse una base de datos relacional como las bases de datos SQLite en apps de Android. Solo almacena datos pequeños
-        // directamente en disco, sin relaciones entre ellos.
-        // Básicamente, cualquier propiedad marcada con @AppStorage se lee o escribe según las circunstancias adecuadas.
         
         // MARK: - Plugin Management
         private var plugins: [FeaturePlugin] = []
         
         // MARK: - Storage Provider
         
-        private lazy var swiftDataProvider: SwiftDataStorageProvider = {
+        private lazy var swiftDataStorageProvider: SwiftDataStorageProvider = {
             // Obtener modelos base
             var schemas: [any PersistentModel.Type] = [Habit.self, Category.self]
             
@@ -44,7 +27,7 @@ class AppConfig: ObservableObject {
         var storageProvider: StorageProvider {
             switch storageType {
             case .swiftData:
-                return swiftDataProvider
+                return swiftDataStorageProvider
                 //case .json:
                 //   return JSONStorageProvider.shared
             }
@@ -62,10 +45,20 @@ class AppConfig: ObservableObject {
         static var showPriorities: Bool = true
         
         @AppStorage("enableReminders")
-        static var enableReminders: Bool = true}
-    
-    @AppStorage("storageType")
-    var storageType: StorageType = .swiftData
+        static var enableReminders: Bool = true
+
+    init() {
+        // Descubrir y registrar plugins automáticamente
+        let discoveredPlugins = PluginDiscovery.discoverPlugins()
+        for pluginType in discoveredPlugins {
+            PluginRegistry.shared.register(pluginType)
+        }
+        
+        print("📝 Plugins registrados en AppConfig: \(PluginRegistry.shared.count)")
+        
+        // Crear instancias de los plugins
+        self.plugins = PluginRegistry.shared.createPluginInstances(config: self)
+    }
     
    // private let modelContainer: ModelContainer
     
@@ -74,15 +67,15 @@ class AppConfig: ObservableObject {
        // setupPlugins()
     //}
     
-    private func setupPlugins() {
-        let registry = PluginRegistry.shared
+    // private func setupPlugins() {
+    //     let registry = PluginRegistry.shared
         
-        //  Registrar los plugins
-        registry.register(plugin: ReminderPlugin())
-        registry.register(plugin: HabitGoalPlugin(storageProvider: storageProvider))
+    //     //  Registrar los plugins
+    //     registry.register(ReminderPlugin.Type)
+    //     registry.register(HabitGoalPlugin.Type)
         
-        print("✅ Plugins registrados correctamente")
-    }
+    //     print("✅ Plugins registrados correctamente")
+    // }
     
     // MARK: - Storage Provider
     
@@ -90,12 +83,7 @@ class AppConfig: ObservableObject {
      //   return SwiftDataStorageProvider(modelContainer: modelContainer)
    // }()
     
-    var storageProvider: StorageProvider {
-        switch storageType {
-            case .swiftData:
-                return swiftDataStorageProvider
-            }
-    }
+
     enum StorageType: String, CaseIterable, Identifiable {
         case swiftData = "SwiftDataStorage"
         //case json = "JSONStorage"
