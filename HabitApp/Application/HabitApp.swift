@@ -5,10 +5,11 @@ import SwiftData
 struct HabitApp: App {
     @State private var selectedDetailView: String?
     let modelContainer: ModelContainer
-    @StateObject private var appConfig: AppConfig
+    @StateObject private var dependencies: AppDependencies
+    @StateObject private var userPreferences = UserPreferences()
     
     private var storageProvider: StorageProvider {
-        appConfig.storageProvider
+        dependencies.storageProvider
     }
     
     init() {
@@ -24,7 +25,7 @@ struct HabitApp: App {
         }
         
         self.modelContainer = container
-        self._appConfig = StateObject(wrappedValue: AppConfig(modelContainer: container))
+        self._dependencies = StateObject(wrappedValue: AppDependencies(modelContainer: container))
         
         #if os(iOS)
         UNUserNotificationCenter.current().requestAuthorization(
@@ -65,7 +66,8 @@ struct HabitApp: App {
                         Label("Ajustes", systemImage: "gearshape")
                     }
             }
-            .environmentObject(appConfig)
+            .environmentObject(dependencies)
+            .environmentObject(userPreferences)
             .modelContainer(modelContainer)  //  AGREGAR ESTO
 
 #else
@@ -101,7 +103,8 @@ struct HabitApp: App {
                     Text("Seleccione una opción")
                 }
             }
-            .environmentObject(appConfig)
+            .environmentObject(dependencies)
+            .environmentObject(userPreferences)
             .modelContainer(modelContainer)  //  AGREGAR ESTO
 #endif
         }

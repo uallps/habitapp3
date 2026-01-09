@@ -6,24 +6,9 @@
 //
 import SwiftUI
 import SwiftData
-import Combine
 
-class AppConfig: ObservableObject {
-    @AppStorage("showDueDates")
-    static var showDueDates: Bool = true
-
-    @AppStorage("showPriorities")
-    static var showPriorities: Bool = true
-
-    @AppStorage("enableReminders")
-    static var enableReminders: Bool = true
-
-    @AppStorage("enableStreaks")
-    static var enableStreaks: Bool = true
-
-    @AppStorage("storageType")
-    var storageType: StorageType = .swiftData
-    
+// Responsabilidad: composición de dependencias (persistencia, plugins).
+final class AppDependencies: ObservableObject {
     private let modelContainer: ModelContainer
 
     init(modelContainer: ModelContainer) {
@@ -33,29 +18,15 @@ class AppConfig: ObservableObject {
     
     private func setupPlugins() {
         let registry = PluginRegistry.shared
-        
-        //  Registrar los plugins
         registry.register(plugin: HabitGoalPlugin(storageProvider: storageProvider))
-        
-
         registry.register(plugin: StreakPlugin(storageProvider: storageProvider))
-
         print("✅ Plugins registrados correctamente")
     }
 
     // MARK: - Storage Provider
-    
     private lazy var swiftDataProvider: SwiftDataStorageProvider = {
-        return SwiftDataStorageProvider(modelContainer: modelContainer)
+        SwiftDataStorageProvider(modelContainer: modelContainer)
     }()
 
-    var storageProvider: StorageProvider {
-        return swiftDataProvider
-    }
-}
-
-enum StorageType: String, CaseIterable, Identifiable {
-    case swiftData = "SwiftData Storage"
-
-    var id: String { self.rawValue }
+    var storageProvider: StorageProvider { swiftDataProvider }
 }

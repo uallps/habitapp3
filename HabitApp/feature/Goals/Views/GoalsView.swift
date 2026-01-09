@@ -5,7 +5,6 @@ struct GoalsView: View {
     @Query private var goals: [Goal]
     @Query private var habits: [Habit]
     @Environment(\.modelContext) private var modelContext
-    @EnvironmentObject private var appConfig: AppConfig
     @StateObject private var viewModel: GoalsViewModel
     @State private var showingAddGoal = false
     
