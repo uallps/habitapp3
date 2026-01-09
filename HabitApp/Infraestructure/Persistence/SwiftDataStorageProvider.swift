@@ -156,7 +156,7 @@ class SwiftDataStorageProvider: StorageProvider {
     }
     
     @MainActor
-    func addAddiction(_Addiction addiction: Addiction) async throws {
+    func addAddiction(addiction: Addiction) async throws {
         if getRealInstanceAddiction(addiction) == nil {
             context.insert(addiction)
             try context.save()
@@ -164,7 +164,7 @@ class SwiftDataStorageProvider: StorageProvider {
     }
 
     @MainActor
-    func updateAddiction(_Addiction addiction: Addiction) async throws {
+    func updateAddiction(addiction: Addiction) async throws {
         if let realAddiction = getRealInstanceAddiction(addiction) {
             realAddiction.title = addiction.title
             realAddiction.severity = addiction.severity
@@ -179,7 +179,7 @@ class SwiftDataStorageProvider: StorageProvider {
     }
 
     @MainActor
-    func deleteAddiction(_Addiction addiction: Addiction) async throws {
+    func deleteAddiction(addiction: Addiction) async throws {
         if let realAddiction = getRealInstanceAddiction(addiction) {
             context.delete(realAddiction)
             try context.save()
@@ -526,7 +526,7 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
         }
         
         if try await categoryExists(id: category.id) == false {
-            await addCategory(category: category)
+            try await addCategory(category: category)
         }else {
             // Actualizar categoría existente
             try await updateCategory(id: category.id, newCategory: category)
@@ -615,7 +615,7 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
     }
     
     @MainActor
-    func addCategory(category: Category) async {
+    func addCategory(category: Category) async throws {
         do {
             let existingCategories = try await loadCategories()
             let existingIds = Set(existingCategories.map { $0.id })
@@ -631,6 +631,35 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
         } catch {
             print("Error saving category: \(error)")
         }
+    }
+    
+    @MainActor
+    func addHabit(habit: Habit) async  throws {
+        do {
+            try context.insert(habit)
+            try await saveContext()
+        } catch {
+            print("Error adding habit: \(error)")
+        }
+    }
+    
+    // @MainActor
+    // func updateHabit(habit: Habit) {
+    //     do {
+    //         try await storageProvider.context.save()
+    //     } catch {
+    //         print("Error updating habit: \(error)")
+    //     }
+    // }
+    
+    @MainActor
+    func deleteHabit(habit: Habit) async throws {
+        do {
+            try context.delete(habit)
+        } catch {
+            print("Error deleting habit: \(error)")
+        }
+
     }
     
     // Este archivo existe para borrar toda la información de la base de datos local.

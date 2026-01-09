@@ -8,7 +8,7 @@ struct AddictionDetailWrapperView: View {
     @State private var showingRelapseAlert = false
     @State private var selectedTrigger: Habit?
 
-    @Query(sort: \.title, order: .forward) private var habitsQuery: [Habit]
+    @Query(sort: \.name, order: .forward) private var habitsQuery: [Habit]
     
     //  Estados locales para evitar binding directo con @State var habit
     @State private var title: String

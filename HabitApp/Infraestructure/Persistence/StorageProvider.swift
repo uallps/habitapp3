@@ -1,8 +1,14 @@
 import Foundation
 
 protocol StorageProvider {
+    //IF HABIT
     func loadHabits() async throws -> [Habit]
     func saveHabits(habits: [Habit]) async throws
+    func addHabit(habit: Habit) async throws
+    //func updateHabit(habit: Habit) async throws
+    func deleteHabit(habit: Habit) async throws
+    //END HABIT
+    
     //IF CATEGORY
     func loadCategories() async throws -> [Category]
     func addCategory(category: Category) async throws
