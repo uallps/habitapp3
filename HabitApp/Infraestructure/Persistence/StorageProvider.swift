@@ -7,6 +7,7 @@ protocol StorageProvider {
     func addHabit(habit: Habit) async throws
     //func updateHabit(habit: Habit) async throws
     func deleteHabit(habit: Habit) async throws
+    func getHabit(id: UUID) async throws-> Habit
     //END HABIT
     
     //IF CATEGORY
@@ -56,7 +57,6 @@ protocol StorageProvider {
     //END DAILYNOTES
     
     //IF STREAK
-    
     //END IF
     
     func saveContext() async throws

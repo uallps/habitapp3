@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 import SwiftData
 import Combine
 
@@ -23,7 +24,7 @@ final class StatisticsViewModel: ObservableObject {
         self.storageProvider = storageProvider
         setupObservers()
         // Register a plugin so the view model gets notified when other parts of the app change data
-        PluginRegistry.shared.register(StatisticsPlugin(viewModel: self))
+        PluginRegistry.shared.register(StatisticsPlugin.self)
     }
 
     // Public API for external triggers (plugin) to force a refresh from storageProvider
@@ -52,22 +53,16 @@ final class StatisticsViewModel: ObservableObject {
     }
 
     func fetchHabitsAndLoad() {
-        let context = storageProvider.context
-        isLoading = true
-        
-        // Fetch habits
-        let descriptor = FetchDescriptor<Habit>(
-            sortBy: [SortDescriptor(\.createdAt)]
-        )
-        
-        do {
-            let habits = try context.fetch(descriptor)
-            // Use the unified load path to compute
-            loadStatistics(from: habits)
-            isLoading = false
-        } catch {
-            print("Error loading habits for statistics: \(error)")
-            isLoading = false
+        Task {
+            isLoading = true
+            do {
+                let habits = try await storageProvider.loadHabits()
+                loadStatistics(from: habits)
+                isLoading = false
+            } catch {
+                print("Error loading habits for statistics: \(error)")
+                isLoading = false
+            }
         }
     }
 }

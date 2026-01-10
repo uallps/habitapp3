@@ -32,6 +32,16 @@ class SwiftDataStorageProvider: StorageProvider {
     }
     
     @MainActor
+    func getHabit(id: UUID) async throws -> Habit? {
+        let habitPredicate = #Predicate<Habit> { $0.id == id }
+        let habitDescriptor = FetchDescriptor<Habit>(predicate: habitPredicate)
+        guard let habit = try context.fetch(habitDescriptor).first else {
+            return nil
+        }
+        return habit
+    }
+    
+    @MainActor
     func loadNotes(calendar: Calendar, startOfDay: Date, endOfDay: Date, selectedDate: Date) async throws -> [DailyNote] {
         var notes: [DailyNote] = []
         do {
