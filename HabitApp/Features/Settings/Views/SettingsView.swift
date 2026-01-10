@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 
 struct SettingsView: View {
-    @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var appConfig: AppConfig
     @State private var showingAbout = false
     @State private var showingClearAlert = false
     
@@ -138,16 +138,8 @@ extension SettingsView {
 extension SettingsView {
     private func clearAllData() {
         do {
-            // Eliminar todos los hábitos
-            try modelContext.delete(model: Habit.self)
-            
-            // Eliminar todas las notas
-            try modelContext.delete(model: DailyNote.self)
-            
-            // Eliminar todos los objetivos
-            try modelContext.delete(model: Goal.self)
-            
-            try modelContext.save()
+            // Eliminar todo
+            try appConfig.storageProvider.resetStorage()
         } catch {
             print("Error clearing data: \(error)")
         }

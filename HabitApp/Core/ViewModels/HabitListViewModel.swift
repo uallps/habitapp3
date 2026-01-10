@@ -9,10 +9,10 @@ final class HabitListViewModel: ObservableObject {
         self.storageProvider = storageProvider
     }
     
-    func addHabit(title: String, 
-                  dueDate: Date? = nil, 
-                  priority: Priority? = nil, 
-                  reminderDate: Date? = nil, 
+    func addHabit(title: String,
+                  dueDate: Date? = nil,
+                  priority: Priority? = nil,
+                  reminderDate: Date? = nil,
                   scheduledDays: [Int] = []) {
         let habit = Habit(
             title: title,
@@ -21,83 +21,86 @@ final class HabitListViewModel: ObservableObject {
             reminderDate: reminderDate,
             scheduledDays: scheduledDays
         )
-        storageProvider.context.insert(habit)
         
-        do {
-            try storageProvider.context.save()
-            
+        Task {
+            try await storageProvider.addHabit(habit: habit)
             //  Notificar plugins si hay fecha de recordatorio
             if let reminderDate = reminderDate {
-                PluginRegistry.shared.notifyDataChanged(
+                TaskDataObserverManager.shared.notifyDataChanged(
                     taskId: habit.id,
                     title: habit.title,
                     dueDate: reminderDate
                 )
             }
-        } catch {
-            print(" Error saving habit: \(error)")
         }
+        
     }
     
     func updateHabit(_ habit: Habit) {
-        do {
-            try storageProvider.context.save()
-        } catch {
-            print(" Error updating habit: \(error)")
+        Task {
+            do {
+                try await storageProvider.saveContext()
+            } catch {
+                print(" Error updating habit: \(error)")
+            }
         }
+
     }
     
     func toggleCompletion(habit: Habit, for date: Date = Date()) {
-        if habit.isCompletedForDate(date) {
-            habit.markAsIncomplete(for: date)
-        } else {
-            habit.markAsCompleted(for: date)
-        }
-        
-        do {
-            try storageProvider.context.save()
-            print(" Hábito '\(habit.title)' guardado - Días completados: \(habit.doneDates.count)")
-            
-            //  Esperar a que SwiftData sincronice completamente
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                PluginRegistry.shared.notifyDataChanged(
-                    taskId: habit.id,
-                    title: habit.title,
-                    dueDate: habit.dueDate
-                )
+        Task {
+            if habit.isCompletedForDate(date) {
+                habit.markAsIncomplete(for: date)
+            } else {
+                habit.markAsCompleted(for: date)
             }
-        } catch {
-            print(" Error saving habit: \(error)")
+            
+            do {
+                try await storageProvider.saveContext()
+                print(" Hábito '\(habit.title)' guardado - Días completados: \(habit.doneDates.count)")
+                
+                //  Esperar a que SwiftData sincronice completamente
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    TaskDataObserverManager.shared.notifyDataChanged(
+                        taskId: habit.id,
+                        title: habit.title,
+                        dueDate: habit.dueDate
+                    )
+                }
+            } catch {
+                print(" Error saving habit: \(error)")
+            }
         }
+
     }
     
     func deleteHabit(_ habit: Habit) {
-        storageProvider.context.delete(habit)
-        
-        do {
-            try storageProvider.context.save()
-        } catch {
-            print(" Error deleting habit: \(error)")
+        Task {
+            try await storageProvider.deleteHabit(habit: habit)
+            try await storageProvider.saveContext()
         }
     }
     
     func createSampleHabits() {
-        let sampleHabits = [
-            Habit(title: "Hacer ejercicio", priority: .high, scheduledDays: [1,  3, 4,  6, 7]),
-            Habit(title: "Leer 30 minutos", priority: .medium, scheduledDays: [ 2,  4, 5,  7]),
-            Habit(title: "Meditar", priority: .low, scheduledDays: [1, 2,  5, 6, 7])
-        ]
-        
-        for habit in sampleHabits {
-            storageProvider.context.insert(habit)
+        Task {
+            let sampleHabits = [
+                Habit(title: "Hacer ejercicio", priority: .high, scheduledDays: [1,  3, 4,  6, 7]),
+                Habit(title: "Leer 30 minutos", priority: .medium, scheduledDays: [ 2,  4, 5,  7]),
+                Habit(title: "Meditar", priority: .low, scheduledDays: [1, 2,  5, 6, 7])
+            ]
+            
+            for habit in sampleHabits {
+                try await storageProvider.addHabit(habit: habit)
+            }
+            
+            do {
+                try await storageProvider.saveContext()
+                print(" Hábitos de muestra creados")
+            } catch {
+                print(" Error creating sample habits: \(error)")
+            }
         }
-        
-        do {
-            try storageProvider.context.save()
-            print(" Hábitos de muestra creados")
-        } catch {
-            print(" Error creating sample habits: \(error)")
-        }
+
     }
     
     func scheduleHabitsNotification(for date: Date, habits: [Habit]) {
@@ -109,7 +112,7 @@ final class HabitListViewModel: ObservableObject {
             let habitTitles = dayHabits.map { $0.title }.joined(separator: ", ")
             let notificationDate = calendar.date(byAdding: .hour, value: 9, to: calendar.startOfDay(for: date)) ?? date
             
-            PluginRegistry.shared.notifyDataChanged(
+            TaskDataObserverManager.shared.notifyDataChanged(
                 taskId: UUID(),
                 title: "Hoy tienes \(dayHabits.count) hábito(s): \(habitTitles)",
                 dueDate: notificationDate

@@ -7,80 +7,22 @@
     " " : {
 
     },
+    "¿Eliminar categoría?" : {
+
+    },
     "¿Eliminar hábito?" : {
 
     },
     "¿Eliminar nota?" : {
 
     },
-    "·" : {
+    "%@" : {
 
     },
     "%lld" : {
 
     },
-    "%lld / %lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld / %2$lld"
-          }
-        }
-      }
-    },
-    "%lld Completados" : {
-
-    },
-    "%lld de %lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld de %2$lld"
-          }
-        }
-      }
-    },
-    "%lld días" : {
-
-    },
-    "%lld días completados" : {
-
-    },
-    "%lld Pendientes" : {
-
-    },
-    "%lld tarea%@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld tarea%2$@"
-          }
-        }
-      }
-    },
-    "%lld/%lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld/%2$lld"
-          }
-        }
-      }
-    },
-    "%lld%%" : {
-
-    },
-    "1.0.0" : {
-
-    },
-    "Acerca de" : {
-
-    },
-    "Acerca de HabitApp" : {
+    "+" : {
 
     },
     "Actualizado: %@ a las %@" : {
@@ -93,58 +35,67 @@
         }
       }
     },
-    "Agregar Hito" : {
-
-    },
     "Ajustes" : {
 
     },
-    "Alerta en 3s" : {
+    "Ajustes (próximamente)" : {
 
     },
-    "Alerta en 5s" : {
+    "All" : {
 
     },
-    "Alerta Inmediata" : {
+    "Alta" : {
 
     },
-    "Arquitectura MVVM" : {
+    "Alta %@" : {
 
     },
-    "Cambiar" : {
+    "Añade primero la categoría padre para añadir subcategorías" : {
+
+    },
+    "Añadir" : {
+
+    },
+    "Añadir a esta categoría" : {
+
+    },
+    "Añadir subcategoría" : {
+
+    },
+    "Baja" : {
+
+    },
+    "Baja %@" : {
+
+    },
+    "Blue" : {
+
+    },
+    "Brown" : {
+
+    },
+    "Buscar emoji..." : {
 
     },
     "Cancelar" : {
 
     },
-    "Cargando..." : {
+    "Cargando emojis..." : {
 
     },
-    "Cerrar" : {
+    "Categorias" : {
 
     },
-    "Compatible con iOS y macOS" : {
+    "Categorías" : {
 
     },
-    "Completado" : {
+    "Color" : {
 
     },
-    "Configuración de Recordatorios" : {
-
-    },
-    "Configurar recordatorios" : {
+    "Color seleccionado" : {
 
     },
     "Contenido" : {
-
-    },
-    "Crea hábitos de ejemplo para empezar" : {
-
-    },
-    "Crea tu primer objetivo para comenzar a alcanzar tus metas" : {
-
-    },
-    "Crea tu primera nota tocando el botón +" : {
 
     },
     "Creado: %@ a las %@" : {
@@ -157,28 +108,13 @@
         }
       }
     },
-    "Crear hábito" : {
+    "Crear nota con notificación en 10s" : {
 
     },
-    "Crear hábitos de muestra" : {
-
-    },
-    "Datos" : {
-
-    },
-    "Desarrollado con SwiftUI" : {
-
-    },
-    "Descripción (opcional)" : {
+    "Cyan" : {
 
     },
     "Detalle de Nota" : {
-
-    },
-    "Días de la semana" : {
-
-    },
-    "Días Restantes" : {
 
     },
     "Editar" : {
@@ -187,19 +123,13 @@
     "Editar hábito" : {
 
     },
-    "Ej: Hacer ejercicio" : {
-
-    },
     "Eliminar" : {
 
     },
-    "Eliminar hábito" : {
+    "Eliminar de categoría" : {
 
     },
-    "Esperado" : {
-
-    },
-    "Esta acción eliminará todos los hábitos, notas y objetivos. No se puede deshacer." : {
+    "Emojis" : {
 
     },
     "Esta acción no se puede deshacer" : {
@@ -208,37 +138,34 @@
     "Esta acción no se puede deshacer." : {
 
     },
-    "Estadísticas" : {
+    "Esta acción no se puede deshacer. Se eliminarán subcategorías" : {
+
+    },
+    "Features" : {
 
     },
     "Fecha" : {
 
     },
-    "Fecha de Inicio" : {
-
-    },
-    "Fecha límite" : {
-
-    },
-    "Fecha Objetivo" : {
+    "Filter" : {
 
     },
     "General" : {
 
     },
+    "Gray" : {
+
+    },
+    "Green" : {
+
+    },
     "Guardar" : {
 
     },
-    "Guardar cambios" : {
+    "Guardar categoría" : {
 
     },
-    "Habilitar notificaciones" : {
-
-    },
-    "HabitApp" : {
-
-    },
-    "Hábito Asociado" : {
+    "Guardar hábito" : {
 
     },
     "Habitos" : {
@@ -250,55 +177,37 @@
     "Hello, world!" : {
 
     },
-    "Hito" : {
+    "Imagen" : {
 
     },
-    "Hitos" : {
+    "Indigo" : {
 
     },
-    "Hitos (opcional)" : {
+    "Media" : {
 
     },
-    "Hora de recordatorio" : {
+    "Media %@" : {
 
     },
-    "Información" : {
+    "Mint" : {
 
     },
-    "Información del Objetivo" : {
+    "No has añadido hábitos a la categoría" : {
 
     },
-    "Limpiar" : {
+    "No hay categorías disponibles. Crea al menos una categoría." : {
 
     },
-    "Limpiar todos los datos" : {
+    "No hay notas para esta fecha" : {
 
     },
-    "Meta" : {
+    "No hay subcategorías" : {
 
     },
-    "Meta: %lld" : {
+    "Nombre" : {
 
     },
-    "Mostrar fechas de vencimiento" : {
-
-    },
-    "Mostrar prioridades" : {
-
-    },
-    "Ninguno" : {
-
-    },
-    "No hay datos disponibles" : {
-
-    },
-    "No hay hábitos con estadísticas" : {
-
-    },
-    "No hay hábitos disponibles" : {
-
-    },
-    "No hay hábitos programados para hoy" : {
+    "Nombre de la categoría" : {
 
     },
     "Notas" : {
@@ -310,34 +219,28 @@
     "Notas Diarias" : {
 
     },
-    "Notificaciones" : {
-
-    },
     "Nueva Nota" : {
 
     },
     "Nuevo hábito" : {
 
     },
-    "Nuevo Objetivo" : {
+    "OK" : {
 
     },
-    "Objetivo: %lld días" : {
+    "Orange" : {
 
     },
-    "Objetivos" : {
-
-    },
-    "Por Hábito" : {
+    "Pink" : {
 
     },
     "Prioridad" : {
 
     },
-    "Prioridad: \\(priority.displayName)" : {
+    "Prioridad: %@" : {
 
     },
-    "Prioridad: %@" : {
+    "Priority" : {
 
     },
     "priority_high" : {
@@ -391,55 +294,49 @@
         }
       }
     },
-    "Rango" : {
+    "Prueba de ReminderPlugin" : {
 
     },
-    "Selecciona un hábito para vincular con este objetivo" : {
+    "Purple" : {
+
+    },
+    "Red" : {
+
+    },
+    "Selecciona color" : {
+
+    },
+    "Selecciona los días de la semana" : {
+
+    },
+    "Selecciona prioridad" : {
+
+    },
+    "Selecciona tipo" : {
 
     },
     "Seleccione una opción" : {
 
     },
-    "Sin datos" : {
-
-    },
-    "Sin estadísticas" : {
-
-    },
-    "Sin hábitos" : {
-
-    },
-    "Sin hábitos creados" : {
-
-    },
-    "Sin hábitos para hoy" : {
+    "Settings" : {
 
     },
     "Sin notas" : {
 
     },
-    "Sin Objetivos" : {
-
-    },
-    "Sistema de notificaciones inteligentes" : {
+    "Subcategorías" : {
 
     },
     "Tareas para %@" : {
 
     },
-    "Tendencia" : {
-
-    },
-    "Test" : {
-
-    },
-    "Test Hábitos Mañana" : {
+    "Teal" : {
 
     },
     "Test Notificaciones" : {
 
     },
-    "Test Plugin Directo" : {
+    "Tipo de icono" : {
 
     },
     "Título" : {
@@ -451,25 +348,10 @@
     "Título del hábito" : {
 
     },
-    "Una aplicación para gestionar tus hábitos diarios y alcanzar tus objetivos." : {
-
-    },
-    "Vence: \\(dueDate.formatted(date: .abbreviated, time: .shortened))" : {
-
-    },
     "Vence: %@" : {
 
     },
-    "Versión" : {
-
-    },
-    "Versión 1.0.0" : {
-
-    },
-    "Vista" : {
-
-    },
-    "Visualización" : {
+    "Yellow" : {
 
     }
   },

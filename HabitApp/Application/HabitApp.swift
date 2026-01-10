@@ -1,30 +1,32 @@
 import SwiftUI
 import SwiftData
 
-@main
+@main // Punto de entrada
+
+// HabitApp cumple con el protocolo App.
 struct HabitApp: App {
-    @State private var selectedDetailView: String?
-    let modelContainer: ModelContainer
-    @StateObject private var appConfig: AppConfig
     
     private var storageProvider: StorageProvider {
-        appConfig.storageProvider
+        AppConfig().storageProvider
     }
+
+    @State private var selectedDetailView: String?
+    //let modelContainer: ModelContainer
     
     init() {
         // Inicializar el ModelContainer
-        let schema = Schema([Habit.self, DailyNote.self, Goal.self, Milestone.self])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        //let schema = Schema([Habit.self, DailyNote.self, Goal.self, Milestone.self])
+       // let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         
-        let container: ModelContainer
-        do {
-            container = try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("❌ Error inicializando ModelContainer: \(error)")
-        }
+        //let container: ModelContainer
+      //  do {
+        //    container = try ModelContainer(for: schema, configurations: [modelConfiguration])
+       // } catch {
+       //     fatalError("❌ Error inicializando ModelContainer: \(error)")
+       // }
         
-        self.modelContainer = container
-        self._appConfig = StateObject(wrappedValue: AppConfig(modelContainer: container))
+       // self.modelContainer = container
+        //self._appConfig = StateObject(wrappedValue: AppConfig(modelContainer: container))
         
         #if os(iOS)
         UNUserNotificationCenter.current().requestAuthorization(
@@ -40,12 +42,20 @@ struct HabitApp: App {
     }
     
     var body: some Scene {
-        WindowGroup{
+        WindowGroup {
 #if os(iOS)
             TabView {
                 HabitListView(storageProvider: storageProvider)
                     .tabItem {
                         Label("Hábitos", systemImage: "checklist")
+                    }
+                CategoriesListView(storageProvider: storageProvider)
+                    .tabItem {
+                        Label("Categorías", systemImage: "folder")
+                    }
+                AddictionListView(storageProvider: storageProvider)
+                    .tabItem {
+                        Label("Adicciones", systemImage: "bandage")
                     }
                 DailyNotesView(storageProvider: storageProvider)
                     .tabItem {
@@ -55,7 +65,7 @@ struct HabitApp: App {
                     .tabItem {
                         Label("Objetivos", systemImage: "target")
                     }
-                StatisticsView()
+                 StatisticsView()             
                     .tabItem {
                         Label("Estadísticas", systemImage: "chart.bar")
                     }
@@ -89,6 +99,15 @@ struct HabitApp: App {
                     NavigationLink(value: "ajustes") {
                         Label("Ajustes", systemImage: "gearshape")
                     }
+                    .task {
+                        storageProvider.resetStorage()
+                    }
+                    NavigationLink(value: "categorias") {
+                        Label("Categorias", systemImage: "folder")
+                    }
+                    NavigationLink(value: "adicciones") {
+                        Label("Adicciones", systemImage: "bandage")
+                    }
                 }
             } detail: {
                 switch selectedDetailView {
@@ -104,8 +123,8 @@ struct HabitApp: App {
                     Text("Seleccione una opción")
                 }
             }
-            .environmentObject(appConfig)
-            .modelContainer(modelContainer)  //  AGREGAR ESTO
+            .environmentObject(AppConfig())
+           // .modelContainer(modelContainer)  //  AGREGAR ESTO
 #endif
         }
     }

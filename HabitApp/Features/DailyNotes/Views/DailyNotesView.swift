@@ -218,7 +218,9 @@ extension DailyNotesView {
                             }
                         }
                     }
+                    #if(os(IOS))
                     .listStyle(.insetGrouped)
+                    #endif
                     .padding(.horizontal)
                 }
             }
