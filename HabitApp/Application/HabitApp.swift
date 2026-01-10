@@ -13,6 +13,8 @@ struct HabitApp: App {
     // Necesario para Query
     let modelContainer: ModelContainer
     
+    @StateObject private var userPreferences = UserPreferences()
+    
     init() {
         // Inicializar el ModelContainer
         //let schema = Schema([Habit.self, DailyNote.self, Goal.self, Milestone.self])

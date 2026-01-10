@@ -8,7 +8,7 @@
 import SwiftData
 import Foundation
 
-final class HabitGoalPlugin: TaskDataObservingPlugin {
+final class HabitGoalPlugin: HabitDataObservingPlugin {
     
     var models: [any PersistentModel.Type]
     var isEnabled: Bool

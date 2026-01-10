@@ -23,7 +23,7 @@ final class StatisticsViewModel: ObservableObject {
         self.storageProvider = storageProvider
         setupObservers()
         // Register a plugin so the view model gets notified when other parts of the app change data
-        PluginRegistry.shared.register(plugin: StatisticsPlugin(viewModel: self))
+        PluginRegistry.shared.register(StatisticsPlugin(viewModel: self))
     }
 
     // Public API for external triggers (plugin) to force a refresh from storageProvider
