@@ -17,54 +17,68 @@ final class DailyNotesViewModel: ObservableObject {
         let startOfDay = calendar.startOfDay(for: selectedDate)
         let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
         
-        Task {
-            notes = try await storageProvider.loadNotes(calendar: calendar, startOfDay: startOfDay, endOfDay: endOfDay, selectedDate: selectedDate)
+        let predicate = #Predicate<DailyNote> { note in
+            note.date >= startOfDay && note.date < endOfDay && note.habitId == nil
+        }
+        
+        let descriptor = FetchDescriptor<DailyNote>(
+            predicate: predicate,
+            sortBy: [SortDescriptor(\.createdAt, order: .reverse)]
+        )
+        
+        do {
+            notes = try storageProvider.context.fetch(descriptor)
+        } catch {
+            print("Error loading notes: \(error)")
         }
     }
     
     func addNote(title: String, content: String) {
-        Task {
-            let calendar = Calendar.current
-            let noteDate = calendar.startOfDay(for: selectedDate)
-            let note = try await storageProvider.addNote(title: title, content: content, selectedDate: selectedDate, noteDate: noteDate)
-            // Programar notificación si la nota es para una fecha futura
-            let today = calendar.startOfDay(for: Date())
-            if noteDate > today {
-                TaskDataObserverManager.shared.notify(
-                    taskId: note.id,
-                    title: "Nota: \(title)",
-                    date: noteDate
-                )
-            }
-            loadNotes()
+        let calendar = Calendar.current
+        let noteDate = calendar.startOfDay(for: selectedDate)
+        let note = DailyNote(title: title, content: content, date: noteDate)
+        storageProvider.context.insert(note)
+        saveContext()
+        loadNotes()
+        
+        // Programar notificación si la nota es para una fecha futura
+        let today = calendar.startOfDay(for: Date())
+        if noteDate > today {
+            HabitDataObserverManager.shared.notify(
+                taskId: note.id,
+                title: "Nota: \(title)",
+                date: noteDate
+            )
         }
     }
       
+      private func saveContext() {
+          do { try storageProvider.context.save() }
+          catch { print("Error guardando contexto: \(error)") }
+      }
+  
+
     
     func updateNote(_ note: DailyNote, title: String, content: String) {
-        Task {
-            note.updateContent(title: title, content: content)
-            try await storageProvider.saveContext()
-            loadNotes()
-        }
+
+        note.updateContent(title: title, content: content)
+        saveContext()
+        loadNotes()
     }
     
     func saveAndGoToNoteDate(_ note: DailyNote, title: String, content: String) {
-        Task {
-            note.updateContent(title: title, content: content)
-            selectedDate = Calendar.current.startOfDay(for: note.date) // Ajusta la fecha al día de la nota
-            try await storageProvider.saveContext()
-            loadNotes()
-        }
+
+        note.updateContent(title: title, content: content)
+        selectedDate = Calendar.current.startOfDay(for: note.date) // Ajusta la fecha al día de la nota
+        saveContext()
+        loadNotes()
     }
 
     
     func deleteNote(_ note: DailyNote) {
-        Task {
-            try await storageProvider.deleteNote(note)
-            try await storageProvider.saveContext()
-            loadNotes()
-        }
+        storageProvider.context.delete(note)
+        saveContext()
+        loadNotes()
     }
     
     func changeDate(to date: Date) {

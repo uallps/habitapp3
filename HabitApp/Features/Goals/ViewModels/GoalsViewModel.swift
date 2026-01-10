@@ -31,10 +31,9 @@ final class GoalsViewModel: ObservableObject {
     }
     
     func deleteGoal(_ goal: Goal) {
+        storageProvider.context.delete(goal)
         do {
-            Task {
-                try await storageProvider.deleteGoal(goal)
-            }
+            try storageProvider.context.save()
         } catch {
             print("Error deleting goal: \(error)")
         }

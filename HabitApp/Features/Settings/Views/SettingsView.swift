@@ -2,7 +2,8 @@ import SwiftUI
 import SwiftData
 
 struct SettingsView: View {
-    @EnvironmentObject private var appConfig: AppConfig
+    @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var userPreferences: UserPreferences
     @State private var showingAbout = false
     @State private var showingClearAlert = false
     
@@ -23,12 +24,12 @@ extension SettingsView {
             List {
                 Section("Visualización") {
                     Toggle("Mostrar fechas de vencimiento", isOn: Binding(
-                        get: { AppConfig.showDueDates },
-                        set: { AppConfig.showDueDates = $0 }
+                        get: { userPreferences.showDueDates },
+                        set: { userPreferences.showDueDates = $0 }
                     ))
                     Toggle("Mostrar prioridades", isOn: Binding(
-                        get: { AppConfig.showPriorities },
-                        set: { AppConfig.showPriorities = $0 }
+                        get: { userPreferences.showPriorities },
+                        set: { userPreferences.showPriorities = $0 }
                     ))
                 }
                 
@@ -82,12 +83,12 @@ extension SettingsView {
             Form {
                 Section("Visualización") {
                     Toggle("Mostrar fechas de vencimiento", isOn: Binding(
-                        get: { AppConfig.showDueDates },
-                        set: { AppConfig.showDueDates = $0 }
+                        get: { userPreferences.showDueDates },
+                        set: { userPreferences.showDueDates = $0 }
                     ))
                     Toggle("Mostrar prioridades", isOn: Binding(
-                        get: { AppConfig.showPriorities },
-                        set: { AppConfig.showPriorities = $0 }
+                        get: { userPreferences.showPriorities },
+                        set: { userPreferences.showPriorities = $0 }
                     ))
                 }
                 
@@ -138,8 +139,16 @@ extension SettingsView {
 extension SettingsView {
     private func clearAllData() {
         do {
-            // Eliminar todo
-            try appConfig.storageProvider.resetStorage()
+            // Eliminar todos los hábitos
+            try modelContext.delete(model: Habit.self)
+            
+            // Eliminar todas las notas
+            try modelContext.delete(model: DailyNote.self)
+            
+            // Eliminar todos los objetivos
+            try modelContext.delete(model: Goal.self)
+            
+            try modelContext.save()
         } catch {
             print("Error clearing data: \(error)")
         }

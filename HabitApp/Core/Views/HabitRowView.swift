@@ -13,6 +13,7 @@ struct HabitRowView: View {
     @State private var showingDeleteAlert = false
     @State private var showingNotesSheet = false
     @Environment(\.modelContext) private var modelContext 
+    @EnvironmentObject private var userPreferences: UserPreferences
     
     var body: some View {
         #if os(iOS)
@@ -40,20 +41,20 @@ struct HabitRowView: View {
                         .foregroundColor(habit.isCompletedForDate(date) ? .gray : .primary)
                     
                     // 🔥 Badge de rachas
-                    if AppConfig.enableStreaks {
+                    if userPreferences.enableStreaks {
                         StreakBadgeView(habitId: habit.id)
                             .animation(.spring(), value: habit.doneDatesString)
                     }
                 }
                 
-                if AppConfig.showDueDates, let dueDate = habit.dueDate {
+                if userPreferences.showDueDates, let dueDate = habit.dueDate {
                     Text("Vence: \(dueDate.formatted(date: .abbreviated, time: .shortened))")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
                 
-                if AppConfig.showPriorities, let priority = habit.priority {
-                    Text("Prioridad: \(priority.localized)")
+                if userPreferences.showPriorities, let priority = habit.priority {
+                    Text("Prioridad: \(priority.displayName)")
                         .font(.caption)
                         .foregroundColor(priorityColor(for: priority))
                 }
@@ -124,20 +125,20 @@ struct HabitRowView: View {
                         .foregroundColor(habit.isCompletedForDate(date) ? .gray : .primary)
                     
                     // 🔥 Badge de rachas
-                    if AppConfig.enableStreaks {
+                    if userPreferences.enableStreaks {
                         StreakBadgeView(habitId: habit.id)
                             .animation(.spring(), value: habit.doneDatesString)
                     }
                 }
                 
-                if AppConfig.showDueDates, let dueDate = habit.dueDate {
+                if userPreferences.showDueDates, let dueDate = habit.dueDate {
                     Text("Vence: \(dueDate.formatted(date: .abbreviated, time: .shortened))")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
                 
-                if AppConfig.showPriorities, let priority = habit.priority {
-                    Text("Prioridad: \(priority.localized)")
+                if userPreferences.showPriorities, let priority = habit.priority {
+                    Text("Prioridad: \(priority.displayName)")
                         .font(.caption)
                         .foregroundColor(priorityColor(for: priority))
                 }
@@ -192,17 +193,8 @@ struct HabitRowView: View {
             Text("Esta acción no se puede deshacer")
         }
     }
-    
     private func deleteHabit() {
-       
-        modelContext.delete(habit)
-        
-        do {
-            try modelContext.save()
-            
-        } catch {
-            print(" Error: \(error)")
-        }
+        viewModel.deleteHabit(habit)
     }
     
     private func priorityColor(for priority: Priority) -> Color {

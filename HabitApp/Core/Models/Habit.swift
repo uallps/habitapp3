@@ -1,3 +1,10 @@
+//
+//  Habit.swift
+//  HabitApp
+//
+//  Created by Aula03 on 15/10/25.
+//
+
 import Foundation
 import SwiftData
 
@@ -9,7 +16,8 @@ class Habit {
     var isCompleted: Bool = false
     var dueDate: Date?
     var priority: Priority? = nil
-    var reminderDate: Date?
+    var isReminderEnabled: Bool = false
+    var reminderDate: Date? = nil
     var scheduledDaysString: String = ""
     var createdAt: Date = Date()
     var updatedAt: Date = Date()
@@ -92,5 +100,35 @@ class Habit {
         let calendar = Calendar.current
         let targetDate = calendar.startOfDay(for: date)
         return doneDates.contains { calendar.isDate($0, inSameDayAs: targetDate) }
+    }
+}
+
+enum Priority: String, Codable, CaseIterable {
+    case low = "Baja"
+    case medium = "Media"
+    case high = "Alta"
+    
+    var displayName: String {
+        return self.rawValue
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(String.self)
+        
+        // Handle both English and Spanish values for backward compatibility
+        switch rawValue {
+        case "Baja", "low":
+            self = .low
+        case "Media", "medium":
+            self = .medium
+        case "Alta", "high":
+            self = .high
+        default:
+            throw DecodingError.dataCorruptedError(
+                in: container,
+                debugDescription: "Cannot initialize Priority from invalid String value \(rawValue)"
+            )
+        }
     }
 }

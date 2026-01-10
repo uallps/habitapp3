@@ -6,7 +6,6 @@ struct GoalDetailView: View {
     @Bindable var goal: Goal
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var appConfig: AppConfig
     @StateObject private var viewModel: GoalsViewModel
     @State private var associatedHabit: Habit?
     @State private var refreshTrigger = UUID()
