@@ -7,6 +7,7 @@ class AppConfig: ObservableObject {
         
         // MARK: - Plugin Management
         private var plugins: [FeaturePlugin] = []
+        var userPreferences: UserPreferences = UserPreferences()
         
         // MARK: - Storage Provider
         
