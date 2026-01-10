@@ -7,7 +7,7 @@ class SwiftDataContext {
 }
 
 class SwiftDataStorageProvider: StorageProvider {
-    private var modelContainer: ModelContainer
+    var modelContainer: ModelContainer
     private var context: ModelContext
 
     init(schema: Schema) {

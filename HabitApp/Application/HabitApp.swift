@@ -6,9 +6,7 @@ import SwiftData
 // HabitApp cumple con el protocolo App.
 struct HabitApp: App {
     
-    private var storageProvider: StorageProvider {
-        AppConfig().storageProvider
-    }
+    private var storageProvider: StorageProvider
 
     @State private var selectedDetailView: String?
     
@@ -26,8 +24,12 @@ struct HabitApp: App {
        // } catch {
        //     fatalError("❌ Error inicializando ModelContainer: \(error)")
        // }
-        
-       // self.modelContainer = container
+       
+        self.storageProvider = AppConfig().storageProvider
+        guard let swiftDataProvider = storageProvider as? SwiftDataStorageProvider else {
+            fatalError("StorageProvider is not a SwiftDataStorageProvider")
+        }
+        self.modelContainer = swiftDataProvider.modelContainer
         //self._appConfig = StateObject(wrappedValue: AppConfig(modelContainer: container))
         
         #if os(iOS)
@@ -126,7 +128,7 @@ struct HabitApp: App {
                 }
             }
             .environmentObject(AppConfig())
-           // .modelContainer(modelContainer)  //  AGREGAR ESTO
+            .modelContainer(modelContainer)
 #endif
         }
     }
