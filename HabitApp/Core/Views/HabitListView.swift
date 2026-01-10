@@ -13,7 +13,12 @@ struct HabitListView: View {
     
     init(storageProvider: StorageProvider) {
         self.storageProvider = storageProvider
-        self._viewModel = StateObject(wrappedValue: HabitListViewModel(storageProvider: storageProvider))
+        // Inyección de Dependencias: Creamos el servicio concreto y lo pasamos como protocolo
+        let wildcardService = WildcardHabitService()
+        self._viewModel = StateObject(wrappedValue: HabitListViewModel(
+            storageProvider: storageProvider,
+            wildcardProvider: wildcardService
+        ))
     }
 
     var body: some View {
