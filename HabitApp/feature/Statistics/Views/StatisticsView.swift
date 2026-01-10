@@ -3,12 +3,8 @@ import SwiftData
 
 struct StatisticsView: View {
     @Query private var habits: [Habit]
-    @StateObject private var viewModel: StatisticsViewModel
+    @StateObject private var viewModel = StatisticsViewModel()
     @State private var selectedTab = 0
-    
-    init(storageProvider: StorageProvider) {
-        _viewModel = StateObject(wrappedValue: StatisticsViewModel(storageProvider: storageProvider))
-    }
     
     var body: some View {
         NavigationStack {
@@ -63,10 +59,10 @@ struct StatisticsView: View {
                 // Push current habits from @Query to the view model
                 viewModel.loadStatistics(from: habits)
             }
-            .onChange(of: habits) { newHabits in
-                viewModel.loadStatistics(from: newHabits)
+            .onChange(of: habits) {
+                viewModel.loadStatistics(from: habits)
             }
-            .onChange(of: viewModel.selectedRange) { _ in
+            .onChange(of: viewModel.selectedRange) {
                 viewModel.loadStatistics(from: habits)
             }
         }

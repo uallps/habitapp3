@@ -55,7 +55,7 @@ struct HabitApp: App {
                     .tabItem {
                         Label("Objetivos", systemImage: "target")
                     }
-                StatisticsView(storageProvider: storageProvider)
+                StatisticsView()
                     .tabItem {
                         Label("Estadísticas", systemImage: "chart.bar")
                     }
