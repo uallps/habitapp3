@@ -19,6 +19,16 @@
     "%@" : {
 
     },
+    "%@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$@"
+          }
+        }
+      }
+    },
     "%lld" : {
 
     },
@@ -79,6 +89,9 @@
     "Acerca de" : {
 
     },
+    "Activar recordatorio" : {
+
+    },
     "Actualizado: %@ a las %@" : {
       "localizations" : {
         "en" : {
@@ -93,15 +106,6 @@
 
     },
     "Ajustes" : {
-
-    },
-    "Alerta en 3s" : {
-
-    },
-    "Alerta en 5s" : {
-
-    },
-    "Alerta Inmediata" : {
 
     },
     "All" : {
@@ -321,6 +325,9 @@
     "Hitos (opcional)" : {
 
     },
+    "Hora" : {
+
+    },
     "Hora de recordatorio" : {
 
     },
@@ -516,6 +523,9 @@
     "Rango" : {
 
     },
+    "Recordatorio" : {
+
+    },
     "Red" : {
 
     },
@@ -568,15 +578,6 @@
 
     },
     "Tendencia" : {
-
-    },
-    "Test Hábitos Mañana" : {
-
-    },
-    "Test Notificaciones" : {
-
-    },
-    "Test Plugin Directo" : {
 
     },
     "Tipo de icono" : {

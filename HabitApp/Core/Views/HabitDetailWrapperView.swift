@@ -103,8 +103,8 @@ extension HabitDetailWrapper {
                             }
                             
                             Picker("Prioridad", selection: $priority) {
-                                ForEach(Priority.allCases, id: \.self) { priority in
-                                    Text(priority.displayName).tag(priority)
+                                ForEach(Priority.allCases, id: \.self) { p in
+                                    Text("\(p.localized) \(p.emoji)").tag(p as Priority)
                                 }
                             }
                             .pickerStyle(.segmented)
@@ -292,8 +292,8 @@ extension HabitDetailWrapper {
                         }
                         
                         Picker("Prioridad", selection: $priority) {
-                            ForEach(Priority.allCases, id: \.self) { priority in
-                                Text(priority.displayName).tag(priority)
+                            ForEach(Priority.allCases, id: \.self) { p in
+                                Text("\(p.localized) \(p.emoji)").tag(p as Priority)
                             }
                         }
                         .pickerStyle(.segmented)

@@ -131,6 +131,7 @@ struct HabitApp: App {
             }
             .environmentObject(AppConfig())
             .modelContainer(modelContainer)
+            .environmentObject(userPreferences)
 #endif
         }
     }
