@@ -9,26 +9,22 @@ final class StreakPlugin: HabitDataObservingPlugin {
     init(config: AppConfig) {
         self.isEnabled = config.userPreferences.enableStreaks
         self.models = [Habit.self]
+        self.storageProvider = config.storageProvider
     }
     
     private let storageProvider: StorageProvider
-    
-    init(storageProvider: StorageProvider) {
-        self.storageProvider = storageProvider
-    }
-    
+        
     func onDataChanged(taskId: UUID, title: String, dueDate: Date?) {
      
         // 1. Buscar el hábito para obtener sus doneDates
         Task {
             do {
-                guard let habit = try await storageProvider.getHabit(id: taskId) else {
-                    return
-                }
+                let habit : Habit? = try await storageProvider.getHabit(id: taskId)
+                if habit == nil { return }
                 
                 
                 // 2. Calcular la racha con las fechas del hábito
-                let streakValue = calculateStreak(from: habit.doneDates)
+                let streakValue = calculateStreak(from: habit!.doneDates)
                 
                 let existingStreaks = try await storageProvider.loadStreaksForHabit(habitId: taskId)
                 

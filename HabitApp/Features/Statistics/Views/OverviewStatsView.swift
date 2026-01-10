@@ -99,7 +99,9 @@ struct OverviewStatsView: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 12)
+            #if(os(iOS))
                 .fill(Color(.systemGray6))
+            #endif
         )
         .frame(maxWidth: fullWidth ? .infinity : nil)
     }

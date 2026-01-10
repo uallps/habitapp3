@@ -67,7 +67,9 @@ struct HabitStatRow: View {
                         .foregroundColor(.secondary)
                 }
                 .padding()
+                #if(os(iOS))
                 .background(Color(.systemGray6))
+                #endif
                 .cornerRadius(12)
             }
             .buttonStyle(.plain)
