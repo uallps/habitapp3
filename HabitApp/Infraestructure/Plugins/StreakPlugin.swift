@@ -30,11 +30,7 @@ final class StreakPlugin: HabitDataObservingPlugin {
                 // 2. Calcular la racha con las fechas del hábito
                 let streakValue = calculateStreak(from: habit.doneDates)
                 
-                // 3. Buscar si ya existe un objeto Streak para este hábito
-                let predicate = #Predicate<Streak> { $0.habitId == taskId }
-                let descriptor = FetchDescriptor<Streak>(predicate: predicate)
-                
-                let existingStreaks = try context.fetch(descriptor)
+                let existingStreaks = try await storageProvider.loadStreaksForHabit(habitId: taskId)
                 
                 if let streakObj = existingStreaks.first {
                     streakObj.currentCount = streakValue
@@ -42,12 +38,12 @@ final class StreakPlugin: HabitDataObservingPlugin {
                 } else {
                     let newStreak = Streak(habitId: taskId)
                     newStreak.currentCount = streakValue
-                    context.insert(newStreak)
+                    try await storageProvider.saveStreak(newStreak)
                 }
                 
                 // 4. Guardar cambios y procesar para que la UI se entere YA
-                try context.save()
-                context.processPendingChanges()
+                try await storageProvider.saveContext()
+                try await storageProvider.savePendingChanges()
                 
             } catch {
             }        }

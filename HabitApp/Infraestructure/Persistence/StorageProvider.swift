@@ -57,6 +57,9 @@ protocol StorageProvider {
     //END DAILYNOTES
     
     //IF STREAK
+    func loadStreaksForHabit(habitId: UUID) async throws -> [Streak]
+    func saveStreak(_ streak: Streak) async throws
+    func savePendingChanges() async throws
     //END IF
     
     func saveContext() async throws

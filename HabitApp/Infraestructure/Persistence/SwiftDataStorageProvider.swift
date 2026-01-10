@@ -9,7 +9,7 @@ class SwiftDataContext {
 class SwiftDataStorageProvider: StorageProvider {
     var modelContainer: ModelContainer
     private var context: ModelContext
-
+    
     init(schema: Schema) {
         do {
             // Schema conflict dev temp solution
@@ -20,7 +20,7 @@ class SwiftDataStorageProvider: StorageProvider {
             SwiftDataContext.shared = self.context
         } catch {
             fatalError("Failed to initialize storage provider: \(error)")
-       }
+        }
     }
     @MainActor
     func createSampleAddictions(to addiction: Addiction, habit: Habit) async throws {
@@ -39,6 +39,34 @@ class SwiftDataStorageProvider: StorageProvider {
             return nil
         }
         return habit
+    }
+    
+    @MainActor
+    func loadStreaksForHabit(habitId: UUID) async throws -> [Streak] {
+        var streaks: [Streak] = []
+        let predicate = #Predicate<Streak> { $0.habitId == habitId }
+        let descriptor = FetchDescriptor<Streak>(predicate: predicate)
+        
+        streaks = try context.fetch(descriptor)
+        return streaks
+    }
+    
+    @MainActor
+    func saveStreak(_ streak: Streak) async throws {
+        do {
+            try context.insert(streak)
+        } catch {
+            print("Error saving streak: \(error)")
+        }
+    }
+    
+    @MainActor
+    func savePendingChanges() async throws {
+        do {
+            try context.processPendingChanges()
+        } catch {
+            print("Error saving pending changes: \(error)")
+        }
     }
     
     @MainActor
