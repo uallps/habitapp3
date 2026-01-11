@@ -77,7 +77,6 @@ final class HabitListViewModel: ObservableObject {
     func deleteHabit(_ habit: Habit) {
         Task {
             try await storageProvider.deleteHabit(habit: habit)
-            try await storageProvider.saveContext()
         }
     }
     

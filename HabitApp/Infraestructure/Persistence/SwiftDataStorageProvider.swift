@@ -703,7 +703,11 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
     @MainActor
     func deleteHabit(habit: Habit) async throws {
         do {
-            try context.delete(habit)
+            if let realHabit = getRealInstanceHabit(habit) {
+                try context.delete(realHabit)
+                try await saveContext()
+            }
+
         } catch {
             print("Error deleting habit: \(error)")
         }

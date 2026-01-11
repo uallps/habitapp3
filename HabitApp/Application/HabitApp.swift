@@ -77,7 +77,8 @@ struct HabitApp: App {
                     }
             }
             .environmentObject(AppConfig())
-           // .modelContainer(modelContainer)  //  AGREGAR ESTO
+            .modelContainer(modelContainer)  //  AGREGAR ESTO
+            .environmentObject(userPreferences)
 
 #else
             NavigationSplitView {
