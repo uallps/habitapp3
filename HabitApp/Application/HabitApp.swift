@@ -75,6 +75,10 @@ struct HabitApp: App {
                     .tabItem {
                         Label("Ajustes", systemImage: "gearshape")
                     }
+                AddictionListView(storageProvider: storageProvider)
+                    .tabItem {
+                        Label("Addicciones", systemImage: "bandage")
+                    }
             }
             .environmentObject(AppConfig())
             .modelContainer(modelContainer)  //  AGREGAR ESTO
@@ -84,7 +88,7 @@ struct HabitApp: App {
             NavigationSplitView {
                 List(selection: $selectedDetailView) {
                     NavigationLink(value: "habitos") {
-                        Label("Habitos", systemImage: "checklist")
+                        Label("Hábitos", systemImage: "checklist")
                     }
                     NavigationLink(value: "notas") {
                         Label("Notas Diarias", systemImage: "note.text")
@@ -120,8 +124,8 @@ struct HabitApp: App {
                     SettingsView()
                 case "categorias":
                     CategoryListView(storageProvider: storageProvider)
-                //case "rachas":
-                    //StreakBadgeView()
+                case "adicciones":
+                    AddictionListView(storageProvider: storageProvider)
                 default:
                     Text("Seleccione una opción")
                 }

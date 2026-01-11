@@ -12,12 +12,12 @@ struct AddictionDetailWrapperView: View {
     
     // Estados locales
     @State private var title: String
-    @State private var selectedDays: [Int]
-    @State private var severity: Addiction.AddictionSeverity
+    @State private var severity: AddictionSeverity
     @State private var addictionToEdit: Addiction?
     @State private var hasAddedNewTrigger: Bool = false
     @State private var hasAddedNewPreventionHabit: Bool = false
     @State private var hasAddedNewCompensatoryHabit: Bool = false
+    //@State private var hasAdded
 
     @StateObject var habitListVM: HabitListViewModel
     let isNew: Bool
@@ -30,8 +30,6 @@ struct AddictionDetailWrapperView: View {
         self._habitListVM = StateObject(wrappedValue: HabitListViewModel(storageProvider: addictionListVM.storageProvider))
         self._title = State(initialValue: addiction.title)
         self._severity = State(initialValue: addiction.severity)
-        // selectedDays is not part of Addiction model; keep it empty by default
-        self._selectedDays = State(initialValue: [])
         self._addictionToEdit = State(initialValue: isNew ? nil : addiction)
     }
 
@@ -55,7 +53,7 @@ struct AddictionDetailWrapperView: View {
             }
             
             Picker("Severidad", selection: $severity) {
-                ForEach(Addiction.AddictionSeverity.allCases, id: \.self) { sev in
+                ForEach(AddictionSeverity.allCases, id: \.self) { sev in
                     Text(sev.displayName).tag(sev)
                 }
             }
@@ -273,7 +271,8 @@ struct AddictionDetailWrapperView: View {
                     severity: severity,
                     triggers: [],
                     preventionHabits: [],
-                    compensatoryHabits: []
+                    compensatoryHabits: [],
+                    addiction: Habit(title: title)
                 )
                 await addictionListVM.addAddiction(addiction: newAddiction)
                 addictionToEdit = newAddiction
@@ -482,8 +481,7 @@ extension AddictionDetailWrapperView {
                                 .fontWeight(.semibold)
                         }
                         
-                        WeekdaySelector(selectedDays: $selectedDays)
-                            .padding(.vertical, 4)
+
                     }
                     .padding(12)
                     .background(Color(.controlBackgroundColor))

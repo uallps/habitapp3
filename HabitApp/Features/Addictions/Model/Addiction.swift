@@ -8,7 +8,6 @@ class Addiction {
     
     // Describe la gravedad de la adicción
     var severity: AddictionSeverity
-    
     var title: String
     
     // Un triggers son hábitos que pueden provocar la recaída, pues son situaciones, emociones o entornos que aumentan el deseo de consumir la sustancia o realizar el comportamiento adictivo.
@@ -20,6 +19,9 @@ class Addiction {
     // Hábitos para aliviar los efectos negativos en caso de recaída
     var compensatoryHabits: [Habit]
     
+    // La addicción en sí
+    var addiction: Habit
+    
     // Número de veces que el usuario ha recaído en la adicción
     var relapseCount: Int = 0
 
@@ -28,13 +30,17 @@ class Addiction {
          severity: AddictionSeverity = .medium,
          triggers: [Habit] = [],
          preventionHabits: [Habit] = [],
-         compensatoryHabits: [Habit] = []) {
+         compensatoryHabits: [Habit] = [],
+         addiction: Habit
+    ) {
         
         self.severity = severity
         self.triggers = triggers
         self.preventionHabits = preventionHabits
         self.compensatoryHabits = compensatoryHabits
         self.title = title
+        self.addiction = addiction
+        }
     }
 
     enum AddictionSeverity: String, Codable, CaseIterable, Hashable {
@@ -56,4 +62,4 @@ class Addiction {
             }
         }
     }
-}
+

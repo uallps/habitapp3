@@ -48,9 +48,6 @@
         }
       }
     },
-    "%lld addición(s) programado(s)" : {
-
-    },
     "%lld completados" : {
 
     },
@@ -109,9 +106,6 @@
 
     },
     "1.0.0" : {
-
-    },
-    "a" : {
 
     },
     "Acerca de" : {
@@ -253,9 +247,6 @@
     "Crea tu primer objetivo para comenzar a alcanzar tus metas" : {
 
     },
-    "Crea tu primera addición" : {
-
-    },
     "Crea tu primera nota haciendo clic en Nueva Nota" : {
 
     },
@@ -273,9 +264,6 @@
       }
     },
     "Crear" : {
-
-    },
-    "Crear addición de muestra" : {
 
     },
     "Crear hábito" : {
@@ -398,9 +386,6 @@
     "Hábito Asociado" : {
 
     },
-    "Habitos" : {
-
-    },
     "Hábitos" : {
 
     },
@@ -477,12 +462,6 @@
 
     },
     "No has añadido hábitos a la categoría" : {
-
-    },
-    "No hay adicciones programadas" : {
-
-    },
-    "No hay adicciones programados" : {
 
     },
     "No hay categorías disponibles. Crea al menos una categoría." : {
@@ -694,15 +673,6 @@
 
     },
     "Sí, he recaído" : {
-
-    },
-    "Sin adicciones" : {
-
-    },
-    "Sin adicciones creadas" : {
-
-    },
-    "Sin adicciones para hoy" : {
 
     },
     "Sin datos" : {
