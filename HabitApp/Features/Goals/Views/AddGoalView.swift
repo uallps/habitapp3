@@ -25,21 +25,15 @@ struct AddGoalView: View {
 // MARK: - iOS UI
 #if os(iOS)
 extension AddGoalView {
-            @ViewBuilder
-        var associatedHabit: some View {
-                            Section("Hábito Asociado") {
-                    if habits.isEmpty {
-                        Text("No hay hábitos disponibles")
-                            .foregroundColor(.secondary)
-                            .italic()
-                    } else {
-                        VStack(alignment: .leading, spacing: 12) {
+    @ViewBuilder
+    var elseBranchAssociatedHabit: some View {
+                                VStack(alignment: .leading, spacing: 12) {
                             Text("Selecciona un hábito para vincular con este objetivo")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                             
                             if selectedHabit == nil {
-                                ForEach(habits) { habit in
+                                ForEach(Array(habits), id: \.id) { (habit: Habit) in
                                     Button {
                                         selectedHabit = habit
                                     } label: {
@@ -61,7 +55,7 @@ extension AddGoalView {
                                                 }
                                                 
                                                 if let priority = habit.priority {
-                                                    Text("Prioridad: \(priority.displayName)")
+                                                    Text("Prioridad: \(priority.localized)")
                                                         .font(.caption)
                                                         .foregroundColor(priorityColor(for: priority))
                                                 }
@@ -105,7 +99,7 @@ extension AddGoalView {
                                         }
                                         
                                         if let priority = selectedHabit!.priority {
-                                            Text("Prioridad: \(priority.displayName)")
+                                            Text("Prioridad: \(priority.localized)")
                                                 .font(.caption)
                                                 .foregroundColor(priorityColor(for: priority))
                                         }
@@ -124,6 +118,16 @@ extension AddGoalView {
                                 .cornerRadius(8)
                             }
                         }
+    }
+            @ViewBuilder
+        var associatedHabit: some View {
+                            Section("Hábito Asociado") {
+                    if habits.isEmpty {
+                        Text("No hay hábitos disponibles")
+                            .foregroundColor(.secondary)
+                            .italic()
+                    } else {
+                        elseBranchAssociatedHabit
                     }
                 }
         }

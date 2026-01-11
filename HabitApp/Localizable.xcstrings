@@ -16,6 +16,9 @@
     "¿Eliminar nota?" : {
 
     },
+    "·" : {
+
+    },
     "%@" : {
 
     },
@@ -61,6 +64,9 @@
     "%lld días" : {
 
     },
+    "%lld días completados" : {
+
+    },
     "%lld días restantes" : {
 
     },
@@ -69,6 +75,16 @@
     },
     "%lld Pendientes" : {
 
+    },
+    "%lld tarea%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld tarea%2$@"
+          }
+        }
+      }
     },
     "%lld/%lld" : {
       "localizations" : {
@@ -86,7 +102,13 @@
     "+" : {
 
     },
+    "1.0.0" : {
+
+    },
     "Acerca de" : {
+
+    },
+    "Acerca de HabitApp" : {
 
     },
     "Activar recordatorio" : {
@@ -147,6 +169,9 @@
     "Buscar emoji..." : {
 
     },
+    "Cambiar" : {
+
+    },
     "Cancelar" : {
 
     },
@@ -192,6 +217,9 @@
     "Contenido" : {
 
     },
+    "Crea hábitos de ejemplo para empezar" : {
+
+    },
     "Crea tu primer hábito" : {
 
     },
@@ -199,6 +227,9 @@
 
     },
     "Crea tu primera nota haciendo clic en Nueva Nota" : {
+
+    },
+    "Crea tu primera nota tocando el botón +" : {
 
     },
     "Creado: %@ a las %@" : {
@@ -214,7 +245,13 @@
     "Crear" : {
 
     },
+    "Crear hábito" : {
+
+    },
     "Crear hábito de muestra" : {
+
+    },
+    "Crear hábitos de muestra" : {
 
     },
     "Cyan" : {
@@ -238,6 +275,9 @@
     "Días de la semana" : {
 
     },
+    "Días Restantes" : {
+
+    },
     "Editar" : {
 
     },
@@ -251,6 +291,9 @@
 
     },
     "Eliminar de categoría" : {
+
+    },
+    "Eliminar hábito" : {
 
     },
     "Emojis" : {
@@ -277,7 +320,13 @@
     "Fecha" : {
 
     },
+    "Fecha de Inicio" : {
+
+    },
     "Fecha límite" : {
+
+    },
+    "Fecha Objetivo" : {
 
     },
     "Filter" : {
@@ -293,6 +342,9 @@
 
     },
     "Guardar" : {
+
+    },
+    "Guardar cambios" : {
 
     },
     "Guardar categoría" : {
@@ -388,7 +440,13 @@
     "No hay hábitos con estadísticas" : {
 
     },
+    "No hay hábitos disponibles" : {
+
+    },
     "No hay hábitos programados" : {
+
+    },
+    "No hay hábitos programados para hoy" : {
 
     },
     "No hay notas para %@ en esta fecha" : {
@@ -538,6 +596,9 @@
     "Selecciona tipo" : {
 
     },
+    "Selecciona un hábito para vincular con este objetivo" : {
+
+    },
     "Seleccionar hábito" : {
 
     },
@@ -596,6 +657,9 @@
 
     },
     "Vence: %@" : {
+
+    },
+    "Versión" : {
 
     },
     "Versión 1.0.0" : {
