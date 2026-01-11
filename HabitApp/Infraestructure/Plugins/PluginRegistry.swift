@@ -68,7 +68,7 @@ class PluginRegistry {
     /// - Returns: Array de vistas de configuración proporcionadas por los plugins
     func getPluginSettingsViews() -> [AnyView] {
         return pluginInstances
-            .compactMap { $0 as? ViewPlugin }
+            .compactMap { $0 as? any ViewPlugin }
             .map { AnyView($0.settingsView()) }
     }
 }

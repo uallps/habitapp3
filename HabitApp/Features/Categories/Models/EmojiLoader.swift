@@ -26,12 +26,12 @@ class EmojiLoader: ObservableObject {
             for line in fileLines {
                 
                 let substrings = line.split(separator: ";")
-                let emojiId : String
+                //let emojiId : String
                 let emoji : String
                 let emojiDesc : String
                 
                 if(substrings.count >= 4 )  {
-                    emojiId = String(substrings[0])
+                    //emojiId = String(substrings[0])
                     emoji = String(substrings[2])
                     emojiDesc = String(substrings[3])
                     allEmojis.append( Emoji(  emoji: emoji, name: emojiDesc) )

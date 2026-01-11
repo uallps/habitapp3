@@ -65,10 +65,10 @@ struct StatisticsView: View {
                 // Push current habits from @Query to the view model
                 viewModel.loadStatistics(from: habits)
             }
-            .onChange(of: habits) { newHabits in
-                viewModel.loadStatistics(from: newHabits)
+            .onChange(of: habits) { _, newValue in
+                viewModel.loadStatistics(from: newValue)
             }
-            .onChange(of: viewModel.selectedRange) { _ in
+            .onChange(of: viewModel.selectedRange) {
                 viewModel.loadStatistics(from: habits)
             }
         }

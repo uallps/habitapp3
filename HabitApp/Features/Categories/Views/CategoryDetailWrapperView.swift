@@ -177,7 +177,6 @@ struct CategoryDetailWrapperView: View {
                     Button {
                         if isCategoryValid {
                             let selectedColorName = CategoryDetailWrapperView.allColorsMap[selectedColor ?? Color.red]
-                            let oldCategoryName = category.name
                             category.name = name
                          category.priority = selectedPriority ?? .medium
                          category.colorAssetName = selectedColorName ?? "red"

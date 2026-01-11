@@ -54,20 +54,12 @@ class SwiftDataStorageProvider: StorageProvider {
     
     @MainActor
     func saveStreak(_ streak: Streak) async throws {
-        do {
-            try context.insert(streak)
-        } catch {
-            print("Error saving streak: \(error)")
-        }
+        context.insert(streak)
     }
     
     @MainActor
     func savePendingChanges() async throws {
-        do {
-            try context.processPendingChanges()
-        } catch {
-            print("Error saving pending changes: \(error)")
-        }
+        context.processPendingChanges()
     }
     
     @MainActor
@@ -117,11 +109,7 @@ class SwiftDataStorageProvider: StorageProvider {
     
     @MainActor
     func deleteNote(_ note: DailyNote) async throws {
-        do {
-            try context.delete(note)
-        } catch {
-            print("Error deleting note: \(error)")
-        }
+        context.delete(note)
     }
 
     @MainActor
@@ -279,7 +267,7 @@ class SwiftDataStorageProvider: StorageProvider {
             return
         }
 
-        guard let realHabit = getRealInstanceHabit(habit) else {
+        guard getRealInstanceHabit(habit) != nil else {
             print("Error adding trigger habit: habit is nil")
             return
         }
@@ -292,7 +280,7 @@ class SwiftDataStorageProvider: StorageProvider {
 
     @MainActor
 func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async throws {
-    guard let realAddiction = getRealInstanceAddiction(addiction) else {
+    guard getRealInstanceAddiction(addiction) != nil else {
         print("Error removing compensatory habit: addiction is nil")
         return
     }
@@ -350,7 +338,7 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
 
         @MainActor
     func associateCompensatoryHabit(to addiction: Addiction, habit: Habit) async throws {
-        guard let realAddiction = getRealInstanceAddiction(addiction) else {
+        guard getRealInstanceAddiction(addiction) != nil else {
             print("Error associating trigger habit: addiction is nil")
             return
         }
@@ -684,7 +672,7 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
     @MainActor
     func addHabit(habit: Habit) async  throws {
         do {
-            try context.insert(habit)
+            context.insert(habit)
             try await saveContext()
         } catch {
             print("Error adding habit: \(error)")
@@ -704,7 +692,7 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
     func deleteHabit(habit: Habit) async throws {
         do {
             if let realHabit = getRealInstanceHabit(habit) {
-                try context.delete(realHabit)
+                context.delete(realHabit)
                 try await saveContext()
             }
 
@@ -742,7 +730,7 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
     static func resetStore(schema: Schema) {
         do {
             let container = try ModelContainer(for: schema)
-            try container.deleteAllData()
+            container.deleteAllData()
             print("SwiftData store reset")
         } catch {
             print("SwiftData reset failed: \(error)")
