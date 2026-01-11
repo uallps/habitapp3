@@ -171,6 +171,13 @@ final class AddictionListViewModel: ObservableObject {
             print(" Error removing trigger habit: \(error)")
         }
     }
+    
+    func relapseIncrement(addiction: Addiction) {
+        Task {
+            addiction.relapseCount = addiction.relapseCount + 1
+            try await storageProvider.updateAddiction(addiction: addiction)
+        }
+    }
 
     func associateCompensatoryHabit(
         to addiction: Addiction,

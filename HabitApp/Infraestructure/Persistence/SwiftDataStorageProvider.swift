@@ -62,7 +62,14 @@ class SwiftDataStorageProvider: StorageProvider {
     }
     @MainActor
     func associatePreventionHabit(to addiction: Addiction, habit: Habit) async throws {
-        ///TODO
+        do {
+            let realAddiction = getRealInstanceAddiction(addiction)
+            if realAddiction == nil { return }
+            realAddiction!.preventionHabits.append(habit)
+            try await saveContext()
+        } catch {
+            print("Error associating prevention habit: \(error)")
+        }
     }
     
     @MainActor
@@ -330,13 +337,11 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
         print("Error removing compensatory habit: addiction is nil")
         return
     }
+    if let index = realAddiction.compensatoryHabits.firstIndex(where: { $0.id == habit.id }) {
+        realAddiction.compensatoryHabits.remove(at: index)
+        try context.save()
+    }
 
-    //if realAddiction.compensatoryHabits.id == habit.id {
-        // No-op replacement; decide if you want a nullable compensatory habit instead
-        print("Removed compensatory habit")
-    //}
-
-    try context.save()
 }
 
     @MainActor
@@ -372,13 +377,8 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
             return
         }
 
-        // Optional guard: only allow known triggers
-        guard realAddiction.triggers.contains(where: { $0.id == habit.id }) else {
-            print("Habit is not a registered trigger for this addiction")
-            return
-        }
+        realAddiction.triggers.append(habit)
 
-        realAddiction.relapseCount += 1
         try context.save()
     }
 
@@ -389,10 +389,7 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
             return
         }
 
-        //guard realAddiction.compensatory.contains(where: { $0.id == habit.id }) else {
-            print("Habit is not a registered compensatory habit for this addiction")
-           // return
-       // }
+        realAddiction.compensatoryHabits.append(habit)
 
         // TODO: LLAMAR A MARCAR HÁBITO COMO REALIZADO
         try context.save()

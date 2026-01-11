@@ -6,6 +6,7 @@ struct AddictionDetailWrapperView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var habitsQuery: [Habit] = []
     @State private var selectedDays: [Int]
+    @State private var showRelapseAlert: Bool = false
 
     let addictionListVM: AddictionListViewModel
     let isNew: Bool
@@ -46,9 +47,10 @@ struct AddictionDetailWrapperView: View {
             onRemove: { habit in
                 await addictionListVM.removeTriggerHabit(from: addiction, habit: habit)
             },
-            onAdd: { habit in
-                await addictionListVM.addTriggerHabit(to: addiction, habit: habit)
+            onTap: { habit in
+                self.showRelapseAlert = true
             }
+
         )
     }
 
@@ -65,8 +67,9 @@ struct AddictionDetailWrapperView: View {
             onRemove: { habit in
                 await addictionListVM.removePreventionHabit(from: addiction, habit: habit)
             },
-            onAdd: { habit in
-                await addictionListVM.addPreventionHabit(to: addiction, habit: habit)
+            onTap: {
+                habit in
+                
             }
         )
     }
@@ -84,9 +87,7 @@ struct AddictionDetailWrapperView: View {
             onRemove: { habit in
                 await addictionListVM.removeCompensatoryHabit(from: addiction, habit: habit)
             },
-            onAdd: { habit in
-                await addictionListVM.addCompensatoryHabit(to: addiction, habit: habit)
-            }
+            onTap: { habit in }
         )
     }
 
@@ -160,7 +161,24 @@ struct AddictionDetailWrapperView: View {
                 }
                 .disabled(title.isEmpty)
             }
-        }.task {
+        }.alert("Has hecho el hábito que puede haberte hecho recaer.", isPresented: $showRelapseAlert) {
+            Button("Sí") {
+                Task {
+                    if addictionToEdit != nil {
+                        addictionToEdit!.relapseCount += 1
+                        try await addictionListVM.updateAddiction(addiction: addictionToEdit!)
+                    }
+ 
+                }
+            }
+
+            Button("No", role: .cancel) {
+            }
+        } message: {
+            Text("¿Has recaído?")
+        
+        }
+        .task {
             await loadAddictionHabits()
         }
     }

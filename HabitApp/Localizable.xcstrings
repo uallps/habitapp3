@@ -16,6 +16,9 @@
     "¿Eliminar nota?" : {
 
     },
+    "¿Has recaído?" : {
+
+    },
     "·" : {
 
     },
@@ -383,6 +386,9 @@
     "Hábitos" : {
 
     },
+    "Has hecho el hábito que puede haberte hecho recaer." : {
+
+    },
     "Hello, world!" : {
 
     },
@@ -444,6 +450,9 @@
 
     },
     "Ninguno" : {
+
+    },
+    "No" : {
 
     },
     "No has añadido hábitos a la categoría" : {
@@ -643,6 +652,9 @@
       }
     },
     "Severidad de adicción" : {
+
+    },
+    "Sí" : {
 
     },
     "Sin datos" : {

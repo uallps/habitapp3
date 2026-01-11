@@ -17,10 +17,9 @@ struct AddictionHabitSectionView: View {
                     ForEach(config.habits) { habit in
                         HStack {
                             Text(habit.title)
-                            Spacer()
 
                             Button {
-                                Task { await config.onAssociate(habit) }
+                                Task { await config.onTap(habit) }
                             } label: {
                                 Image(systemName: habit.isCompletedForDate(today)
                                       ? "checkmark.circle.fill"
@@ -46,7 +45,9 @@ struct AddictionHabitSectionView: View {
                 Section(header: Text("Añadir nuevo hábito")) {
                     ForEach(availableHabits) { habit in
                         Button("Añadir \(habit.title)") {
-                            Task { await config.onAdd(habit) }
+                            Task {
+                                await config.onAssociate(habit)
+                            }
                         }
                     }
                 }
