@@ -8,6 +8,7 @@ final class StatisticsViewModel: ObservableObject {
     
     @Published var selectedRange: TimeRange = .week
     @Published var generalStats: GeneralStats?
+    @Published var dayStats: GeneralStats?  // Para macOS dashboard
     @Published var habitStats: [HabitStats] = []
     @Published var isLoading = false
     
@@ -25,5 +26,10 @@ final class StatisticsViewModel: ObservableObject {
         // Compute statistics from a provided list
         generalStats = service.computeGeneralStats(from: habits, range: selectedRange)
         habitStats = habits.map { service.computeHabitStats(for: $0, range: selectedRange) }
+        
+        // Para macOS: también calcular stats diarias
+        #if os(macOS)
+        dayStats = service.computeGeneralStats(from: habits, range: .day)
+        #endif
     }
 }

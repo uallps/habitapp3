@@ -8,8 +8,9 @@ struct StatisticsView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
-                // Selector de rango
+            VStack(alignment: .leading, spacing: 0) {
+                // Selector de rango (solo en iOS)
+                #if os(iOS)
                 Picker("Rango", selection: $viewModel.selectedRange) {
                     ForEach(TimeRange.allCases, id: \.self) { range in
                         Text(range.rawValue).tag(range)
@@ -17,8 +18,10 @@ struct StatisticsView: View {
                 }
                 .pickerStyle(.segmented)
                 .padding()
+                #endif
 
-                // Selector de vista (solo en rango semanal)
+                // Selector de vista (solo en rango semanal en iOS)
+                #if os(iOS)
                 if viewModel.selectedRange == .week {
                     Picker("Vista", selection: $selectedTab) {
                         Text("General").tag(0)
@@ -27,8 +30,10 @@ struct StatisticsView: View {
                     .pickerStyle(.segmented)
                     .padding(.horizontal)
                 }
+                #endif
 
                 // Contenido
+                #if os(iOS)
                 if viewModel.selectedRange == .day {
                     OverviewStatsView(
                         stats: viewModel.generalStats,
@@ -48,10 +53,58 @@ struct StatisticsView: View {
                         )
                         .tag(1)
                     }
-                    #if(os(iOS))
                     .tabViewStyle(.page(indexDisplayMode: .never))
-                    #endif
                 }
+                #else
+                // macOS: Dashboard completo con todas las vistas
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 40) {
+                        // 1. Vista Diaria
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Hoy")
+                                .font(.title)
+                                .fontWeight(.bold)
+                            
+                            // Necesitamos calcular stats para hoy
+                            if let dayStats = viewModel.dayStats {
+                                OverviewStatsView(
+                                    stats: dayStats,
+                                    isLoading: viewModel.isLoading
+                                )
+                            }
+                        }
+                        
+                        Divider()
+                        
+                        // 2. Vista Semanal General
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Semana - Resumen General")
+                                .font(.title)
+                                .fontWeight(.bold)
+                            
+                            OverviewStatsView(
+                                stats: viewModel.generalStats,
+                                isLoading: viewModel.isLoading
+                            )
+                        }
+                        
+                        Divider()
+                        
+                        // 3. Vista Semanal Por Hábito
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Semana - Por Hábito")
+                                .font(.title)
+                                .fontWeight(.bold)
+                            
+                            PerHabitStatsView(
+                                habitStats: viewModel.habitStats,
+                                isLoading: viewModel.isLoading
+                            )
+                        }
+                    }
+                    .padding()
+                }
+                #endif
             }
             .navigationTitle("Estadísticas")
             #if os(iOS)

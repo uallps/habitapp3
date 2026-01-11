@@ -29,6 +29,7 @@ final class StatisticsService {
             aggregatedPeriods.append(periodData)
         }
         
+        // Total completados y esperados del período (día o semana actual)
         let totalCompleted = aggregatedPeriods.reduce(0) { $0 + $1.completedCount }
         let totalExpected = aggregatedPeriods.reduce(0) { $0 + $1.expectedCount }
         
@@ -83,10 +84,13 @@ final class StatisticsService {
             let formatter = DateFormatter()
             formatter.dateFormat = "EEE d"
             
-            for i in 0..<7 {
-                if let date = calendar.date(byAdding: .day, value: -i, to: today) {
+            // Generar la semana actual (Dom-Sáb) usando la misma lógica que HabitListView
+            let todayWeekday = calendar.component(.weekday, from: today)
+            for weekday in 1...7 {
+                let diff = weekday - todayWeekday
+                if let date = calendar.date(byAdding: .day, value: diff, to: today) {
                     let label = formatter.string(from: date)
-                    periods.insert((label, date), at: 0)
+                    periods.append((label, date))
                 }
             }
         }

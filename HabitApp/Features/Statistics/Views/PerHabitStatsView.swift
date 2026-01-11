@@ -17,7 +17,7 @@ struct PerHabitStatsView: View {
             )
         } else {
             ScrollView {
-                VStack(spacing: 12) {
+                VStack(alignment: .leading, spacing: 12) {
                     ForEach(habitStats) { habit in
                         HabitStatRow(
                             habit: habit,
@@ -29,7 +29,13 @@ struct PerHabitStatsView: View {
                         }
                     }
                 }
+                #if os(macOS)
+                .frame(maxWidth: 700, alignment: .topLeading)
+                #endif
                 .padding()
+                #if os(macOS)
+                .padding(.leading, 20)
+                #endif
             }
         }
     }
@@ -67,7 +73,7 @@ struct HabitStatRow: View {
                         .foregroundColor(.secondary)
                 }
                 .padding()
-                #if(os(iOS))
+                #if os(iOS)
                 .background(Color(.systemGray6))
                 #endif
                 .cornerRadius(12)
@@ -81,8 +87,15 @@ struct HabitStatRow: View {
                         .padding(.horizontal)
                     
                     if !habit.periods.isEmpty {
-                        CompactHabitStatsView(periods: habit.periods)
-                            .padding(.horizontal)
+                        // Filtrar solo días relevantes: programados o completados
+                        let relevantPeriods = habit.periods.filter { period in
+                            period.expectedCount > 0 || period.completedCount > 0
+                        }
+                        
+                        if !relevantPeriods.isEmpty {
+                            CompactHabitStatsView(periods: relevantPeriods)
+                                .padding(.horizontal)
+                        }
                     }
                 }
                 .padding(.vertical, 8)
