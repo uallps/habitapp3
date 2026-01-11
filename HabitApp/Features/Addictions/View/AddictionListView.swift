@@ -23,7 +23,8 @@ struct AddictionListView: View {
                         AddictionDetailWrapperView(
                             addictionListVM: addictionListVM,
                             addiction: addiction,
-                            isNew: false
+                            isNew: false,
+                            habitListVM: HabitListViewModel(storageProvider: addictionListVM.storageProvider)
                         )
                     } label: {
                         AddictionRowView(
@@ -46,6 +47,7 @@ struct AddictionListView: View {
                             AddictionDetailWrapperView(
                                 addictionListVM: addictionListVM,
                                 addiction: addiction,
+                                habitListVM: HabitListViewModel(storageProvider: addictionListVM.storageProvider)
                             )
                         } label: {
                             Label("Añadir", systemImage: "plus")

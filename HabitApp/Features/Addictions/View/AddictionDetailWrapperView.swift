@@ -7,8 +7,11 @@ struct AddictionDetailWrapperView: View {
     @State private var habitsQuery: [Habit] = []
     @State private var selectedDays: [Int]
     @State private var showRelapseAlert: Bool = false
+    
+    @State private var currentDate = Date()
 
     let addictionListVM: AddictionListViewModel
+    let habitListVM: HabitListViewModel
     let isNew: Bool
 
     @State private var title: String
@@ -20,10 +23,12 @@ struct AddictionDetailWrapperView: View {
 
     init(addictionListVM: AddictionListViewModel,
          addiction: Addiction,
-         isNew: Bool = true
+         isNew: Bool = true,
+         habitListVM: HabitListViewModel
     ) {
 
         self.addictionListVM = addictionListVM
+        self.habitListVM = habitListVM
         self.isNew = isNew
 
         _title = State(initialValue: addiction.title)
@@ -49,6 +54,7 @@ struct AddictionDetailWrapperView: View {
             },
             onTap: { habit in
                 self.showRelapseAlert = true
+                habitListVM.toggleCompletion(habit: habit)
             }
 
         )
@@ -69,7 +75,7 @@ struct AddictionDetailWrapperView: View {
             },
             onTap: {
                 habit in
-                
+                habitListVM.toggleCompletion(habit: habit)
             }
         )
     }
@@ -87,7 +93,7 @@ struct AddictionDetailWrapperView: View {
             onRemove: { habit in
                 await addictionListVM.removeCompensatoryHabit(from: addiction, habit: habit)
             },
-            onTap: { habit in }
+            onTap: { habit in habitListVM.toggleCompletion(habit: habit) }
         )
     }
 
@@ -103,6 +109,10 @@ struct AddictionDetailWrapperView: View {
                 TextField("Ej: Fumar", text: $title)
                     .textFieldStyle(.roundedBorder)
             }
+            
+            Text(
+                "Día actual: \(currentDate.formatted(.dateTime.day().weekday()))"
+            )
             
             Text("Días en los que se repite la adicción")
             WeekdaySelector(

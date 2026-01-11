@@ -11,7 +11,8 @@ struct AddictionRowView: View {
                 NavigationLink {
                 AddictionDetailWrapperView(
                     addictionListVM: addictionListVM,
-                    addiction: addiction
+                    addiction: addiction,
+                    habitListVM: HabitListViewModel(storageProvider: addictionListVM.storageProvider)
                 )
             } label: {
                 Image(systemName: "note.text")
@@ -27,7 +28,8 @@ var macOSBody: some View {
     NavigationLink {
         AddictionDetailWrapperView(
             addictionListVM: addictionListVM,
-            addiction: addiction
+            addiction: addiction,
+            habitListVM: HabitListViewModel(storageProvider: addictionListVM.storageProvider)
         )
     } label: {
         HStack {
