@@ -8,6 +8,21 @@ final class UserPreferences: ObservableObject {
     @AppStorage("enableReminders") private var storedEnableReminders: Bool = true
     @AppStorage("enableStreaks") private var storedEnableStreaks: Bool = true
     @AppStorage("enableStatistics") private var storedEnableStatistics: Bool = true
+    @AppStorage("appTheme") private var storedAppTheme: Int = 0
+
+        var appTheme: Int {
+            get { storedAppTheme }
+            set { objectWillChange.send(); storedAppTheme = newValue }
+        }
+        
+        // Helper para convertir el Int en ColorScheme de SwiftUI
+        var colorScheme: ColorScheme? {
+            switch appTheme {
+            case 1: return .light
+            case 2: return .dark
+            default: return nil // Sistema
+            }
+        }
     
     var showDueDates: Bool {
         get { storedShowDueDates }

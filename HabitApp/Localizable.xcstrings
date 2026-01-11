@@ -151,6 +151,9 @@
     "Añadir subcategoría" : {
 
     },
+    "Apariencia" : {
+
+    },
     "Arquitectura MVVM" : {
 
     },
@@ -191,6 +194,9 @@
 
     },
     "Cerrar ventana" : {
+
+    },
+    "Claro" : {
 
     },
     "Color" : {
@@ -503,7 +509,13 @@
     "Orange" : {
 
     },
+    "Oscuro" : {
+
+    },
     "Pink" : {
+
+    },
+    "Plugins y Personalización" : {
 
     },
     "Por Hábito" : {
@@ -626,6 +638,9 @@
     "Sin Objetivos" : {
 
     },
+    "Sistema" : {
+
+    },
     "Sistema de notificaciones inteligentes" : {
 
     },
@@ -636,6 +651,9 @@
 
     },
     "Teal" : {
+
+    },
+    "Tema del dispositivo" : {
 
     },
     "Tendencia" : {
