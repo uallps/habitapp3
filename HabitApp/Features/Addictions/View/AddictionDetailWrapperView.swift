@@ -7,7 +7,7 @@ struct AddictionDetailWrapperView: View {
     @State private var habitsQuery: [Habit] = []
     @State private var selectedDays: [Int]
     @State private var showRelapseAlert: Bool = false
-    
+    @State private var showWrongDayAlert: Bool = false
     @State private var currentDate = Date()
 
     let addictionListVM: AddictionListViewModel
@@ -53,8 +53,12 @@ struct AddictionDetailWrapperView: View {
                 await addictionListVM.removeTriggerHabit(from: addiction, habit: habit)
             },
             onTap: { habit in
-                self.showRelapseAlert = true
-                habitListVM.toggleCompletion(habit: habit)
+                if habit.isScheduled(for: currentDate) {
+                    self.showRelapseAlert = true
+                    habitListVM.toggleCompletion(habit: habit)
+                } else {
+                    self.showWrongDayAlert = true
+                }
             }
 
         )
@@ -93,7 +97,13 @@ struct AddictionDetailWrapperView: View {
             onRemove: { habit in
                 await addictionListVM.removeCompensatoryHabit(from: addiction, habit: habit)
             },
-            onTap: { habit in habitListVM.toggleCompletion(habit: habit) }
+            onTap: { habit in
+                if habit.isScheduled(for: currentDate) {
+                    habitListVM.toggleCompletion(habit: habit)
+                } else {
+                    showWrongDayAlert = false
+                }
+            }
         )
     }
 
@@ -187,6 +197,11 @@ struct AddictionDetailWrapperView: View {
         } message: {
             Text("¿Has recaído?")
         
+        }
+        .alert("¡No se puede completar el hábito este día!", isPresented: $showWrongDayAlert) {
+            Button("Vale", role: .cancel) {
+                
+            }
         }
         .task {
             await loadAddictionHabits()

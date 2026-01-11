@@ -7,6 +7,9 @@
     " " : {
 
     },
+    "¡No se puede completar el hábito este día!" : {
+
+    },
     "¿Eliminar categoría?" : {
 
     },
@@ -709,6 +712,9 @@
 
     },
     "Una aplicación para gestionar tus hábitos diarios y alcanzar tus objetivos." : {
+
+    },
+    "Vale" : {
 
     },
     "Vence: %@" : {
