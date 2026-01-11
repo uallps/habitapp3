@@ -7,9 +7,10 @@ class SwiftDataContext {
 }
 
 class SwiftDataStorageProvider: StorageProvider {
-    private var modelContainer: ModelContainer
+    
+    var modelContainer: ModelContainer
     private var context: ModelContext
-
+    
     init(schema: Schema) {
         do {
             // Schema conflict dev temp solution
@@ -20,7 +21,7 @@ class SwiftDataStorageProvider: StorageProvider {
             SwiftDataContext.shared = self.context
         } catch {
             fatalError("Failed to initialize storage provider: \(error)")
-       }
+        }
     }
     @MainActor
     func createSampleAddictions(to addiction: Addiction, habit: Habit) async throws {
@@ -29,6 +30,44 @@ class SwiftDataStorageProvider: StorageProvider {
     @MainActor
     func associatePreventionHabit(to addiction: Addiction, habit: Habit) async throws {
         ///TODO
+    }
+    
+    @MainActor
+    func getHabit(id: UUID) async throws -> Habit? {
+        let habitPredicate = #Predicate<Habit> { $0.id == id }
+        let habitDescriptor = FetchDescriptor<Habit>(predicate: habitPredicate)
+        guard let habit = try context.fetch(habitDescriptor).first else {
+            return nil
+        }
+        return habit
+    }
+    
+    @MainActor
+    func loadStreaksForHabit(habitId: UUID) async throws -> [Streak] {
+        var streaks: [Streak] = []
+        let predicate = #Predicate<Streak> { $0.habitId == habitId }
+        let descriptor = FetchDescriptor<Streak>(predicate: predicate)
+        
+        streaks = try context.fetch(descriptor)
+        return streaks
+    }
+    
+    @MainActor
+    func saveStreak(_ streak: Streak) async throws {
+        do {
+            try context.insert(streak)
+        } catch {
+            print("Error saving streak: \(error)")
+        }
+    }
+    
+    @MainActor
+    func savePendingChanges() async throws {
+        do {
+            try context.processPendingChanges()
+        } catch {
+            print("Error saving pending changes: \(error)")
+        }
     }
     
     @MainActor
@@ -664,7 +703,11 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
     @MainActor
     func deleteHabit(habit: Habit) async throws {
         do {
-            try context.delete(habit)
+            if let realHabit = getRealInstanceHabit(habit) {
+                try context.delete(realHabit)
+                try await saveContext()
+            }
+
         } catch {
             print("Error deleting habit: \(error)")
         }

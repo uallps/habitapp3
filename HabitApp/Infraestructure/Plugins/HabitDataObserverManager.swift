@@ -5,13 +5,13 @@
 //  Created by Aula03 on 10/12/25.
 //
 import Foundation
-final class TaskDataObserverManager {
-    static let shared = TaskDataObserverManager()
+final class HabitDataObserverManager {
+    static let shared = HabitDataObserverManager()
     private init() {}
     
-    private var plugins: [TaskDataObservingPlugin] = []
+    private var plugins: [HabitDataObservingPlugin] = []
     
-    func register(_ plugin: TaskDataObservingPlugin) {
+    func register(_ plugin: HabitDataObservingPlugin) {
         plugins.append(plugin)
     }
     
@@ -19,7 +19,6 @@ final class TaskDataObserverManager {
         plugins.forEach { $0.onDataChanged(taskId: taskId, title: title, dueDate: date) }
     }
     
-    // ¿No debería esto estar en TaskDataObserverManager?
     func notifyDataChanged(taskId: UUID, title: String, dueDate: Date?) {
         print("🔔 Notificando \(plugins.count) plugins sobre cambio en: \(title)")
         plugins.forEach { plugin in

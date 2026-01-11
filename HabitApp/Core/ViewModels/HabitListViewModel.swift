@@ -26,7 +26,7 @@ final class HabitListViewModel: ObservableObject {
             try await storageProvider.addHabit(habit: habit)
             //  Notificar plugins si hay fecha de recordatorio
             if let reminderDate = reminderDate {
-                TaskDataObserverManager.shared.notifyDataChanged(
+                HabitDataObserverManager.shared.notifyDataChanged(
                     taskId: habit.id,
                     title: habit.title,
                     dueDate: reminderDate
@@ -61,7 +61,7 @@ final class HabitListViewModel: ObservableObject {
                 
                 //  Esperar a que SwiftData sincronice completamente
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                    TaskDataObserverManager.shared.notifyDataChanged(
+                    HabitDataObserverManager.shared.notifyDataChanged(
                         taskId: habit.id,
                         title: habit.title,
                         dueDate: habit.dueDate
@@ -77,7 +77,6 @@ final class HabitListViewModel: ObservableObject {
     func deleteHabit(_ habit: Habit) {
         Task {
             try await storageProvider.deleteHabit(habit: habit)
-            try await storageProvider.saveContext()
         }
     }
     
@@ -112,7 +111,7 @@ final class HabitListViewModel: ObservableObject {
             let habitTitles = dayHabits.map { $0.title }.joined(separator: ", ")
             let notificationDate = calendar.date(byAdding: .hour, value: 9, to: calendar.startOfDay(for: date)) ?? date
             
-            TaskDataObserverManager.shared.notifyDataChanged(
+            HabitDataObserverManager.shared.notifyDataChanged(
                 taskId: UUID(),
                 title: "Hoy tienes \(dayHabits.count) hábito(s): \(habitTitles)",
                 dueDate: notificationDate

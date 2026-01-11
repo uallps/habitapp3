@@ -9,7 +9,8 @@ class Habit {
     var isCompleted: Bool = false
     var dueDate: Date?
     var priority: Priority? = nil
-    var reminderDate: Date?
+    var isReminderEnabled: Bool = false
+    var reminderDate: Date? = nil
     var scheduledDaysString: String = ""
     var createdAt: Date = Date()
     var updatedAt: Date = Date()

@@ -6,12 +6,14 @@ import SwiftData
 // HabitApp cumple con el protocolo App.
 struct HabitApp: App {
     
-    private var storageProvider: StorageProvider {
-        AppConfig().storageProvider
-    }
+    private var storageProvider: StorageProvider
 
     @State private var selectedDetailView: String?
-    //let modelContainer: ModelContainer
+    
+    // Necesario para Query
+    let modelContainer: ModelContainer
+    
+    @StateObject private var userPreferences = UserPreferences()
     
     init() {
         // Inicializar el ModelContainer
@@ -24,8 +26,12 @@ struct HabitApp: App {
        // } catch {
        //     fatalError("❌ Error inicializando ModelContainer: \(error)")
        // }
-        
-       // self.modelContainer = container
+       
+        self.storageProvider = AppConfig().storageProvider
+        guard let swiftDataProvider = storageProvider as? SwiftDataStorageProvider else {
+            fatalError("StorageProvider is not a SwiftDataStorageProvider")
+        }
+        self.modelContainer = swiftDataProvider.modelContainer
         //self._appConfig = StateObject(wrappedValue: AppConfig(modelContainer: container))
         
         #if os(iOS)
@@ -49,13 +55,9 @@ struct HabitApp: App {
                     .tabItem {
                         Label("Hábitos", systemImage: "checklist")
                     }
-                CategoriesListView(storageProvider: storageProvider)
+                CategoryListView(storageProvider: storageProvider)
                     .tabItem {
                         Label("Categorías", systemImage: "folder")
-                    }
-                AddictionListView(storageProvider: storageProvider)
-                    .tabItem {
-                        Label("Adicciones", systemImage: "bandage")
                     }
                 DailyNotesView(storageProvider: storageProvider)
                     .tabItem {
@@ -69,17 +71,14 @@ struct HabitApp: App {
                     .tabItem {
                         Label("Estadísticas", systemImage: "chart.bar")
                     }
-                TestReminderView()
-                    .tabItem {
-                        Label("Test", systemImage: "bell")
-                    }
                 SettingsView()
                     .tabItem {
                         Label("Ajustes", systemImage: "gearshape")
                     }
             }
-            .environmentObject(appConfig)
+            .environmentObject(AppConfig())
             .modelContainer(modelContainer)  //  AGREGAR ESTO
+            .environmentObject(userPreferences)
 
 #else
             NavigationSplitView {
@@ -99,15 +98,15 @@ struct HabitApp: App {
                     NavigationLink(value: "ajustes") {
                         Label("Ajustes", systemImage: "gearshape")
                     }
-                    .task {
-                        storageProvider.resetStorage()
-                    }
+                    //.task {
+                    //    storageProvider.resetStorage()
+                    //}
                     NavigationLink(value: "categorias") {
                         Label("Categorias", systemImage: "folder")
                     }
-                    NavigationLink(value: "adicciones") {
-                        Label("Adicciones", systemImage: "bandage")
-                    }
+                    //NavigationLink(value: "adicciones") {
+                   //     Label("Adicciones", systemImage: "bandage")
+                    //}
                 }
             } detail: {
                 switch selectedDetailView {
@@ -119,12 +118,17 @@ struct HabitApp: App {
                     GoalsView(storageProvider: storageProvider)
                 case "ajustes":
                     SettingsView()
+                case "categorias":
+                    CategoryListView(storageProvider: storageProvider)
+                //case "rachas":
+                    //StreakBadgeView()
                 default:
                     Text("Seleccione una opción")
                 }
             }
             .environmentObject(AppConfig())
-           // .modelContainer(modelContainer)  //  AGREGAR ESTO
+            .modelContainer(modelContainer)
+            .environmentObject(userPreferences)
 #endif
         }
     }

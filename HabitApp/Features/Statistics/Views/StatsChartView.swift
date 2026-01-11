@@ -49,7 +49,9 @@ struct StatsChartView: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 12)
+                #if(os(iOS))
                 .fill(Color(.systemGray6))
+                #endif
         )
     }
     
