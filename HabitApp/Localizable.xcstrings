@@ -16,9 +16,6 @@
     "¿Eliminar nota?" : {
 
     },
-    "¿Este hábito desencadenó una recaída hoy?" : {
-
-    },
     "·" : {
 
     },
@@ -127,6 +124,9 @@
         }
       }
     },
+    "Addicciones" : {
+
+    },
     "Adicciones" : {
 
     },
@@ -157,13 +157,7 @@
     "Añadir a esta categoría" : {
 
     },
-    "Añadir nuevo hábito compensatorio" : {
-
-    },
-    "Añadir nuevo hábito desencadenante" : {
-
-    },
-    "Añadir nuevo hábito preventivo" : {
+    "Añadir nuevo hábito" : {
 
     },
     "Añadir subcategoría" : {
@@ -221,9 +215,6 @@
 
     },
     "Completado" : {
-
-    },
-    "Configura los detalles de tu adicción" : {
 
     },
     "Configura los detalles de tu hábito" : {
@@ -389,15 +380,6 @@
     "Hábitos" : {
 
     },
-    "Hábitos compensatorios creados" : {
-
-    },
-    "Hábitos desencadenantes asociados" : {
-
-    },
-    "Hábitos preventivos creados" : {
-
-    },
     "Hello, world!" : {
 
     },
@@ -473,12 +455,6 @@
     "No hay hábitos con estadísticas" : {
 
     },
-    "No hay hábitos de compensatorios asociados." : {
-
-    },
-    "No hay hábitos de prevención asociados." : {
-
-    },
     "No hay hábitos disponibles" : {
 
     },
@@ -492,9 +468,6 @@
 
     },
     "No hay subcategorías" : {
-
-    },
-    "No, solo fue un riesgo" : {
 
     },
     "Nombre" : {
@@ -552,9 +525,6 @@
 
     },
     "Por Hábito" : {
-
-    },
-    "Posible recaída" : {
 
     },
     "Prioridad" : {
@@ -669,12 +639,6 @@
         }
       }
     },
-    "Severidad de la adicción" : {
-
-    },
-    "Sí, he recaído" : {
-
-    },
     "Sin datos" : {
 
     },
@@ -715,9 +679,6 @@
 
     },
     "Título" : {
-
-    },
-    "Título de la adicción" : {
 
     },
     "Título de la nota" : {
