@@ -5,6 +5,7 @@ struct AddictionDetailWrapperView: View {
 
     @Environment(\.dismiss) private var dismiss
     @State private var habitsQuery: [Habit] = []
+    @State private var selectedDays: [Int]
 
     let addictionListVM: AddictionListViewModel
     let isNew: Bool
@@ -18,7 +19,8 @@ struct AddictionDetailWrapperView: View {
 
     init(addictionListVM: AddictionListViewModel,
          addiction: Addiction,
-         isNew: Bool = true) {
+         isNew: Bool = true
+    ) {
 
         self.addictionListVM = addictionListVM
         self.isNew = isNew
@@ -26,6 +28,7 @@ struct AddictionDetailWrapperView: View {
         _title = State(initialValue: addiction.title)
         _severity = State(initialValue: addiction.severity)
         _addictionToEdit = State(initialValue: isNew ? nil : addiction)
+        _selectedDays = State(initialValue: addiction.selectedDays)
     }
 
     // MARK: - Section Configurations
@@ -99,12 +102,15 @@ struct AddictionDetailWrapperView: View {
                 TextField("Ej: Fumar", text: $title)
                     .textFieldStyle(.roundedBorder)
             }
-
+            
+            Text("Días en los que se repite la adicción")
+            WeekdaySelector(
+                selectedDays: $selectedDays
+            )
+            
             VStack(alignment: .leading, spacing: 12) {
-                Text("Severidad")
-                    .font(.headline)
 
-                Picker("Severidad", selection: $severity) {
+                Picker("Severidad de adicción", selection: $severity) {
                     ForEach(AddictionSeverity.allCases, id: \.self) {
                         Text($0.displayName).tag($0)
                     }
@@ -118,6 +124,8 @@ struct AddictionDetailWrapperView: View {
                     config: triggerConfig,
                     availableHabits: habitsQuery
                 )
+            }else {
+                Text("Podrás asociar hábitos después de crear la adicción.")
             }
 
             if let preventionConfig {
@@ -164,6 +172,7 @@ struct AddictionDetailWrapperView: View {
             if let addiction = addictionToEdit {
                 addiction.title = title
                 addiction.severity = severity
+                addiction.selectedDays = selectedDays
                 await addictionListVM.updateAddiction(addiction: addiction)
             } else {
                 let addiction = Addiction(
@@ -174,6 +183,7 @@ struct AddictionDetailWrapperView: View {
                     compensatoryHabits: [],
                     addiction: Habit(title: title)
                 )
+                addiction.selectedDays = selectedDays
                 await addictionListVM.addAddiction(addiction: addiction)
                 addictionToEdit = addiction
             }

@@ -248,6 +248,7 @@ class SwiftDataStorageProvider: StorageProvider {
             realAddiction.preventionHabits = addiction.preventionHabits
             realAddiction.compensatoryHabits = addiction.compensatoryHabits
             realAddiction.relapseCount = addiction.relapseCount
+            realAddiction.selectedDays = addiction.selectedDays
             try context.save()
         } else {
             print("Error updating addiction: realAddiction is nil")

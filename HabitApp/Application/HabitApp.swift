@@ -103,7 +103,7 @@ struct HabitApp: App {
                         Label("Ajustes", systemImage: "gearshape")
                     }
                     //.task {
-                     //   storageProvider.resetStorage()
+                    //    storageProvider.resetStorage()
                     //}
                     NavigationLink(value: "categorias") {
                         Label("Categorias", systemImage: "folder")

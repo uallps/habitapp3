@@ -42,14 +42,16 @@ struct AddictionHabitSectionView: View {
                     }
                 }
             }
-
-            Section(header: Text("Añadir nuevo hábito")) {
-                ForEach(availableHabits) { habit in
-                    Button("Añadir \(habit.title)") {
-                        Task { await config.onAdd(habit) }
+            if !availableHabits.isEmpty {
+                Section(header: Text("Añadir nuevo hábito")) {
+                    ForEach(availableHabits) { habit in
+                        Button("Añadir \(habit.title)") {
+                            Task { await config.onAdd(habit) }
+                        }
                     }
                 }
             }
+
         }
     }
 }

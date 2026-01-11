@@ -24,6 +24,7 @@ class Addiction {
     
     // Número de veces que el usuario ha recaído en la adicción
     var relapseCount: Int = 0
+    var selectedDays: [Int] = Array(repeating: 0, count: 7)
 
     
     init(title: String,
