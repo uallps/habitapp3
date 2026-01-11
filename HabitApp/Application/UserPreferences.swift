@@ -9,18 +9,31 @@ final class UserPreferences: ObservableObject {
     @AppStorage("enableStreaks") private var storedEnableStreaks: Bool = true
     @AppStorage("enableStatistics") private var storedEnableStatistics: Bool = true
     @AppStorage("appTheme") private var storedAppTheme: Int = 0
-
-        var appTheme: Int {
-            get { storedAppTheme }
-            set { objectWillChange.send(); storedAppTheme = newValue }
-        }
+    @AppStorage("daltonismType") var daltonismType: Int = 0
+    @AppStorage("nightModeIntensity") var nightModeIntensity: Double = 0.0
+    @AppStorage("accentColorName") var accentColorName: String = "Blue"
+    
+    var appTheme: Int {
+        get { storedAppTheme }
+        set { objectWillChange.send(); storedAppTheme = newValue }
+    }
         
-        // Helper para convertir el Int en ColorScheme de SwiftUI
-        var colorScheme: ColorScheme? {
-            switch appTheme {
-            case 1: return .light
-            case 2: return .dark
-            default: return nil // Sistema
+    var colorScheme: ColorScheme? {
+        switch appTheme {
+        case 1: return .light
+        case 2: return .dark
+        default: return nil // Sistema
+        }
+    }
+    
+    var accentColor: Color {
+            switch accentColorName {
+                case "Red": return .red
+                case "Green": return .green
+                case "Orange": return .orange
+                case "Purple": return .purple
+                case "Pink": return .pink
+                default: return .blue
             }
         }
     

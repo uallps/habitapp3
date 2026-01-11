@@ -34,7 +34,7 @@ struct HabitApp: App {
         WindowGroup {
             // 2. Usamos un Group para aplicar los modificadores a toda la App a la vez
             Group {
-                #if os(iOS)
+#if os(iOS)
                 TabView {
                     HabitListView(storageProvider: storageProvider)
                         .tabItem { Label("Hábitos", systemImage: "checklist") }
@@ -54,7 +54,7 @@ struct HabitApp: App {
                     SettingsView()
                         .tabItem { Label("Ajustes", systemImage: "gearshape") }
                 }
-                #else
+#else
                 NavigationSplitView {
                     List(selection: $selectedDetailView) {
                         NavigationLink(value: "habitos") { Label("Habitos", systemImage: "checklist") }
@@ -74,15 +74,15 @@ struct HabitApp: App {
                     default: Text("Seleccione una opción")
                     }
                 }
-                #endif
+#endif
             }
             // --- MODIFICADORES GLOBALES ---
             .environmentObject(AppConfig())
             .modelContainer(modelContainer)
             .environmentObject(userPreferences)
-            // 3. ESTA ES LA LÍNEA MÁGICA:
-            // Aplica el esquema de color (light, dark o nil/sistema) basándose en las preferencias
             .preferredColorScheme(userPreferences.colorScheme)
+            .modifier(AccessibilityFilterModifier(prefs: userPreferences))
+            .tint(userPreferences.accentColor)
         }
     }
 }

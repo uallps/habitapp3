@@ -105,6 +105,9 @@
     "1.0.0" : {
 
     },
+    "Accesibilidad" : {
+
+    },
     "Acerca de" : {
 
     },
@@ -202,6 +205,9 @@
     "Color" : {
 
     },
+    "Color de acento" : {
+
+    },
     "Color seleccionado" : {
 
     },
@@ -269,6 +275,9 @@
     "de %lld" : {
 
     },
+    "Desactivado" : {
+
+    },
     "Desarrollado con SwiftUI" : {
 
     },
@@ -276,6 +285,9 @@
 
     },
     "Detalle de Nota" : {
+
+    },
+    "Deuteranopía" : {
 
     },
     "Días de la semana" : {
@@ -336,6 +348,9 @@
 
     },
     "Filter" : {
+
+    },
+    "Filtro Daltonismo" : {
 
     },
     "General" : {
@@ -425,6 +440,9 @@
     "Mint" : {
 
     },
+    "Modo Noche (Luz cálida)" : {
+
+    },
     "Mostrar fechas de vencimiento" : {
 
     },
@@ -512,6 +530,9 @@
     "Oscuro" : {
 
     },
+    "Personalización de Color" : {
+
+    },
     "Pink" : {
 
     },
@@ -582,6 +603,9 @@
       }
     },
     "Progreso" : {
+
+    },
+    "Protanopía" : {
 
     },
     "Purple" : {
@@ -669,6 +693,9 @@
 
     },
     "Título del hábito" : {
+
+    },
+    "Tritanopía" : {
 
     },
     "Una aplicación para gestionar tus hábitos diarios y alcanzar tus objetivos." : {
