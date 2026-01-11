@@ -16,6 +16,9 @@
     "¿Eliminar nota?" : {
 
     },
+    "¿Este hábito desencadenó una recaída hoy?" : {
+
+    },
     "·" : {
 
     },
@@ -44,6 +47,9 @@
           }
         }
       }
+    },
+    "%lld addición(s) programado(s)" : {
+
     },
     "%lld completados" : {
 
@@ -105,6 +111,9 @@
     "1.0.0" : {
 
     },
+    "a" : {
+
+    },
     "Acerca de" : {
 
     },
@@ -123,6 +132,9 @@
           }
         }
       }
+    },
+    "Adicciones" : {
+
     },
     "Agregar Hito" : {
 
@@ -145,7 +157,19 @@
     "Añadir" : {
 
     },
+    "Añadir %@" : {
+
+    },
     "Añadir a esta categoría" : {
+
+    },
+    "Añadir nuevo hábito compensatorio" : {
+
+    },
+    "Añadir nuevo hábito desencadenante" : {
+
+    },
+    "Añadir nuevo hábito preventivo" : {
 
     },
     "Añadir subcategoría" : {
@@ -205,6 +229,9 @@
     "Completado" : {
 
     },
+    "Configura los detalles de tu adicción" : {
+
+    },
     "Configura los detalles de tu hábito" : {
 
     },
@@ -226,6 +253,9 @@
     "Crea tu primer objetivo para comenzar a alcanzar tus metas" : {
 
     },
+    "Crea tu primera addición" : {
+
+    },
     "Crea tu primera nota haciendo clic en Nueva Nota" : {
 
     },
@@ -243,6 +273,9 @@
       }
     },
     "Crear" : {
+
+    },
+    "Crear addición de muestra" : {
 
     },
     "Crear hábito" : {
@@ -281,7 +314,13 @@
     "Editar" : {
 
     },
+    "Editar adicción" : {
+
+    },
     "Editar hábito" : {
+
+    },
+    "Ej: Fumar" : {
 
     },
     "Ej: Hacer ejercicio" : {
@@ -365,6 +404,15 @@
     "Hábitos" : {
 
     },
+    "Hábitos compensatorios creados" : {
+
+    },
+    "Hábitos desencadenantes asociados" : {
+
+    },
+    "Hábitos preventivos creados" : {
+
+    },
     "Hello, world!" : {
 
     },
@@ -431,6 +479,12 @@
     "No has añadido hábitos a la categoría" : {
 
     },
+    "No hay adicciones programadas" : {
+
+    },
+    "No hay adicciones programados" : {
+
+    },
     "No hay categorías disponibles. Crea al menos una categoría." : {
 
     },
@@ -438,6 +492,12 @@
 
     },
     "No hay hábitos con estadísticas" : {
+
+    },
+    "No hay hábitos de compensatorios asociados." : {
+
+    },
+    "No hay hábitos de prevención asociados." : {
 
     },
     "No hay hábitos disponibles" : {
@@ -453,6 +513,9 @@
 
     },
     "No hay subcategorías" : {
+
+    },
+    "No, solo fue un riesgo" : {
 
     },
     "Nombre" : {
@@ -471,6 +534,9 @@
 
     },
     "Notificaciones" : {
+
+    },
+    "Nueva adicción" : {
 
     },
     "Nueva Nota" : {
@@ -507,6 +573,9 @@
 
     },
     "Por Hábito" : {
+
+    },
+    "Posible recaída" : {
 
     },
     "Prioridad" : {
@@ -581,6 +650,9 @@
     "Rango" : {
 
     },
+    "Recaídas: %lld" : {
+
+    },
     "Recordatorio" : {
 
     },
@@ -603,6 +675,34 @@
 
     },
     "Seleccione una opción" : {
+
+    },
+    "Severidad" : {
+
+    },
+    "Severidad %@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Severidad %1$@ %2$@"
+          }
+        }
+      }
+    },
+    "Severidad de la adicción" : {
+
+    },
+    "Sí, he recaído" : {
+
+    },
+    "Sin adicciones" : {
+
+    },
+    "Sin adicciones creadas" : {
+
+    },
+    "Sin adicciones para hoy" : {
 
     },
     "Sin datos" : {
@@ -645,6 +745,9 @@
 
     },
     "Título" : {
+
+    },
+    "Título de la adicción" : {
 
     },
     "Título de la nota" : {

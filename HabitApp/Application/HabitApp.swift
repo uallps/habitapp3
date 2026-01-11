@@ -104,9 +104,9 @@ struct HabitApp: App {
                     NavigationLink(value: "categorias") {
                         Label("Categorias", systemImage: "folder")
                     }
-                    //NavigationLink(value: "adicciones") {
-                   //     Label("Adicciones", systemImage: "bandage")
-                    //}
+                    NavigationLink(value: "adicciones") {
+                        Label("Adicciones", systemImage: "bandage")
+                    }
                 }
             } detail: {
                 switch selectedDetailView {
