@@ -25,20 +25,9 @@ struct AddGoalView: View {
 // MARK: - iOS UI
 #if os(iOS)
 extension AddGoalView {
-    var iosBody: some View {
-        NavigationStack {
-            Form {
-                Section("Información del Objetivo") {
-                    TextField("Título", text: $title)
-                    TextField("Descripción (opcional)", text: $description)
-                }
-                
-                Section("Meta") {
-                    Stepper("Objetivo: \(targetCount) días", value: $targetCount, in: 1...365)
-                    DatePicker("Fecha límite", selection: $targetDate, in: Date()..., displayedComponents: .date)
-                }
-                
-                Section("Hábito Asociado") {
+            @ViewBuilder
+        var associatedHabit: some View {
+                            Section("Hábito Asociado") {
                     if habits.isEmpty {
                         Text("No hay hábitos disponibles")
                             .foregroundColor(.secondary)
@@ -137,6 +126,22 @@ extension AddGoalView {
                         }
                     }
                 }
+        }
+    var iosBody: some View {
+
+        NavigationStack {
+            Form {
+                Section("Información del Objetivo") {
+                    TextField("Título", text: $title)
+                    TextField("Descripción (opcional)", text: $description)
+                }
+                
+                Section("Meta") {
+                    Stepper("Objetivo: \(targetCount) días", value: $targetCount, in: 1...365)
+                    DatePicker("Fecha límite", selection: $targetDate, in: Date()..., displayedComponents: .date)
+                }
+                
+                associatedHabit
                 
                 Section("Hitos (opcional)") {
                     ForEach(milestones.indices, id: \.self) { index in
