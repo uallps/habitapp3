@@ -20,6 +20,11 @@ struct AddictionListView: View {
             NavigationStack {
                 List(Array(addictions)) { addiction in
                     NavigationLink {
+                        AddictionDetailWrapperView(
+                            addictionListVM: addictionListVM,
+                            addiction: addiction,
+                            isNew: false
+                        )
                     } label: {
                         AddictionRowView(
                             addiction: addiction,
@@ -40,7 +45,7 @@ struct AddictionListView: View {
                             )
                             AddictionDetailWrapperView(
                                 addictionListVM: addictionListVM,
-                                addiction: addiction
+                                addiction: addiction,
                             )
                         } label: {
                             Label("Añadir", systemImage: "plus")

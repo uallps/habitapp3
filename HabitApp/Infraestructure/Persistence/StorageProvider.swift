@@ -63,4 +63,9 @@ protocol StorageProvider {
     //END IF
     
     func saveContext() async throws
+    
+    //IF ADDICTION
+    func loadAddictions() async throws -> [Addiction]
+    func isHabitAddiction(habit: Habit) async throws -> Bool
+    //END IF
 }

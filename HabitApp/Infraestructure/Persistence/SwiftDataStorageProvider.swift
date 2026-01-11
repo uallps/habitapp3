@@ -7,6 +7,8 @@ class SwiftDataContext {
 }
 
 class SwiftDataStorageProvider: StorageProvider {
+
+    
     
     var modelContainer: ModelContainer
     private var context: ModelContext
@@ -23,6 +25,37 @@ class SwiftDataStorageProvider: StorageProvider {
             fatalError("Failed to initialize storage provider: \(error)")
         }
     }
+    
+    @MainActor
+    func loadAddictions() async throws -> [Addiction] {
+        var addictions: [Addiction] = []
+        do {
+            let descriptor = FetchDescriptor<Addiction>() // Use FetchDescriptor
+            addictions = try context.fetch(descriptor)
+            return addictions
+        } catch {
+            print("Error loading addictions: \(error)")
+        }
+        return addictions
+    }
+    
+    @MainActor
+    func isHabitAddiction(habit: Habit) async throws -> Bool {
+        var isAddiction = false
+        do {
+            let addictions = try await loadAddictions()
+            for addiction in addictions {
+                if addiction.addiction.id == habit.id {
+                    isAddiction = true
+                    break
+                }
+            }
+        } catch {
+            print("Error checkign if habit is addiction \(error)")
+        }
+        return isAddiction
+    }
+    
     @MainActor
     func createSampleAddictions(to addiction: Addiction, habit: Habit) async throws {
         ///TODO

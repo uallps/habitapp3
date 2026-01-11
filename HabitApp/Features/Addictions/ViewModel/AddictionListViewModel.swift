@@ -17,6 +17,16 @@ final class AddictionListViewModel: ObservableObject {
         }
     }
     
+    func isHabitAddiction(habit: Habit) async -> Bool {
+        var isHabitAddiction = false
+        do {
+            isHabitAddiction = try await storageProvider.isHabitAddiction(habit: habit)
+        } catch {
+            print("Error checking if habit is addiction \(error)")
+        }
+        return isHabitAddiction
+    }
+    
     func updateAddiction(addiction: Addiction) async {
         do {
             try await storageProvider.updateAddiction(addiction: addiction)

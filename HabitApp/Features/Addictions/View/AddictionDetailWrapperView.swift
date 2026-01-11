@@ -4,6 +4,7 @@ import _SwiftData_SwiftUI
 struct AddictionDetailWrapperView: View {
 
     @Environment(\.dismiss) private var dismiss
+    @State private var habitsQuery: [Habit] = []
 
     let addictionListVM: AddictionListViewModel
     let isNew: Bool
@@ -13,7 +14,7 @@ struct AddictionDetailWrapperView: View {
     @State private var addictionToEdit: Addiction?
 
     @Query(sort: \Habit.title, order: .forward)
-    private var habitsQuery: [Habit]
+    private var habitsQueryAll: [Habit]
 
     init(addictionListVM: AddictionListViewModel,
          addiction: Addiction,
@@ -110,6 +111,7 @@ struct AddictionDetailWrapperView: View {
                 }
                 .pickerStyle(.segmented)
             }
+            
 
             if let triggerConfig {
                 AddictionHabitSectionView(
@@ -150,6 +152,8 @@ struct AddictionDetailWrapperView: View {
                 }
                 .disabled(title.isEmpty)
             }
+        }.task {
+            await loadAddictionHabits()
         }
     }
 
@@ -202,6 +206,20 @@ struct AddictionDetailWrapperView: View {
             .padding()
             .frame(minWidth: 450, minHeight: 400)
         #endif
+    }
+    
+    private func loadAddictionHabits() async {
+        var result: [Habit] = []
+
+        for habit in habitsQueryAll {
+            if try await !addictionListVM.isHabitAddiction(habit: habit) {
+                result.append(habit)
+            }
+        }
+
+        await MainActor.run {
+            habitsQuery = result
+        }
     }
 }
 
