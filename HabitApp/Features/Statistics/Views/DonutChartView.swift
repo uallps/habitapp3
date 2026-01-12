@@ -56,10 +56,15 @@ struct DonutChartView: View {
             }
         }
         .padding()
+        #if os(macOS)
+        .frame(maxWidth: 400, alignment: .leading)
+        #endif
         .background(
             RoundedRectangle(cornerRadius: 12)
-            #if(os(iOS))
+            #if os(iOS)
                 .fill(Color(.systemGray6))
+            #else
+                .fill(Color.clear)
             #endif
         )
     }

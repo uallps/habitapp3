@@ -61,6 +61,7 @@ struct HabitApp: App {
                         NavigationLink(value: "habitos") { Label("Habitos", systemImage: "checklist") }
                         NavigationLink(value: "notas") { Label("Notas Diarias", systemImage: "note.text") }
                         NavigationLink(value: "objetivos") { Label("Objetivos", systemImage: "target") }
+                        NavigationLink(value: "estadisticas") { Label("Estadísticas", systemImage: "chart.bar") }
                         NavigationLink(value: "ajustes") { Label("Ajustes", systemImage: "gearshape") }
                         NavigationLink(value: "categorias") { Label("Categorias", systemImage: "folder") }
                     }
@@ -69,6 +70,7 @@ struct HabitApp: App {
                     case "habitos": HabitListView(storageProvider: storageProvider)
                     case "notas": DailyNotesView(storageProvider: storageProvider)
                     case "objetivos": GoalsView(storageProvider: storageProvider)
+                    case "estadisticas": StatisticsView(storageProvider: storageProvider)
                     case "ajustes": SettingsView()
                     case "categorias": CategoryListView(storageProvider: storageProvider)
                     default: Text("Seleccione una opción")

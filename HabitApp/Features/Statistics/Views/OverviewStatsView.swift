@@ -10,7 +10,7 @@ struct OverviewStatsView: View {
                 ProgressView("Cargando...")
                     .padding()
             } else if let stats = stats {
-                VStack(spacing: 20) {
+                VStack(alignment: .leading, spacing: 20) {
                     // Resumen
                     HStack(spacing: 12) {
                         statCard(
@@ -26,7 +26,14 @@ struct OverviewStatsView: View {
                             icon: "target",
                             color: .blue
                         )
+                        
+                        #if os(macOS)
+                        Spacer()
+                        #endif
                     }
+                    #if os(macOS)
+                    .frame(maxWidth: 400, alignment: .leading)
+                    #endif
                     
                     // Gráfico según rango
                     if stats.range == .day {
@@ -42,7 +49,7 @@ struct OverviewStatsView: View {
                             value: "\(Int(stats.overallRate * 100))%",
                             icon: "chart.bar.fill",
                             color: .orange,
-                            fullWidth: true
+                            fullWidth: false
                         )
                         
                         VStack(alignment: .leading, spacing: 8) {
@@ -60,7 +67,13 @@ struct OverviewStatsView: View {
                         }
                     }
                 }
+                #if os(macOS)
+                .frame(maxWidth: 700, alignment: .topLeading)
+                #endif
                 .padding()
+                #if os(macOS)
+                .padding(.leading, 20)
+                #endif
             } else {
                 ContentUnavailableView(
                     "Sin estadísticas",
@@ -99,8 +112,10 @@ struct OverviewStatsView: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 12)
-            #if(os(iOS))
+            #if os(iOS)
                 .fill(Color(.systemGray6))
+            #else
+                .fill(Color.clear)
             #endif
         )
         .frame(maxWidth: fullWidth ? .infinity : nil)
