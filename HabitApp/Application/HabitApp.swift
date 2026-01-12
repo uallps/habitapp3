@@ -16,6 +16,8 @@ struct HabitApp: App {
     @StateObject private var userPreferences = UserPreferences()
     
     init() {
+        print("\n🚀 ==================== INICIO HABITAPP ====================")
+        
         // Inicializar el ModelContainer
         //let schema = Schema([Habit.self, DailyNote.self, Goal.self, Milestone.self])
        // let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
@@ -32,6 +34,10 @@ struct HabitApp: App {
             fatalError("StorageProvider is not a SwiftDataStorageProvider")
         }
         self.modelContainer = swiftDataProvider.modelContainer
+        
+        print("📦 ModelContainer inicializado correctamente")
+        print("🎯 StorageProvider: SwiftDataStorageProvider")
+        
         //self._appConfig = StateObject(wrappedValue: AppConfig(modelContainer: container))
         
         #if os(iOS)
@@ -45,6 +51,8 @@ struct HabitApp: App {
             }
         }
         #endif
+        
+        print("🏁 ==================== HABITAPP LISTO ====================\n")
     }
     
     var body: some Scene {
@@ -70,6 +78,10 @@ struct HabitApp: App {
                  StatisticsView()             
                     .tabItem {
                         Label("Estadísticas", systemImage: "chart.bar")
+                    }
+                AchievementsListView(storageProvider: storageProvider)
+                    .tabItem {
+                        Label("Logros", systemImage: "trophy.fill")
                     }
                 SettingsView()
                     .tabItem {

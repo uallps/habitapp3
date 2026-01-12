@@ -13,7 +13,15 @@ class AppConfig: ObservableObject {
         
         private lazy var swiftDataStorageProvider: SwiftDataStorageProvider = {
             // Obtener modelos base
-            var schemas: [any PersistentModel.Type] = [Habit.self, Category.self, Addiction.self, DailyNote.self, Goal.self, Milestone.self]
+            var schemas: [any PersistentModel.Type] = [
+                Habit.self, 
+                Category.self, 
+                Addiction.self, 
+                DailyNote.self, 
+                Goal.self, 
+                Milestone.self,
+                Achievement.self  // Achievements - debe estar siempre en el schema
+            ]
             
             // Agregar modelos de plugins habilitados
             schemas.append(contentsOf: PluginRegistry.shared.getEnabledModels(from: plugins))

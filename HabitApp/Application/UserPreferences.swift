@@ -8,6 +8,7 @@ final class UserPreferences: ObservableObject {
     @AppStorage("enableReminders") private var storedEnableReminders: Bool = true
     @AppStorage("enableStreaks") private var storedEnableStreaks: Bool = true
     @AppStorage("enableStatistics") private var storedEnableStatistics: Bool = true
+    @AppStorage("enableAchievements") private var storedEnableAchievements: Bool = true
     
     var showDueDates: Bool {
         get { storedShowDueDates }
@@ -32,5 +33,10 @@ final class UserPreferences: ObservableObject {
     var enableStreaks: Bool {
         get { storedEnableStreaks }
         set { objectWillChange.send(); storedEnableStreaks = newValue }
+    }
+    
+    var enableAchievements: Bool {
+        get { storedEnableAchievements }
+        set { objectWillChange.send(); storedEnableAchievements = newValue }
     }
 }

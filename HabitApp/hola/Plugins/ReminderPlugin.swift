@@ -5,7 +5,7 @@ import UIKit
 
 import SwiftData
 
-class ReminderPlugin: TaskDataObservingPlugin {
+class ReminderPlugin: HabitDataObservingPlugin {
     var models: [any PersistentModel.Type]
     
     var isEnabled: Bool
