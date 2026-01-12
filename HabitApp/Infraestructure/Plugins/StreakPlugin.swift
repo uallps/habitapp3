@@ -31,6 +31,7 @@ final class StreakPlugin: HabitDataObservingPlugin {
                 if let streakObj = existingStreaks.first {
                     streakObj.currentCount = streakValue
                     streakObj.lastUpdate = Date()
+                    try await storageProvider.updateStreak(streakObj)
                 } else {
                     let newStreak = Streak(habitId: taskId)
                     newStreak.currentCount = streakValue

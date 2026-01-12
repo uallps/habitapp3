@@ -65,6 +65,18 @@ class SwiftDataStorageProvider: StorageProvider {
     }
     
     @MainActor
+    func updateStreak(_ streak: Streak) async throws {
+        let streakId = streak.id
+        let predicate = #Predicate<Streak> { $0.id == streakId }
+        let descriptor = FetchDescriptor<Streak>(predicate: predicate)
+        if let realStreak = try context.fetch(descriptor).first {
+            realStreak.currentCount = streak.currentCount
+            realStreak.lastUpdate = streak.lastUpdate
+            try context.save()
+        }
+    }
+    
+    @MainActor
     func savePendingChanges() async throws {
         context.processPendingChanges()
     }

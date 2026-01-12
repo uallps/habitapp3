@@ -60,6 +60,7 @@ protocol StorageProvider {
     func loadStreaksForHabit(habitId: UUID) async throws -> [Streak]
     func saveStreak(_ streak: Streak) async throws
     func savePendingChanges() async throws
+    func updateStreak(_ streak: Streak) async throws
     //END IF
     
     func saveContext() async throws
