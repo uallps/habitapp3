@@ -65,6 +65,7 @@ class AppConfig: ObservableObject {
         
         // Crear instancias de los plugins
         self.plugins = PluginRegistry.shared.createPluginInstances(config: self)
+        setupHabitDataObservingPlugins()
     }
     
    // private let modelContainer: ModelContainer
@@ -74,15 +75,12 @@ class AppConfig: ObservableObject {
        // setupPlugins()
     //}
     
-    // private func setupPlugins() {
-    //     let registry = PluginRegistry.shared
-        
-    //     //  Registrar los plugins
-    //     registry.register(ReminderPlugin.Type)
-    //     registry.register(HabitGoalPlugin.Type)
-        
-    //     print("✅ Plugins registrados correctamente")
-    // }
+    private func setupHabitDataObservingPlugins() {
+        let registry = HabitDataObserverManager.shared
+        registry.register(HabitGoalPlugin(config: self))
+        registry.register(StreakPlugin(config: self))
+        print("✅ Plugins registrados correctamente")
+    }
     
     // MARK: - Storage Provider
     
