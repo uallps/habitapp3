@@ -1,7 +1,7 @@
 import SwiftUI
 import SwiftData
 import Combine
-import SwiftData
+
 
 class AppConfig: ObservableObject {
         
@@ -40,6 +40,7 @@ class AppConfig: ObservableObject {
         print("📦 Schemas registrados: \(schemas)")
         print("🔌 Plugins activos: \(plugins.filter { $0.isEnabled }.count)/\(plugins.count)")
         self.swiftDataStorageProvider = SwiftDataStorageProvider(schema: schema)
+ observadores DESPUÉS de que el storageProvider esté listo
         setupHabitDataObservingPlugins()
     }
     
