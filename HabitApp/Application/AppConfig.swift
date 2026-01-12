@@ -10,7 +10,7 @@ class AppConfig: ObservableObject {
         var userPreferences: UserPreferences = UserPreferences()
         
         // MARK: - Storage Provider
-        
+    @AppStorage("storageType") var storageType: StorageType = .swiftData
     private var swiftDataStorageProvider: SwiftDataStorageProvider? = nil
         
         var storageProvider: StorageProvider {
@@ -21,26 +21,6 @@ class AppConfig: ObservableObject {
                 //   return JSONStorageProvider.shared
             }
         }
-        
-        @AppStorage("storageType")
-        var storageType: StorageType = .swiftData
-        
-        @AppStorage("showCategories")
-        static var showCategories: Bool = true
-        @AppStorage("showDueDates")
-        static var showDueDates: Bool = true
-        
-        @AppStorage("showPriorities")
-        static var showPriorities: Bool = true
-        
-        @AppStorage("enableReminders")
-        static var enableReminders: Bool = true
-    
-        @AppStorage("showGoals")
-        static var enableGoals: Bool = true
-    
-        @AppStorage("showStreaks")
-        static var enableStreaks: Bool = true
 
     init() {
         // Descubrir y registrar plugins automáticamente

@@ -9,7 +9,7 @@ final class StatisticsPlugin: HabitDataObservingPlugin {
     
     init(config: AppConfig) {
         self.isEnabled = config.userPreferences.enableStatistics
-        self.models = [Habit.self]
+        self.models = []
         self.viewModel = StatisticsViewModel(storageProvider: config.storageProvider)
     }
     

@@ -8,6 +8,8 @@ final class UserPreferences: ObservableObject {
     @AppStorage("enableReminders") private var storedEnableReminders: Bool = true
     @AppStorage("enableStreaks") private var storedEnableStreaks: Bool = true
     @AppStorage("enableStatistics") private var storedEnableStatistics: Bool = true
+    @AppStorage("enableHabits") private var storedEnableHabits: Bool = true
+    @AppStorage("enableGoals") private var storedEnableGoals: Bool = true
     @AppStorage("appTheme") private var storedAppTheme: Int = 0
     @AppStorage("daltonismType") var daltonismType: Int = 0
     @AppStorage("nightModeIntensity") var nightModeIntensity: Double = 0.0
@@ -42,6 +44,11 @@ final class UserPreferences: ObservableObject {
         set { objectWillChange.send(); storedShowDueDates = newValue }
     }
     
+    var enableGoals: Bool {
+        get { storedEnableGoals }
+        set { objectWillChange.send(); storedEnableGoals = newValue }
+    }
+    
     var showPriorities: Bool {
         get { storedShowPriorities }
         set { objectWillChange.send(); storedShowPriorities = newValue }
@@ -50,6 +57,11 @@ final class UserPreferences: ObservableObject {
     var enableReminders: Bool {
         get { storedEnableReminders }
         set { objectWillChange.send(); storedEnableReminders = newValue }
+    }
+    
+    var enableHabits: Bool {
+        get { storedEnableHabits }
+        set { objectWillChange.send(); storedEnableHabits = newValue }
     }
     
     var enableStatistics: Bool {

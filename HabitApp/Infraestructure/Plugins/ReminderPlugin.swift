@@ -11,7 +11,7 @@ class ReminderPlugin: HabitDataObservingPlugin {
     var isEnabled: Bool
     
     required init(config: AppConfig) {
-        self.isEnabled = AppConfig.enableReminders
+        self.isEnabled = config.userPreferences.enableReminders
         self.models = []
     }
     
