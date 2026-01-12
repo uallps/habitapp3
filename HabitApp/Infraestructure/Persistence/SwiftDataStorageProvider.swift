@@ -25,6 +25,17 @@ class SwiftDataStorageProvider: StorageProvider {
             // Guardar como singleton para reutilizar el MISMO container
             SwiftDataStorageProvider._shared = self
             print("✅ SwiftDataContext.shared inicializado con mainContext NUEVO")
+
+            // Debug: mostrar conteos al iniciar para confirmar persistencia
+            do {
+                let habitsCount = try context.fetch(FetchDescriptor<Habit>()).count
+                let notesCount = try context.fetch(FetchDescriptor<DailyNote>()).count
+                let categoriesCount = try context.fetch(FetchDescriptor<Category>()).count
+                let addictionsCount = try context.fetch(FetchDescriptor<Addiction>()).count
+                print("📂 Conteos al iniciar -> Habits: \(habitsCount), Notes: \(notesCount), Categories: \(categoriesCount), Addictions: \(addictionsCount)")
+            } catch {
+                print("⚠️ Error obteniendo conteos iniciales: \(error)")
+            }
         } catch {
             fatalError("Failed to initialize storage provider: \(error)")
         }

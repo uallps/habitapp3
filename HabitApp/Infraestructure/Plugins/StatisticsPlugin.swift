@@ -10,15 +10,24 @@ final class StatisticsPlugin: HabitDataObservingPlugin {
     init(config: AppConfig) {
         self.isEnabled = config.userPreferences.enableStatistics
         self.models = []
-        self.viewModel = StatisticsViewModel(storageProvider: config.storageProvider)
+        self.config = config
+        self.viewModel = nil
     }
     
-    // Why was this weak var?
+    private weak var config: AppConfig?
     var viewModel: StatisticsViewModel?
 
     func onDataChanged(taskId: UUID, title: String, dueDate: Date?) {
         DispatchQueue.main.async { [weak self] in
-            self?.viewModel?.refresh()
+            guard let self else { return }
+            if self.viewModel == nil {
+                if let provider = self.config?.storageProvider {
+                    self.viewModel = StatisticsViewModel(storageProvider: provider)
+                } else {
+                    return
+                }
+            }
+            self.viewModel?.refresh()
         }
     }
 }

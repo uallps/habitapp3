@@ -5,19 +5,19 @@ final class StreakPlugin: HabitDataObservingPlugin {
     var models: [any PersistentModel.Type]
     
     var isEnabled: Bool
-    
+    private weak var config: AppConfig?
+
     init(config: AppConfig) {
         self.isEnabled = config.userPreferences.enableStreaks
         self.models = [Streak.self]
-        self.storageProvider = config.storageProvider
+        self.config = config
     }
-    
-    private let storageProvider: StorageProvider
         
     func onDataChanged(taskId: UUID, title: String, dueDate: Date?) {
         
         // 1. Buscar el hábito para obtener sus doneDates
         Task {
+            guard let storageProvider = config?.storageProvider else { return }
             do {
                 let habit : Habit? = try await storageProvider.getHabit(id: taskId)
                 if habit == nil { 

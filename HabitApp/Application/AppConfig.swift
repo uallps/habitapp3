@@ -17,7 +17,10 @@ class AppConfig: ObservableObject {
     var storageProvider: StorageProvider {
         switch storageType {
         case .swiftData:
-            return swiftDataStorageProvider ?? SwiftDataStorageProvider(schema: Schema([]))
+            guard let provider = swiftDataStorageProvider else {
+                fatalError("storageProvider requested before initialization")
+            }
+            return provider
         }
     }
 
