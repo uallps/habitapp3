@@ -39,7 +39,9 @@ struct AccessibilitySettingsView: View {
                     .tag(colorName)
                 }
             }
+            #if(os(iOS))
             .pickerStyle(.navigationLink)
+            #endif
         }
 
         // 3. Sección de Accesibilidad

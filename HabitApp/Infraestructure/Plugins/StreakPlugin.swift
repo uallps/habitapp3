@@ -8,7 +8,7 @@ final class StreakPlugin: HabitDataObservingPlugin {
     
     init(config: AppConfig) {
         self.isEnabled = config.userPreferences.enableStreaks
-        self.models = [Habit.self]
+        self.models = [Habit.self, Streak.self]
         self.storageProvider = config.storageProvider
     }
     
@@ -34,12 +34,9 @@ final class StreakPlugin: HabitDataObservingPlugin {
                 } else {
                     let newStreak = Streak(habitId: taskId)
                     newStreak.currentCount = streakValue
+                    newStreak.habitId = taskId
                     try await storageProvider.saveStreak(newStreak)
                 }
-                
-                // 4. Guardar cambios y procesar para que la UI se entere YA
-                try await storageProvider.saveContext()
-                try await storageProvider.savePendingChanges()
                 
             } catch {
             }        }

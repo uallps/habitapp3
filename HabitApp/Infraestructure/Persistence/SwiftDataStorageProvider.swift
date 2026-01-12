@@ -46,8 +46,9 @@ class SwiftDataStorageProvider: StorageProvider {
     func loadStreaksForHabit(habitId: UUID) async throws -> [Streak] {
         var streaks: [Streak] = []
         let predicate = #Predicate<Streak> { $0.habitId == habitId }
+        let descriptorDebug = FetchDescriptor<Streak>()
         let descriptor = FetchDescriptor<Streak>(predicate: predicate)
-        
+        let streaksDebug = try context.fetch(descriptorDebug)
         streaks = try context.fetch(descriptor)
         return streaks
     }
@@ -55,6 +56,12 @@ class SwiftDataStorageProvider: StorageProvider {
     @MainActor
     func saveStreak(_ streak: Streak) async throws {
         context.insert(streak)
+        try await saveContext()
+        try await savePendingChanges()
+        let descriptorDebug = FetchDescriptor<Streak>()
+        let streaksDebug = try context.fetch(descriptorDebug)
+        
+        print("streaksDebug.count: \(streaksDebug.count)")
     }
     
     @MainActor
