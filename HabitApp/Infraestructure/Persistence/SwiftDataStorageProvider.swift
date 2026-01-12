@@ -8,20 +8,23 @@ class SwiftDataContext {
 
 class SwiftDataStorageProvider: StorageProvider {
     
+    static private var _shared: SwiftDataStorageProvider?
+    
     var modelContainer: ModelContainer
     private var context: ModelContext
     
     init(schema: Schema) {
+        // SIEMPRE crear un nuevo ModelContainer y contexto
+        // No reutilizar anteriores porque pueden estar corruptos
         do {
-            // Schema conflict dev temp solution
-            //SwiftDataStorageProvider.resetStore(schema: schema)
-            //SwiftDataStorageProvider.deleteStoreFile()
             self.modelContainer = try ModelContainer(for: schema)
             // Usar mainContext para que sea el mismo que usa SwiftUI
             self.context = self.modelContainer.mainContext
             // Compartir el contexto globalmente para que todos lo usen
             SwiftDataContext.shared = self.context
-            print("✅ SwiftDataContext.shared inicializado con mainContext")
+            // Guardar como singleton para reutilizar el MISMO container
+            SwiftDataStorageProvider._shared = self
+            print("✅ SwiftDataContext.shared inicializado con mainContext NUEVO")
         } catch {
             fatalError("Failed to initialize storage provider: \(error)")
         }
@@ -619,13 +622,6 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
         try context.save()
     }
 
-    init(modelContainer: ModelContainer) {
-        self.modelContainer = modelContainer
-        self.context = modelContainer.mainContext
-        SwiftDataContext.shared = self.context
-    }
-
-
     @MainActor
     func loadHabits() async throws -> [Habit] {
         let descriptor = FetchDescriptor<Habit>() // Use FetchDescriptor
@@ -694,10 +690,29 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
     @MainActor
     func addHabit(habit: Habit) async  throws {
         do {
+            print("📝 Antes de insertar - hasChanges: \(context.hasChanges)")
             context.insert(habit)
+            print("🔍 Habit insertado: \(habit.title), hasChanges después insert: \(context.hasChanges)")
+            
+            // Si hasChanges sigue siendo false, el contexto está corrupto
+            if !context.hasChanges {
+                print("⚠️ ADVERTENCIA: El contexto no detectó cambios. Intentando forzar...")
+                context.processPendingChanges()
+                print("🔍 Después processPendingChanges - hasChanges: \(context.hasChanges)")
+            }
+            
             try await saveContext()
+            
+            // Verificar que se guardó
+            let descriptor = FetchDescriptor<Habit>()
+            let allHabits = try context.fetch(descriptor)
+            print("✅ Total hábitos después de guardar: \(allHabits.count)")
+            for h in allHabits {
+                print("  - \(h.title)")
+            }
         } catch {
-            print("Error adding habit: \(error)")
+            print("❌ Error adding habit: \(error)")
+            throw error
         }
     }
     

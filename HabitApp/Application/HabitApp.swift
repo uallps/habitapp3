@@ -11,7 +11,8 @@ struct HabitApp: App {
     @StateObject private var userPreferences = UserPreferences()
     
     init() {
-        self.storageProvider = AppConfig().storageProvider
+        let appConfig = AppConfig.shared
+        self.storageProvider = appConfig.storageProvider
         guard let swiftDataProvider = storageProvider as? SwiftDataStorageProvider else {
             fatalError("StorageProvider is not a SwiftDataStorageProvider")
         }
@@ -59,7 +60,6 @@ struct HabitApp: App {
                     List(selection: $selectedDetailView) {
                         NavigationLink(value: "habitos") { Label("Habitos", systemImage: "checklist") }
                         NavigationLink(value: "notas") { Label("Notas Diarias", systemImage: "note.text") }
-                        NavigationLink(value: "rachas") { Label("Rachas", systemImage: "flame") }
                         NavigationLink(value: "objetivos") { Label("Objetivos", systemImage: "target") }
                         NavigationLink(value: "ajustes") { Label("Ajustes", systemImage: "gearshape") }
                         NavigationLink(value: "categorias") { Label("Categorias", systemImage: "folder") }
@@ -77,7 +77,7 @@ struct HabitApp: App {
 #endif
             }
             // --- MODIFICADORES GLOBALES ---
-            .environmentObject(AppConfig())
+            .environmentObject(AppConfig.shared)
             .modelContainer(modelContainer)
             .environmentObject(userPreferences)
             .preferredColorScheme(userPreferences.colorScheme)
