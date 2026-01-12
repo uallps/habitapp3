@@ -11,9 +11,9 @@ class AppConfig: ObservableObject {
         
         // MARK: - Storage Provider
         
-        private lazy var swiftDataStorageProvider: SwiftDataStorageProvider = {
-            // Obtener modelos base
-            var schemas: [any PersistentModel.Type] = [Habit.self, Category.self, Addiction.self, DailyNote.self, Goal.self, Milestone.self]
+    private lazy var swiftDataStorageProvider: SwiftDataStorageProvider = {
+        // Obtener modelos base
+            var schemas: [any PersistentModel.Type] = []
             
             // Agregar modelos de plugins habilitados
             schemas.append(contentsOf: PluginRegistry.shared.getEnabledModels(from: plugins))
