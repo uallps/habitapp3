@@ -15,33 +15,43 @@ final class StreakPlugin: HabitDataObservingPlugin {
     private let storageProvider: StorageProvider
         
     func onDataChanged(taskId: UUID, title: String, dueDate: Date?) {
-     
+        print("🔥 StreakPlugin.onDataChanged called - habit: \(title), id: \(taskId)")
+        
         // 1. Buscar el hábito para obtener sus doneDates
         Task {
             do {
                 let habit : Habit? = try await storageProvider.getHabit(id: taskId)
-                if habit == nil { return }
+                if habit == nil { 
+                    print("⚠️ Habit not found")
+                    return
+                }
                 
+                print("📅 Habit '\(habit!.title)' has \(habit!.doneDates.count) completed dates")
                 
                 // 2. Calcular la racha con las fechas del hábito
                 let streakValue = calculateStreak(from: habit!.doneDates)
+                print("🔥 Calculated streak: \(streakValue)")
                 
                 let existingStreaks = try await storageProvider.loadStreaksForHabit(habitId: taskId)
+                print("🔍 Found \(existingStreaks.count) existing streaks")
                 
                 if let streakObj = existingStreaks.first {
                     streakObj.currentCount = streakValue
                     streakObj.lastUpdate = Date()
                     try await storageProvider.updateStreak(streakObj)
+                    print("✅ Updated existing streak")
                 } else {
                     let newStreak = Streak(habitId: taskId)
                     newStreak.currentCount = streakValue
                     newStreak.habitId = taskId
                     try await storageProvider.saveStreak(newStreak)
+                    print("✨ Created new streak")
                 }
                 
             } catch {
-            }        }
-
+                print("❌ Error in StreakPlugin: \(error)")
+            }        
+        }
     }
     
     private func calculateStreak(from dates: [Date]) -> Int {

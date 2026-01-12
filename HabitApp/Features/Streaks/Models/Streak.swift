@@ -6,10 +6,7 @@ final class Streak {
     var id: UUID
     var currentCount: Int
     var lastUpdate: Date
-    
-    // Relación con el hábito para que SwiftData sepa qué observar
-    @Relationship(inverse: \Habit.id)
-    var habitId: UUID?
+    var habitId: UUID  // Cambiado a no opcional para mejor compatibilidad con @Query
     
     init(habitId: UUID) {
         self.id = UUID()

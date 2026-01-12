@@ -23,6 +23,18 @@ struct HabitListView: View {
         macBody
         #endif
     }
+    
+    // Inicializar rachas para hábitos existentes
+    private func initializeStreaksIfNeeded() {
+        print("🚀 Inicializando rachas para \(habits.count) hábitos")
+        for habit in habits {
+            HabitDataObserverManager.shared.notifyDataChanged(
+                taskId: habit.id,
+                title: habit.title,
+                dueDate: habit.dueDate
+            )
+        }
+    }
 }
 
 // MARK: - iOS UI
@@ -203,6 +215,9 @@ extension HabitListView {
                     isNew: true
                 )
             }
+            .onAppear {
+                initializeStreaksIfNeeded()
+            }
             
             //
         }
@@ -378,6 +393,9 @@ extension HabitListView {
                 habit: Habit(title: ""),
                 isNew: true
             )
+        }
+        .onAppear {
+            initializeStreaksIfNeeded()
         }
     }
 }
