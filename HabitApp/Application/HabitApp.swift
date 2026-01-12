@@ -49,7 +49,7 @@ struct HabitApp: App {
                     GoalsView(storageProvider: storageProvider)
                         .tabItem { Label("Objetivos", systemImage: "target") }
                     
-                    StatisticsView(storageProvider: storageProvider)
+                    StatisticsView()
                         .tabItem { Label("Estadísticas", systemImage: "chart.bar") }
                     
                     SettingsView()
@@ -70,7 +70,7 @@ struct HabitApp: App {
                     case "habitos": HabitListView(storageProvider: storageProvider)
                     case "notas": DailyNotesView(storageProvider: storageProvider)
                     case "objetivos": GoalsView(storageProvider: storageProvider)
-                    case "estadisticas": StatisticsView(storageProvider: storageProvider)
+                    case "estadisticas": StatisticsView()
                     case "ajustes": SettingsView()
                     case "categorias": CategoryListView(storageProvider: storageProvider)
                     default: Text("Seleccione una opción")
