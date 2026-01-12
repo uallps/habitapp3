@@ -1,10 +1,3 @@
-//
-//  Habit.swift
-//  HabitApp
-//
-//  Created by Aula03 on 15/10/25.
-//
-
 import Foundation
 import SwiftData
 
@@ -15,9 +8,20 @@ class Habit {
     var doneDatesString: String = ""
     var isCompleted: Bool = false
     var dueDate: Date?
-    var priority: Priority? = nil
+    var priorityRawValue: String? = nil
     var isReminderEnabled: Bool = false
     var reminderDate: Date? = nil
+    
+    // Computed property para acceder a Priority
+    var priority: Priority? {
+        get {
+            guard let rawValue = priorityRawValue else { return nil }
+            return Priority(rawValue: rawValue)
+        }
+        set {
+            priorityRawValue = newValue?.rawValue
+        }
+    }
     var scheduledDaysString: String = ""
     var createdAt: Date = Date()
     var updatedAt: Date = Date()
@@ -57,7 +61,7 @@ class Habit {
         self.doneDatesString = doneDates.map { String($0.timeIntervalSince1970) }.joined(separator: ",")
         self.isCompleted = isCompleted
         self.dueDate = dueDate
-        self.priority = priority
+        self.priorityRawValue = priority?.rawValue
         self.reminderDate = reminderDate
         self.scheduledDaysString = scheduledDays.map { String($0) }.joined(separator: ",")
         self.createdAt = Date()
@@ -102,5 +106,3 @@ class Habit {
         return doneDates.contains { calendar.isDate($0, inSameDayAs: targetDate) }
     }
 }
-
-
