@@ -17,10 +17,11 @@ class SwiftDataStorageProvider: StorageProvider {
             //SwiftDataStorageProvider.resetStore(schema: schema)
             //SwiftDataStorageProvider.deleteStoreFile()
             self.modelContainer = try ModelContainer(for: schema)
-            self.context = ModelContext(self.modelContainer)
+            // Usar mainContext para que sea el mismo que usa SwiftUI
+            self.context = self.modelContainer.mainContext
             // Compartir el contexto globalmente para que todos lo usen
             SwiftDataContext.shared = self.context
-            print("✅ SwiftDataContext.shared inicializado")
+            print("✅ SwiftDataContext.shared inicializado con mainContext")
         } catch {
             fatalError("Failed to initialize storage provider: \(error)")
         }
