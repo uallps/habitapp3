@@ -35,6 +35,10 @@ struct CompactHabitStatsView: View {
                             .foregroundColor(.secondary)
                     }
                 }
+                
+                #if os(macOS)
+                Spacer()
+                #endif
             }
         }
         .padding(.vertical, 8)
