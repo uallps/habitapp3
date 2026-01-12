@@ -10,8 +10,6 @@ struct StreakBadgeView: View {
     }
     
     var body: some View {
-        let _ = print("🔍 StreakBadgeView rendering - habitId: \(habitId), total streaks: \(allStreaks.count), my streak: \(streak?.currentCount ?? -1)")
-        
         if let streak = streak, streak.currentCount > 0 {
             let hot = streak.currentCount > 4
             HStack(spacing: 4) {
