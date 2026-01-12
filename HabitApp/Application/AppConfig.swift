@@ -11,24 +11,12 @@ class AppConfig: ObservableObject {
         
         // MARK: - Storage Provider
         
-    private lazy var swiftDataStorageProvider: SwiftDataStorageProvider = {
-        // Obtener modelos base
-            var schemas: [any PersistentModel.Type] = []
-            
-            // Agregar modelos de plugins habilitados
-            schemas.append(contentsOf: PluginRegistry.shared.getEnabledModels(from: plugins))
-            
-            let schema = Schema(schemas)
-            print("📦 Schemas registrados: \(schemas)")
-            print("🔌 Plugins activos: \(plugins.filter { $0.isEnabled }.count)/\(plugins.count)")
-            
-            return SwiftDataStorageProvider(schema: schema)
-        }()
+    private var swiftDataStorageProvider: SwiftDataStorageProvider? = nil
         
         var storageProvider: StorageProvider {
             switch storageType {
             case .swiftData:
-                return swiftDataStorageProvider
+                return swiftDataStorageProvider ?? SwiftDataStorageProvider(schema: Schema([]))
                 //case .json:
                 //   return JSONStorageProvider.shared
             }
@@ -65,6 +53,13 @@ class AppConfig: ObservableObject {
         
         // Crear instancias de los plugins
         self.plugins = PluginRegistry.shared.createPluginInstances(config: self)
+        // Now plugins are available
+        var schemas: [any PersistentModel.Type] = []
+        schemas.append(contentsOf: PluginRegistry.shared.getEnabledModels(from: plugins))
+        let schema = Schema(schemas)
+        print("📦 Schemas registrados: \(schemas)")
+        print("🔌 Plugins activos: \(plugins.filter { $0.isEnabled }.count)/\(plugins.count)")
+        self.swiftDataStorageProvider = SwiftDataStorageProvider(schema: schema)
         setupHabitDataObservingPlugins()
     }
     
