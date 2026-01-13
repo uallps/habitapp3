@@ -50,12 +50,12 @@ jobs:
             -project HabitApp.xcodeproj \
             -scheme HabitApp \
             -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,OS=18.0,name=iPhone 16' \
+            -destination 'platform=iOS Simulator,name=iPhone 16' \
             -derivedDataPath ./DerivedData \
+            IPHONEOS_DEPLOYMENT_TARGET=18.0 \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO
-        continue-on-error: true
 
       - name: Build for macOS
         run: |
@@ -63,8 +63,9 @@ jobs:
             -project HabitApp.xcodeproj \
             -scheme HabitApp \
             -sdk macosx \
-            -destination 'generic/platform=macOS' \
+            -destination 'platform=macOS' \
             -derivedDataPath ./DerivedData \
+            MACOSX_DEPLOYMENT_TARGET=15.0 \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO
@@ -76,9 +77,10 @@ jobs:
             -project HabitApp.xcodeproj \
             -scheme HabitApp \
             -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,OS=18.0,name=iPhone 16' \
+            -destination 'platform=iOS Simulator,name=iPhone 16' \
             -derivedDataPath ./DerivedData \
             -testPlan HabitAppUnitTestsMacOS \
+            IPHONEOS_DEPLOYMENT_TARGET=18.0 \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
