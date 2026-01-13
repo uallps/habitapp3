@@ -103,6 +103,9 @@ struct HabitApp: App {
                     NavigationLink(value: "estadisticas") {
                         Label("Estadísticas", systemImage: "chart.bar")
                     }
+                    NavigationLink(value: "logros") {
+                        Label("Logros", systemImage: "trophy.fill")
+                    }
                     NavigationLink(value: "ajustes") {
                         Label("Ajustes", systemImage: "gearshape")
                     }
@@ -126,6 +129,8 @@ struct HabitApp: App {
                     GoalsView(storageProvider: storageProvider)
                 case "estadisticas":
                     StatisticsView()
+                case "logros":
+                    AchievementsListView(storageProvider: storageProvider)
                 case "ajustes":
                     SettingsView()
                 case "categorias":

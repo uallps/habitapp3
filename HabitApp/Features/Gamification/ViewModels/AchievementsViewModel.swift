@@ -62,7 +62,7 @@ class AchievementsViewModel: ObservableObject {
                 .flatMap { $0.doneDates }
                 .map { calendar.startOfDay(for: $0) }
             
-            // Calcular la fecha más reciente para verificaciones temporales (perfect_day, early_bird)
+            // Calcular la fecha más reciente para verificaciones temporales (por ejemplo, perfect_day)
             let triggeringDate = allCompletionDates.max() ?? Date()
             
             let totalCompletions = allCompletionDates.count
@@ -95,22 +95,6 @@ class AchievementsViewModel: ObservableObject {
             }
             
             let hasPerfectWeek = calculatePerfectWeek(habits: habits, allCompletionDates: allCompletionDates)
-            
-            print("📊 ESTADÍSTICAS CALCULADAS:")
-            print("  Total de completados: \(totalCompletions)")
-            print("  Hábitos únicos completados: \(uniqueHabitsCompleted)")
-            print("  Racha individual máxima: \(maxHabitStreak)")
-            print("  Racha global: \(globalStreak)")
-            print("  Día perfecto: \(isPerfectDay)")
-            print("  Fin de semana completado: \(hasWeekendCompletion)")
-            print("  Perfect week: \(hasPerfectWeek)")
-            
-            // Debug: mostrar fechas de cada hábito
-            for habit in habits where !habit.doneDates.isEmpty {
-                let streak = calculateMaxStreak(for: habit)
-                print("  - \(habit.title): \(habit.doneDates.count) días, streak: \(streak)")
-            }
-            
 
             
             // MARK: - Evaluación de logros
