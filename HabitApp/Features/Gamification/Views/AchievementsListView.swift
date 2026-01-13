@@ -16,18 +16,36 @@ struct AchievementsListView: View {
         )
     }
     
+    // MARK: - Scoring
+    
+    private var totalScore: Int {
+        viewModel.totalScore(for: achievements)
+    }
+    
+    private var currentLevel: AchievementLevel {
+        viewModel.level(forScore: totalScore)
+    }
+    
     var body: some View {
         NavigationStack {
             Group {
                 if achievements.isEmpty {
                     ProgressView("Cargando logros...")
                 } else {
-                    List(achievements) { achievement in
-                        AchievementRowView(achievement: achievement)
+                    List {
+                        Section {
+                            ForEach(achievements) { achievement in
+                                AchievementRowView(achievement: achievement)
+                            }
+                        } header: {
+                            ScoreHeaderView(totalScore: totalScore, level: currentLevel)
+                        }
                     }
+                    .listStyle(.insetGrouped)
                 }
             }
             .navigationTitle("Logros")
+            .navigationBarTitleDisplayMode(.inline)
             .task {
                 await viewModel.syncCatalogIfNeeded()
                 await viewModel.checkAndUnlockAchievements(habits: habits)

@@ -190,6 +190,21 @@ class AchievementsViewModel: ObservableObject {
         }
     }
     
+    // MARK: - Scoring
+    
+    /// Calcula la puntuación total a partir de los logros desbloqueados.
+    func totalScore(for achievements: [Achievement]) -> Int {
+        achievements.filter { $0.isUnlocked }.reduce(0) { partial, achievement in
+            guard let definition = AchievementCatalog.find(id: achievement.achievementId) else { return partial }
+            return partial + definition.points
+        }
+    }
+    
+    /// Devuelve el nivel asociado a una puntuación dada.
+    func level(forScore score: Int) -> AchievementLevel {
+        AchievementLevel(score: score)
+    }
+    
     // MARK: - Helpers
     
     private func checkPerfectDay(for date: Date, habits: [Habit]) -> Bool {
