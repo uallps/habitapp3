@@ -4,6 +4,7 @@ import SwiftData
 struct AchievementsListView: View {
     @StateObject private var viewModel: AchievementsViewModel
     @Query(sort: \Achievement.achievementId) private var achievements: [Achievement]
+    @Query(sort: \Habit.createdAt) private var habits: [Habit]
     
     init(storageProvider: StorageProvider) {
         _viewModel = StateObject(wrappedValue: AchievementsViewModel(storageProvider: storageProvider))
@@ -13,10 +14,7 @@ struct AchievementsListView: View {
         NavigationStack {
             Group {
                 if achievements.isEmpty {
-                    ProgressView("Inicializando logros...")
-                        .task {
-                            await viewModel.initializeIfNeeded()
-                        }
+                    ProgressView("Cargando logros...")
                 } else {
                     List {
                         ForEach(achievements) { achievement in
@@ -27,9 +25,24 @@ struct AchievementsListView: View {
             }
             .navigationTitle("Logros (\(achievements.count))")
             .task {
-                print("📊 AchievementsListView - Total logros: \(achievements.count)")
-                achievements.forEach { achievement in
-                    print("  - \(achievement.achievementId): \(achievement.isUnlocked ? "🏆" : "🔒") \(achievement.title)")
+                // Sincronizar catálogo (agrega nuevos logros si los hay)
+                await viewModel.syncCatalogIfNeeded()
+            }
+            .onChange(of: habits.map { $0.doneDates.count }) { oldValue, newValue in
+                // Solo verificar si hubo un incremento (completado), no decremento (descompletado)
+                let oldTotal = oldValue.reduce(0, +)
+                let newTotal = newValue.reduce(0, +)
+                
+                guard newTotal > oldTotal else {
+                    return
+                }
+                
+                // Detectar cambio en completados y verificar logros
+                if let lastModifiedHabit = habits.max(by: { ($0.doneDates.last ?? .distantPast) < ($1.doneDates.last ?? .distantPast) }),
+                   let lastDate = lastModifiedHabit.doneDates.last {
+                    Task {
+                        await viewModel.checkAndUnlockAchievements(triggeringDate: lastDate)
+                    }
                 }
             }
         }

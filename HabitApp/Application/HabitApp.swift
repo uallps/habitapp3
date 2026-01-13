@@ -14,22 +14,15 @@ struct HabitApp: App {
     let modelContainer: ModelContainer
     
     @StateObject private var userPreferences = UserPreferences()
+    private let appConfig: AppConfig  // UNA SOLA INSTANCIA (no StateObject porque init necesita storageProvider)
     
     init() {
         print("\n🚀 ==================== INICIO HABITAPP ====================")
         
-        // Inicializar el ModelContainer
-        //let schema = Schema([Habit.self, DailyNote.self, Goal.self, Milestone.self])
-       // let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        // Crear UNA SOLA instancia de AppConfig
+        self.appConfig = AppConfig()
+        self.storageProvider = appConfig.storageProvider
         
-        //let container: ModelContainer
-      //  do {
-        //    container = try ModelContainer(for: schema, configurations: [modelConfiguration])
-       // } catch {
-       //     fatalError("❌ Error inicializando ModelContainer: \(error)")
-       // }
-       
-        self.storageProvider = AppConfig().storageProvider
         guard let swiftDataProvider = storageProvider as? SwiftDataStorageProvider else {
             fatalError("StorageProvider is not a SwiftDataStorageProvider")
         }
@@ -88,7 +81,7 @@ struct HabitApp: App {
                         Label("Ajustes", systemImage: "gearshape")
                     }
             }
-            .environmentObject(AppConfig())
+            .environmentObject(appConfig)  // Usar la misma instancia
             .modelContainer(modelContainer)  //  AGREGAR ESTO
             .environmentObject(userPreferences)
 
@@ -143,7 +136,7 @@ struct HabitApp: App {
                     Text("Seleccione una opción")
                 }
             }
-            .environmentObject(AppConfig())
+            .environmentObject(appConfig)  // Usar la misma instancia
             .modelContainer(modelContainer)
             .environmentObject(userPreferences)
 #endif

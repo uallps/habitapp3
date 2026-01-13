@@ -748,25 +748,25 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
 
     // Como es evidente, tiene sentido en un entorno de desarrollo y pruebas. A no ser que
     //se quiera dejar una gran vulnerabilidad o trollear un poquito al usuario final, no
-    // debería de existir.
-        @MainActor
-        func resetStorage() {
-            // 1. Tear down old context and container
-            SwiftDataContext.shared = nil
-            // Note: Old modelContainer will be deallocated automatically
-            
-            // 2. Recreate a new container and context
-            do {
-                let newContainer = try ModelContainer(for: Schema()) // your app schema
-                let newContext = ModelContext(newContainer)
-                self.modelContainer = newContainer
-                self.context = newContext
-                SwiftDataContext.shared = newContext
-                print("✅ SwiftData storage reset complete.")
-            } catch {
-                print("❌ Failed to reset SwiftData storage: \(error)")
-            }
+// debería de existir.
+    @MainActor
+    func resetStorage() {
+        // 1. Tear down old context and container
+        SwiftDataContext.shared = nil
+        // Note: Old modelContainer will be deallocated automatically
+        
+        // 2. Recreate a new container and context
+        do {
+            let newContainer = try ModelContainer(for: Schema()) // your app schema
+            let newContext = ModelContext(newContainer)
+            self.modelContainer = newContainer
+            self.context = newContext
+            SwiftDataContext.shared = newContext
+            print("✅ SwiftData storage reset complete.")
+        } catch {
+            print("❌ Failed to reset SwiftData storage: \(error)")
         }
+    }
     
     static func resetStore(schema: Schema) {
         do {

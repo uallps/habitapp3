@@ -51,18 +51,32 @@ enum AchievementCatalog {
             iconName: "crown.fill"
         ),
         
-        // Racha
+        // Racha (por hábito individual)
         AchievementDefinition(
             id: "streak_3",
             title: "En Racha",
-            description: "Mantén una racha de 3 días consecutivos",
+            description: "Mantén una racha de 3 días consecutivos en un hábito",
             iconName: "flame"
         ),
         AchievementDefinition(
             id: "streak_7",
             title: "Una Semana",
-            description: "Mantén una racha de 7 días consecutivos",
+            description: "Mantén una racha de 7 días consecutivos en un hábito",
             iconName: "calendar"
+        ),
+        
+        // Racha global (cualquier hábito cada día)
+        AchievementDefinition(
+            id: "global_streak_7",
+            title: "Constante",
+            description: "Completa al menos un hábito durante 7 días consecutivos",
+            iconName: "chart.line.uptrend.xyaxis"
+        ),
+        AchievementDefinition(
+            id: "global_streak_30",
+            title: "Imparable",
+            description: "Completa al menos un hábito durante 30 días consecutivos",
+            iconName: "bolt.horizontal.fill"
         ),
         
         // Horarios

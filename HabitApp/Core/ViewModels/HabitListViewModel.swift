@@ -4,7 +4,6 @@ import Combine
 
 final class HabitListViewModel: ObservableObject {
     private let storageProvider: StorageProvider
-    private lazy var achievementsVM = AchievementsViewModel(storageProvider: storageProvider)
     
     init(storageProvider: StorageProvider) {
         self.storageProvider = storageProvider
@@ -74,15 +73,6 @@ final class HabitListViewModel: ObservableObject {
                         taskId: habit.id,
                         title: habit.title,
                         dueDate: habit.dueDate
-                    )
-                }
-                
-                // Si se completó (no descompletó), verificar logros
-                if !wasCompleted {
-                    print("  🏆 Verificando logros...")
-                    await achievementsVM.checkAndUnlockAchievements(
-                        completedHabit: habit,
-                        completionDate: date
                     )
                 }
                 

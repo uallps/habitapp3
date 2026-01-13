@@ -129,7 +129,7 @@ extension SettingsView {
                 clearAllData()
             }
         } message: {
-            Text("Esta acción eliminará todos los hábitos, notas y objetivos. No se puede deshacer.")
+            Text("Esta acción eliminará todos los hábitos, notas, objetivos y logros. No se puede deshacer.")
         }
     }
 }
@@ -147,6 +147,9 @@ extension SettingsView {
             
             // Eliminar todos los objetivos
             try modelContext.delete(model: Goal.self)
+            
+            // Eliminar todos los logros
+            try modelContext.delete(model: Achievement.self)
             
             try modelContext.save()
         } catch {
