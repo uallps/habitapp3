@@ -357,12 +357,13 @@ class SwiftDataStorageProvider: StorageProvider {
 
     @MainActor
 func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async throws {
-    guard getRealInstanceAddiction(addiction) != nil else {
+    let realAddiction = getRealInstanceAddiction(addiction)
+    guard realAddiction  != nil else {
         print("Error removing compensatory habit: addiction is nil")
         return
     }
-    if let index = realAddiction.compensatoryHabits.firstIndex(where: { $0.id == habit.id }) {
-        realAddiction.compensatoryHabits.remove(at: index)
+    if let index = realAddiction!.compensatoryHabits.firstIndex(where: { $0.id == habit.id }) {
+        realAddiction!.compensatoryHabits.remove(at: index)
         try context.save()
     }
 
@@ -408,12 +409,13 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
 
         @MainActor
     func associateCompensatoryHabit(to addiction: Addiction, habit: Habit) async throws {
-        guard getRealInstanceAddiction(addiction) != nil else {
+        let realAddiction = getRealInstanceAddiction(addiction)
+        guard realAddiction != nil else {
             print("Error associating trigger habit: addiction is nil")
             return
         }
 
-        realAddiction.compensatoryHabits.append(habit)
+        realAddiction!.compensatoryHabits.append(habit)
 
         // TODO: LLAMAR A MARCAR HÁBITO COMO REALIZADO
         try context.save()

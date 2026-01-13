@@ -133,9 +133,6 @@
         }
       }
     },
-    "Addicciones" : {
-
-    },
     "Adicciones" : {
 
     },
@@ -308,6 +305,9 @@
     "Deuteranopía" : {
 
     },
+    "Día actual: %@" : {
+
+    },
     "Días de la semana" : {
 
     },
@@ -407,6 +407,9 @@
     "Hábito Asociado" : {
 
     },
+    "Habitos" : {
+
+    },
     "Hábitos" : {
 
     },
@@ -429,6 +432,9 @@
 
     },
     "Hora de recordatorio" : {
+
+    },
+    "Hoy" : {
 
     },
     "Imagen" : {
@@ -572,6 +578,9 @@
     "Plugins y Personalización" : {
 
     },
+    "Podrás asociar hábitos después de crear la adicción." : {
+
+    },
     "Por Hábito" : {
 
     },
@@ -644,9 +653,6 @@
     "Purple" : {
 
     },
-    "Rachas" : {
-
-    },
     "Rango" : {
 
     },
@@ -675,6 +681,12 @@
 
     },
     "Seleccione una opción" : {
+
+    },
+    "Semana - Por Hábito" : {
+
+    },
+    "Semana - Resumen General" : {
 
     },
     "Severidad %@ %@" : {

@@ -41,15 +41,6 @@ final class StreakPlugin: HabitDataObservingPlugin {
                     try await storageProvider.saveStreak(newStreak)
                 }
                 
-<<<<<<< HEAD
-                try await storageProvider.onDataChanged(taskId: taskId, title: title, dueDate: dueDate)
-                
-                // 4. Guardar cambios y procesar para que la UI se entere YA
-                try await storageProvider.saveContext()
-                try await storageProvider.savePendingChanges()
-                
-=======
->>>>>>> origin/core_8jan
             } catch {
             }        
         }

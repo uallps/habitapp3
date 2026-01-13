@@ -17,7 +17,7 @@ final class AddictionPlugin: HabitDataObservingPlugin {
     var isEnabled: Bool
     
     init(config: AppConfig) {
-        self.isEnabled = config.userPreferences.showAddictions
+        self.isEnabled = config.userPreferences.enableAddictions
         self.models = [Habit.self, Addiction.self]
         self.storageProvider = config.storageProvider
     }
