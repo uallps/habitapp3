@@ -9,7 +9,7 @@ struct UserImagesPickerView: View {
     #endif
         
     init(storageProvider: StorageProvider) {
-        self._viewModel = StateObject(wrappedValue: UserImagesViewModel(storageProvider: storageProvider))
+        self._viewModel = StateObject(wrappedValue: UserImagesViewModel(storageProvider: storageProvider, userImageSlot: UserImageSlot(emojis: [])))
     }
 
     var body: some View {

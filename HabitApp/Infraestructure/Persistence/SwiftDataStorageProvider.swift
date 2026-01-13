@@ -7,6 +7,26 @@ class SwiftDataContext {
 }
 
 class SwiftDataStorageProvider: StorageProvider {
+    func upsertUserImageSlot(_ userImageSlot: UserImageSlot) async throws {
+        do {
+            var realUIS: UserImageSlot
+            let predicate = #Predicate<UserImageSlot> { $0.id == userImageSlot.id }
+            let descriptor = FetchDescriptor<UserImageSlot>(predicate: predicate)
+            let realUISs: [UserImageSlot] = try context.fetch(descriptor)
+            if realUISs.first == nil {
+                context.insert(userImageSlot)
+            } else {
+                realUIS = realUISs.first!
+                realUIS.imageData = userImageSlot.imageData
+                realUIS.emojis = userImageSlot.emojis
+            }
+            try await saveContext()
+        } catch {
+            print("Error upserting user image slot: \(error)")
+        }
+
+    }
+    
 
     
     
@@ -82,9 +102,7 @@ class SwiftDataStorageProvider: StorageProvider {
     func loadStreaksForHabit(habitId: UUID) async throws -> [Streak] {
         var streaks: [Streak] = []
         let predicate = #Predicate<Streak> { $0.habitId == habitId }
-        let descriptorDebug = FetchDescriptor<Streak>()
         let descriptor = FetchDescriptor<Streak>(predicate: predicate)
-        let streaksDebug = try context.fetch(descriptorDebug)
         streaks = try context.fetch(descriptor)
         return streaks
     }
@@ -94,10 +112,6 @@ class SwiftDataStorageProvider: StorageProvider {
         context.insert(streak)
         try await saveContext()
         try await savePendingChanges()
-        let descriptorDebug = FetchDescriptor<Streak>()
-        let streaksDebug = try context.fetch(descriptorDebug)
-        
-        print("streaksDebug.count: \(streaksDebug.count)")
     }
     
     @MainActor
@@ -453,10 +467,15 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
         }
     }
     @MainActor
-    func loadPickedImage() async throws -> UserImageSlot {
+    func loadPickedImage(_ userImageSlot: UserImageSlot) async throws -> UserImageSlot {
         var fetchedImage: UserImageSlot? = nil
+        
+        let predicate = #Predicate<UserImageSlot> { storedUIS in
+            storedUIS.id == userImageSlot.id
+        }
+        
         let descriptor = FetchDescriptor<UserImageSlot>(
-            sortBy: [SortDescriptor(\.id, order: .forward)]
+            predicate: predicate
         )
         
         do {

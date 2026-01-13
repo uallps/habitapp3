@@ -21,7 +21,10 @@ struct CategoryDetailWrapperView: View {
         case .emoji:
             guard !selectedIconOne.emoji.isEmpty || !selectedIconTwo.emoji.isEmpty || !selectedIconThree.emoji.isEmpty else { return false }
         case .image:
-            if userImageVM.image == nil { return false }
+            Task {
+                userImageVM.userImageSlot = try await userImageVM.storageProvider.loadPickedImage(userImageVM.userImageSlot)
+                if userImageVM.userImageSlot.image == nil { return false } else { return true }
+            }
         }
         guard selectedPriority != nil else { return false }
         return true
@@ -66,7 +69,7 @@ struct CategoryDetailWrapperView: View {
     
     init(storageProvider: StorageProvider, category: Category, parent: Category? = nil, isSubcategory: Bool) {
         self._categoryListVM = StateObject(wrappedValue: CategoryListViewModel(storageProvider: storageProvider))
-        self._userImageVM = StateObject(wrappedValue: UserImagesViewModel(storageProvider: storageProvider))
+        self._userImageVM = StateObject(wrappedValue: UserImagesViewModel(storageProvider: storageProvider, userImageSlot: UserImageSlot(emojis: [])))
 
         self._category = State(initialValue: category)
         self.parent = parent
