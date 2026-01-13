@@ -19,6 +19,9 @@
     "¿Eliminar nota?" : {
 
     },
+    "¿Estás seguro de que quieres eliminar esta adicción?" : {
+
+    },
     "¿Has recaído?" : {
 
     },
@@ -330,6 +333,9 @@
 
     },
     "Eliminar" : {
+
+    },
+    "Eliminar adicción" : {
 
     },
     "Eliminar de categoría" : {

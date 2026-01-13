@@ -3,7 +3,8 @@ import SwiftUI
 struct AddictionRowView: View {
     let addiction: Addiction
     let addictionListVM: AddictionListViewModel
-
+    @State private var showDeleteAlert = false
+    
     @ViewBuilder
     var iOSBody: some View {
         HStack {
@@ -42,8 +43,25 @@ var macOSBody: some View {
             Text("Recaídas: \(addiction.relapseCount)")
                 .font(.subheadline)
                 .foregroundColor(.red)
-
-    }
+            Spacer()
+            Button {
+                showDeleteAlert = true
+            } label: {
+                Image(systemName: "trash")
+                    .foregroundColor(.red)
+            }
+            .buttonStyle(.plain)
+            .alert("Eliminar adicción", isPresented: $showDeleteAlert) {
+                            Button("Eliminar", role: .destructive) {
+                                Task {
+                                    await addictionListVM.deleteAddiction(addiction: addiction)
+                                }
+                               
+                            }
+                            Button("Cancelar", role: .cancel) { }
+                        } message: {
+                            Text("¿Estás seguro de que quieres eliminar esta adicción?")
+                        }    }
 
     var body: some View {
         #if os(iOS)

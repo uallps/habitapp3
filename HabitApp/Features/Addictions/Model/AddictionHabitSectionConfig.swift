@@ -6,8 +6,8 @@ struct AddictionHabitSectionConfig {
     let emptyText: String
     let habits: [Habit]
     
-    let onAssociate: (Habit) async -> Void
-    let onRemove: (Habit) async -> Void
-    let onTap: (Habit) async -> Void
+    let onAssociate: (Habit, [Habit]) async -> Void
+    let onRemove: (Habit, [Habit]) async -> Void
+    let onTap: (Habit, [Habit]) async -> Void
 }
 

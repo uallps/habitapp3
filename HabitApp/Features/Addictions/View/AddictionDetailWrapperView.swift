@@ -46,18 +46,21 @@ struct AddictionDetailWrapperView: View {
             title: "Hábitos desencadenantes",
             emptyText: "No hay hábitos desencadenantes asociados.",
             habits: addiction.triggers,
-            onAssociate: { habit in
+            onAssociate: { habit, availableHabits in
                 await addictionListVM.associateTriggerHabit(to: addiction, habit: habit)
+                let index = availableHabits.firstIndex(of: habit)
+                if index == nil { return }
+                habitsQuery.remove(at: index!)
             },
-            onRemove: { habit in
+            onRemove: { habit, availableHabits in
                 await addictionListVM.removeTriggerHabit(from: addiction, habit: habit)
+                habitsQuery.append(habit)
             },
-            onTap: { habit in
+            onTap: { habit, availableHabits in
                 if habit.isScheduled(for: currentDate) {
-                    self.showRelapseAlert = true
                     habitListVM.toggleCompletion(habit: habit)
                 } else {
-                    self.showWrongDayAlert = true
+                    showWrongDayAlert = false
                 }
             }
 
@@ -71,15 +74,22 @@ struct AddictionDetailWrapperView: View {
             title: "Hábitos preventivos",
             emptyText: "No hay hábitos preventivos asociados.",
             habits: addiction.preventionHabits,
-            onAssociate: { habit in
+            onAssociate: { habit, availableHabits in
                 await addictionListVM.associatePreventionHabit(to: addiction, habit: habit)
+                let index = availableHabits.firstIndex(of: habit)
+                if index == nil { return }
+                habitsQuery.remove(at: index!)
             },
-            onRemove: { habit in
+            onRemove: { habit, availableHabits in
                 await addictionListVM.removePreventionHabit(from: addiction, habit: habit)
+                habitsQuery.append(habit)
             },
-            onTap: {
-                habit in
-                habitListVM.toggleCompletion(habit: habit)
+            onTap: { habit, availableHabits in
+                if habit.isScheduled(for: currentDate) {
+                    habitListVM.toggleCompletion(habit: habit)
+                } else {
+                    showWrongDayAlert = false
+                }
             }
         )
     }
@@ -91,13 +101,17 @@ struct AddictionDetailWrapperView: View {
             title: "Hábitos compensatorios",
             emptyText: "No hay hábitos compensatorios asociados.",
             habits: addiction.compensatoryHabits,
-            onAssociate: { habit in
+            onAssociate: { habit, availableHabits in
                 await addictionListVM.associateCompensatoryHabit(to: addiction, habit: habit)
+                let index = availableHabits.firstIndex(of: habit)
+                if index == nil { return }
+                habitsQuery.remove(at: index!)
             },
-            onRemove: { habit in
+            onRemove: { habit, availableHabits in
                 await addictionListVM.removeCompensatoryHabit(from: addiction, habit: habit)
+                habitsQuery.append(habit)
             },
-            onTap: { habit in
+            onTap: { habit, availableHabits in
                 if habit.isScheduled(for: currentDate) {
                     habitListVM.toggleCompletion(habit: habit)
                 } else {
@@ -143,7 +157,7 @@ struct AddictionDetailWrapperView: View {
             if let triggerConfig {
                 AddictionHabitSectionView(
                     config: triggerConfig,
-                    availableHabits: habitsQuery
+                    availableHabits: $habitsQuery
                 )
             }else {
                 Text("Podrás asociar hábitos después de crear la adicción.")
@@ -152,14 +166,14 @@ struct AddictionDetailWrapperView: View {
             if let preventionConfig {
                 AddictionHabitSectionView(
                     config: preventionConfig,
-                    availableHabits: habitsQuery
+                    availableHabits: $habitsQuery
                 )
             }
 
             if let compensatoryConfig {
                 AddictionHabitSectionView(
                     config: compensatoryConfig,
-                    availableHabits: habitsQuery
+                    availableHabits: $habitsQuery
                 )
             }
 

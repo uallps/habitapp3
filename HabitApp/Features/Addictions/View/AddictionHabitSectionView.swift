@@ -2,7 +2,7 @@ import SwiftUI
 
 struct AddictionHabitSectionView: View {
     let config: AddictionHabitSectionConfig
-    let availableHabits: [Habit]
+    @Binding var availableHabits: [Habit]
 
     private let today = Date()
 
@@ -19,7 +19,7 @@ struct AddictionHabitSectionView: View {
                             Text(habit.title)
 
                             Button {
-                                Task { await config.onTap(habit) }
+                                Task { await config.onTap(habit, availableHabits) }
                             } label: {
                                 Image(systemName: habit.isCompletedForDate(today)
                                       ? "checkmark.circle.fill"
@@ -30,7 +30,7 @@ struct AddictionHabitSectionView: View {
                             .buttonStyle(.plain)
 
                             Button {
-                                Task { await config.onRemove(habit) }
+                                Task { await config.onRemove(habit, availableHabits) }
                             } label: {
                                 Image(systemName: "minus.circle.fill")
                                     .foregroundColor(.red)
@@ -46,7 +46,7 @@ struct AddictionHabitSectionView: View {
                     ForEach(availableHabits) { habit in
                         Button("Añadir \(habit.title)") {
                             Task {
-                                await config.onAssociate(habit)
+                                await config.onAssociate(habit, availableHabits)
                             }
                         }
                     }
