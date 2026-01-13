@@ -23,11 +23,11 @@ jobs:
 
       - name: Check for TODO/FIXME
         run: |
-          echo "🔍 TODO items found:"
-          grep -r "TODO" HabitApp --include="*.swift" | head -20 || echo "✅ No TODOs"
+          echo "TODO items found:"
+          grep -r "TODO" HabitApp --include="*.swift" | head -20 || echo "No TODOs"
           echo ""
-          echo "🔍 FIXME items found:"
-          grep -r "FIXME" HabitApp --include="*.swift" | head -20 || echo "✅ No FIXMEs"
+          echo "FIXME items found:"
+          grep -r "FIXME" HabitApp --include="*.swift" | head -20 || echo "No FIXMEs"
 
   build:
     name: Build and Test HabitApp
@@ -90,19 +90,19 @@ jobs:
       - name: Test Results Summary
         if: always()
         run: |
-          echo "📊 Test Results:"
+          echo "Test Results:"
           find ./DerivedData -name "*.xcresult" -type d || echo "No test results found"
           
           # Extract test summary if available
           XCRESULT=$(find ./DerivedData -name "*.xcresult" -type d | head -n 1)
           if [ ! -z "$XCRESULT" ]; then
             xcrun xcresulttool get --path "$XCRESULT" --format json > test-results.json || true
-            echo "✅ Test results exported"
+            echo "Test results exported"
           fi
 
       - name: Code Quality Metrics
         run: |
-          echo "📊 Code Quality Report"
+          echo "Code Quality Report"
           echo "====================="
           SWIFT_FILES=$(find HabitApp -name "*.swift" -type f | wc -l)
           LOC=$(find HabitApp -name "*.swift" -type f -exec cat {} \; | wc -l)
@@ -112,11 +112,11 @@ jobs:
           echo "Avg lines per file: $((LOC / SWIFT_FILES))"
           
           echo ""
-          echo "📦 Architecture:"
+          echo "Architecture:"
           find HabitApp -type d -maxdepth 2 | grep -E "(Core|Features|Infraestructure|Application)" | sort
           
           echo ""
-          echo "📊 Feature Breakdown:"
+          echo "Feature Breakdown:"
           echo "Goals: $(find HabitApp/Features/Goals -name "*.swift" 2>/dev/null | wc -l) files"
           echo "DailyNotes: $(find HabitApp/Features/DailyNotes -name "*.swift" 2>/dev/null | wc -l) files"
           echo "Categories: $(find HabitApp/Features/Categories -name "*.swift" 2>/dev/null | wc -l) files"
@@ -147,11 +147,11 @@ jobs:
           APP_PATH=$(find ./DerivedData -name "HabitApp.app" -type d | head -n 1)
           
           if [ -z "$APP_PATH" ]; then
-            echo "❌ App not found"
+            echo "App not found"
             exit 1
           fi
           
-          echo "✅ Found app at: $APP_PATH"
+          echo "Found app at: $APP_PATH"
           
           # Install and launch app
           xcrun simctl install booted "$APP_PATH"
@@ -159,7 +159,7 @@ jobs:
           sleep 5
           
           # Take screenshots quickly
-          echo "📸 Taking screenshots..."
+          echo "Taking screenshots..."
           xcrun simctl io booted screenshot screenshots/01-launch.png || true
           sleep 1
           xcrun simctl io booted screenshot screenshots/02-app.png || true
@@ -168,7 +168,7 @@ jobs:
           sleep 1
           xcrun simctl io booted screenshot screenshots/04-app.png || true
           
-          echo "✅ Screenshots captured"
+          echo "Screenshots captured"
           ls -la screenshots
 
       - name: Archive build artifacts
@@ -207,22 +207,22 @@ jobs:
           Commit: ${{ github.sha }}
           
           Features Implemented:
-          - ✅ Habits Management (MVVM + SwiftData persistence)
-          - ✅ Daily Notes (Date-based organization)
-          - ✅ Streaks Tracking (Animation + Badges)
-          - ✅ Goals & Milestones (Progress tracking with deadlines)
-          - ✅ Categories System (Nested subcategories support)
-          - ✅ Addictions Management (Independent feature toggle)
-          - ✅ Statistics (Weekly/Daily/Per-Habit views with charts)
-          - ✅ Reminders & Notifications (UNUserNotificationCenter)
-          - ✅ Plugin Architecture (Extensible modular design)
-          - ✅ UserPreferences (Dynamic theming with accent colors)
-          - ✅ Cross-platform (iOS 18.0+ and macOS support)
+          - Habits Management (MVVM + SwiftData persistence)
+          - Daily Notes (Date-based organization)
+          - Streaks Tracking (Animation + Badges)
+          - Goals & Milestones (Progress tracking with deadlines)
+          - Categories System (Nested subcategories support)
+          - Addictions Management (Independent feature toggle)
+          - Statistics (Weekly/Daily/Per-Habit views with charts)
+          - Reminders & Notifications (UNUserNotificationCenter)
+          - Plugin Architecture (Extensible modular design)
+          - UserPreferences (Dynamic theming with accent colors)
+          - Cross-platform (iOS 18.0+ and macOS support)
           
           Tests:
-          - ✅ Daily Notes unit tests
-          - ✅ Goals & Milestones tests
-          - ✅ Categories nesting tests
+          - Daily Notes unit tests
+          - Goals & Milestones tests
+          - Categories nesting tests
           
           Architecture:
           - MVVM pattern with SwiftData
@@ -230,7 +230,7 @@ jobs:
           - Feature-based folder structure
           - Dependency injection via AppConfig
           
-          Build Status: ✅ Complete
+          Build Status: Complete
           EOF
           cat build-summary.txt
 
