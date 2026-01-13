@@ -2,6 +2,7 @@ import SwiftUI
 
 struct StatsChartView: View {
     let periods: [PeriodData]
+    @EnvironmentObject private var userPreferences: UserPreferences
     
     private let maxHeight: CGFloat = 100
     
@@ -19,7 +20,7 @@ struct StatsChartView: View {
                             
                             // Barra completada (porcentaje del esperado)
                             Rectangle()
-                                .fill(Color.blue)
+                                .fill(userPreferences.accentColor)
                                 .frame(height: barHeight(for: period.completedCount, expected: period.expectedCount))
                         }
                         .frame(maxWidth: .infinity, maxHeight: maxHeight)
@@ -39,7 +40,7 @@ struct StatsChartView: View {
             HStack(spacing: 16) {
                 Label("Completado", systemImage: "checkmark.circle.fill")
                     .font(.caption)
-                    .foregroundColor(.blue)
+                    .foregroundColor(userPreferences.accentColor)
                 
                 Label("Esperado", systemImage: "circle")
                     .font(.caption)

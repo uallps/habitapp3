@@ -4,6 +4,7 @@ import SwiftData
 struct DailyNotesView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var userPreferences: UserPreferences
     @StateObject private var viewModel: DailyNotesViewModel
     @State private var showingAddNote = false
     
@@ -43,7 +44,7 @@ extension DailyNotesView {
                         } label: {
                             Image(systemName: "plus.circle.fill")
                                 .font(.title2)
-                                .foregroundColor(.blue)
+                                .foregroundColor(userPreferences.accentColor)
                         }
                     }
                     

@@ -3,6 +3,7 @@ import SwiftUI
 struct DonutChartView: View {
     let completed: Int
     let expected: Int
+    @EnvironmentObject private var userPreferences: UserPreferences
     
     private var percentage: Double {
         guard expected > 0 else { return 0 }
@@ -22,7 +23,7 @@ struct DonutChartView: View {
                     .trim(from: 0, to: percentage)
                     .stroke(
                         LinearGradient(
-                            colors: [.blue, .green],
+                            colors: [userPreferences.accentColor, .green],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         ),
@@ -48,7 +49,7 @@ struct DonutChartView: View {
             HStack(spacing: 20) {
                 Label("\(completed) Completados", systemImage: "checkmark.circle.fill")
                     .font(.caption)
-                    .foregroundColor(.blue)
+                    .foregroundColor(userPreferences.accentColor)
                 
                 Label("\(expected - completed) Pendientes", systemImage: "circle")
                     .font(.caption)

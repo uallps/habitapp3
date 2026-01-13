@@ -2,6 +2,7 @@ import SwiftUI
 
 struct AboutView: View {
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var userPreferences: UserPreferences
     
     var body: some View {
         #if os(iOS)
@@ -20,7 +21,7 @@ extension AboutView {
             VStack(spacing: 20) {
                 Image(systemName: "checkmark.circle.fill")
                     .font(.system(size: 60))
-                    .foregroundColor(.blue)
+                    .foregroundColor(userPreferences.accentColor)
                 
                 Text("HabitApp")
                     .font(.title)
@@ -66,7 +67,7 @@ extension AboutView {
         VStack(spacing: 20) {
             Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 50))
-                .foregroundColor(.blue)
+                .foregroundColor(userPreferences.accentColor)
             
             Text("HabitApp")
                 .font(.title)

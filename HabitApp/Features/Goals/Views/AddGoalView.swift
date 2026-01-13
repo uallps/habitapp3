@@ -231,7 +231,7 @@ struct AddGoalView: View {
                             .font(.subheadline)
                             .fontWeight(.medium)
                     }
-                    .foregroundColor(.blue)
+                    .foregroundColor(userPreferences.accentColor)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.vertical, 10)
                 }
@@ -281,6 +281,7 @@ struct SectionCard<Content: View>: View {
     let title: String
     let icon: String
     let content: Content
+    @EnvironmentObject private var userPreferences: UserPreferences
     
     init(title: String, icon: String, @ViewBuilder content: () -> Content) {
         self.title = title
@@ -294,7 +295,7 @@ struct SectionCard<Content: View>: View {
                 Image(systemName: icon)
                     .font(.subheadline)
                     .fontWeight(.semibold)
-                    .foregroundColor(.blue)
+                    .foregroundColor(userPreferences.accentColor)
                 
                 Text(title)
                     .font(.headline)
@@ -321,6 +322,7 @@ struct SectionCard<Content: View>: View {
 struct HabitSelectButton: View {
     let habit: Habit
     let action: () -> Void
+    @EnvironmentObject private var userPreferences: UserPreferences
     
     var body: some View {
         Button(action: action) {
@@ -337,7 +339,7 @@ struct HabitSelectButton: View {
                                 .font(.caption2)
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 2)
-                                .background(Color.blue.opacity(0.1))
+                                .background(userPreferences.accentColor.opacity(0.1))
                                 .cornerRadius(3)
                         }
                     }
@@ -364,6 +366,8 @@ struct MilestoneInputRow: View {
     @Binding var milestone: MilestoneInput
     let maxValue: Int
     let onDelete: () -> Void
+    @EnvironmentObject private var userPreferences: UserPreferences
+    let onDelete: () -> Void
     
     var body: some View {
         HStack(spacing: 12) {
@@ -378,7 +382,7 @@ struct MilestoneInputRow: View {
                 Text("\(milestone.value)")
                     .font(.caption)
                     .fontWeight(.semibold)
-                    .foregroundColor(.blue)
+                    .foregroundColor(userPreferences.accentColor)
                     .frame(width: 30)
             }
             

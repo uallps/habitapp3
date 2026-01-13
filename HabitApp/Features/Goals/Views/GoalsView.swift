@@ -272,6 +272,7 @@ struct GoalCardView: View {
     let goal: Goal
     let habit: Habit?
     let isActive: Bool
+    @EnvironmentObject private var userPreferences: UserPreferences
     
     private var actualCount: Int {
         habit?.doneDates.count ?? goal.currentCount

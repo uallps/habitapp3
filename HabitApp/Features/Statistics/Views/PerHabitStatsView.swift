@@ -63,7 +63,7 @@ struct HabitStatRow: View {
                             
                             Text("\(Int(habit.overallRate * 100))%")
                                 .font(.caption.bold())
-                                .foregroundColor(.blue)
+                                .foregroundColor(userPreferences.accentColor)
                         }
                     }
                     

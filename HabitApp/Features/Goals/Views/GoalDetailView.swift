@@ -236,7 +236,7 @@ struct GoalDetailView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "bolt.fill")
                         .font(.subheadline)
-                        .foregroundColor(.purple)
+                        .foregroundColor(userPreferences.accentColor)
                     
                     Text("Hábito Asociado")
                         .font(.headline)
@@ -264,7 +264,7 @@ struct GoalDetailView: View {
                     
                     circularProgressView(
                         value: min(Double(habit.doneDates.count) / Double(goal.targetCount), 1.0),
-                        color: .purple
+                        color: userPreferences.accentColor
                     )
                 }
                 .padding(12)
