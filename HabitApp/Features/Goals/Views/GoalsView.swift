@@ -5,10 +5,14 @@ struct GoalsView: View {
     @Query private var goals: [Goal]
     @Query private var habits: [Habit]
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @StateObject private var viewModel: GoalsViewModel
     @State private var showingAddGoal = false
     
     private let storageProvider: StorageProvider
+    private var isCompact: Bool {
+        horizontalSizeClass == .compact
+    }
     
     init(storageProvider: StorageProvider) {
         self.storageProvider = storageProvider
@@ -16,11 +20,188 @@ struct GoalsView: View {
     }
     
     var body: some View {
-        #if os(iOS)
-        iosBody
-        #else
-        macBody
-        #endif
+        NavigationStack {
+            ZStack {
+                LinearGradient(
+                    gradient: Gradient(colors: [
+                        Color.blue.opacity(0.06),
+                        Color.purple.opacity(0.06)
+                    ]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
+                
+                if goals.isEmpty {
+                    emptyState
+                } else {
+                    contentView
+                }
+            }
+            .navigationTitle("Objetivos")
+            #if os(iOS)
+            .navigationBarTitleDisplayMode(.inline)
+            #endif
+            .toolbar {
+                #if os(iOS)
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    addButton
+                }
+                #else
+                ToolbarItem(placement: .primaryAction) {
+                    addButton
+                }
+                #endif
+            }
+            .sheet(isPresented: $showingAddGoal) {
+                AddGoalView(habits: habits)
+            }
+        }
+    }
+    
+    private var addButton: some View {
+        Button {
+            showingAddGoal = true
+        } label: {
+            Label("Nuevo", systemImage: "plus.circle.fill")
+        }
+        .foregroundColor(.blue)
+    }
+    
+    private var emptyState: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "target")
+                .font(.system(size: isCompact ? 48 : 64))
+                .foregroundColor(.blue.opacity(0.5))
+            
+            Text("Sin Objetivos")
+                .font(isCompact ? .title2 : .title)
+                .fontWeight(.semibold)
+            
+            Text("Crea tu primer objetivo para comenzar a alcanzar tus metas")
+                .font(.body)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+            
+            Button {
+                showingAddGoal = true
+            } label: {
+                Label("Crear Objetivo", systemImage: "plus.circle.fill")
+                    .fontWeight(.semibold)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+            }
+            .padding(.top, 16)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(40)
+        .padding(.top, 80)
+    }
+    
+    @ViewBuilder
+    private var contentView: some View {
+        if isCompact {
+            compactContent
+        } else {
+            regularContent
+        }
+    }
+    
+    private var compactContent: some View {
+        ScrollView {
+            VStack(spacing: 24) {
+                if !viewModel.getActiveGoals(goals).isEmpty {
+                    GoalSectionView(
+                        title: "Objetivos Activos",
+                        icon: "flame.fill",
+                        goals: viewModel.getActiveGoals(goals),
+                        habits: habits,
+                        storageProvider: storageProvider,
+                        isActive: true,
+                        isCompact: true
+                    )
+                }
+                
+                if !viewModel.getCompletedGoals(goals).isEmpty {
+                    GoalSectionView(
+                        title: "Objetivos Completados",
+                        icon: "checkmark.seal.fill",
+                        goals: viewModel.getCompletedGoals(goals),
+                        habits: habits,
+                        storageProvider: storageProvider,
+                        isActive: false,
+                        isCompact: true
+                    )
+                }
+            }
+            .padding(16)
+        }
+    }
+    
+    private var regularContent: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 32) {
+                if !viewModel.getActiveGoals(goals).isEmpty {
+                    VStack(alignment: .leading, spacing: 16) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "flame.fill")
+                                .font(.title3)
+                                .foregroundColor(.orange)
+                            Text("Objetivos Activos")
+                                .font(.title2)
+                                .fontWeight(.semibold)
+                        }
+                        
+                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 300), spacing: 20)], spacing: 20) {
+                            ForEach(viewModel.getActiveGoals(goals)) { goal in
+                                NavigationLink {
+                                    GoalDetailView(goal: goal, storageProvider: storageProvider)
+                                } label: {
+                                    GoalCardView(
+                                        goal: goal,
+                                        habit: getAssociatedHabit(for: goal),
+                                        isActive: true
+                                    )
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                    }
+                }
+                
+                if !viewModel.getCompletedGoals(goals).isEmpty {
+                    VStack(alignment: .leading, spacing: 16) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "checkmark.seal.fill")
+                                .font(.title3)
+                                .foregroundColor(.green)
+                            Text("Objetivos Completados")
+                                .font(.title2)
+                                .fontWeight(.semibold)
+                        }
+                        
+                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 300), spacing: 20)], spacing: 20) {
+                            ForEach(viewModel.getCompletedGoals(goals)) { goal in
+                                NavigationLink {
+                                    GoalDetailView(goal: goal, storageProvider: storageProvider)
+                                } label: {
+                                    GoalCardView(
+                                        goal: goal,
+                                        habit: getAssociatedHabit(for: goal),
+                                        isActive: false
+                                    )
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                    }
+                }
+            }
+            .padding(32)
+        }
     }
     
     private func getAssociatedHabit(for goal: Goal) -> Habit? {
@@ -29,205 +210,64 @@ struct GoalsView: View {
     }
 }
 
-// MARK: - iOS UI
-#if os(iOS)
-extension GoalsView {
-    var iosBody: some View {
-        NavigationStack {
-            ZStack {
-                LinearGradient(
-                    gradient: Gradient(colors: [
-                        Color.blue.opacity(0.05),
-                        Color.purple.opacity(0.05)
-                    ]),
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-                .ignoresSafeArea()
-                
-                ScrollView {
-                    VStack(spacing: 24) {
-                        if !viewModel.getActiveGoals(goals).isEmpty {
-                            GoalSection(
-                                title: "Objetivos Activos",
-                                icon: "flame.fill",
-                                goals: viewModel.getActiveGoals(goals),
-                                habits: habits,
-                                isActive: true,
-                                storageProvider: storageProvider
-                            )
-                        }
-                        
-                        if !viewModel.getCompletedGoals(goals).isEmpty {
-                            GoalSection(
-                                title: "Objetivos Completados",
-                                icon: "checkmark.seal.fill",
-                                goals: viewModel.getCompletedGoals(goals),
-                                habits: habits,
-                                isActive: false,
-                                storageProvider: storageProvider
-                            )
-                        }
-                        
-                        if goals.isEmpty {
-                            VStack(spacing: 16) {
-                                Image(systemName: "target")
-                                    .font(.system(size: 48))
-                                    .foregroundColor(.blue.opacity(0.5))
-                                
-                                Text("Sin Objetivos")
-                                    .font(.title2)
-                                    .fontWeight(.semibold)
-                                
-                                Text("Crea tu primer objetivo para comenzar a alcanzar tus metas")
-                                    .font(.body)
-                                    .foregroundColor(.secondary)
-                                    .multilineTextAlignment(.center)
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding(40)
-                            .padding(.top, 80)
-                        }
-                    }
-                    .padding(16)
-                }
-            }
-            .navigationTitle("Objetivos")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        showingAddGoal = true
-                    } label: {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.title2)
-                            .foregroundColor(.blue)
-                    }
-                }
-            }
-            .sheet(isPresented: $showingAddGoal) {
-                AddGoalView(habits: habits)
-            }
-        }
+// MARK: - Componentes Reutilizables
+struct GoalSectionView: View {
+    let title: String
+    let icon: String
+    let goals: [Goal]
+    let habits: [Habit]
+    let storageProvider: StorageProvider
+    let isActive: Bool
+    let isCompact: Bool
+    
+    private func getAssociatedHabit(for goal: Goal) -> Habit? {
+        guard let habitId = goal.habitId else { return nil }
+        return habits.first { $0.id == habitId }
     }
-}
-#endif
-
-// MARK: - macOS UI
-#if os(macOS)
-extension GoalsView {
-    var macBody: some View {
-        NavigationStack {
-            ZStack {
-                LinearGradient(
-                    gradient: Gradient(colors: [
-                        Color.blue.opacity(0.08),
-                        Color.purple.opacity(0.08)
-                    ]),
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-                .ignoresSafeArea()
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            HStack(spacing: 8) {
+                Image(systemName: icon)
+                    .font(.title3)
+                    .foregroundColor(isActive ? .orange : .green)
                 
-                ScrollView {
-                    VStack(spacing: 32) {
-                        if goals.isEmpty {
-                            VStack(spacing: 16) {
-                                Image(systemName: "target")
-                                    .font(.system(size: 64))
-                                    .foregroundColor(.blue.opacity(0.5))
-                                
-                                Text("Sin Objetivos")
-                                    .font(.title)
-                                    .fontWeight(.semibold)
-                                
-                                Text("Crea tu primer objetivo para comenzar a alcanzar tus metas")
-                                    .font(.body)
-                                    .foregroundColor(.secondary)
-                                    .multilineTextAlignment(.center)
-                            }
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .padding(60)
-                        } else {
-                            VStack(alignment: .leading, spacing: 32) {
-                                if !viewModel.getActiveGoals(goals).isEmpty {
-                                    VStack(alignment: .leading, spacing: 16) {
-                                        HStack(spacing: 8) {
-                                            Image(systemName: "flame.fill")
-                                                .font(.title3)
-                                                .foregroundColor(.orange)
-                                            Text("Objetivos Activos")
-                                                .font(.title2)
-                                                .fontWeight(.semibold)
-                                        }
-                                        
-                                        LazyVGrid(columns: [
-                                            GridItem(.adaptive(minimum: 300), spacing: 20)
-                                        ], spacing: 20) {
-                                            ForEach(viewModel.getActiveGoals(goals)) { goal in
-                                                NavigationLink {
-                                                    GoalDetailView(goal: goal, storageProvider: storageProvider)
-                                                } label: {
-                                                    MacGoalCard(goal: goal, habit: getAssociatedHabit(for: goal), isActive: true)
-                                                }
-                                                .buttonStyle(.plain)
-                                            }
-                                        }
-                                    }
-                                }
-                                
-                                if !viewModel.getCompletedGoals(goals).isEmpty {
-                                    VStack(alignment: .leading, spacing: 16) {
-                                        HStack(spacing: 8) {
-                                            Image(systemName: "checkmark.seal.fill")
-                                                .font(.title3)
-                                                .foregroundColor(.green)
-                                            Text("Objetivos Completados")
-                                                .font(.title2)
-                                                .fontWeight(.semibold)
-                                        }
-                                        
-                                        LazyVGrid(columns: [
-                                            GridItem(.adaptive(minimum: 300), spacing: 20)
-                                        ], spacing: 20) {
-                                            ForEach(viewModel.getCompletedGoals(goals)) { goal in
-                                                NavigationLink {
-                                                    GoalDetailView(goal: goal, storageProvider: storageProvider)
-                                                } label: {
-                                                    MacGoalCard(goal: goal, habit: getAssociatedHabit(for: goal), isActive: false)
-                                                }
-                                                .buttonStyle(.plain)
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            .padding(32)
-                        }
-                    }
-                }
+                Text(title)
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                
+                Spacer()
+                
+                Text("\(goals.count)")
+                    .font(.caption.weight(.semibold))
+                    .foregroundColor(.secondary)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(Color.gray.opacity(0.2))
+                    .cornerRadius(6)
             }
-            .navigationTitle("Objetivos")
-            .toolbar {
-                ToolbarItem {
-                    Button {
-                        showingAddGoal = true
+            .padding(.horizontal, 16)
+            
+            LazyVStack(spacing: 12) {
+                ForEach(goals) { goal in
+                    NavigationLink {
+                        GoalDetailView(goal: goal, storageProvider: storageProvider)
                     } label: {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.title2)
-                            .foregroundColor(.blue)
+                        GoalRowView(
+                            goal: goal,
+                            habit: getAssociatedHabit(for: goal),
+                            isActive: isActive
+                        )
                     }
+                    .buttonStyle(.plain)
                 }
             }
-            .sheet(isPresented: $showingAddGoal) {
-                AddGoalView(habits: habits)
-            }
-            .frame(minWidth: 600, minHeight: 400)
+            .padding(.horizontal, 16)
         }
     }
 }
 
-struct MacGoalCard: View {
+struct GoalCardView: View {
     let goal: Goal
     let habit: Habit?
     let isActive: Bool
@@ -236,7 +276,7 @@ struct MacGoalCard: View {
         habit?.doneDates.count ?? goal.currentCount
     }
     
-    private var actualProgress: Double {
+    private var progressPercentage: Double {
         guard goal.targetCount > 0 else { return 0 }
         return Double(actualCount) / Double(goal.targetCount)
     }
@@ -244,9 +284,9 @@ struct MacGoalCard: View {
     private var progressColor: Color {
         if goal.isCompleted {
             return .green
-        } else if actualProgress > 0.7 {
+        } else if progressPercentage > 0.7 {
             return .orange
-        } else if actualProgress > 0.3 {
+        } else if progressPercentage > 0.3 {
             return .blue
         }
         return .gray
@@ -283,7 +323,7 @@ struct MacGoalCard: View {
                 }
             }
             
-            VStack(spacing: 6) {
+            VStack(spacing: 8) {
                 HStack {
                     Text("\(actualCount)")
                         .font(.title3)
@@ -296,12 +336,12 @@ struct MacGoalCard: View {
                     
                     Spacer()
                     
-                    Text("\(Int(actualProgress * 100))%")
+                    Text("\(Int(progressPercentage * 100))%")
                         .font(.caption.weight(.semibold))
                         .foregroundColor(progressColor)
                 }
                 
-                ProgressView(value: actualProgress)
+                ProgressView(value: progressPercentage)
                     .tint(progressColor)
             }
             
@@ -331,66 +371,17 @@ struct MacGoalCard: View {
         .padding(12)
         .background(
             RoundedRectangle(cornerRadius: 10)
+                #if os(iOS)
+                .fill(Color(.systemGray6))
+                #else
                 .fill(Color(.controlBackgroundColor))
+                #endif
                 .shadow(color: Color.black.opacity(0.06), radius: 3, x: 0, y: 1)
         )
         .overlay(
             RoundedRectangle(cornerRadius: 12)
                 .stroke(progressColor.opacity(0.2), lineWidth: 1)
         )
-    }
-}
-
-#endif
-
-struct GoalSection: View {
-    let title: String
-    let icon: String
-    let goals: [Goal]
-    let habits: [Habit]
-    let isActive: Bool
-    let storageProvider: StorageProvider
-    
-    private func getAssociatedHabit(for goal: Goal) -> Habit? {
-        guard let habitId = goal.habitId else { return nil }
-        return habits.first { $0.id == habitId }
-    }
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack(spacing: 8) {
-                Image(systemName: icon)
-                    .font(.title3)
-                    .foregroundColor(isActive ? .orange : .green)
-                
-                Text(title)
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                
-                Spacer()
-                
-                Text("\(goals.count)")
-                    .font(.caption.weight(.semibold))
-                    .foregroundColor(.secondary)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(Color.gray.opacity(0.2))
-                    .cornerRadius(6)
-            }
-            .padding(.horizontal, 16)
-            
-            LazyVStack(spacing: 12) {
-                ForEach(goals) { goal in
-                    NavigationLink {
-                        GoalDetailView(goal: goal, storageProvider: storageProvider)
-                    } label: {
-                        GoalRowView(goal: goal, habit: getAssociatedHabit(for: goal), isActive: isActive)
-                    }
-                    .buttonStyle(.plain)
-                }
-            }
-            .padding(.horizontal, 16)
-        }
     }
 }
 
@@ -403,7 +394,7 @@ struct GoalRowView: View {
         habit?.doneDates.count ?? goal.currentCount
     }
     
-    private var actualProgress: Double {
+    private var progressPercentage: Double {
         guard goal.targetCount > 0 else { return 0 }
         return Double(actualCount) / Double(goal.targetCount)
     }
@@ -411,9 +402,9 @@ struct GoalRowView: View {
     private var progressColor: Color {
         if goal.isCompleted {
             return .green
-        } else if actualProgress > 0.7 {
+        } else if progressPercentage > 0.7 {
             return .orange
-        } else if actualProgress > 0.3 {
+        } else if progressPercentage > 0.3 {
             return .blue
         }
         return .gray
@@ -445,10 +436,10 @@ struct GoalRowView: View {
             }
             
             HStack(spacing: 8) {
-                ProgressView(value: actualProgress)
+                ProgressView(value: progressPercentage)
                     .tint(progressColor)
                 
-                Text("\(Int(actualProgress * 100))%")
+                Text("\(Int(progressPercentage * 100))%")
                     .font(.caption.weight(.semibold))
                     .foregroundColor(progressColor)
                     .frame(width: 35)
@@ -480,4 +471,3 @@ struct GoalRowView: View {
         )
     }
 }
-

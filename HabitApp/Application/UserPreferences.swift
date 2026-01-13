@@ -8,6 +8,7 @@ final class UserPreferences: ObservableObject {
     @AppStorage("enableReminders") private var storedEnableReminders: Bool = true
     @AppStorage("enableHabits") private var storedEnableHabits: Bool = true
     @AppStorage("enableGoals") private var storedEnableGoals: Bool = true
+    @AppStorage("enableDailyNotes") private var storedEnableDailyNotes: Bool = true
     @AppStorage("appTheme") private var storedAppTheme: Int = 0
     
     var appTheme: Int {
@@ -43,7 +44,8 @@ final class UserPreferences: ObservableObject {
         set { objectWillChange.send(); storedEnableHabits = newValue }
     }
     
-
-    
-
+    var enableDailyNotes: Bool {
+        get { storedEnableDailyNotes }
+        set { objectWillChange.send(); storedEnableDailyNotes = newValue }
+    }
 }

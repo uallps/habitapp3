@@ -33,6 +33,17 @@ extension SettingsView {
                     ))
                 }
                 
+                Section("Características") {
+                    Toggle("Notas diarias", isOn: Binding(
+                        get: { userPreferences.enableDailyNotes },
+                        set: { userPreferences.enableDailyNotes = $0 }
+                    ))
+                    Toggle("Objetivos", isOn: Binding(
+                        get: { userPreferences.enableGoals },
+                        set: { userPreferences.enableGoals = $0 }
+                    ))
+                }
+                
                 Section("Notificaciones") {
                     NavigationLink("Configurar recordatorios") {
                         NotificationSettingsView()
@@ -94,6 +105,17 @@ extension SettingsView {
                     Toggle("Mostrar prioridades", isOn: Binding(
                         get: { userPreferences.showPriorities },
                         set: { userPreferences.showPriorities = $0 }
+                    ))
+                }
+                
+                Section("Características") {
+                    Toggle("Notas diarias", isOn: Binding(
+                        get: { userPreferences.enableDailyNotes },
+                        set: { userPreferences.enableDailyNotes = $0 }
+                    ))
+                    Toggle("Objetivos", isOn: Binding(
+                        get: { userPreferences.enableGoals },
+                        set: { userPreferences.enableGoals = $0 }
                     ))
                 }
                 
