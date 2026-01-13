@@ -5,6 +5,7 @@ struct HabitListView: View {
     let storageProvider: StorageProvider
     @Query(sort: \Habit.createdAt) private var habits: [Habit]
     @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var userPreferences: UserPreferences
     @StateObject private var viewModel: HabitListViewModel
     @State private var currentDate = Date()
     @State private var showingNewHabitSheet = false
