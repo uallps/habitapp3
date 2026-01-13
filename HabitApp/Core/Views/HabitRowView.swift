@@ -44,6 +44,7 @@ struct HabitRowView: View {
                     if userPreferences.enableStreaks {
                         StreakBadgeView(habitId: habit.id)
                             .animation(.spring(), value: habit.doneDatesString)
+                            .id(habit.id)
                     }
                 }
                 
@@ -128,6 +129,7 @@ struct HabitRowView: View {
                     if userPreferences.enableStreaks {
                         StreakBadgeView(habitId: habit.id)
                             .animation(.spring(), value: habit.doneDatesString)
+                            .id(habit.id)
                     }
                 }
                 

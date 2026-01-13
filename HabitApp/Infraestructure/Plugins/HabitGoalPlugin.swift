@@ -15,8 +15,8 @@ final class HabitGoalPlugin: HabitDataObservingPlugin {
     let config: AppConfig
     
     init(config: AppConfig) {
-        self.isEnabled = AppConfig.enableGoals
-        self.models = [Habit.self, Goal.self, Milestone.self]
+        self.isEnabled = config.userPreferences.enableGoals
+        self.models = [Goal.self, Milestone.self]
         self.config = config
     }
     

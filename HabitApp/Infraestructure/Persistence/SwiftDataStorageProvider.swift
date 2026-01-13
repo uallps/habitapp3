@@ -10,17 +10,34 @@ class SwiftDataStorageProvider: StorageProvider {
 
     
     
+    static private var _shared: SwiftDataStorageProvider?
+    
     var modelContainer: ModelContainer
     private var context: ModelContext
     
     init(schema: Schema) {
+        // SIEMPRE crear un nuevo ModelContainer y contexto
+        // No reutilizar anteriores porque pueden estar corruptos
         do {
-            // Schema conflict dev temp solution
-            //SwiftDataStorageProvider.resetStore(schema: schema)
-            //SwiftDataStorageProvider.deleteStoreFile()
             self.modelContainer = try ModelContainer(for: schema)
-            self.context = ModelContext(self.modelContainer)
+            // Usar mainContext para que sea el mismo que usa SwiftUI
+            self.context = self.modelContainer.mainContext
+            // Compartir el contexto globalmente para que todos lo usen
             SwiftDataContext.shared = self.context
+            // Guardar como singleton para reutilizar el MISMO container
+            SwiftDataStorageProvider._shared = self
+            print("✅ SwiftDataContext.shared inicializado con mainContext NUEVO")
+
+            // Debug: mostrar conteos al iniciar para confirmar persistencia
+            do {
+                let habitsCount = try context.fetch(FetchDescriptor<Habit>()).count
+                let notesCount = try context.fetch(FetchDescriptor<DailyNote>()).count
+                let categoriesCount = try context.fetch(FetchDescriptor<Category>()).count
+                let addictionsCount = try context.fetch(FetchDescriptor<Addiction>()).count
+                print("📂 Conteos al iniciar -> Habits: \(habitsCount), Notes: \(notesCount), Categories: \(categoriesCount), Addictions: \(addictionsCount)")
+            } catch {
+                print("⚠️ Error obteniendo conteos iniciales: \(error)")
+            }
         } catch {
             fatalError("Failed to initialize storage provider: \(error)")
         }
@@ -86,28 +103,39 @@ class SwiftDataStorageProvider: StorageProvider {
     func loadStreaksForHabit(habitId: UUID) async throws -> [Streak] {
         var streaks: [Streak] = []
         let predicate = #Predicate<Streak> { $0.habitId == habitId }
+        let descriptorDebug = FetchDescriptor<Streak>()
         let descriptor = FetchDescriptor<Streak>(predicate: predicate)
-        
+        let streaksDebug = try context.fetch(descriptorDebug)
         streaks = try context.fetch(descriptor)
         return streaks
     }
     
     @MainActor
     func saveStreak(_ streak: Streak) async throws {
-        do {
-            try context.insert(streak)
-        } catch {
-            print("Error saving streak: \(error)")
+        context.insert(streak)
+        try await saveContext()
+        try await savePendingChanges()
+        let descriptorDebug = FetchDescriptor<Streak>()
+        let streaksDebug = try context.fetch(descriptorDebug)
+        
+        print("streaksDebug.count: \(streaksDebug.count)")
+    }
+    
+    @MainActor
+    func updateStreak(_ streak: Streak) async throws {
+        let streakId = streak.id
+        let predicate = #Predicate<Streak> { $0.id == streakId }
+        let descriptor = FetchDescriptor<Streak>(predicate: predicate)
+        if let realStreak = try context.fetch(descriptor).first {
+            realStreak.currentCount = streak.currentCount
+            realStreak.lastUpdate = streak.lastUpdate
+            try context.save()
         }
     }
     
     @MainActor
     func savePendingChanges() async throws {
-        do {
-            try context.processPendingChanges()
-        } catch {
-            print("Error saving pending changes: \(error)")
-        }
+        context.processPendingChanges()
     }
     
     @MainActor
@@ -157,11 +185,7 @@ class SwiftDataStorageProvider: StorageProvider {
     
     @MainActor
     func deleteNote(_ note: DailyNote) async throws {
-        do {
-            try context.delete(note)
-        } catch {
-            print("Error deleting note: \(error)")
-        }
+        context.delete(note)
     }
 
     @MainActor
@@ -320,7 +344,7 @@ class SwiftDataStorageProvider: StorageProvider {
             return
         }
 
-        guard let realHabit = getRealInstanceHabit(habit) else {
+        guard getRealInstanceHabit(habit) != nil else {
             print("Error adding trigger habit: habit is nil")
             return
         }
@@ -333,7 +357,7 @@ class SwiftDataStorageProvider: StorageProvider {
 
     @MainActor
 func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async throws {
-    guard let realAddiction = getRealInstanceAddiction(addiction) else {
+    guard getRealInstanceAddiction(addiction) != nil else {
         print("Error removing compensatory habit: addiction is nil")
         return
     }
@@ -384,7 +408,7 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
 
         @MainActor
     func associateCompensatoryHabit(to addiction: Addiction, habit: Habit) async throws {
-        guard let realAddiction = getRealInstanceAddiction(addiction) else {
+        guard getRealInstanceAddiction(addiction) != nil else {
             print("Error associating trigger habit: addiction is nil")
             return
         }
@@ -640,13 +664,6 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
         try context.save()
     }
 
-    init(modelContainer: ModelContainer) {
-        self.modelContainer = modelContainer
-        self.context = modelContainer.mainContext
-        SwiftDataContext.shared = self.context
-    }
-
-
     @MainActor
     func loadHabits() async throws -> [Habit] {
         let descriptor = FetchDescriptor<Habit>() // Use FetchDescriptor
@@ -715,10 +732,29 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
     @MainActor
     func addHabit(habit: Habit) async  throws {
         do {
-            try context.insert(habit)
+            print("📝 Antes de insertar - hasChanges: \(context.hasChanges)")
+            context.insert(habit)
+            print("🔍 Habit insertado: \(habit.title), hasChanges después insert: \(context.hasChanges)")
+            
+            // Si hasChanges sigue siendo false, el contexto está corrupto
+            if !context.hasChanges {
+                print("⚠️ ADVERTENCIA: El contexto no detectó cambios. Intentando forzar...")
+                context.processPendingChanges()
+                print("🔍 Después processPendingChanges - hasChanges: \(context.hasChanges)")
+            }
+            
             try await saveContext()
+            
+            // Verificar que se guardó
+            let descriptor = FetchDescriptor<Habit>()
+            let allHabits = try context.fetch(descriptor)
+            print("✅ Total hábitos después de guardar: \(allHabits.count)")
+            for h in allHabits {
+                print("  - \(h.title)")
+            }
         } catch {
-            print("Error adding habit: \(error)")
+            print("❌ Error adding habit: \(error)")
+            throw error
         }
     }
     
@@ -735,7 +771,7 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
     func deleteHabit(habit: Habit) async throws {
         do {
             if let realHabit = getRealInstanceHabit(habit) {
-                try context.delete(realHabit)
+                context.delete(realHabit)
                 try await saveContext()
             }
 
@@ -773,7 +809,7 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
     static func resetStore(schema: Schema) {
         do {
             let container = try ModelContainer(for: schema)
-            try container.deleteAllData()
+            container.deleteAllData()
             print("SwiftData store reset")
         } catch {
             print("SwiftData reset failed: \(error)")

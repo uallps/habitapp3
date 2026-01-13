@@ -2,21 +2,20 @@ import SwiftUI
 import SwiftData
 
 struct StreakBadgeView: View {
-    @Query private var streaks: [Streak]
+    let habitId: UUID
+    @Query private var allStreaks: [Streak]
     
-    init(habitId: UUID) {
-        // Buscamos solo la racha de este hábito específico
-        let predicate = #Predicate<Streak> { $0.habitId == habitId }
-        _streaks = Query(filter: predicate)
+    private var streak: Streak? {
+        allStreaks.first { $0.habitId == habitId }
     }
     
     var body: some View {
-        if let streak = streaks.first, streak.currentCount > 0 {
+        if let streak = streak, streak.currentCount > 0 {
             let hot = streak.currentCount > 4
             HStack(spacing: 4) {
                 Image(systemName: "flame.fill")
                     .symbolRenderingMode(.multicolor)
-                    .symbolEffect(.bounce, value: streak.currentCount) // Animación al cambiar
+                    .symbolEffect(.bounce, value: streak.currentCount)
                 
                 Text("\(streak.currentCount)")
                     .font(.system(.caption, design: .rounded))

@@ -29,7 +29,7 @@ struct UserImagesPickerView: View {
             ) {
                 imageButton
             }
-            .onChange(of: pickedItem) { newItem in
+            .onChange(of: pickedItem) {_, newItem in
                 guard let item = newItem else { return }
                 Task { await viewModel.loadImage(from: item) }
             }

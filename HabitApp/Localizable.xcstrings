@@ -111,6 +111,9 @@
     "1.0.0" : {
 
     },
+    "Accesibilidad" : {
+
+    },
     "Acerca de" : {
 
     },
@@ -169,6 +172,9 @@
     "Añadir subcategoría" : {
 
     },
+    "Apariencia" : {
+
+    },
     "Arquitectura MVVM" : {
 
     },
@@ -211,7 +217,13 @@
     "Cerrar ventana" : {
 
     },
+    "Claro" : {
+
+    },
     "Color" : {
+
+    },
+    "Color de acento" : {
 
     },
     "Color seleccionado" : {
@@ -281,6 +293,9 @@
     "de %lld" : {
 
     },
+    "Desactivado" : {
+
+    },
     "Desarrollado con SwiftUI" : {
 
     },
@@ -290,7 +305,7 @@
     "Detalle de Nota" : {
 
     },
-    "Día actual: %@" : {
+    "Deuteranopía" : {
 
     },
     "Días de la semana" : {
@@ -360,6 +375,9 @@
 
     },
     "Filter" : {
+
+    },
+    "Filtro Daltonismo" : {
 
     },
     "General" : {
@@ -447,6 +465,9 @@
 
     },
     "Mint" : {
+
+    },
+    "Modo Noche (Luz cálida)" : {
 
     },
     "Mostrar fechas de vencimiento" : {
@@ -539,10 +560,16 @@
     "Orange" : {
 
     },
+    "Oscuro" : {
+
+    },
+    "Personalización de Color" : {
+
+    },
     "Pink" : {
 
     },
-    "Podrás asociar hábitos después de crear la adicción." : {
+    "Plugins y Personalización" : {
 
     },
     "Por Hábito" : {
@@ -609,6 +636,9 @@
       }
     },
     "Progreso" : {
+
+    },
+    "Protanopía" : {
 
     },
     "Purple" : {
@@ -684,6 +714,9 @@
     "Sin Objetivos" : {
 
     },
+    "Sistema" : {
+
+    },
     "Sistema de notificaciones inteligentes" : {
 
     },
@@ -694,6 +727,9 @@
 
     },
     "Teal" : {
+
+    },
+    "Tema del dispositivo" : {
 
     },
     "Tendencia" : {
@@ -709,6 +745,9 @@
 
     },
     "Título del hábito" : {
+
+    },
+    "Tritanopía" : {
 
     },
     "Una aplicación para gestionar tus hábitos diarios y alcanzar tus objetivos." : {

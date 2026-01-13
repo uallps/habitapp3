@@ -5,22 +5,24 @@ final class StreakPlugin: HabitDataObservingPlugin {
     var models: [any PersistentModel.Type]
     
     var isEnabled: Bool
-    
+    private weak var config: AppConfig?
+
     init(config: AppConfig) {
         self.isEnabled = config.userPreferences.enableStreaks
-        self.models = [Habit.self]
-        self.storageProvider = config.storageProvider
+        self.models = [Streak.self]
+        self.config = config
     }
-    
-    private let storageProvider: StorageProvider
         
     func onDataChanged(taskId: UUID, title: String, dueDate: Date?) {
-     
+        
         // 1. Buscar el hábito para obtener sus doneDates
         Task {
+            guard let storageProvider = config?.storageProvider else { return }
             do {
                 let habit : Habit? = try await storageProvider.getHabit(id: taskId)
-                if habit == nil { return }
+                if habit == nil { 
+                    return
+                }
                 
                 
                 // 2. Calcular la racha con las fechas del hábito
@@ -31,21 +33,26 @@ final class StreakPlugin: HabitDataObservingPlugin {
                 if let streakObj = existingStreaks.first {
                     streakObj.currentCount = streakValue
                     streakObj.lastUpdate = Date()
+                    try await storageProvider.updateStreak(streakObj)
                 } else {
                     let newStreak = Streak(habitId: taskId)
                     newStreak.currentCount = streakValue
+                    newStreak.habitId = taskId
                     try await storageProvider.saveStreak(newStreak)
                 }
                 
+<<<<<<< HEAD
                 try await storageProvider.onDataChanged(taskId: taskId, title: title, dueDate: dueDate)
                 
                 // 4. Guardar cambios y procesar para que la UI se entere YA
                 try await storageProvider.saveContext()
                 try await storageProvider.savePendingChanges()
                 
+=======
+>>>>>>> origin/core_8jan
             } catch {
-            }        }
-
+            }        
+        }
     }
     
     private func calculateStreak(from dates: [Date]) -> Int {

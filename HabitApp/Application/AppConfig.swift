@@ -1,60 +1,30 @@
 import SwiftUI
 import SwiftData
 import Combine
-import SwiftData
+
 
 class AppConfig: ObservableObject {
-        
-        // MARK: - Plugin Management
-        private var plugins: [FeaturePlugin] = []
-        var userPreferences: UserPreferences = UserPreferences()
-        
-        // MARK: - Storage Provider
-        
-        private lazy var swiftDataStorageProvider: SwiftDataStorageProvider = {
-            // Obtener modelos base
-            var schemas: [any PersistentModel.Type] = [Habit.self, Category.self, Addiction.self, DailyNote.self, Goal.self, Milestone.self]
-            
-            // Agregar modelos de plugins habilitados
-            schemas.append(contentsOf: PluginRegistry.shared.getEnabledModels(from: plugins))
-            
-            let schema = Schema(schemas)
-            print("📦 Schemas registrados: \(schemas)")
-            print("🔌 Plugins activos: \(plugins.filter { $0.isEnabled }.count)/\(plugins.count)")
-            
-            return SwiftDataStorageProvider(schema: schema)
-        }()
-        
-        var storageProvider: StorageProvider {
-            switch storageType {
-            case .swiftData:
-                return swiftDataStorageProvider
-                //case .json:
-                //   return JSONStorageProvider.shared
+    static let shared = AppConfig()
+    
+    // MARK: - Plugin Management
+    private var plugins: [FeaturePlugin] = []
+    var userPreferences: UserPreferences = UserPreferences()
+    
+    // MARK: - Storage Provider
+    @AppStorage("storageType") var storageType: StorageType = .swiftData
+    private var swiftDataStorageProvider: SwiftDataStorageProvider? = nil
+    
+    var storageProvider: StorageProvider {
+        switch storageType {
+        case .swiftData:
+            guard let provider = swiftDataStorageProvider else {
+                fatalError("storageProvider requested before initialization")
             }
+            return provider
         }
-        
-        @AppStorage("storageType")
-        var storageType: StorageType = .swiftData
-        
-        @AppStorage("showCategories")
-        static var showCategories: Bool = true
-        @AppStorage("showDueDates")
-        static var showDueDates: Bool = true
-        
-        @AppStorage("showPriorities")
-        static var showPriorities: Bool = true
-        
-        @AppStorage("enableReminders")
-        static var enableReminders: Bool = true
-    
-        @AppStorage("showGoals")
-        static var enableGoals: Bool = true
-    
-        @AppStorage("showStreaks")
-        static var enableStreaks: Bool = true
+    }
 
-    init() {
+    private init() {
         // Descubrir y registrar plugins automáticamente
         let discoveredPlugins = PluginDiscovery.discoverPlugins()
         for pluginType in discoveredPlugins {
@@ -65,6 +35,25 @@ class AppConfig: ObservableObject {
         
         // Crear instancias de los plugins
         self.plugins = PluginRegistry.shared.createPluginInstances(config: self)
+        // Now plugins are available
+        var schemas: [any PersistentModel.Type] = []
+        schemas.append(contentsOf: PluginRegistry.shared.getEnabledModels(from: plugins))
+        
+        // Agregar modelos manualmente si no están ya en el schema
+        // (porque sus plugins fueron excluidos del target)
+        if !schemas.contains(where: { $0 == Category.self }) {
+            schemas.append(Category.self)
+        }
+        if !schemas.contains(where: { $0 == Addiction.self }) {
+            schemas.append(Addiction.self)
+        }
+        
+        let schema = Schema(schemas)
+        print("📦 Schemas registrados: \(schemas)")
+        print("🔌 Plugins activos: \(plugins.filter { $0.isEnabled }.count)/\(plugins.count)")
+        self.swiftDataStorageProvider = SwiftDataStorageProvider(schema: schema)
+        //observadores DESPUÉS de que el storageProvider esté listo
+        setupHabitDataObservingPlugins()
     }
     
    // private let modelContainer: ModelContainer
@@ -74,15 +63,12 @@ class AppConfig: ObservableObject {
        // setupPlugins()
     //}
     
-    // private func setupPlugins() {
-    //     let registry = PluginRegistry.shared
-        
-    //     //  Registrar los plugins
-    //     registry.register(ReminderPlugin.Type)
-    //     registry.register(HabitGoalPlugin.Type)
-        
-    //     print("✅ Plugins registrados correctamente")
-    // }
+    private func setupHabitDataObservingPlugins() {
+        let registry = HabitDataObserverManager.shared
+        registry.register(HabitGoalPlugin(config: self))
+        registry.register(StreakPlugin(config: self))
+        print("✅ Plugins registrados correctamente")
+    }
     
     // MARK: - Storage Provider
     
