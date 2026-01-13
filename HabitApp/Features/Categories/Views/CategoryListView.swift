@@ -129,17 +129,20 @@ var iOSBody: some View {
                     
                     return true
                 }) { category in
+                    let newUserImageSlot: UserImageSlot = UserImageSlot(emojis:[])
                     NavigationLink {
                         CategoryDetailWrapperView(
                             storageProvider: categoryListVM.storageProvider,
                             category: category,
-                            isSubcategory: category.isSubcategory
+                            isSubcategory: category.isSubcategory,
+                            userImageSlot: newUserImageSlot
                         )
                     } label: {
                         CategoryRowView(
                             storageProvider: categoryListVM.storageProvider,
                             category: category,
-                            isCategoryParentView: true
+                            isCategoryParentView: true,
+                            userImageSlot: newUserImageSlot
                         )
                     }
                 }
@@ -159,7 +162,8 @@ var iOSBody: some View {
                             CategoryDetailWrapperView(
                                 storageProvider: categoryListVM.storageProvider,
                                 category: category,
-                                isSubcategory: category.isSubcategory
+                                isSubcategory: category.isSubcategory,
+                                userImageSlot: UserImageSlot(emojis:[])
                             )
                         } label: {
                             Label("Añadir", systemImage: "plus")

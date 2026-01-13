@@ -6,6 +6,7 @@ struct HabitCategoryView: View {
     @StateObject var categoryListVM: CategoryListViewModel
     @Query var categoriesQuery: [Category]
     var habit: Habit
+    @StateObject var userImagesVM: UserImagesViewModel
     
     var body: some View {
         Section(header: Text("Categorías")) {
@@ -21,7 +22,8 @@ struct HabitCategoryView: View {
                                 category: category,
                                 isCategoryParentView: false,
                                 habit: habit,
-                                isHabitAddedToCategory: category.habits.contains(habit)
+                                isHabitAddedToCategory: category.habits.contains(habit),
+                                userImageSlot: userImagesVM.userImageSlot
                             )
                             
                         .buttonStyle(.plain)
@@ -33,9 +35,10 @@ struct HabitCategoryView: View {
         }
     }
     
-    init(storageProvider: StorageProvider, habit: Habit) {
+    init(storageProvider: StorageProvider, habit: Habit, userImageSlot: UserImageSlot) {
         self._categoryListVM = StateObject(wrappedValue: CategoryListViewModel(storageProvider: storageProvider))
         self.habit = habit
+        self._userImagesVM = StateObject(wrappedValue: UserImagesViewModel(storageProvider: storageProvider, userImageSlot: userImageSlot))
     }
 }
 

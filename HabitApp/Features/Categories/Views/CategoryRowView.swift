@@ -13,9 +13,9 @@ struct CategoryRowView: View {
     @State private var isImageLoaded = false
     @State private var image: PlatformImage? = nil
     
-    init(storageProvider: StorageProvider, category: Category, isCategoryParentView: Bool, habit: Habit? = nil, isHabitAddedToCategory: Bool = false) {
+    init(storageProvider: StorageProvider, category: Category, isCategoryParentView: Bool, habit: Habit? = nil, isHabitAddedToCategory: Bool = false, userImageSlot: UserImageSlot) {
         self._categoryListVM = StateObject(wrappedValue: CategoryListViewModel(storageProvider: storageProvider))
-        self._userImagesVM = StateObject(wrappedValue: UserImagesViewModel(storageProvider: storageProvider, userImageSlot: UserImageSlot(emojis:[])))
+        self._userImagesVM = StateObject(wrappedValue: UserImagesViewModel(storageProvider: storageProvider, userImageSlot: userImageSlot))
         self.category = category
         self.isCategoryParentView = isCategoryParentView
         self.habit = habit
