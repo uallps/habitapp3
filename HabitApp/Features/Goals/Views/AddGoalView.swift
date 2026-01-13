@@ -6,6 +6,7 @@ struct AddGoalView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @EnvironmentObject private var userPreferences: UserPreferences
     
     @State private var title = ""
     @State private var description = ""
@@ -22,8 +23,8 @@ struct AddGoalView: View {
         ZStack {
             LinearGradient(
                 gradient: Gradient(colors: [
-                    Color.blue.opacity(0.06),
-                    Color.purple.opacity(0.06)
+                    userPreferences.accentColor.opacity(0.06),
+                    userPreferences.accentColor.opacity(0.03)
                 ]),
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
@@ -50,7 +51,7 @@ struct AddGoalView: View {
                                 HStack {
                                     Label("Días objetivo", systemImage: "number.circle.fill")
                                         .font(.subheadline)
-                                        .foregroundColor(.blue)
+                                        .foregroundColor(userPreferences.accentColor)
                                     Spacer()
                                     Stepper("\(targetCount)", value: $targetCount, in: 1...365)
                                 }
@@ -60,7 +61,7 @@ struct AddGoalView: View {
                                 VStack(alignment: .leading, spacing: 8) {
                                     Label("Fecha límite", systemImage: "calendar")
                                         .font(.subheadline)
-                                        .foregroundColor(.blue)
+                                        .foregroundColor(userPreferences.accentColor)
                                     
                                     DatePicker(
                                         "Seleccionar fecha",
@@ -90,7 +91,7 @@ struct AddGoalView: View {
                     #if os(iOS)
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button("Cancelar") { dismiss() }
-                            .foregroundColor(.blue)
+                            .foregroundColor(userPreferences.accentColor)
                     }
                     
                     ToolbarItem(placement: .navigationBarTrailing) {
@@ -169,7 +170,7 @@ struct AddGoalView: View {
                                 .fontWeight(.medium)
                                 .padding(.horizontal, 8)
                                 .padding(.vertical, 4)
-                                .background(Color.blue.opacity(0.15))
+                                .background(userPreferences.accentColor.opacity(0.15))
                                 .cornerRadius(4)
                         }
                     }
@@ -196,7 +197,7 @@ struct AddGoalView: View {
                 }
             }
             .padding(12)
-            .background(Color.blue.opacity(0.06))
+            .background(userPreferences.accentColor.opacity(0.06))
             .cornerRadius(10)
         }
     }

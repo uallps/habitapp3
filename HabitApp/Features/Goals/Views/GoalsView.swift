@@ -6,6 +6,7 @@ struct GoalsView: View {
     @Query private var habits: [Habit]
     @Environment(\.modelContext) private var modelContext
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @EnvironmentObject private var userPreferences: UserPreferences
     @StateObject private var viewModel: GoalsViewModel
     @State private var showingAddGoal = false
     
@@ -65,7 +66,7 @@ struct GoalsView: View {
         } label: {
             Label("Nuevo", systemImage: "plus.circle.fill")
         }
-        .foregroundColor(.blue)
+        .foregroundColor(userPreferences.accentColor)
     }
     
     private var emptyState: some View {
@@ -90,7 +91,7 @@ struct GoalsView: View {
                     .fontWeight(.semibold)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 12)
-                    .background(Color.blue)
+                    .background(userPreferences.accentColor)
                     .foregroundColor(.white)
                     .cornerRadius(10)
             }
@@ -149,7 +150,7 @@ struct GoalsView: View {
                         HStack(spacing: 8) {
                             Image(systemName: "flame.fill")
                                 .font(.title3)
-                                .foregroundColor(.orange)
+                                .foregroundColor(userPreferences.accentColor)
                             Text("Objetivos Activos")
                                 .font(.title2)
                                 .fontWeight(.semibold)
@@ -360,7 +361,7 @@ struct GoalCardView: View {
                     if goal.daysRemaining <= 3 {
                         Image(systemName: "exclamationmark.circle.fill")
                             .font(.caption2)
-                            .foregroundColor(.orange)
+                            .foregroundColor(userPreferences.accentColor)
                     }
                 }
                 .padding(6)

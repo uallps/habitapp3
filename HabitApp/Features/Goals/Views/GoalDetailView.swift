@@ -7,6 +7,7 @@ struct GoalDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @EnvironmentObject private var userPreferences: UserPreferences
     @StateObject private var viewModel: GoalsViewModel
     @State private var associatedHabit: Habit?
     @State private var refreshTrigger = UUID()
@@ -211,7 +212,7 @@ struct GoalDetailView: View {
             VStack(spacing: 14) {
                 InfoRow(
                     icon: "calendar",
-                    iconColor: .blue,
+                    iconColor: userPreferences.accentColor,
                     title: "Fecha Inicio",
                     value: goal.startDate.formatted(date: .abbreviated, time: .omitted)
                 )
@@ -220,7 +221,7 @@ struct GoalDetailView: View {
                 
                 InfoRow(
                     icon: "target",
-                    iconColor: .orange,
+                    iconColor: userPreferences.accentColor,
                     title: "Fecha Límite",
                     value: goal.targetDate.formatted(date: .abbreviated, time: .omitted)
                 )

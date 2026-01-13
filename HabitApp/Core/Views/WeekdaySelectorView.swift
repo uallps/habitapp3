@@ -9,6 +9,7 @@ import SwiftUI
 
 struct WeekdaySelector: View {
     @Binding var selectedDays: [Int]
+    @EnvironmentObject private var userPreferences: UserPreferences
     private let weekdays = Calendar.current.shortStandaloneWeekdaySymbols
     
     var body: some View {
@@ -25,7 +26,7 @@ struct WeekdaySelector: View {
                     Text(weekdays[index - 1].prefix(2))
                         .fontWeight(.semibold)
                         .frame(width: 36, height: 36)
-                        .background(isSelected ? Color.blue : Color.gray.opacity(0.2))
+                        .background(isSelected ? userPreferences.accentColor : Color.gray.opacity(0.2))
                         .foregroundColor(isSelected ? .white : .primary)
                         .clipShape(Circle())
                 }

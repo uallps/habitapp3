@@ -69,7 +69,7 @@ struct HabitRowView: View {
                     HabitNotesView(habit: habit, currentDate: date, storageProvider: storageProvider)
                 } label: {
                     Image(systemName: "note.text")
-                        .foregroundColor(.blue)
+                        .foregroundColor(userPreferences.accentColor)
                         .font(.title3)
                 }
                 .buttonStyle(.plain)
@@ -80,7 +80,7 @@ struct HabitRowView: View {
                 showingEditSheet = true
             } label: {
                 Image(systemName: "pencil")
-                    .foregroundColor(.orange)
+                    .foregroundColor(userPreferences.accentColor)
                     .font(.title3)
             }
             .buttonStyle(.plain)
@@ -156,7 +156,7 @@ struct HabitRowView: View {
                     showingNotesSheet = true
                 } label: {
                     Image(systemName: "note.text")
-                        .foregroundColor(.blue)
+                        .foregroundColor(userPreferences.accentColor)
                         .font(.title3)
                 }
                 .buttonStyle(.plain)
@@ -167,7 +167,7 @@ struct HabitRowView: View {
                 showingEditSheet = true
             } label: {
                 Image(systemName: "pencil")
-                    .foregroundColor(.orange)
+                    .foregroundColor(userPreferences.accentColor)
                     .font(.title3)
             }
             .buttonStyle(.plain)

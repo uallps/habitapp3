@@ -131,7 +131,7 @@ extension SettingsView {
                 SettingsSection(
                     title: "Visualización",
                     icon: "eye.fill",
-                    iconColor: .blue
+                    iconColor: userPreferences.accentColor
                 ) {
                     SettingsRow(
                         title: "Mostrar fechas de vencimiento",
@@ -163,7 +163,7 @@ extension SettingsView {
                 SettingsSection(
                     title: "Características",
                     icon: "slider.horizontal.3",
-                    iconColor: .purple
+                    iconColor: userPreferences.accentColor
                 ) {
                     SettingsRow(
                         title: "Hábitos",
@@ -251,7 +251,7 @@ extension SettingsView {
                 SettingsSection(
                     title: "Notificaciones",
                     icon: "bell.fill",
-                    iconColor: .orange
+                    iconColor: userPreferences.accentColor
                 ) {
                     SettingsRow(
                         title: "Configurar recordatorios",
@@ -286,7 +286,7 @@ extension SettingsView {
                 SettingsSection(
                     title: "Información",
                     icon: "info.circle.fill",
-                    iconColor: .green
+                    iconColor: userPreferences.accentColor
                 ) {
                     SettingsRow(
                         title: "Versión",

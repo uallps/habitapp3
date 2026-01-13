@@ -61,7 +61,7 @@ extension HabitListView {
                                 .foregroundColor(.white)
                                 .padding(.horizontal, 8)
                                 .padding(.vertical, 3)
-                                .background(Color.blue)
+                                .background(userPreferences.accentColor)
                                 .cornerRadius(6)
                         }
                     }
@@ -206,7 +206,7 @@ extension HabitListView {
                     } label: {
                         Image(systemName: "plus.circle.fill")
                             .font(.title3)
-                            .foregroundColor(.blue)
+                            .foregroundColor(userPreferences.accentColor)
                     }
                 }
             }
@@ -248,7 +248,7 @@ extension HabitListView {
                             .foregroundColor(.white)
                             .padding(.horizontal, 8)
                             .padding(.vertical, 3)
-                            .background(Color.blue)
+                            .background(userPreferences.accentColor)
                             .cornerRadius(6)
                     }
                 }
@@ -363,7 +363,7 @@ extension HabitListView {
                         showingNewHabitSheet = true
                     } label: {
                         Image(systemName: "plus.circle.fill")
-                            .foregroundColor(.blue)
+                            .foregroundColor(userPreferences.accentColor)
                     }
                 }
             }

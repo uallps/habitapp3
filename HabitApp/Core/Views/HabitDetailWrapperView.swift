@@ -4,6 +4,7 @@ import SwiftData
 struct HabitDetailWrapper: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var userPreferences: UserPreferences
     let viewModel: HabitListViewModel
     let isNew: Bool
     
@@ -59,7 +60,7 @@ extension HabitDetailWrapper {
                         VStack(alignment: .leading, spacing: 8) {
                             HStack(spacing: 8) {
                                 Image(systemName: "text.cursor")
-                                    .foregroundColor(.blue)
+                                    .foregroundColor(userPreferences.accentColor)
                                 Text("Título")
                                     .font(.headline)
                                     .fontWeight(.semibold)
@@ -78,7 +79,7 @@ extension HabitDetailWrapper {
                         VStack(alignment: .leading, spacing: 12) {
                             HStack(spacing: 8) {
                                 Image(systemName: "calendar")
-                                    .foregroundColor(.orange)
+                                    .foregroundColor(userPreferences.accentColor)
                                 Text("Días de la semana")
                                     .font(.headline)
                                     .fontWeight(.semibold)
@@ -118,7 +119,7 @@ extension HabitDetailWrapper {
                         VStack(alignment: .leading, spacing: 12) {
                             HStack(spacing: 8) {
                                 Image(systemName: "bell.fill") // Icono de campana
-                                    .foregroundColor(.purple)
+                                    .foregroundColor(userPreferences.accentColor)
                                 Text("Recordatorio")
                                     .font(.headline)
                                     .fontWeight(.semibold)
@@ -159,13 +160,13 @@ extension HabitDetailWrapper {
                                 .padding()
                                 .background(
                                     LinearGradient(
-                                        gradient: Gradient(colors: [Color.blue, Color.blue.opacity(0.8)]),
+                                        gradient: Gradient(colors: [userPreferences.accentColor, userPreferences.accentColor.opacity(0.8)]),
                                         startPoint: .leading,
                                         endPoint: .trailing
                                     )
                                 )
                                 .cornerRadius(12)
-                                .shadow(color: Color.blue.opacity(0.3), radius: 4, x: 0, y: 2)
+                                .shadow(color: userPreferences.accentColor.opacity(0.3), radius: 4, x: 0, y: 2)
                             }
                             .disabled(title.isEmpty || selectedDays.isEmpty)
                             
@@ -249,7 +250,7 @@ extension HabitDetailWrapper {
                     VStack(alignment: .leading, spacing: 8) {
                         HStack(spacing: 8) {
                             Image(systemName: "text.cursor")
-                                .foregroundColor(.blue)
+                                .foregroundColor(userPreferences.accentColor)
                             Text("Título del hábito")
                                 .font(.headline)
                                 .fontWeight(.semibold)
@@ -267,7 +268,7 @@ extension HabitDetailWrapper {
                     VStack(alignment: .leading, spacing: 12) {
                         HStack(spacing: 8) {
                             Image(systemName: "calendar")
-                                .foregroundColor(.orange)
+                                .foregroundColor(userPreferences.accentColor)
                             Text("Días de la semana")
                                 .font(.headline)
                                 .fontWeight(.semibold)
@@ -307,7 +308,7 @@ extension HabitDetailWrapper {
                 VStack(alignment: .leading, spacing: 12) {
                     HStack(spacing: 8) {
                         Image(systemName: "bell.fill")
-                            .foregroundColor(.purple)
+                            .foregroundColor(userPreferences.accentColor)
                         Text("Recordatorio")
                             .font(.headline)
                             .fontWeight(.semibold)
