@@ -38,6 +38,10 @@ extension SettingsView {
                         get: { userPreferences.enableHabits },
                         set: { userPreferences.enableHabits = $0 }
                     ))
+                    Toggle("Adicciones", isOn: Binding(
+                        get: { userPreferences.enableAddictions },
+                        set: { userPreferences.enableAddictions = $0 }
+                    ))
                     Toggle("Notas diarias", isOn: Binding(
                         get: { userPreferences.enableDailyNotes },
                         set: { userPreferences.enableDailyNotes = $0 }
@@ -168,6 +172,20 @@ extension SettingsView {
                         Toggle("", isOn: Binding(
                             get: { userPreferences.enableHabits },
                             set: { userPreferences.enableHabits = $0 }
+                        ))
+                        .labelsHidden()
+                    }
+                    
+                    Divider()
+                        .padding(.leading, 40)
+                    
+                    SettingsRow(
+                        title: "Adicciones",
+                        description: "Gestiona adicciones y compensaciones"
+                    ) {
+                        Toggle("", isOn: Binding(
+                            get: { userPreferences.enableAddictions },
+                            set: { userPreferences.enableAddictions = $0 }
                         ))
                         .labelsHidden()
                     }

@@ -86,7 +86,8 @@ final class UserPreferences: ObservableObject {
     var enableDailyNotes: Bool {
         get { storedEnableDailyNotes }
         set { objectWillChange.send(); storedEnableDailyNotes = newValue }
-        
+    }
+    
     var enableAddictions: Bool {
         get { storedEnableAddictions }
         set { objectWillChange.send(); storedEnableAddictions = newValue }

@@ -41,6 +41,7 @@ struct HabitApp: App {
         [
             AppView(id: "habitos", title: "Hábitos", icon: "checklist", isEnabled: userPreferences.enableHabits),
             AppView(id: "categorias", title: "Categorías", icon: "folder", isEnabled: userPreferences.enableHabits),
+            AppView(id: "adicciones", title: "Adicciones", icon: "exclamationmark.triangle", isEnabled: userPreferences.enableAddictions),
             AppView(id: "notas", title: "Notas", icon: "note.text", isEnabled: userPreferences.enableDailyNotes),
             AppView(id: "objetivos", title: "Objetivos", icon: "target", isEnabled: userPreferences.enableGoals),
             AppView(id: "estadisticas", title: "Estadísticas", icon: "chart.bar", isEnabled: userPreferences.enableStatistics),
@@ -91,6 +92,7 @@ struct HabitApp: App {
         switch id {
         case "habitos": HabitListView(storageProvider: storageProvider)
         case "categorias": CategoryListView(storageProvider: storageProvider)
+        case "adicciones": AddictionListView(storageProvider: storageProvider)
         case "notas": DailyNotesView(storageProvider: storageProvider)
         case "objetivos": GoalsView(storageProvider: storageProvider)
         case "estadisticas": StatisticsView()
