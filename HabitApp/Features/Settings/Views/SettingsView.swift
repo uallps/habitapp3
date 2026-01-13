@@ -95,58 +95,144 @@ extension SettingsView {
 #if os(macOS)
 extension SettingsView {
     var macBody: some View {
-        VStack(spacing: 20) {
-            Form {
-                Section("Visualización") {
-                    Toggle("Mostrar fechas de vencimiento", isOn: Binding(
-                        get: { userPreferences.showDueDates },
-                        set: { userPreferences.showDueDates = $0 }
-                    ))
-                    Toggle("Mostrar prioridades", isOn: Binding(
-                        get: { userPreferences.showPriorities },
-                        set: { userPreferences.showPriorities = $0 }
-                    ))
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                // Header
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Ajustes")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                    Text("Personaliza tu experiencia con HabitApp")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
                 }
+                .padding(.horizontal, 32)
+                .padding(.top, 24)
                 
-                Section("Características") {
-                    Toggle("Notas diarias", isOn: Binding(
-                        get: { userPreferences.enableDailyNotes },
-                        set: { userPreferences.enableDailyNotes = $0 }
-                    ))
-                    Toggle("Objetivos", isOn: Binding(
-                        get: { userPreferences.enableGoals },
-                        set: { userPreferences.enableGoals = $0 }
-                    ))
-                }
+                Divider()
                 
-                Section("Notificaciones") {
-                    Button("Configurar recordatorios") {
-                        // Abrir ventana de configuración
+                // Visualización
+                SettingsSection(
+                    title: "Visualización",
+                    icon: "eye.fill",
+                    iconColor: .blue
+                ) {
+                    SettingsRow(
+                        title: "Mostrar fechas de vencimiento",
+                        description: "Muestra cuándo vence cada hábito"
+                    ) {
+                        Toggle("", isOn: Binding(
+                            get: { userPreferences.showDueDates },
+                            set: { userPreferences.showDueDates = $0 }
+                        ))
+                        .labelsHidden()
+                    }
+                    
+                    Divider()
+                        .padding(.leading, 40)
+                    
+                    SettingsRow(
+                        title: "Mostrar prioridades",
+                        description: "Visualiza el nivel de importancia de cada hábito"
+                    ) {
+                        Toggle("", isOn: Binding(
+                            get: { userPreferences.showPriorities },
+                            set: { userPreferences.showPriorities = $0 }
+                        ))
+                        .labelsHidden()
                     }
                 }
                 
-                Section("Datos") {
-                    Button("Limpiar todos los datos") {
-                        showingClearAlert = true
+                // Características
+                SettingsSection(
+                    title: "Características",
+                    icon: "slider.horizontal.3",
+                    iconColor: .purple
+                ) {
+                    SettingsRow(
+                        title: "Notas diarias",
+                        description: "Agrega notas y reflexiones a tus hábitos"
+                    ) {
+                        Toggle("", isOn: Binding(
+                            get: { userPreferences.enableDailyNotes },
+                            set: { userPreferences.enableDailyNotes = $0 }
+                        ))
+                        .labelsHidden()
                     }
-                    .foregroundColor(.red)
+                    
+                    Divider()
+                        .padding(.leading, 40)
+                    
+                    SettingsRow(
+                        title: "Objetivos",
+                        description: "Establece y sigue metas a largo plazo"
+                    ) {
+                        Toggle("", isOn: Binding(
+                            get: { userPreferences.enableGoals },
+                            set: { userPreferences.enableGoals = $0 }
+                        ))
+                        .labelsHidden()
+                    }
                 }
                 
-                Section("Información") {
-                    HStack {
-                        Text("Versión 1.0.0")
-                            .foregroundColor(.secondary)
-                        Spacer()
+                // Notificaciones
+                SettingsSection(
+                    title: "Notificaciones",
+                    icon: "bell.fill",
+                    iconColor: .orange
+                ) {
+                    SettingsRow(
+                        title: "Configurar recordatorios",
+                        description: "Gestiona cuándo recibir notificaciones"
+                    ) {
+                        Button("Configurar") {
+                            // Abrir ventana de configuración
+                        }
+                        .buttonStyle(.bordered)
+                    }
+                }
+                
+                // Datos
+                SettingsSection(
+                    title: "Datos",
+                    icon: "externaldrive.fill",
+                    iconColor: .red
+                ) {
+                    SettingsRow(
+                        title: "Limpiar todos los datos",
+                        description: "Elimina todos los hábitos, notas y objetivos permanentemente"
+                    ) {
+                        Button("Limpiar") {
+                            showingClearAlert = true
+                        }
+                        .buttonStyle(.bordered)
+                        .foregroundColor(.red)
+                    }
+                }
+                
+                // Información
+                SettingsSection(
+                    title: "Información",
+                    icon: "info.circle.fill",
+                    iconColor: .green
+                ) {
+                    SettingsRow(
+                        title: "Versión",
+                        description: "HabitApp 1.0.0"
+                    ) {
                         Button("Acerca de") {
                             showingAbout = true
                         }
+                        .buttonStyle(.bordered)
                     }
                 }
+                
+                Spacer()
             }
-            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .navigationTitle("Ajustes")
-        .frame(minWidth: 400, minHeight: 300)
+        .frame(minWidth: 600, idealWidth: 700, minHeight: 500)
+        .background(Color(.windowBackgroundColor))
         .sheet(isPresented: $showingAbout) {
             AboutView()
         }
@@ -158,6 +244,64 @@ extension SettingsView {
         } message: {
             Text("Esta acción eliminará todos los hábitos, notas y objetivos. No se puede deshacer.")
         }
+    }
+}
+
+// MARK: - macOS Components
+struct SettingsSection<Content: View>: View {
+    let title: String
+    let icon: String
+    let iconColor: Color
+    @ViewBuilder let content: Content
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 10) {
+                Image(systemName: icon)
+                    .font(.title3)
+                    .foregroundColor(iconColor)
+                    .frame(width: 24)
+                
+                Text(title)
+                    .font(.title3)
+                    .fontWeight(.semibold)
+            }
+            .padding(.horizontal, 32)
+            
+            VStack(alignment: .leading, spacing: 0) {
+                content
+            }
+            .padding(.vertical, 16)
+            .padding(.horizontal, 32)
+            .background(Color(.controlBackgroundColor))
+            .cornerRadius(10)
+            .padding(.horizontal, 32)
+        }
+    }
+}
+
+struct SettingsRow<Content: View>: View {
+    let title: String
+    let description: String
+    @ViewBuilder let content: Content
+    
+    var body: some View {
+        HStack(alignment: .center, spacing: 16) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.body)
+                    .fontWeight(.medium)
+                
+                Text(description)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            
+            Spacer()
+            
+            content
+        }
+        .padding(.vertical, 8)
     }
 }
 #endif
