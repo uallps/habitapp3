@@ -167,17 +167,39 @@ extension SettingsView {
     private func clearAllData() {
         do {
             // Eliminar todos los hábitos
-            try modelContext.delete(model: Habit.self)
+            let habitDescriptor = FetchDescriptor<Habit>()
+            let habits = try modelContext.fetch(habitDescriptor)
+            habits.forEach { modelContext.delete($0) }
             
             // Eliminar todas las notas
-            try modelContext.delete(model: DailyNote.self)
+            let noteDescriptor = FetchDescriptor<DailyNote>()
+            let notes = try modelContext.fetch(noteDescriptor)
+            notes.forEach { modelContext.delete($0) }
             
             // Eliminar todos los objetivos
-            try modelContext.delete(model: Goal.self)
+            let goalDescriptor = FetchDescriptor<Goal>()
+            let goals = try modelContext.fetch(goalDescriptor)
+            goals.forEach { modelContext.delete($0) }
+            
+            // Eliminar todos los milestones
+            let milestoneDescriptor = FetchDescriptor<Milestone>()
+            let milestones = try modelContext.fetch(milestoneDescriptor)
+            milestones.forEach { modelContext.delete($0) }
             
             try modelContext.save()
+            
+            // Resetear preferencias de usuario a valores por defecto
+            userPreferences.showDueDates = true
+            userPreferences.showPriorities = true
+            userPreferences.enableReminders = true
+            userPreferences.enableHabits = true
+            userPreferences.enableGoals = true
+            userPreferences.enableDailyNotes = true
+            userPreferences.appTheme = 0
+            
+            print("✅ Todos los datos y preferencias han sido limpiados")
         } catch {
-            print("Error clearing data: \(error)")
+            print("❌ Error clearing data: \(error)")
         }
     }
 }

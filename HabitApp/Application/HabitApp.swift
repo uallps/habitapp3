@@ -7,7 +7,6 @@ struct HabitApp: App {
     @State private var selectedDetailView: String?
     let modelContainer: ModelContainer
     
-    // 1. Instanciamos las preferencias (donde vive la lógica del tema)
     @StateObject private var userPreferences = UserPreferences()
     
     init() {
@@ -31,48 +30,65 @@ struct HabitApp: App {
         #endif
     }
     
+    private var availableViews: [AppView] {
+        [
+            AppView(id: "habitos", title: "Hábitos", icon: "checklist", isEnabled: true),
+            AppView(id: "notas", title: "Notas", icon: "note.text", isEnabled: userPreferences.enableDailyNotes),
+            AppView(id: "objetivos", title: "Objetivos", icon: "target", isEnabled: userPreferences.enableGoals),
+            AppView(id: "ajustes", title: "Ajustes", icon: "gearshape", isEnabled: true)
+        ].filter { $0.isEnabled }
+    }
+    
     var body: some Scene {
         WindowGroup {
-            // 2. Usamos un Group para aplicar los modificadores a toda la App a la vez
             Group {
 #if os(iOS)
                 TabView {
-                    HabitListView(storageProvider: storageProvider)
-                        .tabItem { Label("Hábitos", systemImage: "checklist") }
-                    
-                    DailyNotesView(storageProvider: storageProvider)
-                        .tabItem { Label("Notas", systemImage: "note.text") }
-                    
-                    GoalsView(storageProvider: storageProvider)
-                        .tabItem { Label("Objetivos", systemImage: "target") }
-                    
-                    SettingsView()
-                        .tabItem { Label("Ajustes", systemImage: "gearshape") }
+                    ForEach(availableViews) { view in
+                        viewContent(for: view.id)
+                            .tabItem { Label(view.title, systemImage: view.icon) }
+                    }
                 }
 #else
                 NavigationSplitView {
                     List(selection: $selectedDetailView) {
-                        NavigationLink(value: "habitos") { Label("Habitos", systemImage: "checklist") }
-                        NavigationLink(value: "notas") { Label("Notas Diarias", systemImage: "note.text") }
-                        NavigationLink(value: "objetivos") { Label("Objetivos", systemImage: "target") }
-                        NavigationLink(value: "ajustes") { Label("Ajustes", systemImage: "gearshape") }
+                        ForEach(availableViews) { view in
+                            NavigationLink(value: view.id) {
+                                Label(view.title, systemImage: view.icon)
+                            }
+                        }
                     }
                 } detail: {
-                    switch selectedDetailView {
-                    case "habitos": HabitListView(storageProvider: storageProvider)
-                    case "notas": DailyNotesView(storageProvider: storageProvider)
-                    case "objetivos": GoalsView(storageProvider: storageProvider)
-                    case "ajustes": SettingsView()
-                    default: Text("Seleccione una opción")
+                    if let selectedDetailView {
+                        viewContent(for: selectedDetailView)
+                    } else {
+                        Text("Seleccione una opción")
                     }
                 }
 #endif
             }
-            // --- MODIFICADORES GLOBALES ---
             .environmentObject(AppConfig.shared)
             .modelContainer(modelContainer)
             .environmentObject(userPreferences)
-            
         }
     }
+    
+    @ViewBuilder
+    private func viewContent(for id: String) -> some View {
+        switch id {
+        case "habitos": HabitListView(storageProvider: storageProvider)
+        case "notas": DailyNotesView(storageProvider: storageProvider)
+        case "objetivos": GoalsView(storageProvider: storageProvider)
+        case "ajustes": SettingsView()
+        default: Text("Vista no encontrada")
+        }
+    }
+}
+
+// MARK: - AppView Model
+struct AppView: Identifiable {
+    let id: String
+    let title: String
+    let icon: String
+    let isEnabled: Bool
 }

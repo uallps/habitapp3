@@ -43,12 +43,14 @@ class PluginRegistry {
         return pluginInstances
     }
     
-    /// Obtiene todos los modelos de los plugins habilitados
+    /// Obtiene todos los modelos de los plugins (siempre incluye todos los modelos para evitar errores de schema)
     /// - Parameter plugins: Array de instancias de plugins
     /// - Returns: Array de tipos de modelos persistentes
     func getEnabledModels(from plugins: [FeaturePlugin]) -> [any PersistentModel.Type] {
+        // Siempre retorna todos los modelos, independientemente de si el plugin está habilitado
+        // Esto evita errores de CoreData cuando se deshabilita/habilita funcionalidades
         return plugins.flatMap { plugin in
-            plugin.isEnabled ? plugin.models : []
+            plugin.models
         }
     }
     
