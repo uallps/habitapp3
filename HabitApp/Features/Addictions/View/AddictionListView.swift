@@ -39,10 +39,7 @@ struct AddictionListView: View {
                     ToolbarItem(placement: .automatic) {
                         NavigationLink {
                             let addiction = Addiction(
-                                title: "",
-                                addiction: Habit(
-                                    title: ""
-                                )
+                                title: ""
                             )
                             AddictionDetailWrapperView(
                                 addictionListVM: addictionListVM,

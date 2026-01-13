@@ -54,6 +54,9 @@ struct HabitApp: App {
                     
                     SettingsView()
                         .tabItem { Label("Ajustes", systemImage: "gearshape") }
+                    
+                    AddictionListView(storageProvider: storageProvider)
+                        .tabItem { Label("Adicciones", systemImage: "bandage") }
                 }
 #else
                 NavigationSplitView {
@@ -64,6 +67,7 @@ struct HabitApp: App {
                         NavigationLink(value: "estadisticas") { Label("Estadísticas", systemImage: "chart.bar") }
                         NavigationLink(value: "ajustes") { Label("Ajustes", systemImage: "gearshape") }
                         NavigationLink(value: "categorias") { Label("Categorias", systemImage: "folder") }
+                        NavigationLink(value: "adicciones") { Label("Adicciones", systemImage: "bandage") }
                     }
                 } detail: {
                     switch selectedDetailView {
@@ -73,6 +77,7 @@ struct HabitApp: App {
                     case "estadisticas": StatisticsView()
                     case "ajustes": SettingsView()
                     case "categorias": CategoryListView(storageProvider: storageProvider)
+                    case "adicciones": AddictionListView(storageProvider: storageProvider)
                     default: Text("Seleccione una opción")
                     }
                 }

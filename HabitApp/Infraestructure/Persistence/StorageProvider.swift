@@ -29,16 +29,13 @@ protocol StorageProvider {
     func addAddiction(addiction: Addiction) async throws
     func updateAddiction(addiction: Addiction) async throws
     func deleteAddiction(addiction: Addiction) async throws
-    func createSampleAddictions(to addiction: Addiction, habit: Habit) async throws
-    func addCompensatoryHabit(to addiction: Addiction, habit: Habit) async throws
-    func addPreventionHabit(to addiction: Addiction, habit: Habit) async throws
-    func addTriggerHabit(to addiction: Addiction, habit: Habit) async throws
     func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async throws
     func removePreventionHabit(from addiction: Addiction, habit: Habit) async throws
     func removeTriggerHabit(from addiction: Addiction, habit: Habit) async throws
     func associateCompensatoryHabit(to addiction: Addiction, habit: Habit) async throws
     func associatePreventionHabit(to addiction: Addiction, habit: Habit) async throws
     func associateTriggerHabit(to addiction: Addiction, habit: Habit) async throws
+    func loadAddictions() async throws -> [Addiction]
     //func associateCompensatoryHabit(to addiction: Addiction, habit: Habit) async throws
     //
     //END IF
@@ -64,9 +61,4 @@ protocol StorageProvider {
     //END IF
     
     func saveContext() async throws
-    
-    //IF ADDICTION
-    func loadAddictions() async throws -> [Addiction]
-    func isHabitAddiction(habit: Habit) async throws -> Bool
-    //END IF
 }

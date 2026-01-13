@@ -10,8 +10,8 @@ final class AccessibilityPlugin: ViewPlugin {
         self.config = config
     }
 
-    typealias TaskRowContent = EmptyView
-    typealias TaskDetailContent = EmptyView
+    typealias RowContent = EmptyView
+    typealias DetailContent = EmptyView
     typealias SettingsContent = AccessibilitySettingsView
 
     @ViewBuilder

@@ -11,6 +11,7 @@ final class UserPreferences: ObservableObject {
     @AppStorage("enableHabits") private var storedEnableHabits: Bool = true
     @AppStorage("enableGoals") private var storedEnableGoals: Bool = true
     @AppStorage("enableAddictions") private var storedEnableAddictions: Bool = true
+    @AppStorage("enableCategories") private var storedEnableCategories: Bool = true
     @AppStorage("appTheme") private var storedAppTheme: Int = 0
     @AppStorage("daltonismType") var daltonismType: Int = 0
     @AppStorage("nightModeIntensity") var nightModeIntensity: Double = 0.0
@@ -48,6 +49,11 @@ final class UserPreferences: ObservableObject {
     var enableGoals: Bool {
         get { storedEnableGoals }
         set { objectWillChange.send(); storedEnableGoals = newValue }
+    }
+    
+    var enableCategories: Bool {
+        get { storedEnableCategories }
+        set { objectWillChange.send(); storedEnableCategories = newValue }
     }
     
     var showPriorities: Bool {

@@ -8,18 +8,6 @@ struct AddictionRowView: View {
     var iOSBody: some View {
         HStack {
             commonBody
-                NavigationLink {
-                AddictionDetailWrapperView(
-                    addictionListVM: addictionListVM,
-                    addiction: addiction,
-                    habitListVM: HabitListViewModel(storageProvider: addictionListVM.storageProvider)
-                )
-            } label: {
-                Image(systemName: "note.text")
-                    .foregroundColor(.blue)
-                    .font(.title3)
-            }
-            .buttonStyle(.plain)
         }
     }
 

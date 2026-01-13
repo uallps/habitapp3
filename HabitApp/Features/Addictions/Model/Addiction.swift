@@ -19,8 +19,8 @@ class Addiction {
     // Hábitos para aliviar los efectos negativos en caso de recaída
     var compensatoryHabits: [Habit]
     
-    // La addicción en sí
-    var addiction: Habit
+    // LEFTOVER: La addicción en sí
+    //var addiction: Habit
     
     // Número de veces que el usuario ha recaído en la adicción
     var relapseCount: Int = 0
@@ -31,8 +31,7 @@ class Addiction {
          severity: AddictionSeverity = .medium,
          triggers: [Habit] = [],
          preventionHabits: [Habit] = [],
-         compensatoryHabits: [Habit] = [],
-         addiction: Habit
+         compensatoryHabits: [Habit] = []
     ) {
         
         self.severity = severity
@@ -40,7 +39,6 @@ class Addiction {
         self.preventionHabits = preventionHabits
         self.compensatoryHabits = compensatoryHabits
         self.title = title
-        self.addiction = addiction
         }
     }
 

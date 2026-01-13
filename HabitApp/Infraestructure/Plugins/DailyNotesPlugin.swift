@@ -8,7 +8,7 @@ final class DailyNotesPlugin: FeaturePlugin {
     
     init(config: AppConfig) {
         self.isEnabled = true
-        self.models = [DailyNote.self]
+        self.models = [Habit.self, DailyNote.self]
         self.config = config
     }
 }

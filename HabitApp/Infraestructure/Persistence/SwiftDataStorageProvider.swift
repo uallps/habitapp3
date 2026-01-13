@@ -57,27 +57,6 @@ class SwiftDataStorageProvider: StorageProvider {
     }
     
     @MainActor
-    func isHabitAddiction(habit: Habit) async throws -> Bool {
-        var isAddiction = false
-        do {
-            let addictions = try await loadAddictions()
-            for addiction in addictions {
-                if addiction.addiction.id == habit.id {
-                    isAddiction = true
-                    break
-                }
-            }
-        } catch {
-            print("Error checkign if habit is addiction \(error)")
-        }
-        return isAddiction
-    }
-    
-    @MainActor
-    func createSampleAddictions(to addiction: Addiction, habit: Habit) async throws {
-        ///TODO
-    }
-    @MainActor
     func associatePreventionHabit(to addiction: Addiction, habit: Habit) async throws {
         do {
             let realAddiction = getRealInstanceAddiction(addiction)

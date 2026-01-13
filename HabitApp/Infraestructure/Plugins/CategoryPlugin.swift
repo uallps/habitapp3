@@ -1,8 +1,7 @@
-import Foundation
 import SwiftData
+import Foundation
 
-final class AddictionPlugin: HabitDataObservingPlugin {
-    
+final class CategoryPlugin: HabitDataObservingPlugin {
     func onDataChanged(taskId: UUID, title: String, dueDate: Date?) {
         Task {
             try await config.storageProvider.onDataChanged(taskId: taskId, title: title, dueDate: dueDate)
@@ -10,14 +9,17 @@ final class AddictionPlugin: HabitDataObservingPlugin {
     }
     
     var models: [any PersistentModel.Type]
-    let config: AppConfig
+    
     var isEnabled: Bool
     
+    let config: AppConfig
+    
     init(config: AppConfig) {
-        self.isEnabled = config.userPreferences.enableAddictions
-        self.models = [Habit.self, Addiction.self]
         self.config = config
+        self.models = [Habit.self, Category.self]
+        self.isEnabled = config.userPreferences.enableCategories
     }
     
     
 }
+

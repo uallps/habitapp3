@@ -11,8 +11,8 @@ final class DarkModePlugin: ViewPlugin {
     }
     
     // Implementamos los tipos asociados requeridos por ViewPlugin
-    typealias TaskRowContent = EmptyView
-    typealias TaskDetailContent = EmptyView
+    typealias RowContent = EmptyView
+    typealias DetailContent = EmptyView
     typealias SettingsContent = DarkModeSettingsView
 
     @ViewBuilder

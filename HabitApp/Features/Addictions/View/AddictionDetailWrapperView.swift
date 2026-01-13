@@ -224,7 +224,6 @@ struct AddictionDetailWrapperView: View {
                     triggers: [],
                     preventionHabits: [],
                     compensatoryHabits: [],
-                    addiction: Habit(title: title)
                 )
                 addiction.selectedDays = selectedDays
                 await addictionListVM.addAddiction(addiction: addiction)
@@ -248,12 +247,7 @@ struct AddictionDetailWrapperView: View {
 
     var body: some View {
         #if os(iOS)
-        NavigationStack {
-            ScrollView {
                 content.padding()
-            }
-            .navigationTitle(isNew ? "Nueva adicción" : "Editar adicción")
-        }
         #else
         content
             .padding()
@@ -265,9 +259,7 @@ struct AddictionDetailWrapperView: View {
         var result: [Habit] = []
 
         for habit in habitsQueryAll {
-            if try await !addictionListVM.isHabitAddiction(habit: habit) {
-                result.append(habit)
-            }
+            result.append(habit)
         }
 
         await MainActor.run {
