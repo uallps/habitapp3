@@ -17,7 +17,8 @@ class SwiftDataStorageProvider: StorageProvider {
         // SIEMPRE crear un nuevo ModelContainer y contexto
         // No reutilizar anteriores porque pueden estar corruptos
         do {
-            self.modelContainer = try ModelContainer(for: schema)
+            let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+            self.modelContainer = try ModelContainer(for: schema, configurations: configuration)
             // Usar mainContext para que sea el mismo que usa SwiftUI
             self.context = self.modelContainer.mainContext
             // Compartir el contexto globalmente para que todos lo usen
@@ -37,7 +38,31 @@ class SwiftDataStorageProvider: StorageProvider {
                 print("⚠️ Error obteniendo conteos iniciales: \(error)")
             }
         } catch {
-            fatalError("Failed to initialize storage provider: \(error)")
+            // En caso de error de migración, intentar eliminar y recrear
+            print("❌ Error inicial de SwiftData: \(error)")
+            print("🔄 Intentando recuperación eliminando store corrupto...")
+            
+            do {
+                // Eliminar archivos de base de datos corruptos
+                let fileManager = FileManager.default
+                if let appSupport = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first {
+                    let storeURL = appSupport.appendingPathComponent("default.store")
+                    try? fileManager.removeItem(at: storeURL)
+                    try? fileManager.removeItem(at: storeURL.appendingPathExtension("shm"))
+                    try? fileManager.removeItem(at: storeURL.appendingPathExtension("wal"))
+                    print("🗑️ Archivos de store eliminados")
+                }
+                
+                // Reintentar creación
+                let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+                self.modelContainer = try ModelContainer(for: schema, configurations: configuration)
+                self.context = self.modelContainer.mainContext
+                SwiftDataContext.shared = self.context
+                SwiftDataStorageProvider._shared = self
+                print("✅ SwiftData reinicializado correctamente después de limpieza")
+            } catch {
+                fatalError("Failed to initialize storage provider: \(error)")
+            }
         }
     }
     @MainActor
