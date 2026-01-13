@@ -4,7 +4,7 @@ import Combine
 
 
 class AppConfig: ObservableObject {
-    static let shared = AppConfig()
+    @MainActor static let shared = AppConfig()
     
     // MARK: - Plugin Management
     private var plugins: [FeaturePlugin] = []
@@ -24,6 +24,7 @@ class AppConfig: ObservableObject {
         }
     }
 
+    @MainActor
     private init() {
         // Descubrir y registrar plugins automáticamente
         let discoveredPlugins = PluginDiscovery.discoverPlugins()
