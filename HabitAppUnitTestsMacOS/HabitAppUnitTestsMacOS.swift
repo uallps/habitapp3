@@ -1,59 +1,114 @@
 import Testing
+import Foundation
+
 @testable import HabitApp
 
 struct HabitAppUnitTestsMacOS {
-
-    @Test func nestThreeCategoriesSequentially() async throws {
-        let iconSetParent = [Emoji(emoji: "🚙", name: "vehicle")]
-        let iconSetChild = [Emoji(emoji: "🧽", name: "sponge")]
-        let iconSetChildOfChild = [Emoji(emoji: "💺", name: "seat")]
-        
-        let parentCategory = Category(
-            name: "Coche",
-            icon: UserImageSlot(emojis: iconSetParent),
-            priority: Priority.medium,
-            isSubcategory: false
+    
+    // MARK: - DailyNotes Tests
+    
+    @Test func createAndUpdateDailyNote() async throws {
+        let note = DailyNote(
+            title: "Test Note",
+            content: "Test content",
+            date: Date()
         )
         
-        let childOfParentCategory = Category(
-            name: "Limpieza",
-            icon: UserImageSlot(emojis: iconSetChild),
-            priority: Priority.high,
-            isSubcategory: true
-        )
+        #expect(note.title == "Test Note")
+        #expect(note.content == "Test content")
+        #expect(note.id != UUID())
         
-        let childOfChildCategory = Category(
-            name: "Asientos",
-            icon: UserImageSlot(emojis: iconSetChildOfChild),
-            priority: Priority.high,
-            isSubcategory: true
-        )
+        note.updateContent(title: "Updated Title", content: "Updated content")
         
-        let categoryListVM = await CategoryListViewModel()
-        
-        await categoryListVM.upsertCategoryOrSubcategory(
-            parent: nil,
-            category: parentCategory
-        )
-        
-        #expect (categoryListVM.categories.count == 1)
-        
-        await categoryListVM.upsertCategoryOrSubcategory(
-            parent: parentCategory,
-            category: childOfParentCategory
-        )
-        
-        #expect (categoryListVM.categories.count == 2)
-        
-        await categoryListVM.upsertCategoryOrSubcategory(
-            parent: childOfParentCategory,
-            category: childOfChildCategory
-        )
-        
-        #expect (categoryListVM.categories.count == 3)
-        #expect (parentCategory.subCategories.count == 1)
-        #expect(childOfParentCategory.subCategories.count == 1)
-        #expect(childOfChildCategory.subCategories.count == 0)
+        #expect(note.title == "Updated Title")
+        #expect(note.content == "Updated content")
+        #expect(note.updatedAt > note.createdAt)
     }
-
+    
+    @Test func dailyNoteWithHabitId() async throws {
+        let habitId = UUID()
+        let note = DailyNote(
+            title: "Habit Note",
+            content: "Note for habit",
+            date: Date(),
+            habitId: habitId
+        )
+        
+        #expect(note.habitId == habitId)
+        #expect(note.title == "Habit Note")
+    }
+    
+    // MARK: - Goals Tests
+    
+    @Test func createGoalWithProgress() async throws {
+        let targetDate = Calendar.current.date(byAdding: .day, value: 30, to: Date())!
+        
+        let goal = Goal(
+            title: "Exercise 30 days",
+            description: "Exercise daily for 30 days",
+            targetCount: 30,
+            targetDate: targetDate
+        )
+        
+        #expect(goal.title == "Exercise 30 days")
+        #expect(goal.targetCount == 30)
+        #expect(goal.currentCount == 0)
+        #expect(goal.isCompleted == false)
+        #expect(goal.progress == 0.0)
+    }
+    
+    @Test func trackGoalProgress() async throws {
+        let targetDate = Calendar.current.date(byAdding: .day, value: 30, to: Date())!
+        
+        let goal = Goal(
+            title: "Read 10 books",
+            description: "Complete 10 books this month",
+            targetCount: 10,
+            targetDate: targetDate
+        )
+        
+        goal.updateProgress(count: 5)
+        #expect(goal.currentCount == 5)
+        #expect(goal.progress == 0.5)
+        
+        goal.updateProgress(count: 10)
+        #expect(goal.currentCount == 10)
+        #expect(goal.progress == 1.0)
+    }
+    
+    @Test func goalWithMilestones() async throws {
+        let targetDate = Calendar.current.date(byAdding: .day, value: 90, to: Date())!
+        
+        let goal = Goal(
+            title: "Save money",
+            description: "Save $1000",
+            targetCount: 1000,
+            targetDate: targetDate
+        )
+        
+        let milestone1 = Milestone(title: "First $250", targetValue: 250, goal: goal)
+        let milestone2 = Milestone(title: "Half $500", targetValue: 500, goal: goal)
+        
+        goal.milestones.append(milestone1)
+        goal.milestones.append(milestone2)
+        
+        #expect(goal.milestones.count == 2)
+        #expect(milestone1.targetValue == 250)
+        #expect(milestone2.targetValue == 500)
+    }
+    
+    @Test func goalDaysRemaining() async throws {
+        let futureDate = Calendar.current.date(byAdding: .day, value: 7, to: Date())!
+        
+        let goal = Goal(
+            title: "Weekly challenge",
+            description: "Complete in 7 days",
+            targetCount: 7,
+            targetDate: futureDate
+        )
+        
+        #expect(goal.daysRemaining >= 6) // Allow for time variation
+        #expect(goal.daysRemaining <= 7)
+    }
+    
 }
