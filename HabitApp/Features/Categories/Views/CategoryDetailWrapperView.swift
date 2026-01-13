@@ -22,7 +22,7 @@ struct CategoryDetailWrapperView: View {
             guard !selectedIconOne.emoji.isEmpty || !selectedIconTwo.emoji.isEmpty || !selectedIconThree.emoji.isEmpty else { return false }
         case .image:
             Task {
-                userImageVM.userImageSlot = try await userImageVM.storageProvider.loadPickedImage(userImageVM.userImageSlot)
+               // userImageVM.userImageSlot = try await userImageVM.storageProvider.loadPickedImage(userImageVM.userImageSlot)
                 if userImageVM.userImageSlot.image == nil { return false } else { return true }
             }
         }
@@ -130,14 +130,15 @@ struct CategoryDetailWrapperView: View {
             }
         }
         
-        Section("Tipo de icono") {
-            Picker("Selecciona tipo", selection: $selectionMode) {
-                ForEach(SelectionMode.allCases) { mode in
-                    Text(mode.rawValue).tag(mode as SelectionMode)
-                }
-            }
-            .pickerStyle(.segmented)
-        }
+        //Section("Tipo de icono") {
+            //Picker("Selecciona tipo", selection: $selectionMode) {
+                //ForEach(SelectionMode.allCases) { mode in
+                //    Text(mode.rawValue).tag(mode as SelectionMode)
+              //  }
+            //}
+          //  .pickerStyle(.segmented)
+        //}
+        
     }
     
     @ViewBuilder

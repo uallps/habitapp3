@@ -12,7 +12,7 @@ class UserImagesViewModel: ObservableObject {
     func assign(image: PlatformImage) {
         self.image = image
         Task {
-            try await storageProvider.upsertUserImageSlot(userImageSlot)
+           // try await storageProvider.upsertUserImageSlot(userImageSlot) DESECHADO
         }
     }
     
@@ -23,7 +23,7 @@ class UserImagesViewModel: ObservableObject {
     
     func loadPickedImage() async {
         do {
-            self.image = try await storageProvider.loadPickedImage(userImageSlot).image
+            //self.image = try await storageProvider.loadPickedImage(userImageSlot).image
         } catch {
             print("Error loading image \(error)")
         }

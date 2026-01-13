@@ -16,7 +16,8 @@ final class CategoryPlugin: HabitDataObservingPlugin {
     
     init(config: AppConfig) {
         self.config = config
-        self.models = [Habit.self, Category.self, Emoji.self, UserImageSlot.self]
+       // self.models = [Habit.self, Category.self, Emoji.self, UserImageSlot.self] DESECHADO
+        self.models = [Habit.self, Category.self, Emoji.self]
         self.isEnabled = config.userPreferences.enableCategories
     }
     

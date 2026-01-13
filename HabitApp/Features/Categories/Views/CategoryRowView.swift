@@ -74,19 +74,19 @@ struct CategoryRowView: View {
                         )
                 }
             }
-            .task {
-                do {
-                    let loadedImage = try await userImagesVM.storageProvider.loadPickedImage(userImagesVM.userImageSlot).image
-                    await MainActor.run {
-                        self.image = loadedImage
-                    }
-                } catch {
-                    print("Failed to load image: \(error)")
-                    await MainActor.run {
-                        self.image = nil
-                    }
-                }
-            }
+          //  .task {
+                //do {
+                   // let loadedImage = try await userImagesVM.storageProvider.loadPickedImage(userImagesVM.userImageSlot).image
+                   // await MainActor.run {
+                       // self.image = loadedImage
+                    //}
+                //} catch {
+                    //print("Failed to load image: \(error)")
+                    //await MainActor.run {
+                    //    self.image = nil
+                  //  }
+                //}
+          //  }
 
             
             HStack() {
