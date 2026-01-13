@@ -79,20 +79,42 @@ enum AchievementCatalog {
             iconName: "bolt.horizontal.fill"
         ),
         
-        // Horarios
-        AchievementDefinition(
-            id: "early_bird",
-            title: "Madrugador",
-            description: "Completa un hábito antes de las 8am",
-            iconName: "sunrise.fill"
-        ),
-        
         // Variedad
         AchievementDefinition(
             id: "variety_5",
             title: "Versátil",
             description: "Completa al menos 5 hábitos diferentes",
             iconName: "sparkles"
+        ),
+        
+        // Contexto: fin de semana
+        AchievementDefinition(
+            id: "weekend_aguafiestas",
+            title: "Aguafiestas",
+            description: "Completa al menos un hábito un sábado o un domingo",
+            iconName: "party.popper"
+        ),
+        
+        // Semana perfecta
+        AchievementDefinition(
+            id: "perfect_week",
+            title: "Semana Impecable",
+            description: "Completa todos tus hábitos programados durante 7 días seguidos",
+            iconName: "calendar.circle"
+        ),
+        
+        // Prioridad
+        AchievementDefinition(
+            id: "low_priority_done",
+            title: "Cuidando lo pequeño",
+            description: "Completa un hábito de prioridad baja",
+            iconName: "tortoise.fill"
+        ),
+        AchievementDefinition(
+            id: "high_priority_done",
+            title: "Misión crítica",
+            description: "Completa un hábito de prioridad alta",
+            iconName: "exclamationmark.triangle.fill"
         )
     ]
     

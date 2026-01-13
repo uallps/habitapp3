@@ -10,13 +10,26 @@ class AchievementsViewModel: ObservableObject {
         self.storageProvider = storageProvider
     }
     
+    // MARK: - Public
+    
     func syncCatalogIfNeeded() async {
         do {
             let storedAchievements = try await storageProvider.loadAchievements()
-            let storedIds = Set(storedAchievements.map { $0.achievementId })
-
+            let catalogIds = Set(AchievementCatalog.all.map { $0.id })
+            
+            // Eliminar logros obsoletos que ya no estén en el catálogo
+            for achievement in storedAchievements where !catalogIds.contains(achievement.achievementId) {
+                try await storageProvider.deleteAchievement(achievement)
+            }
+            
+            let existingIds = Set(
+                storedAchievements
+                    .filter { catalogIds.contains($0.achievementId) }
+                    .map { $0.achievementId }
+            )
+            
             for definition in AchievementCatalog.all {
-                if !storedIds.contains(definition.id) {
+                if !existingIds.contains(definition.id) {
                     let achievement = Achievement(
                         achievementId: definition.id,
                         title: definition.title,
@@ -24,237 +37,258 @@ class AchievementsViewModel: ObservableObject {
                         iconName: definition.iconName
                     )
                     achievement.isUnlocked = false
-
                     try await storageProvider.saveAchievement(achievement)
-                    print("➕ Nuevo logro agregado: \(definition.id)")
                 }
             }
         } catch {
             print("❌ Error sincronizando logros: \(error)")
         }
     }
-
+    
     /// Verifica y desbloquea logros basados en el estado actual de los hábitos
-    func checkAndUnlockAchievements(triggeringDate: Date = Date()) async {
-        print("\n🎯 === VERIFICANDO LOGROS ===")
-        print("Fecha de verificación: \(triggeringDate)")
-        
+    /// Usa directamente la lista de hábitos que ya tiene la vista (mismo contexto de SwiftData)
+    func checkAndUnlockAchievements(habits: [Habit]) async {
         do {
-            // Cargar todos los hábitos y logros
-            let allHabits = try await storageProvider.loadHabits()
-            let allAchievements = try await storageProvider.loadAchievements()
+            let achievements = try await storageProvider.loadAchievements()
             
-            // Filtrar solo logros NO desbloqueados (optimización)
-            let lockedAchievements = allAchievements.filter { !$0.isUnlocked }
+            let lockedAchievements = achievements.filter { !$0.isUnlocked }
+            guard !lockedAchievements.isEmpty else { return }
             
-            guard !lockedAchievements.isEmpty else {
-                print("✅ Todos los logros ya están desbloqueados")
-                return
+            // MARK: - Estadísticas globales
+            
+            let calendar = Calendar.current
+            
+            let allCompletionDates = habits
+                .flatMap { $0.doneDates }
+                .map { calendar.startOfDay(for: $0) }
+            
+            // Calcular la fecha más reciente para verificaciones temporales (perfect_day, early_bird)
+            let triggeringDate = allCompletionDates.max() ?? Date()
+            
+            let totalCompletions = allCompletionDates.count
+            let uniqueHabitsCompleted = Set(
+                habits.filter { !$0.doneDates.isEmpty }.map { $0.id }
+            ).count
+            
+            let maxHabitStreak = habits
+                .map { calculateMaxStreak(for: $0) }
+                .max() ?? 0
+            
+            let globalStreak = calculateGlobalStreak(from: allCompletionDates)
+
+            let isPerfectDay = checkPerfectDay(
+                for: triggeringDate,
+                habits: habits
+            )
+            
+            let hasWeekendCompletion = allCompletionDates.contains { date in
+                let weekday = calendar.component(.weekday, from: date)
+                return weekday == 1 || weekday == 7 // domingo o sábado
             }
             
-            print("📊 Logros pendientes: \(lockedAchievements.count)/\(allAchievements.count)")
+            let hasLowPriorityCompletion = habits.contains { habit in
+                habit.priority == .low && !habit.doneDates.isEmpty
+            }
             
-            // Calcular estadísticas globales
-            let totalCompletions = allHabits.reduce(0) { $0 + $1.doneDates.count }
-            let uniqueHabitsCompleted = Set(allHabits.filter { !$0.doneDates.isEmpty }.map { $0.id }).count
+            let hasHighPriorityCompletion = habits.contains { habit in
+                habit.priority == .high && !habit.doneDates.isEmpty
+            }
             
-            print("\n📊 ESTADÍSTICAS:")
-            print("  Total completados: \(totalCompletions)")
-            print("  Hábitos únicos: \(uniqueHabitsCompleted)")
+            let hasPerfectWeek = calculatePerfectWeek(habits: habits, allCompletionDates: allCompletionDates)
             
-            // Verificar día perfecto para la fecha específica
-            let isPerfectDay = checkPerfectDay(for: triggeringDate, habits: allHabits)
-            print("  Día perfecto (\(triggeringDate)): \(isPerfectDay ? "✅" : "❌")")
-            
-            // Calcular racha MÁXIMA entre TODOS los hábitos (individual)
-            let maxStreak = allHabits.map { calculateMaxStreak(for: $0) }.max() ?? 0
-            print("  Racha máxima individual: \(maxStreak)")
-            
-            // Calcular racha GLOBAL (días consecutivos con al menos 1 hábito)
-            let globalStreak = calculateGlobalStreak(habits: allHabits)
+            print("📊 ESTADÍSTICAS CALCULADAS:")
+            print("  Total de completados: \(totalCompletions)")
+            print("  Hábitos únicos completados: \(uniqueHabitsCompleted)")
+            print("  Racha individual máxima: \(maxHabitStreak)")
             print("  Racha global: \(globalStreak)")
+            print("  Día perfecto: \(isPerfectDay)")
+            print("  Fin de semana completado: \(hasWeekendCompletion)")
+            print("  Perfect week: \(hasPerfectWeek)")
             
-            // Hora de la fecha de verificación (para early_bird)
-            let hour = Calendar.current.component(.hour, from: triggeringDate)
-            print("  Hora de verificación: \(hour)h")
+            // Debug: mostrar fechas de cada hábito
+            for habit in habits where !habit.doneDates.isEmpty {
+                let streak = calculateMaxStreak(for: habit)
+                print("  - \(habit.title): \(habit.doneDates.count) días, streak: \(streak)")
+            }
             
-            // Verificar cada logro SOLO si NO está desbloqueado
-            print("\n🔍 VERIFICANDO LOGROS:")
+
+            
+            // MARK: - Evaluación de logros
+            
+            var unlockedCount = 0
+            
             for achievement in lockedAchievements {
                 guard let definition = AchievementCatalog.find(id: achievement.achievementId) else {
                     continue
                 }
                 
-                var shouldUnlock = false
-                var reason = ""
+                let shouldUnlock: Bool
                 
                 switch definition.id {
                 case "first_habit":
                     shouldUnlock = totalCompletions >= 1
-                    reason = "\(totalCompletions) >= 1"
-                    
-                case "perfect_day":
-                    shouldUnlock = isPerfectDay
-                    reason = "isPerfectDay = \(isPerfectDay)"
                     
                 case "habits_5":
                     shouldUnlock = totalCompletions >= 5
-                    reason = "\(totalCompletions) >= 5"
                     
                 case "habits_25":
                     shouldUnlock = totalCompletions >= 25
-                    reason = "\(totalCompletions) >= 25"
                     
                 case "habits_50":
                     shouldUnlock = totalCompletions >= 50
-                    reason = "\(totalCompletions) >= 50"
                     
                 case "habits_100":
                     shouldUnlock = totalCompletions >= 100
-                    reason = "\(totalCompletions) >= 100"
+                    
+                case "perfect_day":
+                    shouldUnlock = isPerfectDay
                     
                 case "streak_3":
-                    shouldUnlock = maxStreak >= 3
-                    reason = "\(maxStreak) >= 3"
+                    shouldUnlock = maxHabitStreak >= 3
                     
                 case "streak_7":
-                    shouldUnlock = maxStreak >= 7
-                    reason = "\(maxStreak) >= 7"
+                    shouldUnlock = maxHabitStreak >= 7
                     
                 case "global_streak_7":
                     shouldUnlock = globalStreak >= 7
-                    reason = "\(globalStreak) >= 7"
                     
                 case "global_streak_30":
                     shouldUnlock = globalStreak >= 30
-                    reason = "\(globalStreak) >= 30"
-                    
-                case "early_bird":
-                    shouldUnlock = hour < 8
-                    reason = "\(hour)h < 8h"
                     
                 case "variety_5":
                     shouldUnlock = uniqueHabitsCompleted >= 5
-                    reason = "\(uniqueHabitsCompleted) >= 5"
+                    
+                case "weekend_aguafiestas":
+                    shouldUnlock = hasWeekendCompletion
+                    
+                case "perfect_week":
+                    shouldUnlock = hasPerfectWeek
+                    
+                case "low_priority_done":
+                    shouldUnlock = hasLowPriorityCompletion
+                    
+                case "high_priority_done":
+                    shouldUnlock = hasHighPriorityCompletion
                     
                 default:
-                    break
+                    shouldUnlock = false
                 }
                 
                 if shouldUnlock {
-                    print("  ✅ \(definition.id): DESBLOQUEADO (\(reason))")
-                    await unlockAchievement(achievement: achievement)
-                } else {
-                    print("  🔒 \(definition.id): bloqueado (\(reason))")
+                    achievement.isUnlocked = true
+                    achievement.unlockedAt = Date()
+                    unlockedCount += 1
                 }
             }
             
-            print("✅ === VERIFICACIÓN COMPLETADA ===\n")
+            if unlockedCount > 0 {
+                try await storageProvider.saveContext()
+            }
             
         } catch {
-            print("❌ Error verificando logros: \(error)")
+            print("❌ Error comprobando logros: \(error)")
         }
     }
     
-    // MARK: - Private Helpers
-    
-    private func unlockAchievement(achievement: Achievement) async {
-        achievement.isUnlocked = true
-        achievement.unlockedAt = Date()
-        
-        do {
-            try await storageProvider.saveContext()
-            print("🏆 ¡Logro desbloqueado! '\(achievement.title)'")
-        } catch {
-            print("❌ Error desbloqueando logro: \(error)")
-        }
-    }
+    // MARK: - Helpers
     
     private func checkPerfectDay(for date: Date, habits: [Habit]) -> Bool {
         let calendar = Calendar.current
         let weekday = calendar.component(.weekday, from: date)
         
-        print("\n🗓️ checkPerfectDay para fecha: \(date)")
-        print("   Día de la semana: \(weekday) (1=Dom, 2=Lun, ..., 7=Sáb)")
-        
-        // Hábitos programados para ese día
-        let scheduledForDay = habits.filter { $0.scheduledDays.contains(weekday) }
-        
-        print("   Hábitos programados ese día: \(scheduledForDay.count)")
-        scheduledForDay.forEach { habit in
-            let isCompleted = habit.doneDates.contains { calendar.isDate($0, inSameDayAs: date) }
-            print("     - \(habit.title): \(isCompleted ? "✅" : "❌")")
+        let scheduledHabits = habits.filter {
+            $0.scheduledDays.isEmpty || $0.scheduledDays.contains(weekday)
         }
         
-        guard !scheduledForDay.isEmpty else {
-            print("   ⚠️ No hay hábitos programados para ese día")
-            return false
-        }
+        guard !scheduledHabits.isEmpty else { return false }
         
-        // Verificar que todos estén completados en esa fecha
-        let allCompleted = scheduledForDay.allSatisfy { habit in
-            habit.doneDates.contains { calendar.isDate($0, inSameDayAs: date) }
+        return scheduledHabits.allSatisfy { habit in
+            habit.doneDates.contains {
+                calendar.isDate($0, inSameDayAs: date)
+            }
         }
-        
-        print("   Resultado: \(allCompleted ? "✅ DÍA PERFECTO" : "❌ No perfecto")")
-        return allCompleted
     }
     
     private func calculateMaxStreak(for habit: Habit) -> Int {
-        guard !habit.doneDates.isEmpty else { return 0 }
-        
         let calendar = Calendar.current
-        let sortedDates = habit.doneDates.sorted()
+        
+        let dates = habit.doneDates
+            .map { calendar.startOfDay(for: $0) }
+            .sorted()
+        
+        guard dates.count > 1 else {
+            return dates.isEmpty ? 0 : 1
+        }
         
         var maxStreak = 1
-        var currentStreak = 1
+        var current = 1
         
-        for i in 1..<sortedDates.count {
-            let previousDay = calendar.startOfDay(for: sortedDates[i-1])
-            let currentDay = calendar.startOfDay(for: sortedDates[i])
-            
-            if let daysBetween = calendar.dateComponents([.day], from: previousDay, to: currentDay).day,
-               daysBetween == 1 {
-                currentStreak += 1
-                maxStreak = max(maxStreak, currentStreak)
+        for i in 1..<dates.count {
+            if calendar.dateComponents([.day], from: dates[i - 1], to: dates[i]).day == 1 {
+                current += 1
+                maxStreak = max(maxStreak, current)
             } else {
-                currentStreak = 1
+                current = 1
             }
         }
         
         return maxStreak
     }
     
-    private func calculateGlobalStreak(habits: [Habit]) -> Int {
-        // Obtener todas las fechas únicas de completado de TODOS los hábitos
-        let calendar = Calendar.current
-        var allDates = Set<Date>()
-        
-        for habit in habits {
-            for date in habit.doneDates {
-                allDates.insert(calendar.startOfDay(for: date))
-            }
+    private func calculateGlobalStreak(from dates: [Date]) -> Int {
+        let sortedDates = Array(Set(dates)).sorted()
+        guard sortedDates.count > 1 else {
+            return sortedDates.isEmpty ? 0 : 1
         }
         
-        guard !allDates.isEmpty else { return 0 }
-        
-        let sortedDates = allDates.sorted()
+        let calendar = Calendar.current
         var maxStreak = 1
-        var currentStreak = 1
+        var current = 1
         
         for i in 1..<sortedDates.count {
-            let previousDay = sortedDates[i-1]
-            let currentDay = sortedDates[i]
-            
-            if let daysBetween = calendar.dateComponents([.day], from: previousDay, to: currentDay).day,
-               daysBetween == 1 {
-                currentStreak += 1
-                maxStreak = max(maxStreak, currentStreak)
+            if calendar.dateComponents([.day], from: sortedDates[i - 1], to: sortedDates[i]).day == 1 {
+                current += 1
+                maxStreak = max(maxStreak, current)
             } else {
-                currentStreak = 1
+                current = 1
             }
         }
         
         return maxStreak
+    }
+
+    /// Devuelve true si existe una ventana de 7 días consecutivos
+    /// en la que todos los días son "perfect_day" para los hábitos actuales.
+    private func calculatePerfectWeek(habits: [Habit], allCompletionDates: [Date]) -> Bool {
+        let calendar = Calendar.current
+        let uniqueDays = Array(Set(allCompletionDates)).sorted()
+        guard uniqueDays.count >= 7 else { return false }
+        
+        let daySet = Set(uniqueDays)
+        
+        for startDay in uniqueDays {
+            var allPerfect = true
+            var currentDay = startDay
+            
+            for _ in 0..<7 {
+                // Comprobar que el día existe en el conjunto de días con completados
+                if !daySet.contains(currentDay) || !checkPerfectDay(for: currentDay, habits: habits) {
+                    allPerfect = false
+                    break
+                }
+                
+                guard let nextDay = calendar.date(byAdding: .day, value: 1, to: currentDay) else {
+                    allPerfect = false
+                    break
+                }
+                currentDay = calendar.startOfDay(for: nextDay)
+            }
+            
+            if allPerfect {
+                return true
+            }
+        }
+        
+        return false
     }
 }
