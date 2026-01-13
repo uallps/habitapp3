@@ -45,6 +45,7 @@ struct HabitStatRow: View {
     let habit: HabitStats
     let isExpanded: Bool
     let onTap: () -> Void
+    @EnvironmentObject private var userPreferences: UserPreferences
     
     var body: some View {
         VStack(spacing: 0) {

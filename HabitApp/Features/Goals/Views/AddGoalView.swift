@@ -367,7 +367,7 @@ struct MilestoneInputRow: View {
     let maxValue: Int
     let onDelete: () -> Void
     @EnvironmentObject private var userPreferences: UserPreferences
-    let onDelete: () -> Void
+
     
     var body: some View {
         HStack(spacing: 12) {
