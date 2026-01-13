@@ -89,9 +89,8 @@ jobs:
             -project HabitApp.xcodeproj \
             -scheme HabitApp \
             -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -destination generic/platform=iOS \
             -derivedDataPath ./DerivedData \
-            -testPlan HabitAppUnitTestsMacOS \
             IPHONEOS_DEPLOYMENT_TARGET=18.0 \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
