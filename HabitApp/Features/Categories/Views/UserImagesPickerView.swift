@@ -8,8 +8,8 @@ struct UserImagesPickerView: View {
     @State private var pickedItem: PhotosPickerItem? = nil
     #endif
         
-    init(storageProvider: StorageProvider) {
-        self._viewModel = StateObject(wrappedValue: UserImagesViewModel(storageProvider: storageProvider))
+    init(storageProvider: StorageProvider, userImageSlot: UserImageSlot) {
+        self._viewModel = StateObject(wrappedValue: UserImagesViewModel(storageProvider: storageProvider, userImageSlot: userImageSlot))
     }
 
     var body: some View {

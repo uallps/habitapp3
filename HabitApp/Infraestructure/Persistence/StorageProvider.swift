@@ -20,25 +20,23 @@ protocol StorageProvider {
     func updateCategory(id: UUID, newCategory: Category) async throws
     func upsertCategoryOrSubcategory(parent: Category?, category: Category) async throws
     func addHabitToCategory(habit: Habit, category: Category) async throws
-    func loadPickedImage() async throws -> UserImageSlot
+    // DESECHADO func loadPickedImage(_ userImageSlot: UserImageSlot) async throws -> UserImageSlot
     func checkIfHabitIsInCategory(habit: Habit, category: Category) async throws -> Bool
     func deleteHabitFromCategory(habit: Habit, category: Category) async throws
+    // DESECHADO func upsertUserImageSlot(_ userImageSlot: UserImageSlot) async throws
     //END IF
     //DEV ONLY METHOD
     //IF ADDICTIONS
     func addAddiction(addiction: Addiction) async throws
     func updateAddiction(addiction: Addiction) async throws
     func deleteAddiction(addiction: Addiction) async throws
-    func createSampleAddictions(to addiction: Addiction, habit: Habit) async throws
-    func addCompensatoryHabit(to addiction: Addiction, habit: Habit) async throws
-    func addPreventionHabit(to addiction: Addiction, habit: Habit) async throws
-    func addTriggerHabit(to addiction: Addiction, habit: Habit) async throws
     func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async throws
     func removePreventionHabit(from addiction: Addiction, habit: Habit) async throws
     func removeTriggerHabit(from addiction: Addiction, habit: Habit) async throws
     func associateCompensatoryHabit(to addiction: Addiction, habit: Habit) async throws
     func associatePreventionHabit(to addiction: Addiction, habit: Habit) async throws
     func associateTriggerHabit(to addiction: Addiction, habit: Habit) async throws
+    func loadAddictions() async throws -> [Addiction]
     //func associateCompensatoryHabit(to addiction: Addiction, habit: Habit) async throws
     //
     //END IF

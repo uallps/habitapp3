@@ -25,97 +25,11 @@ final class AddictionListViewModel: ObservableObject {
         }
     }
     
-    func toggleCompletion(Addiction: Addiction, for date: Date = Date()) {
-        // if Addiction.isCompletedForDate(date) {
-        //     Addiction.markAsIncomplete(for: date)
-        // } else {
-        //     Addiction.markAsCompleted(for: date)
-        // }
-        
-        // do {
-        //     try storageProvider.context.save()
-        //     print(" Hábito '\(Addiction.title)' guardado - Días completados: \(Addiction.doneDates.count)")
-            
-        //     //  Esperar a que SwiftData sincronice completamente
-        //     DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-        //         PluginRegistry.shared.notifyDataChanged(
-        //             taskId: Addiction.id,
-        //             title: Addiction.title,
-        //             dueDate: Addiction.dueDate
-        //         )
-        //     }
-        // } catch {
-        //     print(" Error saving Addiction: \(error)")
-        // }
-    }
-    
     func deleteAddiction(addiction: Addiction) async {
         do {
             try await storageProvider.deleteAddiction(addiction:  addiction)
         } catch {
             print(" Error deleting Addiction: \(error)")
-        }
-    }
-    
-    func createSampleAddictions() {
-        // let sampleAddictions = [
-        //     Addiction(title: "Fumar", priority: .high, scheduledDays: [1,  3, 4,  6, 7]),
-        //     Addiction(title: "Comer chocolate", priority: .medium, scheduledDays: [ 2,  4, 5,  7]),
-        //     Addiction(title: "Doomscrolling", priority: .low, scheduledDays: [1, 2,  5, 6, 7])
-        // ]
-
-        // do {
-        //     for Addiction in sampleAddictions {
-        //         Task {
-        //             await addAddiction(Addiction)
-        //         }
-        //     }
-        // }catch {
-        //     print(" Error creating sample Addictions: \(error)")
-        // }
-        
-
-    }
-
-    func addCompensatoryHabit(
-        to addiction: Addiction,
-        habit: Habit
-    ) async {
-        do {
-            try await storageProvider.addCompensatoryHabit(
-                to: addiction,
-                habit: habit
-            )
-        } catch {
-            print(" Error adding compensatory habit: \(error)")
-        }
-    }
-
-    func addPreventionHabit(
-        to addiction: Addiction,
-        habit: Habit
-    ) async {
-        do {
-            try await storageProvider.addPreventionHabit(
-                to: addiction,
-                habit: habit
-            )
-        } catch {
-            print(" Error adding prevention habit: \(error)")
-        }
-    }
-
-    func addTriggerHabit(
-        to addiction: Addiction,
-        habit: Habit
-    ) async {
-        do {
-            try await storageProvider.addTriggerHabit(
-                to: addiction,
-                habit: habit
-            )
-        } catch {
-            print(" Error adding trigger habit: \(error)")
         }
     }
 
@@ -159,6 +73,13 @@ final class AddictionListViewModel: ObservableObject {
             )
         } catch {
             print(" Error removing trigger habit: \(error)")
+        }
+    }
+    
+    func relapseIncrement(addiction: Addiction) {
+        Task {
+            addiction.relapseCount = addiction.relapseCount + 1
+            try await storageProvider.updateAddiction(addiction: addiction)
         }
     }
 

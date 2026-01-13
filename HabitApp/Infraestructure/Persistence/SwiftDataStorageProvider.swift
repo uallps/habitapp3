@@ -7,6 +7,28 @@ class SwiftDataContext {
 }
 
 class SwiftDataStorageProvider: StorageProvider {
+    func upsertUserImageSlot(_ userImageSlot: UserImageSlot) async throws {
+        do {
+            var realUIS: UserImageSlot
+            let predicate = #Predicate<UserImageSlot> { $0.id == userImageSlot.id }
+            let descriptor = FetchDescriptor<UserImageSlot>(predicate: predicate)
+            let realUISs: [UserImageSlot] = try context.fetch(descriptor)
+            if realUISs.first == nil {
+                context.insert(userImageSlot)
+            } else {
+                realUIS = realUISs.first!
+                realUIS.imageData = userImageSlot.imageData
+                realUIS.emojis = userImageSlot.emojis
+            }
+            try await saveContext()
+        } catch {
+            print("Error upserting user image slot: \(error)")
+        }
+
+    }
+    
+
+    
     
     static private var _shared: SwiftDataStorageProvider?
     
@@ -65,13 +87,30 @@ class SwiftDataStorageProvider: StorageProvider {
             }
         }
     }
+    
     @MainActor
-    func createSampleAddictions(to addiction: Addiction, habit: Habit) async throws {
-        ///TODO
+    func loadAddictions() async throws -> [Addiction] {
+        var addictions: [Addiction] = []
+        do {
+            let descriptor = FetchDescriptor<Addiction>() // Use FetchDescriptor
+            addictions = try context.fetch(descriptor)
+            return addictions
+        } catch {
+            print("Error loading addictions: \(error)")
+        }
+        return addictions
     }
+    
     @MainActor
     func associatePreventionHabit(to addiction: Addiction, habit: Habit) async throws {
-        ///TODO
+        do {
+            let realAddiction = getRealInstanceAddiction(addiction)
+            if realAddiction == nil { return }
+            realAddiction!.preventionHabits.append(habit)
+            try await saveContext()
+        } catch {
+            print("Error associating prevention habit: \(error)")
+        }
     }
     
     @MainActor
@@ -88,9 +127,7 @@ class SwiftDataStorageProvider: StorageProvider {
     func loadStreaksForHabit(habitId: UUID) async throws -> [Streak] {
         var streaks: [Streak] = []
         let predicate = #Predicate<Streak> { $0.habitId == habitId }
-        let descriptorDebug = FetchDescriptor<Streak>()
         let descriptor = FetchDescriptor<Streak>(predicate: predicate)
-        let streaksDebug = try context.fetch(descriptorDebug)
         streaks = try context.fetch(descriptor)
         return streaks
     }
@@ -100,10 +137,6 @@ class SwiftDataStorageProvider: StorageProvider {
         context.insert(streak)
         try await saveContext()
         try await savePendingChanges()
-        let descriptorDebug = FetchDescriptor<Streak>()
-        let streaksDebug = try context.fetch(descriptorDebug)
-        
-        print("streaksDebug.count: \(streaksDebug.count)")
     }
     
     @MainActor
@@ -264,6 +297,7 @@ class SwiftDataStorageProvider: StorageProvider {
             realAddiction.preventionHabits = addiction.preventionHabits
             realAddiction.compensatoryHabits = addiction.compensatoryHabits
             realAddiction.relapseCount = addiction.relapseCount
+            realAddiction.selectedDays = addiction.selectedDays
             try context.save()
         } else {
             print("Error updating addiction: realAddiction is nil")
@@ -341,17 +375,16 @@ class SwiftDataStorageProvider: StorageProvider {
 
     @MainActor
 func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async throws {
-    guard getRealInstanceAddiction(addiction) != nil else {
+    let realAddiction = getRealInstanceAddiction(addiction)
+    guard realAddiction  != nil else {
         print("Error removing compensatory habit: addiction is nil")
         return
     }
+    if let index = realAddiction!.compensatoryHabits.firstIndex(where: { $0.id == habit.id }) {
+        realAddiction!.compensatoryHabits.remove(at: index)
+        try context.save()
+    }
 
-    //if realAddiction.compensatoryHabits.id == habit.id {
-        // No-op replacement; decide if you want a nullable compensatory habit instead
-        print("Removed compensatory habit")
-    //}
-
-    try context.save()
 }
 
     @MainActor
@@ -387,27 +420,20 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
             return
         }
 
-        // Optional guard: only allow known triggers
-        guard realAddiction.triggers.contains(where: { $0.id == habit.id }) else {
-            print("Habit is not a registered trigger for this addiction")
-            return
-        }
+        realAddiction.triggers.append(habit)
 
-        realAddiction.relapseCount += 1
         try context.save()
     }
 
         @MainActor
     func associateCompensatoryHabit(to addiction: Addiction, habit: Habit) async throws {
-        guard getRealInstanceAddiction(addiction) != nil else {
+        let realAddiction = getRealInstanceAddiction(addiction)
+        guard realAddiction != nil else {
             print("Error associating trigger habit: addiction is nil")
             return
         }
 
-        //guard realAddiction.compensatory.contains(where: { $0.id == habit.id }) else {
-            print("Habit is not a registered compensatory habit for this addiction")
-           // return
-       // }
+        realAddiction!.compensatoryHabits.append(habit)
 
         // TODO: LLAMAR A MARCAR HÁBITO COMO REALIZADO
         try context.save()
@@ -466,10 +492,15 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
         }
     }
     @MainActor
-    func loadPickedImage() async throws -> UserImageSlot {
+    func loadPickedImage(_ userImageSlot: UserImageSlot) async throws -> UserImageSlot {
         var fetchedImage: UserImageSlot? = nil
+        
+        let predicate = #Predicate<UserImageSlot> { storedUIS in
+            storedUIS.id == userImageSlot.id
+        }
+        
         let descriptor = FetchDescriptor<UserImageSlot>(
-            sortBy: [SortDescriptor(\.id, order: .forward)]
+            predicate: predicate
         )
         
         do {

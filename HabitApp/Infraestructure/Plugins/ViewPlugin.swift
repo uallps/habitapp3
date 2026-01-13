@@ -4,10 +4,10 @@ import SwiftUI
 /// Protocol para plugins que proveen vistas en diferentes puntos de la aplicación
 protocol ViewPlugin: FeaturePlugin {
     /// Tipo asociado para la vista de fila que provee el plugin
-    associatedtype TaskRowContent: View
+    associatedtype RowContent: View
     
     /// Tipo asociado para la vista de detalle que provee el plugin
-    associatedtype TaskDetailContent: View
+    associatedtype DetailContent: View
     
     /// Tipo asociado para la vista de configuración que provee el plugin
     associatedtype SettingsContent: View

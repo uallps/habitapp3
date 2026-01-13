@@ -1,7 +1,7 @@
 import SwiftUI
 import Combine
 
-// Responsabilidad: preferencias de UI persistidas en UserDefaults.
+// Responsabilidad: preferencias de UI y características persistidas en UserDefaults.
 final class UserPreferences: ObservableObject {
     @AppStorage("showDueDates") private var storedShowDueDates: Bool = true
     @AppStorage("showPriorities") private var storedShowPriorities: Bool = true
@@ -10,6 +10,8 @@ final class UserPreferences: ObservableObject {
     @AppStorage("enableStatistics") private var storedEnableStatistics: Bool = true
     @AppStorage("enableHabits") private var storedEnableHabits: Bool = true
     @AppStorage("enableGoals") private var storedEnableGoals: Bool = true
+    @AppStorage("enableAddictions") private var storedEnableAddictions: Bool = true
+    @AppStorage("enableCategories") private var storedEnableCategories: Bool = true
     @AppStorage("appTheme") private var storedAppTheme: Int = 0
     @AppStorage("daltonismType") var daltonismType: Int = 0
     @AppStorage("nightModeIntensity") var nightModeIntensity: Double = 0.0
@@ -51,6 +53,11 @@ final class UserPreferences: ObservableObject {
         set { objectWillChange.send(); storedEnableGoals = newValue }
     }
     
+    var enableCategories: Bool {
+        get { storedEnableCategories }
+        set { objectWillChange.send(); storedEnableCategories = newValue }
+    }
+    
     var showPriorities: Bool {
         get { storedShowPriorities }
         set { objectWillChange.send(); storedShowPriorities = newValue }
@@ -79,5 +86,9 @@ final class UserPreferences: ObservableObject {
     var enableDailyNotes: Bool {
         get { storedEnableDailyNotes }
         set { objectWillChange.send(); storedEnableDailyNotes = newValue }
+        
+    var enableAddictions: Bool {
+        get { storedEnableAddictions }
+        set { objectWillChange.send(); storedEnableAddictions = newValue }
     }
 }

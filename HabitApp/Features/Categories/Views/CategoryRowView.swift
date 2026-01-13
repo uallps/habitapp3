@@ -6,12 +6,16 @@ struct CategoryRowView: View {
     let habit: Habit?
     
     @StateObject var categoryListVM: CategoryListViewModel
+    @StateObject var userImagesVM: UserImagesViewModel
     @State private var showingDeleteAlert = false
     private var isCategoryParentView = false
     @State private var isHabitAddedToCategory = false
+    @State private var isImageLoaded = false
+    @State private var image: PlatformImage? = nil
     
-    init(storageProvider: StorageProvider, category: Category, isCategoryParentView: Bool, habit: Habit? = nil, isHabitAddedToCategory: Bool = false) {
+    init(storageProvider: StorageProvider, category: Category, isCategoryParentView: Bool, habit: Habit? = nil, isHabitAddedToCategory: Bool = false, userImageSlot: UserImageSlot) {
         self._categoryListVM = StateObject(wrappedValue: CategoryListViewModel(storageProvider: storageProvider))
+        self._userImagesVM = StateObject(wrappedValue: UserImagesViewModel(storageProvider: storageProvider, userImageSlot: userImageSlot))
         self.category = category
         self.isCategoryParentView = isCategoryParentView
         self.habit = habit
@@ -31,42 +35,59 @@ struct CategoryRowView: View {
                     Circle().stroke(Color.black, lineWidth: 1)
                 )
             
-            if let image = category.icon.image {
-                #if os(iOS)
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 46, height: 46)
-                    .clipShape(Circle())
-                    .overlay(
-                        Circle().stroke(Color.black, lineWidth: 1)
-                    )
-                #elseif os(macOS)
-                Image(nsImage: image)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 46, height: 46)
-                    .clipShape(Circle())
-                    .overlay(
-                        Circle().stroke(Color.black, lineWidth: 1)
-                    )
-                #endif
-            } else {
-                Capsule()
-                    .fill(Color.white)
-                    .frame(width: 50, height: 40)
-                    .overlay(
-                        HStack(spacing: 0) {
-                            ForEach(category.icon.emojis ?? [], id: \.self) { emoji in
-                                Text(emoji.emoji)
-                                    .font(.title2)
+            Group {
+                let image = userImagesVM.image
+                if image != nil {
+#if os(iOS)
+                    Image(uiImage: image!)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 46, height: 46)
+                        .clipShape(Circle())
+                        .overlay(
+                            Circle().stroke(Color.black, lineWidth: 1)
+                        )
+#elseif os(macOS)
+                    Image(nsImage: image!)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 46, height: 46)
+                        .clipShape(Circle())
+                        .overlay(
+                            Circle().stroke(Color.black, lineWidth: 1)
+                        )
+#endif
+                } else {
+                    Capsule()
+                        .fill(Color.white)
+                        .frame(width: 50, height: 40)
+                        .overlay(
+                            HStack(spacing: 0) {
+                                ForEach(category.icon.emojis ?? [], id: \.self) { emoji in
+                                    Text(emoji.emoji)
+                                        .font(.title2)
+                                }
                             }
-                        }
-                    )
-                    .overlay(
-                        Capsule().stroke(Color.black, lineWidth: 1)
-                    )
+                        )
+                        .overlay(
+                            Capsule().stroke(Color.black, lineWidth: 1)
+                        )
+                }
             }
+          //  .task {
+                //do {
+                   // let loadedImage = try await userImagesVM.storageProvider.loadPickedImage(userImagesVM.userImageSlot).image
+                   // await MainActor.run {
+                       // self.image = loadedImage
+                    //}
+                //} catch {
+                    //print("Failed to load image: \(error)")
+                    //await MainActor.run {
+                    //    self.image = nil
+                  //  }
+                //}
+          //  }
+
             
             HStack() {
                 #if os(macOS)

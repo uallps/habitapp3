@@ -7,6 +7,9 @@
     " " : {
 
     },
+    "¡No se puede completar el hábito este día!" : {
+
+    },
     "¿Eliminar categoría?" : {
 
     },
@@ -14,6 +17,12 @@
 
     },
     "¿Eliminar nota?" : {
+
+    },
+    "¿Estás seguro de que quieres eliminar esta adicción?" : {
+
+    },
+    "¿Has recaído?" : {
 
     },
     "·" : {
@@ -127,6 +136,9 @@
         }
       }
     },
+    "Adicciones" : {
+
+    },
     "Agregar Hito" : {
 
     },
@@ -148,7 +160,13 @@
     "Añadir" : {
 
     },
+    "Añadir %@" : {
+
+    },
     "Añadir a esta categoría" : {
+
+    },
+    "Añadir nuevo hábito" : {
 
     },
     "Añadir subcategoría" : {
@@ -290,7 +308,13 @@
     "Deuteranopía" : {
 
     },
+    "Día actual: %@" : {
+
+    },
     "Días de la semana" : {
+
+    },
+    "Días en los que se repite la adicción" : {
 
     },
     "Días Restantes" : {
@@ -302,10 +326,16 @@
     "Editar hábito" : {
 
     },
+    "Ej: Fumar" : {
+
+    },
     "Ej: Hacer ejercicio" : {
 
     },
     "Eliminar" : {
+
+    },
+    "Eliminar adicción" : {
 
     },
     "Eliminar de categoría" : {
@@ -386,6 +416,9 @@
     "Hábitos" : {
 
     },
+    "Has hecho el hábito que puede haberte hecho recaer." : {
+
+    },
     "Hello, world!" : {
 
     },
@@ -402,6 +435,9 @@
 
     },
     "Hora de recordatorio" : {
+
+    },
+    "Hoy" : {
 
     },
     "Imagen" : {
@@ -450,6 +486,9 @@
 
     },
     "Ninguno" : {
+
+    },
+    "No" : {
 
     },
     "No has añadido hábitos a la categoría" : {
@@ -539,6 +578,9 @@
     "Plugins y Personalización" : {
 
     },
+    "Podrás asociar hábitos después de crear la adicción." : {
+
+    },
     "Por Hábito" : {
 
     },
@@ -611,10 +653,10 @@
     "Purple" : {
 
     },
-    "Rachas" : {
+    "Rango" : {
 
     },
-    "Rango" : {
+    "Recaídas: %lld" : {
 
     },
     "Recordatorio" : {
@@ -629,9 +671,6 @@
     "Selecciona prioridad" : {
 
     },
-    "Selecciona tipo" : {
-
-    },
     "Selecciona un hábito para vincular con este objetivo" : {
 
     },
@@ -639,6 +678,28 @@
 
     },
     "Seleccione una opción" : {
+
+    },
+    "Semana - Por Hábito" : {
+
+    },
+    "Semana - Resumen General" : {
+
+    },
+    "Severidad %@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Severidad %1$@ %2$@"
+          }
+        }
+      }
+    },
+    "Severidad de adicción" : {
+
+    },
+    "Sí" : {
 
     },
     "Sin datos" : {
@@ -683,9 +744,6 @@
     "Tendencia" : {
 
     },
-    "Tipo de icono" : {
-
-    },
     "Título" : {
 
     },
@@ -699,6 +757,9 @@
 
     },
     "Una aplicación para gestionar tus hábitos diarios y alcanzar tus objetivos." : {
+
+    },
+    "Vale" : {
 
     },
     "Vence: %@" : {

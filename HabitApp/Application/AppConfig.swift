@@ -36,8 +36,18 @@ class AppConfig: ObservableObject {
         // Crear instancias de los plugins
         self.plugins = PluginRegistry.shared.createPluginInstances(config: self)
         // Now plugins are available
+        var rawSchemas: [any PersistentModel.Type] = []
+        rawSchemas.append(contentsOf: PluginRegistry.shared.getEnabledModels(from: plugins))
+        var seenSchemas: Set<ObjectIdentifier> = []
         var schemas: [any PersistentModel.Type] = []
-        schemas.append(contentsOf: PluginRegistry.shared.getEnabledModels(from: plugins))
+        
+        for model in rawSchemas {
+            let id = ObjectIdentifier(model)
+            if seenSchemas.insert(id).inserted {
+                // Insertar solo modelos no repetidos
+                schemas.append(model)
+            }
+        }
         
         // Agregar modelos manualmente si no están ya en el schema
         // (porque sus plugins fueron excluidos del target)

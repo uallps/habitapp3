@@ -9,7 +9,7 @@ final class StreakPlugin: HabitDataObservingPlugin {
 
     init(config: AppConfig) {
         self.isEnabled = config.userPreferences.enableStreaks
-        self.models = [Streak.self]
+        self.models = [Habit.self, Streak.self]
         self.config = config
     }
         

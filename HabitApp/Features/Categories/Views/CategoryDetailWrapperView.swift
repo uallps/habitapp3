@@ -7,7 +7,7 @@ struct CategoryDetailWrapperView: View {
     @State private var categoryExists: Bool = false
     @State private var isCheckingCategoryExists: Bool = false
     private let parent: Category?
-    
+    @State var userImageSlot: UserImageSlot
     @StateObject var userImageVM: UserImagesViewModel
 
     @State private var showAlert = false
@@ -21,7 +21,10 @@ struct CategoryDetailWrapperView: View {
         case .emoji:
             guard !selectedIconOne.emoji.isEmpty || !selectedIconTwo.emoji.isEmpty || !selectedIconThree.emoji.isEmpty else { return false }
         case .image:
-            if userImageVM.image == nil { return false }
+            Task {
+               // userImageVM.userImageSlot = try await userImageVM.storageProvider.loadPickedImage(userImageVM.userImageSlot)
+                if userImageVM.userImageSlot.image == nil { return false } else { return true }
+            }
         }
         guard selectedPriority != nil else { return false }
         return true
@@ -64,9 +67,9 @@ struct CategoryDetailWrapperView: View {
 
     @State private var selectionMode: SelectionMode = .emoji
     
-    init(storageProvider: StorageProvider, category: Category, parent: Category? = nil, isSubcategory: Bool) {
+    init(storageProvider: StorageProvider, category: Category, parent: Category? = nil, isSubcategory: Bool, userImageSlot: UserImageSlot) {
         self._categoryListVM = StateObject(wrappedValue: CategoryListViewModel(storageProvider: storageProvider))
-        self._userImageVM = StateObject(wrappedValue: UserImagesViewModel(storageProvider: storageProvider))
+        self._userImageVM = StateObject(wrappedValue: UserImagesViewModel(storageProvider: storageProvider, userImageSlot: userImageSlot))
 
         self._category = State(initialValue: category)
         self.parent = parent
@@ -80,6 +83,7 @@ struct CategoryDetailWrapperView: View {
         self._name = State(initialValue: category.name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased().togglingFirstLetterCase)
         self._selectedPriority = State(initialValue: category.priority)
         self._selectedColor = State(initialValue: category.color)
+        self._userImageSlot = State(initialValue: userImageSlot)
 
         // Initialize icons
         if let emojis = category.icon.emojis, !emojis.isEmpty {
@@ -126,14 +130,15 @@ struct CategoryDetailWrapperView: View {
             }
         }
         
-        Section("Tipo de icono") {
-            Picker("Selecciona tipo", selection: $selectionMode) {
-                ForEach(SelectionMode.allCases) { mode in
-                    Text(mode.rawValue).tag(mode as SelectionMode)
-                }
-            }
-            .pickerStyle(.segmented)
-        }
+        //Section("Tipo de icono") {
+            //Picker("Selecciona tipo", selection: $selectionMode) {
+                //ForEach(SelectionMode.allCases) { mode in
+                //    Text(mode.rawValue).tag(mode as SelectionMode)
+              //  }
+            //}
+          //  .pickerStyle(.segmented)
+        //}
+        
     }
     
     @ViewBuilder
@@ -151,7 +156,8 @@ struct CategoryDetailWrapperView: View {
         case .image:
             // MARK: - Image Picker (if needed)
             UserImagesPickerView(
-                storageProvider: categoryListVM.storageProvider
+                storageProvider: categoryListVM.storageProvider,
+                userImageSlot: userImageSlot
             )
         }
     }
@@ -252,18 +258,21 @@ struct CategoryDetailWrapperView: View {
                             .disabled(!categoryExists || isCheckingCategoryExists)
                     } else {
                         ForEach(Array(category.subCategories), id: \.id) { sub in
+                            let newUserImageSlot = UserImageSlot(emojis:[])
                             NavigationLink {
                                 CategoryDetailWrapperView(
                                     storageProvider: categoryListVM.storageProvider,
                                     category: sub,
                                     parent: category,
-                                    isSubcategory: true
+                                    isSubcategory: true,
+                                    userImageSlot: newUserImageSlot
                                 )
                             } label: {
                                 CategoryRowView(
                                     storageProvider: categoryListVM.storageProvider,
                                     category: sub,
-                                    isCategoryParentView: true
+                                    isCategoryParentView: true,
+                                    userImageSlot: newUserImageSlot
                                 )
                                 .padding(.vertical, 6)
 
@@ -322,7 +331,8 @@ struct CategoryDetailWrapperView: View {
                                 storageProvider: categoryListVM.storageProvider,
                                 category: sub,
                                 parent: category,
-                                isSubcategory: true
+                                isSubcategory: true,
+                                userImageSlot: userImageSlot
                             )
                         }
             .navigationTitle( (initialName == "" ? "Nueva " : "Editar ") + noun )
