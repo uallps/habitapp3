@@ -33,6 +33,29 @@ extension SettingsView {
                     ))
                 }
                 
+                Section("Características") {
+                    Toggle("Hábitos", isOn: Binding(
+                        get: { userPreferences.enableHabits },
+                        set: { userPreferences.enableHabits = $0 }
+                    ))
+                    Toggle("Notas diarias", isOn: Binding(
+                        get: { userPreferences.enableDailyNotes },
+                        set: { userPreferences.enableDailyNotes = $0 }
+                    ))
+                    Toggle("Objetivos", isOn: Binding(
+                        get: { userPreferences.enableGoals },
+                        set: { userPreferences.enableGoals = $0 }
+                    ))
+                    Toggle("Estadísticas", isOn: Binding(
+                        get: { userPreferences.enableStatistics },
+                        set: { userPreferences.enableStatistics = $0 }
+                    ))
+                    Toggle("Rachas", isOn: Binding(
+                        get: { userPreferences.enableStreaks },
+                        set: { userPreferences.enableStreaks = $0 }
+                    ))
+                }
+                
                 Section("Notificaciones") {
                     NavigationLink("Configurar recordatorios") {
                         NotificationSettingsView()
@@ -84,47 +107,186 @@ extension SettingsView {
 #if os(macOS)
 extension SettingsView {
     var macBody: some View {
-        VStack(spacing: 20) {
-            Form {
-                Section("Visualización") {
-                    Toggle("Mostrar fechas de vencimiento", isOn: Binding(
-                        get: { userPreferences.showDueDates },
-                        set: { userPreferences.showDueDates = $0 }
-                    ))
-                    Toggle("Mostrar prioridades", isOn: Binding(
-                        get: { userPreferences.showPriorities },
-                        set: { userPreferences.showPriorities = $0 }
-                    ))
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                // Header
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Ajustes")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                    Text("Personaliza tu experiencia con HabitApp")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
                 }
+                .padding(.horizontal, 32)
+                .padding(.top, 24)
                 
-                Section("Notificaciones") {
-                    Button("Configurar recordatorios") {
-                        // Abrir ventana de configuración
+                Divider()
+                
+                // Visualización
+                SettingsSection(
+                    title: "Visualización",
+                    icon: "eye.fill",
+                    iconColor: .blue
+                ) {
+                    SettingsRow(
+                        title: "Mostrar fechas de vencimiento",
+                        description: "Muestra cuándo vence cada hábito"
+                    ) {
+                        Toggle("", isOn: Binding(
+                            get: { userPreferences.showDueDates },
+                            set: { userPreferences.showDueDates = $0 }
+                        ))
+                        .labelsHidden()
+                    }
+                    
+                    Divider()
+                        .padding(.leading, 40)
+                    
+                    SettingsRow(
+                        title: "Mostrar prioridades",
+                        description: "Visualiza el nivel de importancia de cada hábito"
+                    ) {
+                        Toggle("", isOn: Binding(
+                            get: { userPreferences.showPriorities },
+                            set: { userPreferences.showPriorities = $0 }
+                        ))
+                        .labelsHidden()
                     }
                 }
                 
-                Section("Datos") {
-                    Button("Limpiar todos los datos") {
-                        showingClearAlert = true
+                // Características
+                SettingsSection(
+                    title: "Características",
+                    icon: "slider.horizontal.3",
+                    iconColor: .purple
+                ) {
+                    SettingsRow(
+                        title: "Hábitos",
+                        description: "Activa o desactiva la gestión de hábitos"
+                    ) {
+                        Toggle("", isOn: Binding(
+                            get: { userPreferences.enableHabits },
+                            set: { userPreferences.enableHabits = $0 }
+                        ))
+                        .labelsHidden()
                     }
-                    .foregroundColor(.red)
+                    
+                    Divider()
+                        .padding(.leading, 40)
+                    
+                    SettingsRow(
+                        title: "Notas diarias",
+                        description: "Agrega notas y reflexiones a tus hábitos"
+                    ) {
+                        Toggle("", isOn: Binding(
+                            get: { userPreferences.enableDailyNotes },
+                            set: { userPreferences.enableDailyNotes = $0 }
+                        ))
+                        .labelsHidden()
+                    }
+                    
+                    Divider()
+                        .padding(.leading, 40)
+                    
+                    SettingsRow(
+                        title: "Objetivos",
+                        description: "Establece y sigue metas a largo plazo"
+                    ) {
+                        Toggle("", isOn: Binding(
+                            get: { userPreferences.enableGoals },
+                            set: { userPreferences.enableGoals = $0 }
+                        ))
+                        .labelsHidden()
+                    }
+                    
+                    Divider()
+                        .padding(.leading, 40)
+                    
+                    SettingsRow(
+                        title: "Estadísticas",
+                        description: "Habilita la vista de estadísticas"
+                    ) {
+                        Toggle("", isOn: Binding(
+                            get: { userPreferences.enableStatistics },
+                            set: { userPreferences.enableStatistics = $0 }
+                        ))
+                        .labelsHidden()
+                    }
+                    
+                    Divider()
+                        .padding(.leading, 40)
+                    
+                    SettingsRow(
+                        title: "Rachas",
+                        description: "Activa el seguimiento de streaks"
+                    ) {
+                        Toggle("", isOn: Binding(
+                            get: { userPreferences.enableStreaks },
+                            set: { userPreferences.enableStreaks = $0 }
+                        ))
+                        .labelsHidden()
+                    }
                 }
                 
-                Section("Información") {
-                    HStack {
-                        Text("Versión 1.0.0")
-                            .foregroundColor(.secondary)
-                        Spacer()
+                // Notificaciones
+                SettingsSection(
+                    title: "Notificaciones",
+                    icon: "bell.fill",
+                    iconColor: .orange
+                ) {
+                    SettingsRow(
+                        title: "Configurar recordatorios",
+                        description: "Gestiona cuándo recibir notificaciones"
+                    ) {
+                        Button("Configurar") {
+                            // Abrir ventana de configuración
+                        }
+                        .buttonStyle(.bordered)
+                    }
+                }
+                
+                // Datos
+                SettingsSection(
+                    title: "Datos",
+                    icon: "externaldrive.fill",
+                    iconColor: .red
+                ) {
+                    SettingsRow(
+                        title: "Limpiar todos los datos",
+                        description: "Elimina todos los hábitos, notas y objetivos permanentemente"
+                    ) {
+                        Button("Limpiar") {
+                            showingClearAlert = true
+                        }
+                        .buttonStyle(.bordered)
+                        .foregroundColor(.red)
+                    }
+                }
+                
+                // Información
+                SettingsSection(
+                    title: "Información",
+                    icon: "info.circle.fill",
+                    iconColor: .green
+                ) {
+                    SettingsRow(
+                        title: "Versión",
+                        description: "HabitApp 1.0.0"
+                    ) {
                         Button("Acerca de") {
                             showingAbout = true
                         }
+                        .buttonStyle(.bordered)
                     }
                 }
+                
+                Spacer()
             }
-            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .navigationTitle("Ajustes")
-        .frame(minWidth: 400, minHeight: 300)
+        .frame(minWidth: 600, idealWidth: 700, minHeight: 500)
+        .background(Color(.windowBackgroundColor))
         .sheet(isPresented: $showingAbout) {
             AboutView()
         }
@@ -138,6 +300,64 @@ extension SettingsView {
         }
     }
 }
+
+// MARK: - macOS Components
+struct SettingsSection<Content: View>: View {
+    let title: String
+    let icon: String
+    let iconColor: Color
+    @ViewBuilder let content: Content
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 10) {
+                Image(systemName: icon)
+                    .font(.title3)
+                    .foregroundColor(iconColor)
+                    .frame(width: 24)
+                
+                Text(title)
+                    .font(.title3)
+                    .fontWeight(.semibold)
+            }
+            .padding(.horizontal, 32)
+            
+            VStack(alignment: .leading, spacing: 0) {
+                content
+            }
+            .padding(.vertical, 16)
+            .padding(.horizontal, 32)
+            .background(Color(.controlBackgroundColor))
+            .cornerRadius(10)
+            .padding(.horizontal, 32)
+        }
+    }
+}
+
+struct SettingsRow<Content: View>: View {
+    let title: String
+    let description: String
+    @ViewBuilder let content: Content
+    
+    var body: some View {
+        HStack(alignment: .center, spacing: 16) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.body)
+                    .fontWeight(.medium)
+                
+                Text(description)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            
+            Spacer()
+            
+            content
+        }
+        .padding(.vertical, 8)
+    }
+}
 #endif
 
 // MARK: - Functions
@@ -145,17 +365,39 @@ extension SettingsView {
     private func clearAllData() {
         do {
             // Eliminar todos los hábitos
-            try modelContext.delete(model: Habit.self)
+            let habitDescriptor = FetchDescriptor<Habit>()
+            let habits = try modelContext.fetch(habitDescriptor)
+            habits.forEach { modelContext.delete($0) }
             
             // Eliminar todas las notas
-            try modelContext.delete(model: DailyNote.self)
+            let noteDescriptor = FetchDescriptor<DailyNote>()
+            let notes = try modelContext.fetch(noteDescriptor)
+            notes.forEach { modelContext.delete($0) }
             
             // Eliminar todos los objetivos
-            try modelContext.delete(model: Goal.self)
+            let goalDescriptor = FetchDescriptor<Goal>()
+            let goals = try modelContext.fetch(goalDescriptor)
+            goals.forEach { modelContext.delete($0) }
+            
+            // Eliminar todos los milestones
+            let milestoneDescriptor = FetchDescriptor<Milestone>()
+            let milestones = try modelContext.fetch(milestoneDescriptor)
+            milestones.forEach { modelContext.delete($0) }
             
             try modelContext.save()
+            
+            // Resetear preferencias de usuario a valores por defecto
+            userPreferences.showDueDates = true
+            userPreferences.showPriorities = true
+            userPreferences.enableReminders = true
+            userPreferences.enableHabits = true
+            userPreferences.enableGoals = true
+            userPreferences.enableDailyNotes = true
+            userPreferences.appTheme = 0
+            
+            print("✅ Todos los datos y preferencias han sido limpiados")
         } catch {
-            print("Error clearing data: \(error)")
+            print("❌ Error clearing data: \(error)")
         }
     }
 }

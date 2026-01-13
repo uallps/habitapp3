@@ -63,15 +63,17 @@ struct HabitRowView: View {
             
             Spacer()
             
-            //  Navegación a notas (iOS)
-            NavigationLink {
-                HabitNotesView(habit: habit, currentDate: date, storageProvider: storageProvider)
-            } label: {
-                Image(systemName: "note.text")
-                    .foregroundColor(.blue)
-                    .font(.title3)
+            //  Navegación a notas (iOS) - Solo si está habilitado
+            if userPreferences.enableDailyNotes {
+                NavigationLink {
+                    HabitNotesView(habit: habit, currentDate: date, storageProvider: storageProvider)
+                } label: {
+                    Image(systemName: "note.text")
+                        .foregroundColor(.blue)
+                        .font(.title3)
+                }
+                .buttonStyle(.plain)
             }
-            .buttonStyle(.plain)
             
             //  Botón para editar
             Button {
@@ -148,15 +150,17 @@ struct HabitRowView: View {
             
             Spacer()
             
-            //  Botón para notas (macOS - usa sheet)
-            Button {
-                showingNotesSheet = true
-            } label: {
-                Image(systemName: "note.text")
-                    .foregroundColor(.blue)
-                    .font(.title3)
+            //  Botón para notas (macOS - usa sheet) - Solo si está habilitado
+            if userPreferences.enableDailyNotes {
+                Button {
+                    showingNotesSheet = true
+                } label: {
+                    Image(systemName: "note.text")
+                        .foregroundColor(.blue)
+                        .font(.title3)
+                }
+                .buttonStyle(.plain)
             }
-            .buttonStyle(.plain)
             
             //  Botón para editar
             Button {
@@ -184,7 +188,9 @@ struct HabitRowView: View {
             HabitDetailWrapper(viewModel: viewModel, habit: habit, isNew: false)
         }
         .sheet(isPresented: $showingNotesSheet) {
-            HabitNotesView(habit: habit, currentDate: date, storageProvider: storageProvider)
+            if userPreferences.enableDailyNotes {
+                HabitNotesView(habit: habit, currentDate: date, storageProvider: storageProvider)
+            }
         }
         .alert("¿Eliminar hábito?", isPresented: $showingDeleteAlert) {
             Button("Eliminar", role: .destructive) {

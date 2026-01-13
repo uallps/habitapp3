@@ -14,6 +14,8 @@ final class UserPreferences: ObservableObject {
     @AppStorage("daltonismType") var daltonismType: Int = 0
     @AppStorage("nightModeIntensity") var nightModeIntensity: Double = 0.0
     @AppStorage("accentColorName") var accentColorName: String = "Blue"
+    @AppStorage("enableDailyNotes") private var storedEnableDailyNotes: Bool = true
+
     
     var appTheme: Int {
         get { storedAppTheme }
@@ -72,5 +74,10 @@ final class UserPreferences: ObservableObject {
     var enableStreaks: Bool {
         get { storedEnableStreaks }
         set { objectWillChange.send(); storedEnableStreaks = newValue }
+    }
+    
+    var enableDailyNotes: Bool {
+        get { storedEnableDailyNotes }
+        set { objectWillChange.send(); storedEnableDailyNotes = newValue }
     }
 }

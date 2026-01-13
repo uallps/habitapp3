@@ -1,13 +1,19 @@
 import SwiftUI
 import SwiftData
 
+struct AppView: Identifiable {
+    let id: String
+    let title: String
+    let icon: String
+    let isEnabled: Bool
+}
+
 @main
 struct HabitApp: App {
     private var storageProvider: StorageProvider
     @State private var selectedDetailView: String?
     let modelContainer: ModelContainer
     
-    // 1. Instanciamos las preferencias (donde vive la lógica del tema)
     @StateObject private var userPreferences = UserPreferences()
     
     init() {
@@ -31,60 +37,65 @@ struct HabitApp: App {
         #endif
     }
     
+    private var availableViews: [AppView] {
+        [
+            AppView(id: "habitos", title: "Hábitos", icon: "checklist", isEnabled: userPreferences.enableHabits),
+            AppView(id: "categorias", title: "Categorías", icon: "folder", isEnabled: userPreferences.enableHabits),
+            AppView(id: "notas", title: "Notas", icon: "note.text", isEnabled: userPreferences.enableDailyNotes),
+            AppView(id: "objetivos", title: "Objetivos", icon: "target", isEnabled: userPreferences.enableGoals),
+            AppView(id: "estadisticas", title: "Estadísticas", icon: "chart.bar", isEnabled: userPreferences.enableStatistics),
+            AppView(id: "ajustes", title: "Ajustes", icon: "gearshape", isEnabled: true)
+        ].filter { $0.isEnabled }
+    }
+    
     var body: some Scene {
         WindowGroup {
-            // 2. Usamos un Group para aplicar los modificadores a toda la App a la vez
             Group {
 #if os(iOS)
                 TabView {
-                    HabitListView(storageProvider: storageProvider)
-                        .tabItem { Label("Hábitos", systemImage: "checklist") }
-                    
-                    CategoryListView(storageProvider: storageProvider)
-                        .tabItem { Label("Categorías", systemImage: "folder") }
-                    
-                    DailyNotesView(storageProvider: storageProvider)
-                        .tabItem { Label("Notas", systemImage: "note.text") }
-                    
-                    GoalsView(storageProvider: storageProvider)
-                        .tabItem { Label("Objetivos", systemImage: "target") }
-                    
-                    StatisticsView()
-                        .tabItem { Label("Estadísticas", systemImage: "chart.bar") }
-                    
-                    SettingsView()
-                        .tabItem { Label("Ajustes", systemImage: "gearshape") }
+                    ForEach(availableViews) { view in
+                        viewContent(for: view.id)
+                            .tabItem { Label(view.title, systemImage: view.icon) }
+                    }
                 }
 #else
                 NavigationSplitView {
                     List(selection: $selectedDetailView) {
-                        NavigationLink(value: "habitos") { Label("Habitos", systemImage: "checklist") }
-                        NavigationLink(value: "notas") { Label("Notas Diarias", systemImage: "note.text") }
-                        NavigationLink(value: "objetivos") { Label("Objetivos", systemImage: "target") }
-                        NavigationLink(value: "estadisticas") { Label("Estadísticas", systemImage: "chart.bar") }
-                        NavigationLink(value: "ajustes") { Label("Ajustes", systemImage: "gearshape") }
-                        NavigationLink(value: "categorias") { Label("Categorias", systemImage: "folder") }
+                        ForEach(availableViews) { view in
+                            NavigationLink(value: view.id) {
+                                Label(view.title, systemImage: view.icon)
+                            }
+                        }
                     }
                 } detail: {
-                    switch selectedDetailView {
-                    case "habitos": HabitListView(storageProvider: storageProvider)
-                    case "notas": DailyNotesView(storageProvider: storageProvider)
-                    case "objetivos": GoalsView(storageProvider: storageProvider)
-                    case "estadisticas": StatisticsView()
-                    case "ajustes": SettingsView()
-                    case "categorias": CategoryListView(storageProvider: storageProvider)
-                    default: Text("Seleccione una opción")
+                    let currentId = selectedDetailView ?? availableViews.first?.id
+                    if let currentId {
+                        viewContent(for: currentId)
+                    } else {
+                        Text("Seleccione una opción")
                     }
                 }
 #endif
             }
-            // --- MODIFICADORES GLOBALES ---
             .environmentObject(AppConfig.shared)
             .modelContainer(modelContainer)
             .environmentObject(userPreferences)
             .preferredColorScheme(userPreferences.colorScheme)
             .modifier(AccessibilityFilterModifier(prefs: userPreferences))
             .tint(userPreferences.accentColor)
+        }
+    }
+    
+    @ViewBuilder
+    private func viewContent(for id: String) -> some View {
+        switch id {
+        case "habitos": HabitListView(storageProvider: storageProvider)
+        case "categorias": CategoryListView(storageProvider: storageProvider)
+        case "notas": DailyNotesView(storageProvider: storageProvider)
+        case "objetivos": GoalsView(storageProvider: storageProvider)
+        case "estadisticas": StatisticsView()
+        case "ajustes": SettingsView()
+        default: Text("Vista no encontrada")
         }
     }
 }

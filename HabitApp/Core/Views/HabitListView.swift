@@ -26,6 +26,7 @@ struct HabitListView: View {
     
     // Inicializar rachas para hábitos existentes
     private func initializeStreaksIfNeeded() {
+        guard userPreferences.enableStreaks else { return }
         print("🚀 Inicializando rachas para \(habits.count) hábitos")
         for habit in habits {
             HabitDataObserverManager.shared.notifyDataChanged(
