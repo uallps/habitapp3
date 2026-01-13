@@ -88,7 +88,7 @@ struct AddictionDetailWrapperView: View {
                 if habit.isScheduled(for: currentDate) {
                     habitListVM.toggleCompletion(habit: habit)
                 } else {
-                    showWrongDayAlert = false
+                    showWrongDayAlert = true
                 }
             }
         )
