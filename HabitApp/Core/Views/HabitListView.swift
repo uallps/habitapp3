@@ -3,6 +3,7 @@ import SwiftData
 
 struct HabitListView: View {
     let storageProvider: StorageProvider
+    let wildcardService = WildcardHabitService()
     @Query(sort: \Habit.createdAt) private var habits: [Habit]
     @Environment(\.modelContext) private var modelContext
     @StateObject private var viewModel: HabitListViewModel
@@ -13,8 +14,6 @@ struct HabitListView: View {
     
     init(storageProvider: StorageProvider) {
         self.storageProvider = storageProvider
-        // Inyección de Dependencias: Creamos el servicio concreto y lo pasamos como protocolo
-        let wildcardService = WildcardHabitService()
         self._viewModel = StateObject(wrappedValue: HabitListViewModel(
             storageProvider: storageProvider,
             wildcardProvider: wildcardService
@@ -192,12 +191,24 @@ extension HabitListView {
             .navigationTitle("Hábitos")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        showingNewHabitSheet = true
-                    } label: {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.title3)
-                            .foregroundColor(.blue)
+                    HStack(spacing: 16) {
+                        Button {
+                            withAnimation {
+                                viewModel.unlockWildcardHabit()
+                            }
+                        } label: {
+                            Image(systemName: "dice.fill")
+                                .font(.title3)
+                                .foregroundColor(.purple)
+                        }
+                        
+                        Button {
+                            showingNewHabitSheet = true
+                        } label: {
+                            Image(systemName: "plus.circle.fill")
+                                .font(.title3)
+                                .foregroundColor(.blue)
+                        }
                     }
                 }
             }
@@ -347,11 +358,22 @@ extension HabitListView {
             .navigationSplitViewColumnWidth(min: 280, ideal: 350, max: 450)
             .toolbar {
                 ToolbarItem {
-                    Button {
-                        showingNewHabitSheet = true
-                    } label: {
-                        Image(systemName: "plus.circle.fill")
-                            .foregroundColor(.blue)
+                    HStack {
+                         Button {
+                            withAnimation {
+                                viewModel.unlockWildcardHabit()
+                            }
+                        } label: {
+                            Image(systemName: "dice.fill")
+                                .foregroundColor(.purple)
+                        }
+                        
+                        Button {
+                            showingNewHabitSheet = true
+                        } label: {
+                            Image(systemName: "plus.circle.fill")
+                                .foregroundColor(.blue)
+                        }
                     }
                 }
             }

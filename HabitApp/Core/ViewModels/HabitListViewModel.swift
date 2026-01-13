@@ -20,15 +20,15 @@ final class HabitListViewModel: ObservableObject {
         guard let provider = wildcardProvider else { return }
         
         do {
-            if let newHabit = try provider.unlockWildcardHabit(context: storageProvider.context) {
+            if let newHabit = try provider.getWildcardHabit(context: storageProvider.context) {
                 storageProvider.context.insert(newHabit)
                 try storageProvider.context.save()
-                print("✨ Hábito comodín desbloqueado: \(newHabit.title)")
+                print("Hábito comodín desbloqueado: \(newHabit.title)")
             } else {
-                print("⚠️ No hay hábitos comodín disponibles para hoy")
+                print("No hay hábitos comodín disponibles para hoy")
             }
         } catch {
-            print("❌ Error al desbloquear hábito comodín: \(error)")
+            print("Error al desbloquear hábito comodín: \(error)")
         }
     }
     
