@@ -39,14 +39,7 @@ class AppConfig: ObservableObject {
         var schemas: [any PersistentModel.Type] = []
         schemas.append(contentsOf: PluginRegistry.shared.getEnabledModels(from: plugins))
         
-        // Agregar modelos manualmente si no están ya en el schema
-        // (porque sus plugins fueron excluidos del target)
-        if !schemas.contains(where: { $0 == Category.self }) {
-            schemas.append(Category.self)
-        }
-        if !schemas.contains(where: { $0 == Addiction.self }) {
-            schemas.append(Addiction.self)
-        }
+      
         
         let schema = Schema(schemas)
         print("📦 Schemas registrados: \(schemas)")
@@ -56,25 +49,15 @@ class AppConfig: ObservableObject {
         setupHabitDataObservingPlugins()
     }
     
-   // private let modelContainer: ModelContainer
-    
-    //init(modelContainer: ModelContainer) {
-     //   self.modelContainer = modelContainer
-       // setupPlugins()
-    //}
+   
     
     private func setupHabitDataObservingPlugins() {
         let registry = HabitDataObserverManager.shared
         registry.register(HabitGoalPlugin(config: self))
-        registry.register(StreakPlugin(config: self))
         print("✅ Plugins registrados correctamente")
     }
     
-    // MARK: - Storage Provider
-    
-    //private lazy var swiftDataProvider: SwiftDataStorageProvider = {
-     //   return SwiftDataStorageProvider(modelContainer: modelContainer)
-   // }()
+   
     
 
     enum StorageType: String, CaseIterable, Identifiable {

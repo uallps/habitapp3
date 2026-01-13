@@ -26,11 +26,12 @@ class SwiftDataStorageProvider: StorageProvider {
             SwiftDataStorageProvider._shared = self
             print("✅ SwiftDataContext.shared inicializado con mainContext NUEVO")
 
+          
         } catch {
             fatalError("Failed to initialize storage provider: \(error)")
         }
     }
- 
+
     
     @MainActor
     func getHabit(id: UUID) async throws -> Habit? {
@@ -42,7 +43,7 @@ class SwiftDataStorageProvider: StorageProvider {
         return habit
     }
     
-    
+   
     
     @MainActor
     func savePendingChanges() async throws {
@@ -84,6 +85,7 @@ class SwiftDataStorageProvider: StorageProvider {
         catch { print("Error guardando contexto: \(error)") }
    }
     
+   
     
     @MainActor
     func deleteNote(_ note: DailyNote) async throws {
@@ -142,8 +144,7 @@ class SwiftDataStorageProvider: StorageProvider {
         }
     }
     
-
-    
+   
     @MainActor
     private func getRealInstanceHabit(_ habit: Habit) -> Habit? {
         do {
@@ -163,8 +164,7 @@ class SwiftDataStorageProvider: StorageProvider {
     }
 
     
-    }
-
+  
     func loadTasks() async throws -> [Habit] {
         let descriptor = FetchDescriptor<Habit>()
         let tasks = try context.fetch(descriptor)
@@ -220,7 +220,6 @@ class SwiftDataStorageProvider: StorageProvider {
         try context.save()
     }
     
-   
     
     @MainActor
     func addHabit(habit: Habit) async  throws {
@@ -251,7 +250,14 @@ class SwiftDataStorageProvider: StorageProvider {
         }
     }
     
-
+    // @MainActor
+    // func updateHabit(habit: Habit) {
+    //     do {
+    //         try await storageProvider.context.save()
+    //     } catch {
+    //         print("Error updating habit: \(error)")
+    //     }
+    // }
     
     @MainActor
     func deleteHabit(habit: Habit) async throws {
@@ -267,7 +273,12 @@ class SwiftDataStorageProvider: StorageProvider {
 
     }
     
-    
+    // Este archivo existe para borrar toda la información de la base de datos local.
+    // Es especialmente útil cuando existe un conflicto en los esquemas de un ordenador MacOS.
+
+    // Como es evidente, tiene sentido en un entorno de desarrollo y pruebas. A no ser que
+    //se quiera dejar una gran vulnerabilidad o trollear un poquito al usuario final, no
+    // debería de existir.
         @MainActor
         func resetStorage() {
             // 1. Tear down old context and container
@@ -303,7 +314,6 @@ class SwiftDataStorageProvider: StorageProvider {
 
         try? FileManager.default.removeItem(at: url)
     }}
-
 
 
 
