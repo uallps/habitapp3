@@ -60,20 +60,7 @@
     "%lld Completados" : {
 
     },
-    "%lld de %lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld de %2$lld"
-          }
-        }
-      }
-    },
     "%lld días" : {
-
-    },
-    "%lld días completados" : {
 
     },
     "%lld días restantes" : {
@@ -139,6 +126,9 @@
     "Adicciones" : {
 
     },
+    "Agrega hitos para marcar progreso" : {
+
+    },
     "Agregar Hito" : {
 
     },
@@ -193,9 +183,6 @@
     "Buscar emoji..." : {
 
     },
-    "Cambiar" : {
-
-    },
     "Cancelar" : {
 
     },
@@ -203,9 +190,6 @@
 
     },
     "Cargando..." : {
-
-    },
-    "Categorias" : {
 
     },
     "Categorías" : {
@@ -239,6 +223,9 @@
 
     },
     "Configuración de Recordatorios" : {
+
+    },
+    "Configurar" : {
 
     },
     "Configurar recordatorios" : {
@@ -284,6 +271,9 @@
     "Crear hábitos de muestra" : {
 
     },
+    "Crear Objetivo" : {
+
+    },
     "Cyan" : {
 
     },
@@ -317,7 +307,7 @@
     "Días en los que se repite la adicción" : {
 
     },
-    "Días Restantes" : {
+    "Días objetivo" : {
 
     },
     "Editar" : {
@@ -368,13 +358,7 @@
     "Fecha" : {
 
     },
-    "Fecha de Inicio" : {
-
-    },
     "Fecha límite" : {
-
-    },
-    "Fecha Objetivo" : {
 
     },
     "Filter" : {
@@ -408,9 +392,6 @@
 
     },
     "Hábito Asociado" : {
-
-    },
-    "Habitos" : {
 
     },
     "Hábitos" : {
@@ -452,13 +433,13 @@
     "Información del Objetivo" : {
 
     },
-    "Inicio" : {
-
-    },
     "Limpiar" : {
 
     },
     "Limpiar todos los datos" : {
+
+    },
+    "Listo" : {
 
     },
     "Media" : {
@@ -539,16 +520,13 @@
     "Nueva Nota" : {
 
     },
+    "Nuevo" : {
+
+    },
     "Nuevo hábito" : {
 
     },
     "Nuevo Objetivo" : {
-
-    },
-    "Objetivo" : {
-
-    },
-    "Objetivo: %lld días" : {
 
     },
     "Objetivos" : {
@@ -567,6 +545,9 @@
 
     },
     "Oscuro" : {
+
+    },
+    "Personaliza tu experiencia con HabitApp" : {
 
     },
     "Personalización de Color" : {
@@ -671,10 +652,7 @@
     "Selecciona prioridad" : {
 
     },
-    "Selecciona un hábito para vincular con este objetivo" : {
-
-    },
-    "Seleccionar hábito" : {
+    "Seleccionar fecha" : {
 
     },
     "Seleccione una opción" : {
@@ -772,6 +750,9 @@
 
     },
     "Vista" : {
+
+    },
+    "Vista no encontrada" : {
 
     },
     "Visualización" : {
