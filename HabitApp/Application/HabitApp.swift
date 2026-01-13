@@ -3,28 +3,20 @@ import SwiftData
 
 @main
 struct HabitApp: App {
+    private var storageProvider: StorageProvider
     @State private var selectedDetailView: String?
     let modelContainer: ModelContainer
-    @StateObject private var appConfig: AppConfig
     
-    private var storageProvider: StorageProvider {
-        appConfig.storageProvider
-    }
+    // 1. Instanciamos las preferencias (donde vive la lógica del tema)
+    @StateObject private var userPreferences = UserPreferences()
     
     init() {
-        // Inicializar el ModelContainer
-        let schema = Schema([Habit.self, DailyNote.self, Goal.self, Milestone.self])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-        
-        let container: ModelContainer
-        do {
-            container = try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("❌ Error inicializando ModelContainer: \(error)")
+        let appConfig = AppConfig.shared
+        self.storageProvider = appConfig.storageProvider
+        guard let swiftDataProvider = storageProvider as? SwiftDataStorageProvider else {
+            fatalError("StorageProvider is not a SwiftDataStorageProvider")
         }
-        
-        self.modelContainer = container
-        self._appConfig = StateObject(wrappedValue: AppConfig(modelContainer: container))
+        self.modelContainer = swiftDataProvider.modelContainer
         
         #if os(iOS)
         UNUserNotificationCenter.current().requestAuthorization(
@@ -40,62 +32,47 @@ struct HabitApp: App {
     }
     
     var body: some Scene {
-        WindowGroup{
+        WindowGroup {
+            // 2. Usamos un Group para aplicar los modificadores a toda la App a la vez
+            Group {
 #if os(iOS)
-            TabView {
-                HabitListView(storageProvider: storageProvider)
-                    .tabItem {
-                        Label("Hábitos", systemImage: "checklist")
-                    }
-                DailyNotesView(storageProvider: storageProvider)
-                    .tabItem {
-                        Label("Notas", systemImage: "note.text")
-                    }
-                GoalsView(storageProvider: storageProvider)
-                    .tabItem {
-                        Label("Objetivos", systemImage: "target")
-                    }
-                SettingsView()
-                    .tabItem {
-                        Label("Ajustes", systemImage: "gearshape")
-                    }
-            }
-            .environmentObject(appConfig)
-            .modelContainer(modelContainer)  //  AGREGAR ESTO
-
-#else
-            NavigationSplitView {
-                List(selection: $selectedDetailView) {
-                    NavigationLink(value: "habitos") {
-                        Label("Habitos", systemImage: "checklist")
-                    }
-                    NavigationLink(value: "notas") {
-                        Label("Notas Diarias", systemImage: "note.text")
-                    }
-                    NavigationLink(value: "objetivos") {
-                        Label("Objetivos", systemImage: "target")
-                    }
-                    NavigationLink(value: "ajustes") {
-                        Label("Ajustes", systemImage: "gearshape")
-                    }
-                }
-            } detail: {
-                switch selectedDetailView {
-                case "habitos":
+                TabView {
                     HabitListView(storageProvider: storageProvider)
-                case "notas":
+                        .tabItem { Label("Hábitos", systemImage: "checklist") }
+                    
                     DailyNotesView(storageProvider: storageProvider)
-                case "objetivos":
+                        .tabItem { Label("Notas", systemImage: "note.text") }
+                    
                     GoalsView(storageProvider: storageProvider)
-                case "ajustes":
+                        .tabItem { Label("Objetivos", systemImage: "target") }
+                    
                     SettingsView()
-                default:
-                    Text("Seleccione una opción")
+                        .tabItem { Label("Ajustes", systemImage: "gearshape") }
                 }
-            }
-            .environmentObject(appConfig)
-            .modelContainer(modelContainer)  //  AGREGAR ESTO
+#else
+                NavigationSplitView {
+                    List(selection: $selectedDetailView) {
+                        NavigationLink(value: "habitos") { Label("Habitos", systemImage: "checklist") }
+                        NavigationLink(value: "notas") { Label("Notas Diarias", systemImage: "note.text") }
+                        NavigationLink(value: "objetivos") { Label("Objetivos", systemImage: "target") }
+                        NavigationLink(value: "ajustes") { Label("Ajustes", systemImage: "gearshape") }
+                    }
+                } detail: {
+                    switch selectedDetailView {
+                    case "habitos": HabitListView(storageProvider: storageProvider)
+                    case "notas": DailyNotesView(storageProvider: storageProvider)
+                    case "objetivos": GoalsView(storageProvider: storageProvider)
+                    case "ajustes": SettingsView()
+                    default: Text("Seleccione una opción")
+                    }
+                }
 #endif
+            }
+            // --- MODIFICADORES GLOBALES ---
+            .environmentObject(AppConfig.shared)
+            .modelContainer(modelContainer)
+            .environmentObject(userPreferences)
+            
         }
     }
 }

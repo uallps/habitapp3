@@ -131,7 +131,7 @@ extension AddNoteView {
             let today = calendar.startOfDay(for: Date())
             if normalizedDate > today {
                 let notificationTitle = habit != nil ? "Hábito: \(habit!.title) - \(title)" : "Nota: \(title)"
-                TaskDataObserverManager.shared.notify(
+                HabitDataObserverManager.shared.notify(
                     taskId: note.id,
                     title: notificationTitle,
                     date: normalizedDate

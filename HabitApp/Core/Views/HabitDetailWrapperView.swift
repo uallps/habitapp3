@@ -11,6 +11,8 @@ struct HabitDetailWrapper: View {
     @State private var title: String
     @State private var selectedDays: [Int]
     @State private var priority: Priority
+    @State private var hasReminder: Bool = false
+    @State private var reminderDate: Date = Date()
     @State private var habitToEdit: Habit?
     
     init(viewModel: HabitListViewModel, habit: Habit, isNew: Bool = true) {
@@ -22,6 +24,8 @@ struct HabitDetailWrapper: View {
         _title = State(initialValue: habit.title)
         _selectedDays = State(initialValue: habit.scheduledDays)
         _priority = State(initialValue: habit.priority ?? .medium)
+        _hasReminder = State(initialValue: habit.isReminderEnabled != false)
+        _reminderDate = State(initialValue:  habit.reminderDate ?? Date())
     }
 
     var body: some View {
@@ -99,8 +103,8 @@ extension HabitDetailWrapper {
                             }
                             
                             Picker("Prioridad", selection: $priority) {
-                                ForEach(Priority.allCases, id: \.self) { priority in
-                                    Text(priority.displayName).tag(priority)
+                                ForEach(Priority.allCases, id: \.self) { p in
+                                    Text("\(p.localized) \(p.emoji)").tag(p as Priority)
                                 }
                             }
                             .pickerStyle(.segmented)
@@ -255,8 +259,8 @@ extension HabitDetailWrapper {
                         }
                         
                         Picker("Prioridad", selection: $priority) {
-                            ForEach(Priority.allCases, id: \.self) { priority in
-                                Text(priority.displayName).tag(priority)
+                            ForEach(Priority.allCases, id: \.self) { p in
+                                Text("\(p.localized) \(p.emoji)").tag(p as Priority)
                             }
                         }
                         .pickerStyle(.segmented)
@@ -313,7 +317,7 @@ extension HabitDetailWrapper {
                 title: title,
                 dueDate: nil,
                 priority: priority,
-                reminderDate: nil,
+                reminderDate: hasReminder ? reminderDate : nil,
                 scheduledDays: selectedDays
             )
         } else if let habitToEdit = habitToEdit {
@@ -321,6 +325,7 @@ extension HabitDetailWrapper {
             habitToEdit.title = title
             habitToEdit.scheduledDaysString = selectedDays.map { String($0) }.joined(separator: ",")
             habitToEdit.priority = priority
+            habitToEdit.reminderDate = hasReminder ? reminderDate : nil
             viewModel.updateHabit(habitToEdit)
         }
         

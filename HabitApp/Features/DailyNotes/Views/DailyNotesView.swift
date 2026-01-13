@@ -4,7 +4,6 @@ import SwiftData
 struct DailyNotesView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var appConfig: AppConfig
     @StateObject private var viewModel: DailyNotesViewModel
     @State private var showingAddNote = false
     

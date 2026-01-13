@@ -9,7 +9,7 @@
 import Foundation
 
 /// Protocolo para plugins que observan cambios en datos (habit o nota)
-protocol TaskDataObservingPlugin {
+protocol HabitDataObservingPlugin: DataPlugin {
     /// Se llama cuando un “task” (nota o hábito) cambia o se crea
     /// - Parameters:
     ///   - taskId: UUID de la nota o hábito
