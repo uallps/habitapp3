@@ -1,0 +1,63 @@
+@startuml DailyNotes_UseCases
+!theme plain
+skinparam backgroundColor #FEFEFE
+skinparam actorBackgroundColor #E8F4F8
+skinparam actorBorderColor #0066CC
+skinparam usecaseBackgroundColor #E8F4F8
+skinparam usecaseBorderColor #0066CC
+
+title Daily Notes - Diagrama de Casos de Uso
+
+left to right direction
+
+actor Usuario as user
+actor Sistema as system
+
+usecase UC1 as "Crear Nota"
+usecase UC2 as "Ver Notas"
+usecase UC3 as "Editar Nota"
+usecase UC4 as "Eliminar Nota"
+usecase UC5 as "Buscar Notas"
+usecase UC6 as "Vincular Nota a Hábito"
+usecase UC7 as "Ver Nota en Contexto Hábito"
+usecase UC8 as "Filtrar Notas por Fecha"
+usecase UC9 as "Guardar en Core Data"
+usecase UC10 as "Cargar Notas"
+
+' Relaciones Usuario
+user --> UC1
+user --> UC2
+user --> UC3
+user --> UC4
+user --> UC5
+user --> UC6
+user --> UC7
+user --> UC8
+
+' Relaciones Sistema
+UC1 ..> UC9 : <<include>>
+UC3 ..> UC9 : <<include>>
+UC4 ..> UC9 : <<include>>
+UC2 ..> UC10 : <<include>>
+UC5 ..> UC10 : <<include>>
+UC8 ..> UC10 : <<include>>
+
+UC6 ..> UC1 : <<extend>>
+UC7 ..> UC2 : <<extend>>
+
+system --> UC9
+system --> UC10
+
+note right of UC6
+  Permite asociar una nota
+  con un hábito específico
+  mediante habitId
+end note
+
+note right of UC9
+  Persistencia usando
+  Core Data con
+  DailyNote Model
+end note
+
+@enduml
