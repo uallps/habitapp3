@@ -239,3 +239,4 @@ struct AchievementsTests {
         #expect(level == .advanced)
     }
 }
+}

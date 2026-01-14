@@ -293,7 +293,7 @@ extension HabitDetailWrapper {
                         
                         Picker("Prioridad", selection: $priority) {
                             ForEach(Priority.allCases, id: \.self) { p in
-                                Text("\(p.localized) \(p.emoji)").tag(p as Priority)
+                                Text(p.localized).tag(p as Priority)
                             }
                         }
                         .pickerStyle(.segmented)
