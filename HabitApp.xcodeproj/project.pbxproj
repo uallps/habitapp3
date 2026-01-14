@@ -35,14 +35,10 @@
 		35944D032F05A47D002892A5 /* HabitAppUnitTestsMacOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HabitAppUnitTestsMacOS.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		35EDF0D02E9FF1C000D50221 /* HabitApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HabitApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		35EDF0E72E9FF1C300D50221 /* HabitAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HabitAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A48D3AF32F17BE940041C9B7 /* HabitApp.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = HabitApp.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		358641782EF8414D0000C589 /* HabitAppUITestsXCTest */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = HabitAppUITestsXCTest;
-			sourceTree = "<group>";
-		};
 		35944CF52F05A1EA002892A5 /* HabitApTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = HabitApTests;
@@ -95,8 +91,8 @@
 		35EDF0C72E9FF1C000D50221 = {
 			isa = PBXGroup;
 			children = (
+				A48D3AF32F17BE940041C9B7 /* HabitApp.xctestplan */,
 				35EDF0D22E9FF1C000D50221 /* HabitApp */,
-				358641782EF8414D0000C589 /* HabitAppUITestsXCTest */,
 				35944CF52F05A1EA002892A5 /* HabitApTests */,
 				35944D042F05A47D002892A5 /* HabitAppUnitTestsMacOS */,
 				35EDF0D12E9FF1C000D50221 /* Products */,
@@ -129,9 +125,6 @@
 			);
 			dependencies = (
 				3586417E2EF8414D0000C589 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				358641782EF8414D0000C589 /* HabitAppUITestsXCTest */,
 			);
 			name = HabitAppUITestsXCTest;
 			packageProductDependencies = (
@@ -348,7 +341,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = es.ual.HabitAppUITestsXCTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SDKROOT = iphoneos;
+				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -366,13 +359,15 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = es.ual.HabitAppUITestsXCTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SDKROOT = iphoneos;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;

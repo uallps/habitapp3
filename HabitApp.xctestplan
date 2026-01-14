@@ -1,0 +1,30 @@
+{
+  "configurations" : [
+    {
+      "id" : "B6777965-9A70-4F5C-B61F-F488F1D5F49D",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:HabitApp.xcodeproj",
+      "identifier" : "35EDF0CF2E9FF1C000D50221",
+      "name" : "HabitApp"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:HabitApp.xcodeproj",
+        "identifier" : "35944D022F05A47D002892A5",
+        "name" : "HabitAppUnitTestsMacOS"
+      }
+    }
+  ],
+  "version" : 1
+}
