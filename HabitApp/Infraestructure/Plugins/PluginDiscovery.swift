@@ -18,6 +18,13 @@ class PluginDiscovery {
         
         print("� Ejecutable: \(executableName)")
         
+        // Normalizar el nombre del ejecutable para matching de clases
+        // (reemplazar espacios con underscores para coincidir con nombres de clases en runtime)
+        let normalizedName = executableName.replacingOccurrences(of: " ", with: "_")
+        let alternativeName = executableName.replacingOccurrences(of: " ", with: "")
+        
+        print("📦 Buscando clases con prefijo: \(normalizedName) o \(alternativeName) o HabitApp")
+        
         // Obtener todas las clases del runtime
         let expectedClassCount = objc_getClassList(nil, 0)
         let allClasses = UnsafeMutablePointer<AnyClass?>.allocate(capacity: Int(expectedClassCount))
@@ -35,7 +42,12 @@ class PluginDiscovery {
                 let className = NSStringFromClass(currentClass)
                 
                 // OPTIMIZACIÓN 1: Filtrar solo clases de nuestro módulo/app
-                guard className.hasPrefix(executableName) else {
+                // Aceptar: "HabitApp_", "HabitAppPremium", "HabitApp."
+                let isFromOurBundle = className.hasPrefix(normalizedName) || 
+                                     className.hasPrefix(alternativeName) ||
+                                     className.hasPrefix("HabitApp")
+                
+                guard isFromOurBundle else {
                     skippedCount += 1
                     continue
                 }
