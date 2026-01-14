@@ -1,0 +1,22 @@
+//
+//  PremiumVersionConfig.xcconfig
+//  HabitApp copy
+//
+//  Created by Aula03 on 14/1/26.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project
+
+CATEGORY_FEATURE = YES
+ACCESIBILITY_FEATURE = YES
+ADDICTION_FEATURE = YES
+DAILY_NOTE_FEATURE = YES
+GOAL_FEATURE = YES
+REMINDER_FEATURE = YES
+SETTING_FEATURE = YES
+STATISTIC_FEATURE = YES
+STREAK_FEATURE = YES
+ACHIEVEMENT_FEATURE = YES
+WILD_CARD_HABIT_FEATURE = YES
+HABIT_FEATURE = YES

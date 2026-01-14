@@ -1,0 +1,22 @@
+//
+//  BasicVersionConfig.xcconfig
+//  HabitApp
+//
+//  Created by Aula03 on 14/1/26.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project
+
+CATEGORY_FEATURE = YES
+ACCESIBILITY_FEATURE = NO
+ADDICTION_FEATURE = NO
+DAILY_NOTE_FEATURE = YES
+GOAL_FEATURE = NOS
+REMINDER_FEATURE = YES
+SETTING_FEATURE = NO
+STATISTIC_FEATURE = YES
+STREAK_FEATURE = NO
+ACHIEVEMENT_FEATURE = NO
+WILD_CARD_HABIT_FEATURE = NO
+HABIT_FEATURE = YES

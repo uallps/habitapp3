@@ -3,20 +3,99 @@ import Combine
 
 // Responsabilidad: preferencias de UI y características persistidas en UserDefaults.
 final class UserPreferences: ObservableObject {
-    @AppStorage("showDueDates") private var storedShowDueDates: Bool = true
-    @AppStorage("showPriorities") private var storedShowPriorities: Bool = true
-    @AppStorage("enableReminders") private var storedEnableReminders: Bool = true
-    @AppStorage("enableStreaks") private var storedEnableStreaks: Bool = true
-    @AppStorage("enableStatistics") private var storedEnableStatistics: Bool = true
-    @AppStorage("enableHabits") private var storedEnableHabits: Bool = true
-    @AppStorage("enableGoals") private var storedEnableGoals: Bool = true
-    @AppStorage("enableAddictions") private var storedEnableAddictions: Bool = true
-    @AppStorage("enableCategories") private var storedEnableCategories: Bool = true
-    @AppStorage("appTheme") private var storedAppTheme: Int = 0
-    @AppStorage("daltonismType") var daltonismType: Int = 0
-    @AppStorage("nightModeIntensity") var nightModeIntensity: Double = 0.0
-    @AppStorage("accentColorName") var accentColorName: String = "Blue"
-    @AppStorage("enableDailyNotes") private var storedEnableDailyNotes: Bool = true
+    // #if HABIT_FEATURE
+    // @AppStorage("showDueDates") private var storedShowDueDates: Bool = true
+    // @AppStorage("showPriorities") private var storedShowPriorities: Bool = true
+    // @AppStorage("enableReminders") private var storedEnableReminders: Bool = true
+    // #else
+    // @AppStorage("showDueDates") private var storedShowDueDates: Bool = false
+    // @AppStorage("showPriorities") private var storedShowPriorities: Bool = false
+    // @AppStorage("enableReminders") private var storedEnableReminders: Bool = false
+    // #endif
+    // #if STREAK_FEATURE
+    // @AppStorage("enableStreaks") private var storedEnableStreaks: Bool = true
+    // #else
+    // @AppStorage("enableStreaks") private var storedEnableStreaks: Bool = false
+    // #endif
+    // #if STATISTIC_FEATURE
+    // @AppStorage("enableStatistics") private var storedEnableStatistics: Bool = true
+    // #else
+    // @AppStorage("enableStatistics") private var storedEnableStatistics: Bool = false
+    // #endif
+    // #if 
+    // @AppStorage("enableHabits") private var storedEnableHabits: Bool = true
+    // @AppStorage("enableGoals") private var storedEnableGoals: Bool = true
+    // @AppStorage("enableAddictions") private var storedEnableAddictions: Bool = true
+    // @AppStorage("enableCategories") private var storedEnableCategories: Bool = true
+    // @AppStorage("appTheme") private var storedAppTheme: Int = 0
+    // @AppStorage("daltonismType") var daltonismType: Int = 0
+    // @AppStorage("nightModeIntensity") var nightModeIntensity: Double = 0.0
+    // @AppStorage("accentColorName") var accentColorName: String = "Blue"
+    // @AppStorage("enableDailyNotes") private var storedEnableDailyNotes: Bool = true
+    
+#if HABIT_FEATURE
+@AppStorage("showDueDates") private var storedShowDueDates: Bool = true
+@AppStorage("showPriorities") private var storedShowPriorities: Bool = true
+@AppStorage("enableReminders") private var storedEnableReminders: Bool = true
+#else
+@AppStorage("showDueDates") private var storedShowDueDates: Bool = false
+@AppStorage("showPriorities") private var storedShowPriorities: Bool = false
+@AppStorage("enableReminders") private var storedEnableReminders: Bool = false
+#endif
+
+#if STREAK_FEATURE
+@AppStorage("enableStreaks") private var storedEnableStreaks: Bool = true
+#else
+@AppStorage("enableStreaks") private var storedEnableStreaks: Bool = false
+#endif
+
+#if STATISTIC_FEATURE
+@AppStorage("enableStatistics") private var storedEnableStatistics: Bool = true
+#else
+@AppStorage("enableStatistics") private var storedEnableStatistics: Bool = false
+#endif
+
+#if HABIT_FEATURE
+@AppStorage("enableHabits") private var storedEnableHabits: Bool = true
+#else
+@AppStorage("enableHabits") private var storedEnableHabits: Bool = false
+#endif
+
+#if GOAL_FEATURE
+@AppStorage("enableGoals") private var storedEnableGoals: Bool = true
+#else
+@AppStorage("enableGoals") private var storedEnableGoals: Bool = false
+#endif
+
+#if ADDICTION_FEATURE
+@AppStorage("enableAddictions") private var storedEnableAddictions: Bool = true
+#else
+@AppStorage("enableAddictions") private var storedEnableAddictions: Bool = false
+#endif
+
+#if CATEGORY_FEATURE
+@AppStorage("enableCategories") private var storedEnableCategories: Bool = true
+#else
+@AppStorage("enableCategories") private var storedEnableCategories: Bool = false
+#endif
+
+#if SETTING_FEATURE
+@AppStorage("appTheme") private var storedAppTheme: Int = 0
+@AppStorage("daltonismType") var daltonismType: Int = 0
+@AppStorage("nightModeIntensity") var nightModeIntensity: Double = 0.0
+@AppStorage("accentColorName") var accentColorName: String = "Blue"
+#else
+@AppStorage("appTheme") private var storedAppTheme: Int = 0
+@AppStorage("daltonismType") var daltonismType: Int = 0
+@AppStorage("nightModeIntensity") var nightModeIntensity: Double = 0.0
+@AppStorage("accentColorName") var accentColorName: String = "Blue"
+#endif
+
+#if DAILY_NOTE_FEATURE
+@AppStorage("enableDailyNotes") private var storedEnableDailyNotes: Bool = true
+#else
+@AppStorage("enableDailyNotes") private var storedEnableDailyNotes: Bool = false
+#endif
 
     
     var appTheme: Int {
