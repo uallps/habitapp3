@@ -97,7 +97,7 @@ struct HabitApp: App {
         case "notas": DailyNotesView(storageProvider: storageProvider)
         case "objetivos": GoalsView(storageProvider: storageProvider)
         case "estadisticas": StatisticsView()
-        case "logros": AchievementsListView()
+        case "logros": AchievementsListView(storageProvider: storageProvider)
         case "ajustes": SettingsView()
         default: Text("Vista no encontrada")
         }
