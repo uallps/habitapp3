@@ -67,7 +67,7 @@ struct HabitStatRow: View {
                         .foregroundColor(.secondary)
                 }
                 .padding()
-                .background(Color(.systemGray6))
+                .background(Color(.gray))
                 .cornerRadius(12)
             }
             .buttonStyle(.plain)

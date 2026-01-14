@@ -48,7 +48,7 @@ struct StatisticsView: View {
                         )
                         .tag(1)
                     }
-                    .tabViewStyle(.page(indexDisplayMode: .never))
+                    //.tabViewStyle(.page(indexDisplayMode: .never))
                 }
             }
             .navigationTitle("Estadísticas")
