@@ -83,20 +83,38 @@ jobs:
             CODE_SIGNING_ALLOWED=NO
         continue-on-error: true
 
-      - name: Run Unit Tests
+      - name: Run Unit Tests (latest iOS simulator)
         run: |
+          set -e
+
+          echo "Detecting latest iOS simulator..."
+
+          DESTINATION=$(xcrun simctl list devices available | \
+            awk '
+              BEGIN { runtime="" }
+              /^-- iOS/ { runtime=$0 }
+              /iPhone/ && runtime != "" { print runtime "|" $0 }
+            ' | \
+            sed 's/^[^0-9]*//' | \
+            sort -V | \
+            tail -n 1 | \
+            awk -F'[()]' '{ print $2 "|" $1 }' | \
+            awk -F'|' '{ print "platform=iOS Simulator,id="$1 }'
+          )
+
+          echo "Using destination: $DESTINATION"
+
           xcodebuild test \
             -project HabitApp.xcodeproj \
             -scheme HabitApp \
-            -sdk iphonesimulator \
-            -destination generic/platform=iOS \
+            -destination "$DESTINATION" \
             -derivedDataPath ./DerivedData \
             IPHONEOS_DEPLOYMENT_TARGET=18.0 \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
-            | xcpretty || true
-        continue-on-error: true
+            | xcpretty
+
 
       - name: Test Results Summary
         if: always()
