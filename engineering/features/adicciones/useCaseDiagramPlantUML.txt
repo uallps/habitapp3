@@ -1,0 +1,24 @@
+@startuml
+
+usecase (Crear adicción) as CrAd
+usecase (Asignar hábito preventivo) as AHP
+usecase (Asignar hábito compensatorio) as AHC
+usecase (Asignar hábito desencadenante) as AHD
+
+usecase (Introducir nombre) as IntNom
+usecase (Introducir severidad) as IntSev
+
+
+actor Usuario as Us
+
+Us --> CrAd
+
+CrAd <..  AHP : extends
+CrAd <..  AHC : extends
+CrAd <..  AHD : extends
+
+CrAd ..>  IntNom : extends
+CrAd ..>  IntSev : extends
+
+
+@enduml
