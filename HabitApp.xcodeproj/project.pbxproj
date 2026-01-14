@@ -39,102 +39,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		354A31AE2F17891E005237E6 /* Exceptions for "HabitApp" folder in "HabitApp Premium" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Application/AppConfig.swift,
-				Application/HabitApp.swift,
-				Application/UserPreferences.swift,
-				Assets.xcassets,
-				ContentView.swift,
-				Core/Extensions/CharacterExtensions.swift,
-				Core/Extensions/StringExtensions.swift,
-				Core/Models/Habit.swift,
-				Core/Models/Priority.swift,
-				Core/ViewModels/HabitListViewModel.swift,
-				Core/Views/CustomCalendarView.swift,
-				Core/Views/HabitDetailWrapperView.swift,
-				Core/Views/HabitListView.swift,
-				Core/Views/HabitNotesView.swift,
-				Core/Views/HabitRowView.swift,
-				Core/Views/WeekdaySelectorView.swift,
-				Features/Accessibility/Views/AccessibilityFilterModifier.swift,
-				Features/Addictions/Extensions/HabitExtension.swift,
-				Features/Addictions/Model/Addiction.swift,
-				Features/Addictions/Model/AddictionHabitSectionConfig.swift,
-				Features/Addictions/View/AddictionDetailWrapperView.swift,
-				Features/Addictions/View/AddictionHabitSectionView.swift,
-				Features/Addictions/View/AddictionListView.swift,
-				Features/Addictions/View/AddictionRowView.swift,
-				Features/Addictions/ViewModel/AddictionListViewModel.swift,
-				Features/Categories/Models/Category.swift,
-				Features/Categories/Models/Emoji.swift,
-				Features/Categories/Models/EmojiLoader.swift,
-				Features/Categories/Models/EmojiSearchModel.swift,
-				Features/Categories/Models/UserImageSlot.swift,
-				Features/Categories/ViewModel/CategoryListViewModel.swift,
-				Features/Categories/ViewModel/UserImageViewModel.swift,
-				Features/Categories/Views/CategoryDetailWrapperView.swift,
-				Features/Categories/Views/CategoryListView.swift,
-				Features/Categories/Views/CategoryRowView.swift,
-				Features/Categories/Views/EmojiSearchView.swift,
-				Features/Categories/Views/HabitCategoryView.swift,
-				Features/Categories/Views/UserImagesPickerView.swift,
-				Features/DailyNotes/Models/DailyNote.swift,
-				Features/DailyNotes/ViewModels/DailyNotesViewModel.swift,
-				Features/DailyNotes/Views/AddNoteView.swift,
-				Features/DailyNotes/Views/DailyNotesView.swift,
-				Features/DailyNotes/Views/NoteDetailView.swift,
-				Features/DailyNotes/Views/NoteRowView.swift,
-				Features/Goals/Models/Goal.swift,
-				Features/Goals/Models/Milestone.swift,
-				Features/Goals/ViewModels/GoalsViewModel.swift,
-				Features/Goals/Views/AddGoalView.swift,
-				Features/Goals/Views/GoalDetailView.swift,
-				Features/Goals/Views/GoalsView.swift,
-				Features/Recordatorios/Models/Recordatorio.swift,
-				Features/Recordatorios/Service/NotificationManager.swift,
-				Features/Recordatorios/ViewModels/RecordatorioViewModel.swift,
-				Features/Recordatorios/Views/RecordatorioView.swift,
-				Features/Settings/Views/AboutView.swift,
-				Features/Settings/Views/NotificationSettingsView.swift,
-				Features/Settings/Views/SettingsView.swift,
-				Features/Statistics/Models/StatsModels.swift,
-				Features/Statistics/Services/StatisticsService.swift,
-				Features/Statistics/ViewModels/StatisticsViewModel.swift,
-				Features/Statistics/Views/CompactHabitStatsView.swift,
-				Features/Statistics/Views/DonutChartView.swift,
-				Features/Statistics/Views/OverviewStatsView.swift,
-				Features/Statistics/Views/PerHabitStatsView.swift,
-				Features/Statistics/Views/StatisticsView.swift,
-				Features/Statistics/Views/StatsChartView.swift,
-				Features/Streaks/Models/Streak.swift,
-				Features/Streaks/Views/StreakBadgeView.swift,
-				Infraestructure/Persistence/IdentifiableModel.swift,
-				Infraestructure/Persistence/StorageProvider.swift,
-				Infraestructure/Persistence/SwiftDataStorageProvider.swift,
-				Infraestructure/Plugins/AccessibilityPlugin.swift,
-				Infraestructure/Plugins/AddictionPlugin.swift,
-				Infraestructure/Plugins/CategoryPlugin.swift,
-				Infraestructure/Plugins/DailyNotesPlugin.swift,
-				Infraestructure/Plugins/DarkModePlugin.swift,
-				Infraestructure/Plugins/DataPlugin.swift,
-				Infraestructure/Plugins/FeaturePlugin.swift,
-				Infraestructure/Plugins/HabitDataObserverManager.swift,
-				Infraestructure/Plugins/HabitDataObservingPlugin.swift,
-				Infraestructure/Plugins/HabitGoalPlugin.swift,
-				Infraestructure/Plugins/HabitPlugin.swift,
-				Infraestructure/Plugins/PluginDiscovery.swift,
-				Infraestructure/Plugins/PluginRegistry.swift,
-				Infraestructure/Plugins/StatisticsPlugin.swift,
-				Infraestructure/Plugins/StreakPlugin.swift,
-				Infraestructure/Plugins/ViewPlugin.swift,
-				Localizable.xcstrings,
-				Resources/emoji.txt,
-				"Utils/   DailyNotesStyle+Extensions.swift",
-			);
-			target = 354A31A62F17891E005237E6 /* HabitApp Premium */;
-		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -150,9 +54,6 @@
 		};
 		35EDF0D22E9FF1C000D50221 /* HabitApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				354A31AE2F17891E005237E6 /* Exceptions for "HabitApp" folder in "HabitApp Premium" target */,
-			);
 			path = HabitApp;
 			sourceTree = "<group>";
 		};
