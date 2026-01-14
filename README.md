@@ -151,33 +151,25 @@ Esta aplicación forma parte de la asignatura Línea de Productos Software del g
 
 ---
 
-## �� Roadmap
+## 🗺️ Roadmap
 
-- [] **v1.0** - MVP: Categorías, Rachas, Estadísticas, Notas Diarias y Recordatoeios
+- [] **v1.0** - Categorías, Adicciones, Rachas, Estadísticas, Notas Diarias, Objetivos, Hábitos Comodín, Logros y Recordatorios
 
+## 🎯 Funcionalidades por Versión
 
-### 📝 **Notas Diarias**
-
-## 🙏 Agradecimientos
-
-- **Apple** por SwiftUI y SwiftData
-- **Universidad de Almería** por ofrecer los Mac para el desarrollo
-- Al equipo de HabitApp1 por tener un README tan profesional que ha inspirado este
-- A todos los profesores y compañeros de la **Universidad de Almería**
-
-<p align="center">
-  <strong>⭐ Si te gusta este proyecto, ¡dale una estrella! ⭐</strong>
-</p>
-
-<p align="center">
-  <a href="https://github.com/uallps/habitapp3/issues">Reportar Bug</a> •
-  <a href="https://github.com/uallps/habitapp3/issues">Solicitar Feature</a> •
-  <a href="https://github.com/uallps/habitapp3/pulls">Contribuir</a>
-</p>
-
-<p align="center">
-  Made with ❤️ in Almería, Spain 🇪🇸
-</p>
+| Funcionalidad          | Básica | Premium |
+| ---------------------- | --- | ----- |
+| Hábitos               | ✅  | ✅    |
+| Notas Diarias          | ✅  | ✅    |
+| Objetivos              | ❌  | ✅    |
+| Rachas    | ❌  | ✅    |
+| Accesibilidad   | ❌  | ✅    |
+| Estadísticas | ❌  | ✅    |
+| Categorías    | ✅  | ✅    |
+| Adicciones    | ❌  | ✅    |
+| Logros    | ❌  | ✅    |
+| Hábitos Comodín    | ❌  | ✅    |
+| Recordatorios    | ✅  | ✅    |
 
 ## 🏗️ Arquitectura del Proyecto
 
@@ -204,21 +196,26 @@ HabitApp/
 - **macOS 14.0+**
 - **SwiftUI + SwiftData**
 
-## 🎯 Funcionalidades por Versión
+## 🙏 Agradecimientos
 
-| Funcionalidad          | Básica | Premium |
-| ---------------------- | --- | ----- |
-| Hábitos               | ✅  | ✅    |
-| Notas Diarias          | ✅  | ✅    |
-| Objetivos              | ❌  | ✅    |
-| Rachas    | ❌  | ✅    |
-| Accesibilidad   | ❌  | ✅    |
-| Estadísticas | ❌  | ✅    |
-| Categorías    | ✅  | ✅    |
-| Adicciones    | ❌  | ✅    |
-| Logros    | ❌  | ✅    |
-| Hábitos Comodín    | ❌  | ✅    |
-| Recordatorios    | ✅  | ✅    |
+- **Apple** por SwiftUI y SwiftData
+- **Universidad de Almería** por ofrecer los Mac para el desarrollo
+- Al equipo de HabitApp1 por tener un README tan profesional que ha inspirado este
+- A todos los profesores y compañeros de la **Universidad de Almería**
+
+<p align="center">
+  <strong>⭐ Si te gusta este proyecto, ¡dale una estrella! ⭐</strong>
+</p>
+
+<p align="center">
+  <a href="https://github.com/uallps/habitapp3/issues">Reportar Bug</a> •
+  <a href="https://github.com/uallps/habitapp3/issues">Solicitar Feature</a> •
+  <a href="https://github.com/uallps/habitapp3/pulls">Contribuir</a>
+</p>
+
+<p align="center">
+  Made with ❤️ in Almería, Spain 🇪🇸
+</p>
 
 
 ## 📄 Licencia
