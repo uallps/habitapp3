@@ -158,6 +158,73 @@ class SwiftDataStorageProvider: StorageProvider {
     }
     
     @MainActor
+    func getHabit(id: UUID) async throws -> Habit? {
+        let habitPredicate = #Predicate<Habit> { $0.id == id }
+        let habitDescriptor = FetchDescriptor<Habit>(predicate: habitPredicate)
+        guard let habit = try context.fetch(habitDescriptor).first else {
+            return nil
+        }
+        return habit
+    }
+    
+    @MainActor
+    func loadStreaksForHabit(habitId: UUID) async throws -> [Streak] {
+        var streaks: [Streak] = []
+        let predicate = #Predicate<Streak> { $0.habitId == habitId }
+        let descriptor = FetchDescriptor<Streak>(predicate: predicate)
+        
+        streaks = try context.fetch(descriptor)
+        return streaks
+    }
+    
+    @MainActor
+    func saveStreak(_ streak: Streak) async throws {
+        do {
+            try context.insert(streak)
+        } catch {
+            print("Error saving streak: \(error)")
+        }
+    }
+    
+    @MainActor
+    func savePendingChanges() async throws {
+        do {
+            try context.processPendingChanges()
+        } catch {
+            print("Error saving pending changes: \(error)")
+        }
+    }
+    
+    // MARK: - Achievements
+    
+    @MainActor
+    func loadAchievements() async throws -> [Achievement] {
+        print("📂 Cargando logros desde SwiftData...")
+        let descriptor = FetchDescriptor<Achievement>(
+            sortBy: [SortDescriptor(\.unlockedAt, order: .reverse)]
+        )
+        let achievements = try context.fetch(descriptor)
+        print("📊 Logros encontrados: \(achievements.count)")
+        achievements.forEach { print("  - \($0.achievementId): \($0.title)") }
+        return achievements
+    }
+    
+    @MainActor
+    func saveAchievement(_ achievement: Achievement) async throws {
+        print("💾 Insertando logro en contexto: \(achievement.achievementId)")
+        context.insert(achievement)
+        print("💾 Guardando contexto...")
+        try context.save()
+        print("✅ Contexto guardado exitosamente")
+    }
+    
+    @MainActor
+    func deleteAchievement(_ achievement: Achievement) async throws {
+        context.delete(achievement)
+        try context.save()
+    }
+    
+    @MainActor
     func loadNotes(calendar: Calendar, startOfDay: Date, endOfDay: Date, selectedDate: Date) async throws -> [DailyNote] {
         var notes: [DailyNote] = []
         do {
@@ -812,25 +879,25 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
 
     // Como es evidente, tiene sentido en un entorno de desarrollo y pruebas. A no ser que
     //se quiera dejar una gran vulnerabilidad o trollear un poquito al usuario final, no
-    // debería de existir.
-        @MainActor
-        func resetStorage() {
-            // 1. Tear down old context and container
-            SwiftDataContext.shared = nil
-            // Note: Old modelContainer will be deallocated automatically
-            
-            // 2. Recreate a new container and context
-            do {
-                let newContainer = try ModelContainer(for: Schema()) // your app schema
-                let newContext = ModelContext(newContainer)
-                self.modelContainer = newContainer
-                self.context = newContext
-                SwiftDataContext.shared = newContext
-                print("✅ SwiftData storage reset complete.")
-            } catch {
-                print("❌ Failed to reset SwiftData storage: \(error)")
-            }
+// debería de existir.
+    @MainActor
+    func resetStorage() {
+        // 1. Tear down old context and container
+        SwiftDataContext.shared = nil
+        // Note: Old modelContainer will be deallocated automatically
+        
+        // 2. Recreate a new container and context
+        do {
+            let newContainer = try ModelContainer(for: Schema()) // your app schema
+            let newContext = ModelContext(newContainer)
+            self.modelContainer = newContainer
+            self.context = newContext
+            SwiftDataContext.shared = newContext
+            print("✅ SwiftData storage reset complete.")
+        } catch {
+            print("❌ Failed to reset SwiftData storage: \(error)")
         }
+    }
     
     static func resetStore(schema: Schema) {
         do {

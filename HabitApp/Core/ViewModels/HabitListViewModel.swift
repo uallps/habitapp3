@@ -49,17 +49,25 @@ final class HabitListViewModel: ObservableObject {
     
     func toggleCompletion(habit: Habit, for date: Date = Date()) {
         Task {
-            if habit.isCompletedForDate(date) {
+            let wasCompleted = habit.isCompletedForDate(date)
+            
+            print("\n🔄 toggleCompletion - Hábito: '\(habit.title)'")
+            print("  📅 Fecha: \(date)")
+            print("  ✅ Estaba completado: \(wasCompleted)")
+            
+            if wasCompleted {
                 habit.markAsIncomplete(for: date)
+                print("  ❌ Marcado como incompleto")
             } else {
                 habit.markAsCompleted(for: date)
+                print("  ✅ Marcado como completado")
             }
             
             do {
                 try await storageProvider.saveContext()
-                print(" Hábito '\(habit.title)' guardado - Días completados: \(habit.doneDates.count)")
+                print("  💾 Guardado - Total días completados: \(habit.doneDates.count)")
                 
-                //  Esperar a que SwiftData sincronice completamente
+                // Notificar a plugins observadores
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                     HabitDataObserverManager.shared.notifyDataChanged(
                         taskId: habit.id,
@@ -67,8 +75,9 @@ final class HabitListViewModel: ObservableObject {
                         dueDate: habit.dueDate
                     )
                 }
+                
             } catch {
-                print(" Error saving habit: \(error)")
+                print("❌ Error saving habit: \(error)")
             }
         }
 

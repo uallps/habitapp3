@@ -61,5 +61,11 @@ protocol StorageProvider {
     func updateStreak(_ streak: Streak) async throws
     //END IF
     
+    //IF ACHIEVEMENTS
+    func loadAchievements() async throws -> [Achievement]
+    func saveAchievement(_ achievement: Achievement) async throws
+    func deleteAchievement(_ achievement: Achievement) async throws
+    //END IF
+    
     func saveContext() async throws
 }

@@ -70,6 +70,12 @@ final class UserPreferences: ObservableObject {
 @AppStorage("enableDailyNotes") private var storedEnableDailyNotes: Bool = false
 #endif
 
+#if ACHIEVEMENT_FEATURE
+@AppStorage("enableAchievements") private var storedEnableAchievements: Bool = true
+#else
+@AppStorage("enableAchievements") private var storedEnableAchievements: Bool = false
+#endif
+
     
     var appTheme: Int {
         get { storedAppTheme }
@@ -143,6 +149,11 @@ final class UserPreferences: ObservableObject {
     var enableDailyNotes: Bool {
         get { storedEnableDailyNotes }
         set { objectWillChange.send(); storedEnableDailyNotes = newValue }
+    }
+    
+    var enableAchievements: Bool {
+        get { storedEnableAchievements }
+        set { objectWillChange.send(); storedEnableAchievements = newValue }
     }
     
     var enableAddictions: Bool {

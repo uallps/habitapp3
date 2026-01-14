@@ -45,6 +45,7 @@ struct HabitApp: App {
             AppView(id: "notas", title: "Notas", icon: "note.text", isEnabled: userPreferences.enableDailyNotes),
             AppView(id: "objetivos", title: "Objetivos", icon: "target", isEnabled: userPreferences.enableGoals),
             AppView(id: "estadisticas", title: "Estadísticas", icon: "chart.bar", isEnabled: userPreferences.enableStatistics),
+            AppView(id: "logros", title: "Logros", icon: "star.fill", isEnabled: userPreferences.enableAchievements),
             AppView(id: "ajustes", title: "Ajustes", icon: "gearshape", isEnabled: userPreferences.enableSettings)
         ].filter { $0.isEnabled }
     }
@@ -96,6 +97,7 @@ struct HabitApp: App {
         case "notas": DailyNotesView(storageProvider: storageProvider)
         case "objetivos": GoalsView(storageProvider: storageProvider)
         case "estadisticas": StatisticsView()
+        case "logros": AchievementsListView()
         case "ajustes": SettingsView()
         default: Text("Vista no encontrada")
         }
