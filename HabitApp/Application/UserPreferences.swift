@@ -51,7 +51,7 @@ final class UserPreferences: ObservableObject {
 #endif
 
 #if SETTING_FEATURE
-@AppStorage("enableSettings") private var enableSettings: Bool = true
+@AppStorage("enableSettings") private var storedEnableSettings: Bool = true
 @AppStorage("appTheme") private var storedAppTheme: Int = 0
 @AppStorage("daltonismType") var daltonismType: Int = 0
 @AppStorage("nightModeIntensity") var nightModeIntensity: Double = 0.0

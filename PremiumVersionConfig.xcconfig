@@ -1,8 +1,8 @@
 //
-//  BasicVersionConfig.xcconfig
+//  PremiumVersionConfig.xcconfig
 //  HabitApp
 //
-//  Base configuration for the Basic version of the app
+//  Base configuration for the Premium version of the app
 //
 
 SWIFT_ACTIVE_COMPILATION_CONDITIONS = \
@@ -12,10 +12,10 @@ DAILY_NOTE_FEATURE \
 REMINDER_FEATURE \
 STATISTIC_FEATURE \
 HABIT_FEATURE \
+GOAL_FEATURE \
 ACCESIBILITY_FEATURE \
 ADDICTION_FEATURE \
 SETTING_FEATURE \
-STATISTIC_FEATURE \
 STREAK_FEATURE \
 ACHIEVEMENT_FEATURE \
 WILD_CARD_FEATURE
