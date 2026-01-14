@@ -14,11 +14,14 @@ struct HabitListView: View {
     
     init(storageProvider: StorageProvider) {
         self.storageProvider = storageProvider
+        let wildcardService = WildcardHabitService()
         self._viewModel = StateObject(wrappedValue: HabitListViewModel(
             storageProvider: storageProvider,
             wildcardProvider: wildcardService
         ))
     }
+    
+    
 
     var body: some View {
         #if os(iOS)

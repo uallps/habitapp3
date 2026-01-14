@@ -51,7 +51,11 @@ class WildcardHabitService: WildcardHabitProvider {
         let history = try context.fetch(descriptor)
         let recentTitles = Set(history.map { $0.habitTitle })
         
+        print("🔍 History Fetch: \(history.count) items")
+        print("🚫 Recent Titles: \(recentTitles)")
+        
         let finalCandidates = availableHabits.filter { !recentTitles.contains($0.title) }
+        print("✅ Candidates: \(finalCandidates.count) / \(availableHabits.count)")
         
         let pool = finalCandidates.isEmpty ? availableHabits : finalCandidates
         
