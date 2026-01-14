@@ -1,0 +1,124 @@
+@startuml
+top to bottom direction
+skinparam nodesep 10
+!include <archimate/Archimate>
+
+' Nodo principal - Core del proyecto
+Application_Component(core, "HabitApp Core")
+
+' Características principales
+Application_Component(habit, "Habit")
+Application_Component(dailyNote, "DailyNote")
+Application_Component(goals, "Goals")
+Application_Component(persistencia, "Persistencia")
+
+' Sub-características de Habit
+Application_Component(habitId, "id")
+Application_Component(habitTitle, "title")
+Application_Component(habitDesc, "description")
+Application_Component(habitPriority, "priority")
+Application_Component(habitCreatedDate, "createdDate")
+Application_Component(habitIsCompleted, "isCompleted")
+Application_Component(habitCompletionDates, "completionDates")
+
+' Valores de Priority
+Application_Component(priorityLow, "low")
+Application_Component(priorityMedium, "medium")
+Application_Component(priorityHigh, "high")
+
+' Sub-características de DailyNote
+Application_Component(noteId, "id")
+Application_Component(noteContent, "content")
+Application_Component(noteDate, "date")
+Application_Component(noteCreatedDate, "createdDate")
+Application_Component(noteUpdatedDate, "updatedDate")
+Application_Component(noteHabitRef, "habitReference")
+
+' Sub-características de Goals
+Application_Component(goalId, "id")
+Application_Component(goalTitle, "title")
+Application_Component(goalDesc, "description")
+Application_Component(goalTarget, "targetValue")
+Application_Component(goalProgress, "currentProgress")
+Application_Component(goalDeadline, "deadline")
+Application_Component(goalStatus, "status")
+Application_Component(goalCreatedDate, "createdDate")
+Application_Component(goalUpdatedDate, "updatedDate")
+Application_Component(milestones, "Milestones")
+
+' Sub-sub-características de Milestones
+Application_Component(milestoneId, "id")
+Application_Component(milestoneTitle, "title")
+Application_Component(milestoneDesc, "description")
+Application_Component(milestoneTarget, "targetValue")
+Application_Component(milestoneProgress, "currentProgress")
+Application_Component(milestoneOrder, "sequenceOrder")
+Application_Component(milestoneCompleted, "isCompleted")
+
+' Sub-características de Persistencia
+Application_Component(storageProvider, "StorageProvider")
+Application_Component(swiftData, "SwiftDataStorageProvider")
+
+' Relaciones del Core
+Rel_Composition(core, habit, "")
+Rel_Composition(core, dailyNote, "")
+Rel_Aggregation(core, goals, "")
+Rel_Composition(core, persistencia, "")
+
+' Sub-características de Habit
+Rel_Composition(habit, habitId, "")
+Rel_Composition(habit, habitTitle, "")
+Rel_Composition(habit, habitDesc, "")
+Rel_Composition(habit, habitPriority, "")
+Rel_Composition(habit, habitCreatedDate, "")
+Rel_Composition(habit, habitIsCompleted, "")
+Rel_Composition(habit, habitCompletionDates, "")
+
+' Valores de Priority (alternativas)
+Rel_Specialization(priorityLow, habitPriority, "")
+Rel_Specialization(priorityMedium, habitPriority, "")
+Rel_Specialization(priorityHigh, habitPriority, "")
+
+' Sub-características de DailyNote
+Rel_Composition(dailyNote, noteId, "")
+Rel_Composition(dailyNote, noteContent, "")
+Rel_Composition(dailyNote, noteDate, "")
+Rel_Composition(dailyNote, noteCreatedDate, "")
+Rel_Composition(dailyNote, noteUpdatedDate, "")
+Rel_Composition(dailyNote, noteHabitRef, "")
+
+' Sub-características de Goals
+Rel_Composition(goals, goalId, "")
+Rel_Composition(goals, goalTitle, "")
+Rel_Composition(goals, goalDesc, "")
+Rel_Composition(goals, goalTarget, "")
+Rel_Composition(goals, goalProgress, "")
+Rel_Composition(goals, goalDeadline, "")
+Rel_Composition(goals, goalStatus, "")
+Rel_Composition(goals, goalCreatedDate, "")
+Rel_Composition(goals, goalUpdatedDate, "")
+Rel_Aggregation(goals, milestones, "")
+
+' Sub-sub-características de Milestones
+Rel_Composition(milestones, milestoneId, "")
+Rel_Composition(milestones, milestoneTitle, "")
+Rel_Composition(milestones, milestoneDesc, "")
+Rel_Composition(milestones, milestoneTarget, "")
+Rel_Composition(milestones, milestoneProgress, "")
+Rel_Composition(milestones, milestoneOrder, "")
+Rel_Composition(milestones, milestoneCompleted, "")
+
+' Sub-características de Persistencia
+Rel_Composition(persistencia, storageProvider, "")
+Rel_Specialization(swiftData, storageProvider, "implements")
+Rel_Realization(swiftData, storageProvider, "requires")
+
+' RELACIONES DESDE HABIT (solo líneas desde Habit que actualiza otros componentes)
+
+' Habit → DailyNote
+Rel_Association_dir(habit, dailyNote, "can create")
+
+' Habit → Goals (cuando Habit cambia, actualiza Goal)
+Rel_Triggering(habitIsCompleted, goalProgress, "triggers update")
+
+@enduml
