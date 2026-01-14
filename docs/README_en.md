@@ -25,11 +25,11 @@
   <a href="#-team">Team</a>
 </p>
 
-A cross-platform app (iOS/macOS) for managing daily habits and notes with an intelligent notification system.
+A cross-platform app (iOS/macOS) for managing daily habits with a streak system and advanced accessibility features.
 
 ## 🤔 What is HabitApp3?
 
-**HabitApp3** is a learning app built in SwiftUI, a framework that promises simultaneous development on iOS and macOS. It is modern, elegant, and designed to help you **build positive habits** and **achieve your goals**.
+**HabitApp3** is a learning app built in SwiftUI, focused on habit streak tracking and implementing accessibility features such as light/dark theme modes and colorblind support.
 
 This app is part of the Software Product Line course of the Computer Engineering degree at the University of Almería: [More information](https://www.ual.es/estudios/grados/presentacion/plandeestudios/asignatura/4015/40154304)
 
@@ -39,35 +39,11 @@ This app is part of the Software Product Line course of the Computer Engineering
 
 <table>
 <tr>
-<td align="center" width="20%">
-<img src="https://github.com/ualfsp323.png" width="80" style="border-radius:50%"/><br/>
-<strong>Franco Sergio Pereyra</strong><br/>
-<sub>📝 Daily Notes, 🎯 Goals </sub><br/>
-<a href="https://github.com/ualfsp323">@ualfsp323</a>
-</td>
-<td align="center" width="20%">
-<img src="https://github.com/ifm562-ual.png" width="80" style="border-radius:50%"/><br/>
-<strong>Ismael Fernández Méndez</strong><br/>
-<sub>🗂️ Categories, 🚬 Addictions</sub><br/>
-<a href="https://github.com/ifm562-ual">@ifm562-ual</a>
-</td>
-<td align="center" width="20%">
+<td align="center" width="50%">
 <img src="https://github.com/dgp336.png" width="80" style="border-radius:50%"/><br/>
 <strong>David Granados Pérez</strong><br/>
 <sub>🔥 Streaks, 👨‍🦯 Accessibility</sub><br/>
 <a href="https://github.com/dgp336">@dgp336</a>
-</td>
-<td align="center" width="20%">
-<img src="https://github.com/ualjfr498.png" width="80" style="border-radius:50%"/><br/>
-<strong>Juan José Fernández Requena</strong><br/>
-<sub>📊 Statistics, 🏆 Achievements</sub><br/>
-<a href="https://github.com/jgm847">@ualjfr498</a>
-</td>
-<td align="center" width="20%">
-<img src="https://github.com/dcf313.png" width="80" style="border-radius:50%"/><br/>
-<strong></strong><br/>
-<sub>🔔 Reminders, 🟢⚡ Quick Habits</sub><br/>
-<a href="https://github.com/dcf313">@dcf313</a>
 </td>
 </tr>
 </table>
@@ -85,87 +61,84 @@ This app is part of the Software Product Line course of the Computer Engineering
 
 <table>
 <tr>
-<td align="center" width="25%">
+<td align="center" width="50%">
 <img src="https://cdn-icons-png.flaticon.com/512/3767/3767084.png" width="60"/><br/>
 <strong>Habit Management</strong><br/>
 <sub>Create your habits</sub>
 </td>
-<td align="center" width="25%">
+<td align="center" width="50%">
 <img src="https://i.redd.it/streak-flame-updated-v0-3n46sx7a0e9b1.png?width=283&format=png&auto=webp&s=74253ccd745fc4cf470e99c589921ce4d83c4d10" width="60"/><br/>
 <strong>Streaks</strong><br/>
 <sub>Motivate yourself with your own progress</sub>
 </td>
-<td align="center" width="25%">
+</tr>
+<tr>
+<td align="center" width="50%">
+<img src="https://rushplumbingseattle.com/images/ada-icon.png" width="60"/><br/>
+<strong>Accessibility</strong><br/>
+<sub>Features that make it easier for everyone to use</sub>
+</td>
+<td align="center" width="50%">
 <img src="https://cdn-icons-png.flaticon.com/512/1792/1792931.png" width="60"/><br/>
 <strong>Reminders</strong><br/>
 <sub>The app reminds you of what you forget</sub>
-</td>
-<td align="center" width="25%">
-<img src="https://cdn-icons-png.flaticon.com/512/5136/5136407.png" width="60"/><br/>
-<strong>Statistics</strong><br/>
-<sub>Visualize your progress with detailed charts</sub>
-</td>
-</tr>
-<tr>
-<td align="center" width="20%">
-<a href="#addictions">
-<img src="https://freesvg.org/img/drugs2.png" width="60"/><br/>
-<strong>Addictions</strong></a><br/>
-<sub>Control habits you want to reduce or eliminate</sub>
-</td>
-<td align="center" width="20%">
-<a href="#achievements">
-<img src="https://cdn.iconscout.com/icon/free/png-256/free-cup-icon-svg-download-png-124193.png" width="60"/><br/>
-<strong>Achievements</strong></a><br/>
-<sub>Virtual rewards for staying consistent</sub>
-</td>
-<td align="center" width="20%">
-<a href="#goals">
-<img src="https://freesvg.org/img/Anonymous_target_with_arrow.png" width="60"/><br/>
-<strong>Goals</strong></a><br/>
-<sub>Set short- and long-term goals</sub>
-</td>
-<td align="center" width="20%">
-<a href="#quick-habits">
-<img src="https://steadfastelec.com/wp-content/uploads/2024/07/electrical-installations.png" width="60"/><br/>
-<strong>Quick Habits</strong></a><br/>
-<sub>Small, fast habits to keep your routine</sub>
-</td>
-<td align="center" width="20%">
-<a href="#categories">
-<img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/distribution.png" width="60"/><br/>
-<strong>Categories</strong></a><br/>
-<sub>Organize your habits by type or priority</sub>
-</td>
-<td align="center" width="20%">
-<a href="#accessibility">
-<img src="https://rushplumbingseattle.com/images/ada-icon.png" width="60"/><br/>
-<strong>Accessibility</strong></a><br/>
-<sub>Features that make it easier for everyone to use</sub>
 </td>
 </tr>
 </table>
 
 ---
 
+## 🔥 Technical Operation of Streaks
+
+Streaks are a motivation system that tracks consistency in performing habits. Each time a user completes a habit on the expected day, the streak increases.
+
+### Data Model
+- **Streak.swift**: SwiftData model that stores the habit ID, current count, and last update.
+- Persistence: Uses SwiftData for persistent streak storage.
+
+### Badge View
+- **StreakBadgeView.swift**: View that displays a flame icon with the number of consecutive days.
+- Animations: Bounce effects on the icon when the streak increases.
+- Colors: Orange background for normal streaks, red for "hot" streaks (>4 days).
+
+### Update Logic
+- Automatically updates when habits are completed.
+- Resets if the daily sequence is broken.
+
+## 👨‍🦯 Accessibility System
+
+The accessibility system includes theme modes and adjustments for colorblind users.
+
+### Theme Management
+- **UserPreferences.swift**: Manages UI preferences, including theme (light/dark/system), night mode intensity, and colorblind type.
+- Themes: Light, Dark, System (follows device).
+- Accent Colors: Blue, Red, Green, etc.
+
+### Night Mode
+- Semi-transparent orange overlay to reduce blue light.
+- Adjustable intensity by the user.
+
+### Colorblind Support
+- Color filters: Hue rotation for Protanopia and Deuteranopia.
+- Saturation reduction for better readability.
+
+### Implementation
+- **AccessibilityFilterModifier.swift**: ViewModifier that applies accessibility filters to the entire app.
+- Integration: Applied globally using the modifier at the view root.
+
+---
+
 ## 🗺️ Roadmap
 
-- [] **v1.0** - Categories, Addictions, Streaks, Statistics, Daily Notes, Goals, Quick Habits, Achievements, and Reminders
+- [] **v1.0** - Core habits, Streaks, Accessibility
 
 ## 🎯 Features by Version
 
 | Feature          | Basic | Premium |
 | ---------------- | --- | ----- |
 | Habits           | ✅  | ✅    |
-| Daily Notes      | ✅  | ✅    |
-| Goals            | ❌  | ✅    |
-| Streaks          | ❌  | ✅    |
-| Accessibility    | ❌  | ✅    |
-| Statistics       | ❌  | ✅    |
-| Categories       | ✅  | ✅    |
-| Addictions       | ❌  | ✅    |
-| Achievements     | ❌  | ✅    |
-| Quick Habits     | ❌  | ✅    |
+| Streaks          | ✅  | ✅    |
+| Accessibility    | ✅  | ✅    |
 | Reminders        | ✅  | ✅    |
 
 ## 🏗️ Project Architecture
@@ -177,10 +150,10 @@ HabitApp/
 │   ├── Models/           # Habit.swift
 │   ├── ViewModels/       # HabitListViewModel.swift
 │   └── Views/            # Habit views
-├── Features/              # Non-habit features
-│   ├── DailyNotes/       # Notes system
-│   ├── Goals/            # Goals (iOS only)
-│   └── ...
+├── Features/           # Specific functionalities
+│   ├── Streaks/         # Streak system
+│   ├── Accessibility/   # Accessibility filters
+│   └── Settings/        # User settings
 ├── Infrastructure/
 │   └── Plugins/          # Plugin system
 │   └── Persistence/      # Persistence implementation

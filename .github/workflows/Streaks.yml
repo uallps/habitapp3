@@ -1,10 +1,10 @@
-name: Build and Test HabitApp
+name: Streaks CI
 
 on:
   push:
-    branches: [  "core_8jan" ]
+    branches: [ "david" ]
   pull_request:
-    branches: [ "core_8jan" ]
+    branches: [ "david" ]
   workflow_dispatch:
 
 jobs:
@@ -30,7 +30,7 @@ jobs:
           grep -r "FIXME" HabitApp --include="*.swift" | head -20 || echo "No FIXMEs"
 
   build:
-    name: Build and Test HabitApp
+    name: Streaks CI
     runs-on: macos-latest
     needs: lint
 

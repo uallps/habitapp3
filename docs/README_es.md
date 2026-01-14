@@ -2,10 +2,10 @@
   <img src="HabitApp/Assets.xcassets/AppIcon.appiconset/icon 1.png" alt="HabitApp Logo" width="120"/>
 </p>
 
-<h1 align="center">🌀 HabitApp3 📝</h1>
+<h1 align="center">🌀 HabitApp3 - Streaks & Accessibility 📝</h1>
 
 <p align="center">
-  <strong>Tu compañero inteligente para construir hábitos que transforman tu vida</strong>
+  <strong>Tu compañero inteligente para construir hábitos con rachas motivadoras y accesibilidad inclusiva</strong>
 </p>
 
 <p align="center">
@@ -25,11 +25,11 @@
   <a href="#-equipo">Equipo</a>
 </p>
 
-Una aplicación multiplataforma (iOS/macOS) para gestionar hábitos diarios y notas con sistema de notificaciones inteligentes.
+Una aplicación multiplataforma (iOS/macOS) para gestionar hábitos diarios con sistema de rachas y accesibilidad avanzada.
 
 ## 🤔 ¿Qué es HabitApp3?
 
-**HabitApp3** es una aplicación de aprendizaje construida en SwiftUI, un framework que promete construir simultáneamente en iOS y MacOS moderna y elegante diseñada para ayudarte a **construir hábitos positivos** y **alcanzar tus metas**.
+**HabitApp3** es una aplicación de aprendizaje construida en SwiftUI, enfocada en el seguimiento de rachas de hábitos y la implementación de características de accesibilidad como modos de tema claro/oscuro y soporte para daltónicos.
 
 Esta aplicación forma parte de la asignatura Línea de Productos Software del grado Ingeniería Informática de la Universidad de Almería: [Más información](https://www.ual.es/estudios/grados/presentacion/plandeestudios/asignatura/4015/40154304)
 
@@ -39,35 +39,11 @@ Esta aplicación forma parte de la asignatura Línea de Productos Software del g
 
 <table>
 <tr>
-<td align="center" width="20%">
-<img src="https://github.com/ualfsp323.png" width="80" style="border-radius:50%"/><br/>
-<strong>Franco Sergio Pereyra</strong><br/>
-<sub>📝 Notas Diarias, 🎯 Objetivos </sub><br/>
-<a href="https://github.com/ualfsp323">@ualfsp323</a>
-</td>
-<td align="center" width="20%">
-<img src="https://github.com/ifm562-ual.png" width="80" style="border-radius:50%"/><br/>
-<strong>Ismael Fernández Méndez</strong><br/>
-<sub>🗂️ Categorías, 🚬 Adicciones</sub><br/>
-<a href="https://github.com/ifm562-ual">@ifm562-ual</a>
-</td>
-<td align="center" width="20%">
+<td align="center" width="50%">
 <img src="https://github.com/dgp336.png" width="80" style="border-radius:50%"/><br/>
 <strong>David Granados Pérez</strong><br/>
 <sub>🔥 Rachas, 👨‍🦯 Accesibilidad</sub><br/>
 <a href="https://github.com/dgp336">@dgp336</a>
-</td>
-<td align="center" width="20%">
-<img src="https://github.com/ualjfr498.png" width="80" style="border-radius:50%"/><br/>
-<strong>Juan José Fernández Requena</strong><br/>
-<sub>📊 Estadísticas, 🏆 Logros</sub><br/>
-<a href="https://github.com/jgm847">@ualjfr498</a>
-</td>
-<td align="center" width="20%">
-<img src="https://github.com/dcf313.png" width="80" style="border-radius:50%"/><br/>
-<strong></strong><br/>
-<sub>🔔 Recordatorios, 🟢⚡ Hábitos Comodín</sub><br/>
-<a href="https://github.com/dcf313">@dcf313</a>
 </td>
 </tr>
 </table>
@@ -85,88 +61,85 @@ Esta aplicación forma parte de la asignatura Línea de Productos Software del g
 
 <table>
 <tr>
-<td align="center" width="25%">
+<td align="center" width="50%">
 <img src="https://cdn-icons-png.flaticon.com/512/3767/3767084.png" width="60"/><br/>
 <strong>Gestión de Hábitos</strong><br/>
 <sub>Crea tus hábitos</sub>
 </td>
-<td align="center" width="25%">
+<td align="center" width="50%">
 <img src="https://i.redd.it/streak-flame-updated-v0-3n46sx7a0e9b1.png?width=283&format=png&auto=webp&s=74253ccd745fc4cf470e99c589921ce4d83c4d10" width="60"/><br/>
 <strong>Rachas</strong><br/>
 <sub>Motívate con tu propio progreso</sub>
 </td>
-<td align="center" width="25%">
+</tr>
+<tr>
+<td align="center" width="50%">
+<img src="https://rushplumbingseattle.com/images/ada-icon.png" width="60"/><br/>
+<strong>Accesibilidad</strong><br/>
+<sub>Funciones que facilitan el uso a todos los usuarios</sub>
+</td>
+<td align="center" width="50%">
 <img src="https://cdn-icons-png.flaticon.com/512/1792/1792931.png" width="60"/><br/>
 <strong>Recordatorios</strong><br/>
 <sub>La aplicación te recuerda lo que se te olvida</sub>
-</td>
-<td align="center" width="25%">
-<img src="https://cdn-icons-png.flaticon.com/512/5136/5136407.png" width="60"/><br/>
-<strong>Estadísticas</strong><br/>
-<sub>Visualiza tu progreso con gráficos detallados</sub>
-</td>
-</tr>
-<tr>
-<td align="center" width="20%">
-<a href="#adicciones">
-<img src="https://freesvg.org/img/drugs2.png" width="60"/><br/>
-<strong>Adicciones</strong></a><br/>
-<sub>Controla hábitos que quieres reducir o eliminar</sub>
-</td>
-<td align="center" width="20%">
-<a href="#logros">
-<img src="https://cdn.iconscout.com/icon/free/png-256/free-cup-icon-svg-download-png-124193.png" width="60"/><br/>
-<strong>Logros</strong></a><br/>
-<sub>Premios virtuales por mantener tu constancia</sub>
-</td>
-<td align="center" width="20%">
-<a href="#objetivos">
-<img src="https://freesvg.org/img/Anonymous_target_with_arrow.png" width="60"/><br/>
-<strong>Objetivos</strong></a><br/>
-<sub>Establece metas a corto y largo plazo</sub>
-</td>
-<td align="center" width="20%">
-<a href="#habitos-comodin">
-<img src="https://steadfastelec.com/wp-content/uploads/2024/07/electrical-installations.png" width="60"/><br/>
-<strong>Hábitos Comodín</strong></a><br/>
-<sub>Pequeños hábitos rápidos para no perder la rutina</sub>
-</td>
-<td align="center" width="20%">
-<a href="#categorias">
-<img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/distribution.png" width="60"/><br/>
-<strong>Categorías</strong></a><br/>
-<sub>Organiza tus hábitos por tipo o prioridad</sub>
-</td>
-<td align="center" width="20%">
-<a href="#accesibilidad">
-<img src="https://rushplumbingseattle.com/images/ada-icon.png" width="60"/><br/>
-<strong>Accesibilidad</strong></a><br/>
-<sub>Funciones que facilitan el uso a todos los usuarios</sub>
 </td>
 </tr>
 </table>
 
 ---
 
+## 🔥 Funcionamiento Técnico de las Rachas
+
+Las rachas (Streaks) son un sistema de motivación que rastrea la consistencia en la realización de hábitos. Cada vez que un usuario completa un hábito en el día esperado, la racha se incrementa.
+
+### Modelo de Datos
+- **Streak.swift**: Modelo SwiftData que almacena el ID del hábito, el conteo actual y la última actualización.
+- Persistencia: Utiliza SwiftData para almacenar rachas de forma persistente.
+
+### Vista de Badge
+- **StreakBadgeView.swift**: Vista que muestra un ícono de llama con el número de días consecutivos.
+- Animaciones: Efectos de rebote en el ícono cuando la racha aumenta.
+- Colores: Fondo naranja para rachas normales, rojo para rachas "calientes" (>4 días).
+
+### Lógica de Actualización
+- Se actualiza automáticamente al completar hábitos.
+- Reinicia si se rompe la secuencia diaria.
+
+## 👨‍🦯 Sistema de Accesibilidad
+
+El sistema de accesibilidad incluye modos de tema y ajustes para usuarios con daltonismo.
+
+### Gestión de Temas
+- **UserPreferences.swift**: Gestiona preferencias de UI, incluyendo tema (claro/oscuro/sistema), intensidad de modo noche y tipo de daltonismo.
+- Temas: Claro, Oscuro, Sistema (sigue el dispositivo).
+- Colores de acento: Azul, Rojo, Verde, etc.
+
+### Modo Noche
+- Overlay naranja semitransparente para reducir la luz azul.
+- Intensidad ajustable por el usuario.
+
+### Soporte para Daltónicos
+- Filtros de color: Rotación de tono para Protanopía y Deuteranopía.
+- Reducción de saturación para mejorar legibilidad.
+
+### Implementación
+- **AccessibilityFilterModifier.swift**: ViewModifier que aplica filtros de accesibilidad a toda la app.
+- Integración: Se aplica globalmente usando el modifier en la raíz de la vista.
+
+---
+
 ## 🗺️ Roadmap
 
-- [] **v1.0** - Categorías, Adicciones, Rachas, Estadísticas, Notas Diarias, Objetivos, Hábitos Comodín, Logros y Recordatorios
+- [] **v1.0** - Core de hábitos, Rachas, Accesibilidad
 
 ## 🎯 Funcionalidades por Versión
 
 | Funcionalidad          | Básica | Premium |
 | ---------------------- | --- | ----- |
 | Hábitos               | ✅  | ✅    |
-| Notas Diarias          | ✅  | ✅    |
-| Objetivos              | ❌  | ✅    |
-| Rachas    | ❌  | ✅    |
-| Accesibilidad   | ❌  | ✅    |
-| Estadísticas | ❌  | ✅    |
-| Categorías    | ✅  | ✅    |
-| Adicciones    | ❌  | ✅    |
-| Logros    | ❌  | ✅    |
-| Hábitos Comodín    | ❌  | ✅    |
-| Recordatorios    | ✅  | ✅    |
+| Rachas                 | ✅  | ✅    |
+| Accesibilidad          | ✅  | ✅    |
+| Recordatorios          | ✅  | ✅    |
 
 ## 🏗️ Arquitectura del Proyecto
 
@@ -177,10 +150,10 @@ HabitApp/
 │   ├── Models/          # Habit.swift
 │   ├── ViewModels/      # HabitListViewModel.swift
 │   └── Views/           # Vistas de hábitos
-├── Features/           # Funcionalidades que no son de hábitos
-│   ├── DailyNotes/      # Sistema de notas
-│   ├── Goals/           # Objetivos (solo iOS)
-│   └── ...
+├── Features/           # Funcionalidades específicas
+│   ├── Streaks/         # Sistema de rachas
+│   ├── Accessibility/   # Filtros de accesibilidad
+│   └── Settings/        # Configuraciones de usuario
 ├── Infraestructure/
 │   └── Plugins/         # Sistema de plugins
 |   └── Persistence/     # Implementación de persistencia
