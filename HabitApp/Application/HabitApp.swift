@@ -56,19 +56,7 @@ struct HabitApp: App {
                     .tabItem {
                         Label("Hábitos", systemImage: "checklist")
                     }
-                CategoryListView(storageProvider: storageProvider)
-                    .tabItem {
-                        Label("Categorías", systemImage: "folder")
-                    }
-                DailyNotesView(storageProvider: storageProvider)
-                    .tabItem {
-                        Label("Notas", systemImage: "note.text")
-                    }
-                GoalsView(storageProvider: storageProvider)
-                    .tabItem {
-                        Label("Objetivos", systemImage: "target")
-                    }
-                 StatisticsView()             
+                StatisticsView()             
                     .tabItem {
                         Label("Estadísticas", systemImage: "chart.bar")
                     }
@@ -91,15 +79,6 @@ struct HabitApp: App {
                     NavigationLink(value: "habitos") {
                         Label("Habitos", systemImage: "checklist")
                     }
-                    NavigationLink(value: "notas") {
-                        Label("Notas Diarias", systemImage: "note.text")
-                    }
-                    NavigationLink(value: "rachas") {
-                        Label("Rachas", systemImage: "flame")
-                    }
-                    NavigationLink(value: "objetivos") {
-                        Label("Objetivos", systemImage: "target")
-                    }
                     NavigationLink(value: "estadisticas") {
                         Label("Estadísticas", systemImage: "chart.bar")
                     }
@@ -109,34 +88,17 @@ struct HabitApp: App {
                     NavigationLink(value: "ajustes") {
                         Label("Ajustes", systemImage: "gearshape")
                     }
-                    //.task {
-                    //    storageProvider.resetStorage()
-                    //}
-                    NavigationLink(value: "categorias") {
-                        Label("Categorias", systemImage: "folder")
-                    }
-                    //NavigationLink(value: "adicciones") {
-                   //     Label("Adicciones", systemImage: "bandage")
-                    //}
                 }
             } detail: {
                 switch selectedDetailView {
                 case "habitos":
                     HabitListView(storageProvider: storageProvider)
-                case "notas":
-                    DailyNotesView(storageProvider: storageProvider)
-                case "objetivos":
-                    GoalsView(storageProvider: storageProvider)
                 case "estadisticas":
                     StatisticsView()
                 case "logros":
                     AchievementsListView(storageProvider: storageProvider)
                 case "ajustes":
                     SettingsView()
-                case "categorias":
-                    CategoryListView(storageProvider: storageProvider)
-                //case "rachas":
-                    //StreakBadgeView()
                 default:
                     Text("Seleccione una opción")
                 }

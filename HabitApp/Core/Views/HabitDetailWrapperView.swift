@@ -128,12 +128,12 @@ extension HabitDetailWrapper {
                             Toggle("Activar recordatorio", isOn: $hasReminder)
                                 .onChange(of: hasReminder) { newValue in
                                     if newValue {
-                                        NotificationManager.shared.requestAuthorization { granted in
-                                            if !granted {
-                                                print("Permiso denegado")
-                                            }
-                                            
-                                        }
+                                        // NotificationManager removed
+                                        // NotificationManager.shared.requestAuthorization { granted in
+                                        //     if !granted {
+                                        //         print("Permiso denegado")
+                                        //     }
+                                        // }
                                     }
                                 }
                             
@@ -317,11 +317,12 @@ extension HabitDetailWrapper {
                     Toggle("Activar recordatorio", isOn: $hasReminder)
                         .onChange(of: hasReminder) { newValue in
                             if newValue {
-                                NotificationManager.shared.requestAuthorization { granted in
-                                    if !granted {
-                                        print("Permiso denegado")
-                                    }
-                                }
+                                // NotificationManager removed
+                                // NotificationManager.shared.requestAuthorization { granted in
+                                //     if !granted {
+                                //         print("Permiso denegado")
+                                //     }
+                                // }
                             }
                         }
                     

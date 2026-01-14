@@ -11,7 +11,6 @@ struct HabitRowView: View {
     
     @State private var showingEditSheet = false
     @State private var showingDeleteAlert = false
-    @State private var showingNotesSheet = false
     @Environment(\.modelContext) private var modelContext 
     @EnvironmentObject private var userPreferences: UserPreferences
     
@@ -35,17 +34,9 @@ struct HabitRowView: View {
             
             //  Información del hábito
             VStack(alignment: .leading) {
-                HStack(alignment: .center, spacing: 8) {
-                    Text(habit.title)
-                        .strikethrough(habit.isCompletedForDate(date))
-                        .foregroundColor(habit.isCompletedForDate(date) ? .gray : .primary)
-                    
-                    // 🔥 Badge de rachas
-                    if userPreferences.enableStreaks {
-                        StreakBadgeView(habitId: habit.id)
-                            .animation(.spring(), value: habit.doneDatesString)
-                    }
-                }
+                Text(habit.title)
+                    .strikethrough(habit.isCompletedForDate(date))
+                    .foregroundColor(habit.isCompletedForDate(date) ? .gray : .primary)
                 
                 if userPreferences.showDueDates, let dueDate = habit.dueDate {
                     Text("Vence: \(dueDate.formatted(date: .abbreviated, time: .shortened))")
@@ -61,16 +52,6 @@ struct HabitRowView: View {
             }
             
             Spacer()
-            
-            //  Navegación a notas (iOS)
-            NavigationLink {
-                HabitNotesView(habit: habit, currentDate: date, storageProvider: storageProvider)
-            } label: {
-                Image(systemName: "note.text")
-                    .foregroundColor(.blue)
-                    .font(.title3)
-            }
-            .buttonStyle(.plain)
             
             //  Botón para editar
             Button {
@@ -119,17 +100,9 @@ struct HabitRowView: View {
             
             //  Información del hábito
             VStack(alignment: .leading) {
-                HStack(alignment: .center, spacing: 8) {
-                    Text(habit.title)
-                        .strikethrough(habit.isCompletedForDate(date))
-                        .foregroundColor(habit.isCompletedForDate(date) ? .gray : .primary)
-                    
-                    // 🔥 Badge de rachas
-                    if userPreferences.enableStreaks {
-                        StreakBadgeView(habitId: habit.id)
-                            .animation(.spring(), value: habit.doneDatesString)
-                    }
-                }
+                Text(habit.title)
+                    .strikethrough(habit.isCompletedForDate(date))
+                    .foregroundColor(habit.isCompletedForDate(date) ? .gray : .primary)
                 
                 if userPreferences.showDueDates, let dueDate = habit.dueDate {
                     Text("Vence: \(dueDate.formatted(date: .abbreviated, time: .shortened))")
@@ -145,16 +118,6 @@ struct HabitRowView: View {
             }
             
             Spacer()
-            
-            //  Botón para notas (macOS - usa sheet)
-            Button {
-                showingNotesSheet = true
-            } label: {
-                Image(systemName: "note.text")
-                    .foregroundColor(.blue)
-                    .font(.title3)
-            }
-            .buttonStyle(.plain)
             
             //  Botón para editar
             Button {
@@ -180,9 +143,6 @@ struct HabitRowView: View {
         }
         .sheet(isPresented: $showingEditSheet) {
             HabitDetailWrapper(viewModel: viewModel, habit: habit, isNew: false)
-        }
-        .sheet(isPresented: $showingNotesSheet) {
-            HabitNotesView(habit: habit, currentDate: date, storageProvider: storageProvider)
         }
         .alert("¿Eliminar hábito?", isPresented: $showingDeleteAlert) {
             Button("Eliminar", role: .destructive) {

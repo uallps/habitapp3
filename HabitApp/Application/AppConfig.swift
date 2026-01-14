@@ -14,12 +14,7 @@ class AppConfig: ObservableObject {
         private lazy var swiftDataStorageProvider: SwiftDataStorageProvider = {
             // Obtener modelos base
             var schemas: [any PersistentModel.Type] = [
-                Habit.self, 
-                Category.self, 
-                Addiction.self, 
-                DailyNote.self, 
-                Goal.self, 
-                Milestone.self,
+                Habit.self,
                 Achievement.self  // Achievements - debe estar siempre en el schema
             ]
             
@@ -44,23 +39,6 @@ class AppConfig: ObservableObject {
         
         @AppStorage("storageType")
         var storageType: StorageType = .swiftData
-        
-        @AppStorage("showCategories")
-        static var showCategories: Bool = true
-        @AppStorage("showDueDates")
-        static var showDueDates: Bool = true
-        
-        @AppStorage("showPriorities")
-        static var showPriorities: Bool = true
-        
-        @AppStorage("enableReminders")
-        static var enableReminders: Bool = true
-    
-        @AppStorage("showGoals")
-        static var enableGoals: Bool = true
-    
-        @AppStorage("showStreaks")
-        static var enableStreaks: Bool = true
 
     init() {
         // Descubrir y registrar plugins automáticamente
