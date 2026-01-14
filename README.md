@@ -10,10 +10,10 @@
 
 ---
 
-## 🌐 Choose your language / Elige tu idioma
+## 🌐 Choose your language
 
-- [English](README_en.md)
-- [Español](README_es.md)
+- [English](docs/README_en.md)
+- [Español](docs/README_es.md)
 
 ---
 
