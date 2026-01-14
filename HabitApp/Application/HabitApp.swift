@@ -45,7 +45,7 @@ struct HabitApp: App {
             AppView(id: "notas", title: "Notas", icon: "note.text", isEnabled: userPreferences.enableDailyNotes),
             AppView(id: "objetivos", title: "Objetivos", icon: "target", isEnabled: userPreferences.enableGoals),
             AppView(id: "estadisticas", title: "Estadísticas", icon: "chart.bar", isEnabled: userPreferences.enableStatistics),
-            AppView(id: "ajustes", title: "Ajustes", icon: "gearshape", isEnabled: true)
+            AppView(id: "ajustes", title: "Ajustes", icon: "gearshape", isEnabled: userPreferences.enableSettings)
         ].filter { $0.isEnabled }
     }
     

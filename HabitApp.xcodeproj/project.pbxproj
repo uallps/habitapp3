@@ -29,7 +29,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		354A31AD2F17891E005237E6 /* HabitApp copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HabitApp copy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		354A31AD2F17891E005237E6 /* HabitApp Premium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HabitApp Premium.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		354A31B22F178DD1005237E6 /* BasicVersionConfig.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = BasicVersionConfig.xcconfig; sourceTree = "<group>"; };
 		354A31B42F178E42005237E6 /* PremiumVersionConfig.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = PremiumVersionConfig.xcconfig; sourceTree = "<group>"; };
 		35944D032F05A47D002892A5 /* HabitAppUnitTestsMacOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HabitAppUnitTestsMacOS.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -39,7 +39,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		354A31AE2F17891E005237E6 /* Exceptions for "HabitApp" folder in "HabitApp copy" target */ = {
+		354A31AE2F17891E005237E6 /* Exceptions for "HabitApp" folder in "HabitApp Premium" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Application/AppConfig.swift,
@@ -133,7 +133,7 @@
 				Resources/emoji.txt,
 				"Utils/   DailyNotesStyle+Extensions.swift",
 			);
-			target = 354A31A62F17891E005237E6 /* HabitApp copy */;
+			target = 354A31A62F17891E005237E6 /* HabitApp Premium */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -151,7 +151,7 @@
 		35EDF0D22E9FF1C000D50221 /* HabitApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				354A31AE2F17891E005237E6 /* Exceptions for "HabitApp" folder in "HabitApp copy" target */,
+				354A31AE2F17891E005237E6 /* Exceptions for "HabitApp" folder in "HabitApp Premium" target */,
 			);
 			path = HabitApp;
 			sourceTree = "<group>";
@@ -209,7 +209,7 @@
 				35EDF0D02E9FF1C000D50221 /* HabitApp.app */,
 				35EDF0E72E9FF1C300D50221 /* HabitAppUITests.xctest */,
 				35944D032F05A47D002892A5 /* HabitAppUnitTestsMacOS.xctest */,
-				354A31AD2F17891E005237E6 /* HabitApp copy.app */,
+				354A31AD2F17891E005237E6 /* HabitApp Premium.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -217,9 +217,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		354A31A62F17891E005237E6 /* HabitApp copy */ = {
+		354A31A62F17891E005237E6 /* HabitApp Premium */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 354A31AA2F17891E005237E6 /* Build configuration list for PBXNativeTarget "HabitApp copy" */;
+			buildConfigurationList = 354A31AA2F17891E005237E6 /* Build configuration list for PBXNativeTarget "HabitApp Premium" */;
 			buildPhases = (
 				354A31A72F17891E005237E6 /* Sources */,
 				354A31A82F17891E005237E6 /* Frameworks */,
@@ -232,11 +232,11 @@
 			fileSystemSynchronizedGroups = (
 				35EDF0D22E9FF1C000D50221 /* HabitApp */,
 			);
-			name = "HabitApp copy";
+			name = "HabitApp Premium";
 			packageProductDependencies = (
 			);
 			productName = HabitApp;
-			productReference = 354A31AD2F17891E005237E6 /* HabitApp copy.app */;
+			productReference = 354A31AD2F17891E005237E6 /* HabitApp Premium.app */;
 			productType = "com.apple.product-type.application";
 		};
 		35944D022F05A47D002892A5 /* HabitAppUnitTestsMacOS */ = {
@@ -344,7 +344,7 @@
 				35EDF0CF2E9FF1C000D50221 /* HabitApp */,
 				35EDF0E62E9FF1C300D50221 /* HabitAppUITests */,
 				35944D022F05A47D002892A5 /* HabitAppUnitTestsMacOS */,
-				354A31A62F17891E005237E6 /* HabitApp copy */,
+				354A31A62F17891E005237E6 /* HabitApp Premium */,
 			);
 		};
 /* End PBXProject section */
@@ -763,7 +763,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		354A31AA2F17891E005237E6 /* Build configuration list for PBXNativeTarget "HabitApp copy" */ = {
+		354A31AA2F17891E005237E6 /* Build configuration list for PBXNativeTarget "HabitApp Premium" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				354A31AB2F17891E005237E6 /* Debug */,

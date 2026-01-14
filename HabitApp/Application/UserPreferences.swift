@@ -3,35 +3,6 @@ import Combine
 
 // Responsabilidad: preferencias de UI y características persistidas en UserDefaults.
 final class UserPreferences: ObservableObject {
-    // #if HABIT_FEATURE
-    // @AppStorage("showDueDates") private var storedShowDueDates: Bool = true
-    // @AppStorage("showPriorities") private var storedShowPriorities: Bool = true
-    // @AppStorage("enableReminders") private var storedEnableReminders: Bool = true
-    // #else
-    // @AppStorage("showDueDates") private var storedShowDueDates: Bool = false
-    // @AppStorage("showPriorities") private var storedShowPriorities: Bool = false
-    // @AppStorage("enableReminders") private var storedEnableReminders: Bool = false
-    // #endif
-    // #if STREAK_FEATURE
-    // @AppStorage("enableStreaks") private var storedEnableStreaks: Bool = true
-    // #else
-    // @AppStorage("enableStreaks") private var storedEnableStreaks: Bool = false
-    // #endif
-    // #if STATISTIC_FEATURE
-    // @AppStorage("enableStatistics") private var storedEnableStatistics: Bool = true
-    // #else
-    // @AppStorage("enableStatistics") private var storedEnableStatistics: Bool = false
-    // #endif
-    // #if 
-    // @AppStorage("enableHabits") private var storedEnableHabits: Bool = true
-    // @AppStorage("enableGoals") private var storedEnableGoals: Bool = true
-    // @AppStorage("enableAddictions") private var storedEnableAddictions: Bool = true
-    // @AppStorage("enableCategories") private var storedEnableCategories: Bool = true
-    // @AppStorage("appTheme") private var storedAppTheme: Int = 0
-    // @AppStorage("daltonismType") var daltonismType: Int = 0
-    // @AppStorage("nightModeIntensity") var nightModeIntensity: Double = 0.0
-    // @AppStorage("accentColorName") var accentColorName: String = "Blue"
-    // @AppStorage("enableDailyNotes") private var storedEnableDailyNotes: Bool = true
     
 #if HABIT_FEATURE
 @AppStorage("showDueDates") private var storedShowDueDates: Bool = true
@@ -80,11 +51,13 @@ final class UserPreferences: ObservableObject {
 #endif
 
 #if SETTING_FEATURE
+@AppStorage("enableSettings") private var enableSettings: Bool = true
 @AppStorage("appTheme") private var storedAppTheme: Int = 0
 @AppStorage("daltonismType") var daltonismType: Int = 0
 @AppStorage("nightModeIntensity") var nightModeIntensity: Double = 0.0
 @AppStorage("accentColorName") var accentColorName: String = "Blue"
 #else
+@AppStorage("enableSettings") private var storedEnableSettings: Bool = false
 @AppStorage("appTheme") private var storedAppTheme: Int = 0
 @AppStorage("daltonismType") var daltonismType: Int = 0
 @AppStorage("nightModeIntensity") var nightModeIntensity: Double = 0.0
@@ -130,6 +103,11 @@ final class UserPreferences: ObservableObject {
     var enableGoals: Bool {
         get { storedEnableGoals }
         set { objectWillChange.send(); storedEnableGoals = newValue }
+    }
+    
+    var enableSettings: Bool {
+        get { storedEnableSettings }
+        set { objectWillChange.send(); storedEnableSettings = newValue }
     }
     
     var enableCategories: Bool {
