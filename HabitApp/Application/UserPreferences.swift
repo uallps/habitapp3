@@ -76,6 +76,12 @@ final class UserPreferences: ObservableObject {
 @AppStorage("enableAchievements") private var storedEnableAchievements: Bool = false
 #endif
 
+#if WILD_CARD_FEATURE
+@AppStorage("enableWildcard") private var storedEnableWildcard: Bool = true
+#else
+@AppStorage("enableWildcard") private var storedEnableWildcard: Bool = false
+#endif
+
     
     var appTheme: Int {
         get { storedAppTheme }
@@ -159,5 +165,10 @@ final class UserPreferences: ObservableObject {
     var enableAddictions: Bool {
         get { storedEnableAddictions }
         set { objectWillChange.send(); storedEnableAddictions = newValue }
+    }
+    
+    var enableWildcard: Bool {
+        get { storedEnableWildcard }
+        set { objectWillChange.send(); storedEnableWildcard = newValue }
     }
 }

@@ -4,9 +4,36 @@ import Combine
 
 final class HabitListViewModel: ObservableObject {
     private let storageProvider: StorageProvider
+    private let wildcardProvider: WildcardHabitProvider?
     
-    init(storageProvider: StorageProvider) {
+    init(storageProvider: StorageProvider, wildcardProvider: WildcardHabitProvider? = nil) {
         self.storageProvider = storageProvider
+        self.wildcardProvider = wildcardProvider
+        
+        // Ejecutar limpieza de hábitos expirados al iniciar
+        Task {
+            if let context = SwiftDataContext.shared,
+               let provider = wildcardProvider {
+                try? provider.cleanupExpiredHabits(context: context)
+            }
+        }
+    }
+    
+    func unlockWildcardHabit() {
+        guard let provider = wildcardProvider,
+              let context = SwiftDataContext.shared else { return }
+        
+        do {
+            if let newHabit = try provider.getWildcardHabit(context: context) {
+                context.insert(newHabit)
+                try context.save()
+                print("Hábito comodín desbloqueado: \(newHabit.title)")
+            } else {
+                print("No hay hábitos comodín disponibles para hoy")
+            }
+        } catch {
+            print("Error al desbloquear hábito comodín: \(error)")
+        }
     }
     
     func addHabit(title: String,
@@ -29,8 +56,7 @@ final class HabitListViewModel: ObservableObject {
                 HabitDataObserverManager.shared.notifyDataChanged(
                     taskId: habit.id,
                     title: habit.title,
-                    dueDate: reminderDate
-                )
+                    dueDate: reminderDate)
             }
         }
         

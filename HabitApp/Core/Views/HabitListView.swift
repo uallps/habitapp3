@@ -3,6 +3,11 @@ import SwiftData
 
 struct HabitListView: View {
     let storageProvider: StorageProvider
+    #if WILD_CARD_FEATURE
+    let wildcardService = WildcardHabitService()
+    #else
+    let wildcardService: WildcardHabitService? = nil
+    #endif
     @Query(sort: \Habit.createdAt) private var habits: [Habit]
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var userPreferences: UserPreferences
@@ -14,7 +19,16 @@ struct HabitListView: View {
     
     init(storageProvider: StorageProvider) {
         self.storageProvider = storageProvider
-        self._viewModel = StateObject(wrappedValue: HabitListViewModel(storageProvider: storageProvider))
+        let wildcardProvider: WildcardHabitProvider?
+        #if WILD_CARD_FEATURE
+        wildcardProvider = WildcardHabitService()
+        #else
+        wildcardProvider = nil
+        #endif
+        self._viewModel = StateObject(wrappedValue: HabitListViewModel(
+            storageProvider: storageProvider,
+            wildcardProvider: wildcardProvider
+        ))
     }
 
     var body: some View {
@@ -201,12 +215,28 @@ extension HabitListView {
             .navigationTitle("Hábitos")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        showingNewHabitSheet = true
-                    } label: {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.title3)
-                            .foregroundColor(userPreferences.accentColor)
+                    HStack(spacing: 16) {
+                        #if WILD_CARD_FEATURE
+                        if userPreferences.enableWildcard {
+                            Button {
+                                withAnimation {
+                                    viewModel.unlockWildcardHabit()
+                                }
+                            } label: {
+                                Image(systemName: "dice.fill")
+                                    .font(.title3)
+                                    .foregroundColor(.purple)
+                            }
+                        }
+                        #endif
+                        
+                        Button {
+                            showingNewHabitSheet = true
+                        } label: {
+                            Image(systemName: "plus.circle.fill")
+                                .font(.title3)
+                                .foregroundColor(userPreferences.accentColor)
+                        }
                     }
                 }
             }
@@ -359,11 +389,26 @@ extension HabitListView {
             .navigationSplitViewColumnWidth(min: 280, ideal: 350, max: 450)
             .toolbar {
                 ToolbarItem {
-                    Button {
-                        showingNewHabitSheet = true
-                    } label: {
-                        Image(systemName: "plus.circle.fill")
-                            .foregroundColor(userPreferences.accentColor)
+                    HStack {
+                        #if WILD_CARD_FEATURE
+                        if userPreferences.enableWildcard {
+                            Button {
+                                withAnimation {
+                                    viewModel.unlockWildcardHabit()
+                                }
+                            } label: {
+                                Image(systemName: "dice.fill")
+                                    .foregroundColor(.purple)
+                            }
+                        }
+                        #endif
+                        
+                        Button {
+                            showingNewHabitSheet = true
+                        } label: {
+                            Image(systemName: "plus.circle.fill")
+                                .foregroundColor(userPreferences.accentColor)
+                        }
                     }
                 }
             }
