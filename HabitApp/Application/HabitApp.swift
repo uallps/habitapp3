@@ -11,7 +11,8 @@ struct AppView: Identifiable {
 @main
 struct HabitApp: App {
     private var storageProvider: StorageProvider
-    @State private var selectedDetailView: String?
+    @State private var selectedDetailView: String? = "habitos"
+    @State private var columnVisibility: NavigationSplitViewVisibility = .all
     let modelContainer: ModelContainer
     
     @StateObject private var userPreferences = UserPreferences()
@@ -45,37 +46,75 @@ struct HabitApp: App {
             AppView(id: "notas", title: "Notas", icon: "note.text", isEnabled: userPreferences.enableDailyNotes),
             AppView(id: "objetivos", title: "Objetivos", icon: "target", isEnabled: userPreferences.enableGoals),
             AppView(id: "estadisticas", title: "Estadísticas", icon: "chart.bar", isEnabled: userPreferences.enableStatistics),
-            AppView(id: "logros", title: "Logros", icon: "star.fill", isEnabled: userPreferences.enableAchievements),
-            AppView(id: "ajustes", title: "Ajustes", icon: "gearshape", isEnabled: userPreferences.enableSettings)
+            AppView(id: "logros", title: "Logros", icon: "star.fill", isEnabled: userPreferences.enableAchievements)
         ].filter { $0.isEnabled }
+    }
+    
+    private var mainViews: [AppView] {
+        availableViews
+    }
+    
+    private var settingsView: AppView {
+        AppView(id: "ajustes", title: "Ajustes", icon: "gearshape", isEnabled: userPreferences.enableSettings)
     }
     
     var body: some Scene {
         WindowGroup {
             Group {
 #if os(iOS)
-                TabView {
-                    ForEach(availableViews) { view in
-                        viewContent(for: view.id)
-                            .tabItem { Label(view.title, systemImage: view.icon) }
+                NavigationSplitView(columnVisibility: $columnVisibility) {
+                    List(selection: $selectedDetailView) {
+                        Section {
+                            if settingsView.isEnabled {
+                                NavigationLink(value: settingsView.id) {
+                                    Label(settingsView.title, systemImage: settingsView.icon)
+                                        .font(.headline)
+                                }
+                            }
+                        }
+                        
+                        Section("Funciones") {
+                            ForEach(mainViews) { view in
+                                NavigationLink(value: view.id) {
+                                    Label(view.title, systemImage: view.icon)
+                                }
+                            }
+                        }
+                    }
+                    .listStyle(.sidebar)
+                    .navigationTitle("HabitApp")
+                    .navigationBarTitleDisplayMode(.large)
+                } detail: {
+                    let currentId = selectedDetailView ?? "habitos"
+                    NavigationStack {
+                        viewContent(for: currentId)
+                            .navigationTitle(getViewTitle(for: currentId))
+                            .navigationBarTitleDisplayMode(.large)
                     }
                 }
 #else
                 NavigationSplitView {
                     List(selection: $selectedDetailView) {
-                        ForEach(availableViews) { view in
-                            NavigationLink(value: view.id) {
-                                Label(view.title, systemImage: view.icon)
+                        Section {
+                            if settingsView.isEnabled {
+                                NavigationLink(value: settingsView.id) {
+                                    Label(settingsView.title, systemImage: settingsView.icon)
+                                }
+                            }
+                        }
+                        
+                        Section("Funciones") {
+                            ForEach(mainViews) { view in
+                                NavigationLink(value: view.id) {
+                                    Label(view.title, systemImage: view.icon)
+                                }
                             }
                         }
                     }
                 } detail: {
-                    let currentId = selectedDetailView ?? availableViews.first?.id
-                    if let currentId {
-                        viewContent(for: currentId)
-                    } else {
-                        Text("Seleccione una opción")
-                    }
+                    let currentId = selectedDetailView ?? "habitos"
+                    viewContent(for: currentId)
+                        .navigationTitle(getViewTitle(for: currentId))
                 }
 #endif
             }
@@ -101,5 +140,12 @@ struct HabitApp: App {
         case "ajustes": SettingsView()
         default: Text("Vista no encontrada")
         }
+    }
+    
+    private func getViewTitle(for id: String) -> String {
+        if id == settingsView.id {
+            return settingsView.title
+        }
+        return mainViews.first(where: { $0.id == id })?.title ?? ""
     }
 }
