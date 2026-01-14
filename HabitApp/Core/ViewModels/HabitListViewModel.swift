@@ -1,6 +1,7 @@
 import Foundation
 import SwiftData
 import Combine
+import UserNotifications
 
 final class HabitListViewModel: ObservableObject {
     private let storageProvider: StorageProvider
@@ -51,6 +52,10 @@ final class HabitListViewModel: ObservableObject {
         
         Task {
             try await storageProvider.addHabit(habit: habit)
+            // Programar notificaciones si hay recordatorio
+            if reminderDate != nil {
+                NotificationManager.shared.scheduleNotification(for: habit)
+            }
             //  Notificar plugins si hay fecha de recordatorio
             if let reminderDate = reminderDate {
                 HabitDataObserverManager.shared.notifyDataChanged(
@@ -66,6 +71,11 @@ final class HabitListViewModel: ObservableObject {
         Task {
             do {
                 try await storageProvider.saveContext()
+                // Actualizar notificaciones
+                NotificationManager.shared.removeHabitNotifications(for: habit)
+                if habit.reminderDate != nil {
+                    NotificationManager.shared.scheduleNotification(for: habit)
+                }
             } catch {
                 // Error updating habit
             }
@@ -104,6 +114,7 @@ final class HabitListViewModel: ObservableObject {
     
     func deleteHabit(_ habit: Habit) {
         Task {
+            NotificationManager.shared.removeHabitNotifications(for: habit)
             try await storageProvider.deleteHabit(habit: habit)
         }
     }
