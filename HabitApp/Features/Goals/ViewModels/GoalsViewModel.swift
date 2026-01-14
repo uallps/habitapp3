@@ -34,9 +34,9 @@ final class GoalsViewModel: ObservableObject {
         Task {
             do {
                 try await storageProvider.deleteGoal(goal)
-                print("✅ Objetivo eliminado correctamente")
+                print("Objetivo eliminado correctamente")
             } catch {
-                print("❌ Error deleting goal: \(error)")
+                print("Error deleting goal: \(error)")
             }
         }
     }}

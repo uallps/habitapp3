@@ -41,7 +41,7 @@ final class HabitListViewModel: ObservableObject {
             do {
                 try await storageProvider.saveContext()
             } catch {
-                print(" Error updating habit: \(error)")
+                // Error updating habit
             }
         }
 
@@ -51,21 +51,14 @@ final class HabitListViewModel: ObservableObject {
         Task {
             let wasCompleted = habit.isCompletedForDate(date)
             
-            print("\n🔄 toggleCompletion - Hábito: '\(habit.title)'")
-            print("  📅 Fecha: \(date)")
-            print("  ✅ Estaba completado: \(wasCompleted)")
-            
             if wasCompleted {
                 habit.markAsIncomplete(for: date)
-                print("  ❌ Marcado como incompleto")
             } else {
                 habit.markAsCompleted(for: date)
-                print("  ✅ Marcado como completado")
             }
             
             do {
                 try await storageProvider.saveContext()
-                print("  💾 Guardado - Total días completados: \(habit.doneDates.count)")
                 
                 // Notificar a plugins observadores
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
@@ -77,7 +70,7 @@ final class HabitListViewModel: ObservableObject {
                 }
                 
             } catch {
-                print("❌ Error saving habit: \(error)")
+                print("Error saving habit: \(error)")
             }
         }
 

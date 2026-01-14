@@ -48,7 +48,7 @@ class SwiftDataStorageProvider: StorageProvider {
             SwiftDataContext.shared = self.context
             // Guardar como singleton para reutilizar el MISMO container
             SwiftDataStorageProvider._shared = self
-            print("✅ SwiftDataContext.shared inicializado con mainContext NUEVO")
+            print("SwiftDataContext.shared inicializado con mainContext NUEVO")
 
             // Debug: mostrar conteos al iniciar para confirmar persistencia
             do {
@@ -56,14 +56,14 @@ class SwiftDataStorageProvider: StorageProvider {
                 let notesCount = try context.fetch(FetchDescriptor<DailyNote>()).count
                 let categoriesCount = try context.fetch(FetchDescriptor<Category>()).count
                 let addictionsCount = try context.fetch(FetchDescriptor<Addiction>()).count
-                print("📂 Conteos al iniciar -> Habits: \(habitsCount), Notes: \(notesCount), Categories: \(categoriesCount), Addictions: \(addictionsCount)")
+                print("Conteos al iniciar -> Habits: \(habitsCount), Notes: \(notesCount), Categories: \(categoriesCount), Addictions: \(addictionsCount)")
             } catch {
-                print("⚠️ Error obteniendo conteos iniciales: \(error)")
+                print("Error obteniendo conteos iniciales: \(error)")
             }
         } catch {
             // En caso de error de migración, intentar eliminar y recrear
-            print("❌ Error inicial de SwiftData: \(error)")
-            print("🔄 Intentando recuperación eliminando store corrupto...")
+            print("Error inicial de SwiftData: \(error)")
+            print("Intentando recuperación eliminando store corrupto...")
             
             do {
                 // Eliminar archivos de base de datos corruptos
@@ -73,7 +73,7 @@ class SwiftDataStorageProvider: StorageProvider {
                     try? fileManager.removeItem(at: storeURL)
                     try? fileManager.removeItem(at: storeURL.appendingPathExtension("shm"))
                     try? fileManager.removeItem(at: storeURL.appendingPathExtension("wal"))
-                    print("🗑️ Archivos de store eliminados")
+                    print("Archivos de store eliminados")
                 }
                 
                 // Reintentar creación
@@ -82,7 +82,7 @@ class SwiftDataStorageProvider: StorageProvider {
                 self.context = self.modelContainer.mainContext
                 SwiftDataContext.shared = self.context
                 SwiftDataStorageProvider._shared = self
-                print("✅ SwiftData reinicializado correctamente después de limpieza")
+                print("SwiftData reinicializado correctamente después de limpieza")
             } catch {
                 fatalError("Failed to initialize storage provider: \(error)")
             }
@@ -161,23 +161,23 @@ class SwiftDataStorageProvider: StorageProvider {
     
     @MainActor
     func loadAchievements() async throws -> [Achievement] {
-        print("📂 Cargando logros desde SwiftData...")
+        print("Cargando logros desde SwiftData...")
         let descriptor = FetchDescriptor<Achievement>(
             sortBy: [SortDescriptor(\.unlockedAt, order: .reverse)]
         )
         let achievements = try context.fetch(descriptor)
-        print("📊 Logros encontrados: \(achievements.count)")
+        print("Logros encontrados: \(achievements.count)")
         achievements.forEach { print("  - \($0.achievementId): \($0.title)") }
         return achievements
     }
     
     @MainActor
     func saveAchievement(_ achievement: Achievement) async throws {
-        print("💾 Insertando logro en contexto: \(achievement.achievementId)")
+        print("Insertando logro en contexto: \(achievement.achievementId)")
         context.insert(achievement)
-        print("💾 Guardando contexto...")
+        print("Guardando contexto...")
         try context.save()
-        print("✅ Contexto guardado exitosamente")
+        print("Contexto guardado exitosamente")
     }
     
     @MainActor
@@ -284,7 +284,7 @@ class SwiftDataStorageProvider: StorageProvider {
         
         do {
             let habitId = habit.id
-            print("🔍 Hábito encontrado: '\(habit.title)' - doneDatesString: '\(habit.doneDatesString)'")
+            print("Hábito encontrado: '\(habit.title)' - doneDatesString: '\(habit.doneDatesString)'")
             
             let goalDescriptor = FetchDescriptor<Goal>(
                 predicate: #Predicate<Goal> { goal in
@@ -787,15 +787,15 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
     @MainActor
     func addHabit(habit: Habit) async  throws {
         do {
-            print("📝 Antes de insertar - hasChanges: \(context.hasChanges)")
-            context.insert(habit)
-            print("🔍 Habit insertado: \(habit.title), hasChanges después insert: \(context.hasChanges)")
+            print("Antes de insertar - hasChanges: \(context.hasChanges)")
+            try context.insert(habit)
+            print("Habit insertado: \(habit.title), hasChanges después insert: \(context.hasChanges)")
             
             // Si hasChanges sigue siendo false, el contexto está corrupto
             if !context.hasChanges {
-                print("⚠️ ADVERTENCIA: El contexto no detectó cambios. Intentando forzar...")
+                print("ADVERTENCIA: El contexto no detectó cambios. Intentando forzar...")
                 context.processPendingChanges()
-                print("🔍 Después processPendingChanges - hasChanges: \(context.hasChanges)")
+                print("Después processPendingChanges - hasChanges: \(context.hasChanges)")
             }
             
             try await saveContext()
@@ -803,12 +803,12 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
             // Verificar que se guardó
             let descriptor = FetchDescriptor<Habit>()
             let allHabits = try context.fetch(descriptor)
-            print("✅ Total hábitos después de guardar: \(allHabits.count)")
+            print("Total hábitos después de guardar: \(allHabits.count)")
             for h in allHabits {
                 print("  - \(h.title)")
             }
         } catch {
-            print("❌ Error adding habit: \(error)")
+            print("Error adding habit: \(error)")
             throw error
         }
     }
@@ -855,9 +855,9 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
             self.modelContainer = newContainer
             self.context = newContext
             SwiftDataContext.shared = newContext
-            print("✅ SwiftData storage reset complete.")
+            print("SwiftData storage reset complete.")
         } catch {
-            print("❌ Failed to reset SwiftData storage: \(error)")
+            print("Failed to reset SwiftData storage: \(error)")
         }
     }
     

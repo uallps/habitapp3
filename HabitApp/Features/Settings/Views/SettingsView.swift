@@ -416,9 +416,9 @@ extension SettingsView {
             userPreferences.enableDailyNotes = true
             userPreferences.appTheme = 0
             
-            print("✅ Todos los datos y preferencias han sido limpiados")
+            print("Todos los datos y preferencias han sido limpiados")
         } catch {
-            print("❌ Error clearing data: \(error)")
+            print("Error clearing data: \(error)")
         }
     }
 }

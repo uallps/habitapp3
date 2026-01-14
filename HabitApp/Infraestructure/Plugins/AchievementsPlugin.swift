@@ -11,7 +11,7 @@ final class AchievementsPlugin: FeaturePlugin {
         self.isEnabled = config.userPreferences.enableAchievements
         self.models = [Achievement.self]
         
-        print("🏆 AchievementsPlugin inicializado")
+        print("AchievementsPlugin inicializado")
         print("   - Habilitado: \(isEnabled)")
         print("   - Modelos: \(models)")
     }

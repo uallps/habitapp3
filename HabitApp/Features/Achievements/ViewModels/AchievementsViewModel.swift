@@ -40,7 +40,7 @@ class AchievementsViewModel: ObservableObject {
                 }
             }
         } catch {
-            print("❌ Error sincronizando logros: \(error)")
+            print("Error sincronizando logros: \(error)")
         }
     }
     
@@ -169,7 +169,7 @@ class AchievementsViewModel: ObservableObject {
             }
             
         } catch {
-            print("❌ Error comprobando logros: \(error)")
+            print("Error comprobando logros: \(error)")
         }
     }
     

@@ -20,7 +20,7 @@ final class HabitDataObserverManager {
     }
     
     func notifyDataChanged(taskId: UUID, title: String, dueDate: Date?) {
-        print("🔔 Notificando \(plugins.count) plugins sobre cambio en: \(title)")
+        print("Notificando \(plugins.count) plugins sobre cambio en: \(title)")
         plugins.forEach { plugin in
             plugin.onDataChanged(taskId: taskId, title: title, dueDate: dueDate)
         }

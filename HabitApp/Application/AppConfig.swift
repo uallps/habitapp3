@@ -32,7 +32,7 @@ class AppConfig: ObservableObject {
             PluginRegistry.shared.register(pluginType)
         }
         
-        print("📝 Plugins registrados en AppConfig: \(PluginRegistry.shared.count)")
+        print("Plugins registrados en AppConfig: \(PluginRegistry.shared.count)")
         
         // Crear instancias de los plugins
         self.plugins = PluginRegistry.shared.createPluginInstances(config: self)
@@ -60,8 +60,8 @@ class AppConfig: ObservableObject {
         }
         
         let schema = Schema(schemas)
-        print("📦 Schemas registrados: \(schemas)")
-        print("🔌 Plugins activos: \(plugins.filter { $0.isEnabled }.count)/\(plugins.count)")
+        print("Schemas registrados: \(schemas)")
+        print("Plugins activos: \(plugins.filter { $0.isEnabled }.count)/\(plugins.count)")
         self.swiftDataStorageProvider = SwiftDataStorageProvider(schema: schema)
         //observadores DESPUÉS de que el storageProvider esté listo
         setupHabitDataObservingPlugins()
@@ -78,7 +78,7 @@ class AppConfig: ObservableObject {
         let registry = HabitDataObserverManager.shared
         registry.register(HabitGoalPlugin(config: self))
         registry.register(StreakPlugin(config: self))
-        print("✅ Plugins registrados correctamente")
+        print("Plugins registrados correctamente")
     }
     
     // MARK: - Storage Provider

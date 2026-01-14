@@ -25,12 +25,11 @@ class PluginRegistry {
     /// - Parameter pluginType: Tipo del plugin a registrar
     func register(_ pluginType: FeaturePlugin.Type) {
         guard !registeredPlugins.contains(where: { $0 == pluginType }) else {
-            print("⚠️ Plugin \(pluginType) ya está registrado")
             return
         }
         
         registeredPlugins.append(pluginType)
-        print("✅ Plugin registrado: \(pluginType)")
+        print(" Plugin registrado: \(pluginType)")
     }
     
     /// Crea instancias de todos los plugins registrados
@@ -58,7 +57,6 @@ class PluginRegistry {
     func clearAll() {
         registeredPlugins.removeAll()
         pluginInstances.removeAll()
-        print("🗑️ Todos los plugins han sido eliminados del registro")
     }
     
     /// Obtiene el número de plugins registrados

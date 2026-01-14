@@ -10,7 +10,5 @@ final class StatisticsPlugin: FeaturePlugin {
     required init(config: AppConfig) {
         self.isEnabled = config.userPreferences.enableStatistics
         self.models = [] // No necesita modelos adicionales, usa los existentes
-        
-        print("📊 StatisticsPlugin inicializado - Habilitado: \(isEnabled)")
     }
 }

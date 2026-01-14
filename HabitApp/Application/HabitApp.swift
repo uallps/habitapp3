@@ -29,9 +29,9 @@ struct HabitApp: App {
             options: [.alert, .sound, .badge]
         ) { granted, error in
             if granted {
-                print("✅ Permiso concedido para notificaciones")
+                print("Permiso concedido para notificaciones")
             } else if let error = error {
-                print("❌ Error solicitando permisos: \(error)")
+                print("Error solicitando permisos: \(error)")
             }
         }
         #endif
