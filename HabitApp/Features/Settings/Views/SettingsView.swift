@@ -38,22 +38,6 @@ extension SettingsView {
                         get: { userPreferences.enableHabits },
                         set: { userPreferences.enableHabits = $0 }
                     ))
-                    Toggle("Adicciones", isOn: Binding(
-                        get: { userPreferences.enableAddictions },
-                        set: { userPreferences.enableAddictions = $0 }
-                    ))
-                    Toggle("Notas diarias", isOn: Binding(
-                        get: { userPreferences.enableDailyNotes },
-                        set: { userPreferences.enableDailyNotes = $0 }
-                    ))
-                    Toggle("Objetivos", isOn: Binding(
-                        get: { userPreferences.enableGoals },
-                        set: { userPreferences.enableGoals = $0 }
-                    ))
-                    Toggle("Estadísticas", isOn: Binding(
-                        get: { userPreferences.enableStatistics },
-                        set: { userPreferences.enableStatistics = $0 }
-                    ))
                     Toggle("Rachas", isOn: Binding(
                         get: { userPreferences.enableStreaks },
                         set: { userPreferences.enableStreaks = $0 }
@@ -100,7 +84,7 @@ extension SettingsView {
                     clearAllData()
                 }
             } message: {
-                Text("Esta acción eliminará todos los hábitos, notas y objetivos. No se puede deshacer.")
+                Text("Esta acción eliminará todos los hábitos y rachas. No se puede deshacer.")
             }
         }
     }
@@ -110,6 +94,8 @@ extension SettingsView {
 // MARK: - macOS UI
 #if os(macOS)
 extension SettingsView {
+    private var accentOptions: [String] { ["Blue", "Red", "Green", "Orange", "Purple", "Pink"] }
+    
     var macBody: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
@@ -126,6 +112,53 @@ extension SettingsView {
                 .padding(.top, 24)
                 
                 Divider()
+
+                // Apariencia
+                SettingsSection(
+                    title: "Apariencia",
+                    icon: "paintpalette.fill",
+                    iconColor: userPreferences.accentColor
+                ) {
+                    SettingsRow(
+                        title: "Tema",
+                        description: "Sistema, claro u oscuro"
+                    ) {
+                        Picker("", selection: Binding(
+                            get: { userPreferences.appTheme },
+                            set: { userPreferences.appTheme = $0 }
+                        )) {
+                            Text("Sistema").tag(0)
+                            Text("Claro").tag(1)
+                            Text("Oscuro").tag(2)
+                        }
+                        .pickerStyle(.segmented)
+                        .frame(maxWidth: 260)
+                        .labelsHidden()
+                    }
+                    
+                    Divider()
+                        .padding(.leading, 40)
+                    
+                    SettingsRow(
+                        title: "Color de acento",
+                        description: "Aplica a botones y resaltados"
+                    ) {
+                        Picker("", selection: Binding(
+                            get: { userPreferences.accentColorName },
+                            set: { userPreferences.accentColorName = $0 }
+                        )) {
+                            ForEach(accentOptions, id: \.self) { name in
+                                HStack {
+                                    ColorCircle(color: color(for: name))
+                                    Text(name)
+                                }
+                                .tag(name)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .labelsHidden()
+                    }
+                }
                 
                 // Visualización
                 SettingsSection(
@@ -180,62 +213,6 @@ extension SettingsView {
                         .padding(.leading, 40)
                     
                     SettingsRow(
-                        title: "Adicciones",
-                        description: "Gestiona adicciones y compensaciones"
-                    ) {
-                        Toggle("", isOn: Binding(
-                            get: { userPreferences.enableAddictions },
-                            set: { userPreferences.enableAddictions = $0 }
-                        ))
-                        .labelsHidden()
-                    }
-                    
-                    Divider()
-                        .padding(.leading, 40)
-                    
-                    SettingsRow(
-                        title: "Notas diarias",
-                        description: "Agrega notas y reflexiones a tus hábitos"
-                    ) {
-                        Toggle("", isOn: Binding(
-                            get: { userPreferences.enableDailyNotes },
-                            set: { userPreferences.enableDailyNotes = $0 }
-                        ))
-                        .labelsHidden()
-                    }
-                    
-                    Divider()
-                        .padding(.leading, 40)
-                    
-                    SettingsRow(
-                        title: "Objetivos",
-                        description: "Establece y sigue metas a largo plazo"
-                    ) {
-                        Toggle("", isOn: Binding(
-                            get: { userPreferences.enableGoals },
-                            set: { userPreferences.enableGoals = $0 }
-                        ))
-                        .labelsHidden()
-                    }
-                    
-                    Divider()
-                        .padding(.leading, 40)
-                    
-                    SettingsRow(
-                        title: "Estadísticas",
-                        description: "Habilita la vista de estadísticas"
-                    ) {
-                        Toggle("", isOn: Binding(
-                            get: { userPreferences.enableStatistics },
-                            set: { userPreferences.enableStatistics = $0 }
-                        ))
-                        .labelsHidden()
-                    }
-                    
-                    Divider()
-                        .padding(.leading, 40)
-                    
-                    SettingsRow(
                         title: "Rachas",
                         description: "Activa el seguimiento de streaks"
                     ) {
@@ -272,7 +249,7 @@ extension SettingsView {
                 ) {
                     SettingsRow(
                         title: "Limpiar todos los datos",
-                        description: "Elimina todos los hábitos, notas y objetivos permanentemente"
+                        description: "Elimina todos los hábitos y rachas permanentemente"
                     ) {
                         Button("Limpiar") {
                             showingClearAlert = true
@@ -314,7 +291,7 @@ extension SettingsView {
                 clearAllData()
             }
         } message: {
-            Text("Esta acción eliminará todos los hábitos, notas, objetivos y logros. No se puede deshacer.")
+            Text("Esta acción eliminará todos los hábitos y rachas. No se puede deshacer.")
         }
     }
 }
@@ -376,6 +353,26 @@ struct SettingsRow<Content: View>: View {
         .padding(.vertical, 8)
     }
 }
+
+private func color(for name: String) -> Color {
+    switch name {
+    case "Red": return .red
+    case "Green": return .green
+    case "Orange": return .orange
+    case "Purple": return .purple
+    case "Pink": return .pink
+    default: return .blue
+    }
+}
+
+private struct ColorCircle: View {
+    let color: Color
+    var body: some View {
+        Circle()
+            .fill(color)
+            .frame(width: 14, height: 14)
+    }
+}
 #endif
 
 // MARK: - Functions
@@ -387,23 +384,10 @@ extension SettingsView {
             let habits = try modelContext.fetch(habitDescriptor)
             habits.forEach { modelContext.delete($0) }
             
-            // Eliminar todas las notas
-            let noteDescriptor = FetchDescriptor<DailyNote>()
-            let notes = try modelContext.fetch(noteDescriptor)
-            notes.forEach { modelContext.delete($0) }
-            
-            // Eliminar todos los objetivos
-            let goalDescriptor = FetchDescriptor<Goal>()
-            let goals = try modelContext.fetch(goalDescriptor)
-            goals.forEach { modelContext.delete($0) }
-            
-            // Eliminar todos los milestones
-            let milestoneDescriptor = FetchDescriptor<Milestone>()
-            let milestones = try modelContext.fetch(milestoneDescriptor)
-            milestones.forEach { modelContext.delete($0) }
-            
-            // Eliminar todos los logros
-            try modelContext.delete(model: Achievement.self)
+            // Eliminar todas las rachas
+            let streakDescriptor = FetchDescriptor<Streak>()
+            let streaks = try modelContext.fetch(streakDescriptor)
+            streaks.forEach { modelContext.delete($0) }
             
             try modelContext.save()
             
@@ -412,8 +396,7 @@ extension SettingsView {
             userPreferences.showPriorities = true
             userPreferences.enableReminders = true
             userPreferences.enableHabits = true
-            userPreferences.enableGoals = true
-            userPreferences.enableDailyNotes = true
+            userPreferences.enableStreaks = true
             userPreferences.appTheme = 0
             
             print("Todos los datos y preferencias han sido limpiados")
