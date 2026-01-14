@@ -34,53 +34,64 @@ Una aplicación multiplataforma (iOS/macOS) para gestionar hábitos diarios y no
 
 **HabitApp3** es una aplicación de aprendizaje construida en SwiftUI, un framework que promete construir simultáneamente en iOS y MacOS moderna y elegante diseñada para ayudarte a **construir hábitos positivos** y **alcanzar tus metas**.
 
+Esta aplicación forma parte de la asignatura Línea de Productos Software del grado Ingeniería Informática de la Universidad de Almería: [Más información](https://www.ual.es/estudios/grados/presentacion/plandeestudios/asignatura/4015/40154304)
+
+---
+
+## 👥 Equipo
+
 <table>
 <tr>
-<td width="50%">
-
-### Objetivos y Metas
-
+<td align="center" width="20%">
+<img src="https://github.com/ualfsp323.png" width="80" style="border-radius:50%"/><br/>
+<strong>Franco Sergio Pereyra</strong><br/>
+<sub>📝 Notas Diarias, 🎯 Objetivos </sub><br/>
+<a href="https://github.com/ualfsp323">@ualfsp323</a>
 </td>
-<td width="50%">
-
-### Adicciones y Multilenguaje
-- Sugerencias de hábitos con GPT-4 Vision
-
+<td align="center" width="20%">
+<img src="https://github.com/ifm562-ual.png" width="80" style="border-radius:50%"/><br/>
+<strong>Ismael Fernández Méndez</strong><br/>
+<sub>🗂️ Categorías, 🚬 Adicciones</sub><br/>
+<a href="https://github.com/ifm562-ual">@ifm562-ual</a>
 </td>
-</tr>
-<tr>
-<td width="50%">
-
-### ❓ Característica Personal 3
-- Captura de fotos para hábitos
-- Modelado 3D con LiDAR
-- Resúmenes visuales tipo "stories"
-
+<td align="center" width="20%">
+<img src="https://github.com/dgp336.png" width="80" style="border-radius:50%"/><br/>
+<strong>David Granados Pérez</strong><br/>
+<sub>🔥 Rachas, 👨‍🦯 Accesibilidad</sub><br/>
+<a href="https://github.com/dgp336">@dgp336</a>
 </td>
-<td width="50%">
-
-### ❓ Característica Personal 4
-- Multilenguaje (ES/EN)
-- Modo claro/oscuro/auto
-- Estadísticas detalladas
-
-### ❓ Característica Personal 5
-
+<td align="center" width="20%">
+<img src="https://github.com/ualjfr498.png" width="80" style="border-radius:50%"/><br/>
+<strong>Juan José Fernández Requena</strong><br/>
+<sub>📊 Estadísticas, 🏆 Logros</sub><br/>
+<a href="https://github.com/jgm847">@ualjfr498</a>
+</td>
+<td align="center" width="20%">
+<img src="https://github.com/dcf313.png" width="80" style="border-radius:50%"/><br/>
+<strong></strong><br/>
+<sub>🔔 Recordatorios, 🟢⚡ Hábitos Comodín</sub><br/>
+<a href="https://github.com/dcf313">@dcf313</a>
 </td>
 </tr>
 </table>
 
+<p align="center">
+  <strong>Universidad de Almería</strong> • Línea de Productos Software • 4º Curso • 2025-2026
+</p>
+
+---
+
 - **iOS**: Interfaz TabView optimizada para móviles
 - **macOS**: NavigationSplitView con sidebar para escritorio
 
-## 🗂️ Características
+## Características de la Aplicación
 
 <table>
 <tr>
 <td align="center" width="25%">
 <img src="https://cdn-icons-png.flaticon.com/512/3767/3767084.png" width="60"/><br/>
 <strong>Gestión de Hábitos</strong><br/>
-<sub>Organiza tus hábitos y agrúpalos de manera personalizada</sub>
+<sub>Crea tus hábitos</sub>
 </td>
 <td align="center" width="25%">
 <img src="https://i.redd.it/streak-flame-updated-v0-3n46sx7a0e9b1.png?width=283&format=png&auto=webp&s=74253ccd745fc4cf470e99c589921ce4d83c4d10" width="60"/><br/>
@@ -98,73 +109,45 @@ Una aplicación multiplataforma (iOS/macOS) para gestionar hábitos diarios y no
 <sub>Visualiza tu progreso con gráficos detallados</sub>
 </td>
 </tr>
+<tr>
+<td align="center" width="20%">
+<a href="#adicciones">
+<img src="https://freesvg.org/img/drugs2.png" width="60"/><br/>
+<strong>Adicciones</strong></a><br/>
+<sub>Controla hábitos que quieres reducir o eliminar</sub>
+</td>
+<td align="center" width="20%">
+<a href="#logros">
+<img src="https://cdn.iconscout.com/icon/free/png-256/free-cup-icon-svg-download-png-124193.png" width="60"/><br/>
+<strong>Logros</strong></a><br/>
+<sub>Premios virtuales por mantener tu constancia</sub>
+</td>
+<td align="center" width="20%">
+<a href="#objetivos">
+<img src="https://freesvg.org/img/Anonymous_target_with_arrow.png" width="60"/><br/>
+<strong>Objetivos</strong></a><br/>
+<sub>Establece metas a corto y largo plazo</sub>
+</td>
+<td align="center" width="20%">
+<a href="#habitos-comodin">
+<img src="https://steadfastelec.com/wp-content/uploads/2024/07/electrical-installations.png" width="60"/><br/>
+<strong>Hábitos Comodín</strong></a><br/>
+<sub>Pequeños hábitos rápidos para no perder la rutina</sub>
+</td>
+<td align="center" width="20%">
+<a href="#categorias">
+<img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/distribution.png" width="60"/><br/>
+<strong>Categorías</strong></a><br/>
+<sub>Organiza tus hábitos por tipo o prioridad</sub>
+</td>
+<td align="center" width="20%">
+<a href="#accesibilidad">
+<img src="https://rushplumbingseattle.com/images/ada-icon.png" width="60"/><br/>
+<strong>Accesibilidad</strong></a><br/>
+<sub>Funciones que facilitan el uso a todos los usuarios</sub>
+</td>
+</tr>
 </table>
-
----
-
-## 📸 Capturas
-
----
-
-## 🛠 Instalación
-
-### Requisitos
-
-| Requisito | Versión |
-|-----------|---------|
-| macOS | Sequoia ? |
-| Xcode | ? |
-| iOS Deployment Target | ? |
-| Swift | ? |
-
-### Pasos
-
----
-
-## 👷🏻‍♂️ Arquitectura
-
-HabitApp3 utiliza el patrón arquitectónico **Model View ViewModel**, así como una **arquitectura modular** basada en el patrón **Plugin** que permite añadir funcionalidades sin modificar el núcleo.
-
-TODO: Modificar con lo nuestro
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     🎯 HabitApp Core                         │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐          │
-│  │ ContentView │  │ HabitStore  │  │  AppConfig  │          │
-│  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘          │
-│         └────────────────┼────────────────┘                  │
-│                          ▼                                   │
-│              ┌───────────────────────┐                       │
-│              │   📦 ModuleRegistry   │                       │
-│              │   (Service Locator)   │                       │
-│              └───────────┬───────────┘                       │
-└──────────────────────────┼───────────────────────────────────┘
-                           │
-     ┌─────────────────────┼─────────────────────┐
-     │           │         │         │           │
-     ▼           ▼         ▼         ▼           ▼
-┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐
-│ 📢 Ads  │ │ 📸 3D   │ │ 🤖 AI   │ │ 📊 Recap│ │ 🎮 Game │
-│ Module  │ │ Module  │ │ Module  │ │ Module  │ │ Module  │
-└─────────┘ └─────────┘ └─────────┘ └─────────┘ └─────────┘
-```
-
-### Módulos Disponibles
-
-| Módulo | Autor | Estado | Descripción |
-|--------|-------|:------:|-------------|
-|  |  |  |  |
----
-
-
----
-
-## 📚 Documentación
-
-| Documento | Descripción |
-|-----------|-------------|
-|  |  |
-
 
 ---
 
@@ -172,50 +155,71 @@ TODO: Modificar con lo nuestro
 
 - [] **v1.0** - MVP: Categorías, Rachas, Estadísticas, Notas Diarias y Recordatoeios
 
----
 
-## 👥 Equipo
+### 📝 **Notas Diarias**
 
-<table>
-<tr>
-<td align="center" width="20%">
-<img src="https://github.com/ualfsp323.png" width="80" style="border-radius:50%"/><br/>
-<strong>Franco Sergio Pereyra</strong><br/>
-<sub>📝 Notas Diarias & 🎨 Appearance</sub><br/>
-<a href="https://github.com/ualfsp323">@ualfsp323</a>
-</td>
-<td align="center" width="20%">
-<img src="https://github.com/ifm562-ual.png" width="80" style="border-radius:50%"/><br/>
-<strong>Ismael Fernández Méndez</strong><br/>
-<sub>🗂️ Categorías, 🚬 Adicciones y 🌍 MultiLenguaje</sub><br/>
-<a href="https://github.com/ifm562-ual">@ifm562-ual</a>
-</td>
-<td align="center" width="20%">
-<img src="https://github.com/dgp336.png" width="80" style="border-radius:50%"/><br/>
-<strong>David Granados Pérez</strong><br/>
-<sub>🔥 Rachas</sub><br/>
-<a href="https://github.com/dgp336">@dgp336</a>
-</td>
-<td align="center" width="20%">
-<img src="https://github.com/ualjfr498.png" width="80" style="border-radius:50%"/><br/>
-<strong>Juan José Fernández Requena</strong><br/>
-<sub>📊 Estadísticas</sub><br/>
-<a href="https://github.com/jgm847">@ualjfr498</a>
-</td>
-<td align="center" width="20%">
-<img src="https://github.com/dcf313.png" width="80" style="border-radius:50%"/><br/>
-<strong></strong><br/>
-<sub>🔔 Recordatorios</sub><br/>
-<a href="https://github.com/dcf313">@dcf313</a>
-</td>
-</tr>
-</table>
+## 🙏 Agradecimientos
+
+- **Apple** por SwiftUI y SwiftData
+- **Universidad de Almería** por ofrecer los Mac para el desarrollo
+- Al equipo de HabitApp1 por tener un README tan profesional que ha inspirado este
+- A todos los profesores y compañeros de la **Universidad de Almería**
 
 <p align="center">
-  <strong>Universidad de Almería</strong> • Línea de Productos Software • 4º Curso • 2025-2026
+  <strong>⭐ Si te gusta este proyecto, ¡dale una estrella! ⭐</strong>
 </p>
 
----
+<p align="center">
+  <a href="https://github.com/uallps/habitapp3/issues">Reportar Bug</a> •
+  <a href="https://github.com/uallps/habitapp3/issues">Solicitar Feature</a> •
+  <a href="https://github.com/uallps/habitapp3/pulls">Contribuir</a>
+</p>
+
+<p align="center">
+  Made with ❤️ in Almería, Spain 🇪🇸
+</p>
+
+## 🏗️ Arquitectura del Proyecto
+
+```
+HabitApp/
+├── Application/           # Configuración principal
+├── Core/                 # Funcionalidad principal de hábitos
+│   ├── Models/          # Habit.swift
+│   ├── ViewModels/      # HabitListViewModel.swift
+│   └── Views/           # Vistas de hábitos
+├── Features/           # Funcionalidades que no son de hábitos
+│   ├── DailyNotes/      # Sistema de notas
+│   ├── Goals/           # Objetivos (solo iOS)
+│   └── ...
+├── Infraestructure/
+│   └── Plugins/         # Sistema de plugins
+|   └── Persistence/     # Implementación de persistencia
+└── Utils/               # Utilidades
+```
+
+## 📱 Plataformas Soportadas
+
+- **iOS 17.0+**
+- **macOS 14.0+**
+- **SwiftUI + SwiftData**
+
+## 🎯 Funcionalidades por Versión
+
+| Funcionalidad          | Básica | Premium |
+| ---------------------- | --- | ----- |
+| Hábitos               | ✅  | ✅    |
+| Notas Diarias          | ✅  | ✅    |
+| Objetivos              | ❌  | ✅    |
+| Rachas    | ❌  | ✅    |
+| Accesibilidad   | ❌  | ✅    |
+| Estadísticas | ❌  | ✅    |
+| Categorías    | ✅  | ✅    |
+| Adicciones    | ❌  | ✅    |
+| Logros    | ❌  | ✅    |
+| Hábitos Comodín    | ❌  | ✅    |
+| Recordatorios    | ✅  | ✅    |
+
 
 ## 📄 Licencia
 
@@ -238,104 +242,3 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 ```
-
-### 📝 **Notas Diarias**
-
-## 🙏 Agradecimientos
-
-- **Apple** por SwiftUI y SwiftData
-- **Universidad de Almería** por ofrecer los Mac para el desarrollo
-- Al equipo de HabitApp1 por tener un README tan profesional que ha inspirado este
-- A todos los profesores y compañeros de la **Universidad de Almería**
-
-- Crear objetivos con metas numéricas
-- Hitos intermedios
-- Seguimiento de progreso automático
-- Asociación con hábitos
-
-<p align="center">
-  <strong>⭐ Si te gusta este proyecto, ¡dale una estrella! ⭐</strong>
-</p>
-
-<p align="center">
-  <a href="https://github.com/uallps/habitapp3/issues">Reportar Bug</a> •
-  <a href="https://github.com/uallps/habitapp3/issues">Solicitar Feature</a> •
-  <a href="https://github.com/uallps/habitapp3/pulls">Contribuir</a>
-</p>
-
-<p align="center">
-  Made with ❤️ in Almería, Spain 🇪🇸
-</p>
-
-### **Uso del Sistema**
-
-```swift
-// 1. Para programar una notificación
-TaskDataObserverManager.shared.notify(
-    taskId: UUID(),
-    title: "Mi recordatorio",
-    date: Date().addingTimeInterval(3600) // En 1 hora
-)
-
-// 2. El manager notifica a todos los plugins registrados
-// 3. ReminderPlugin programa la alerta
-// 4. La alerta se muestra en el momento programado
-```
-
-## 🏗️ Arquitectura del Proyecto
-
-```
-HabitApp/
-├── Application/           # Configuración principal
-├── Core/                 # Funcionalidad principal de hábitos
-│   ├── Models/          # Habit.swift
-│   ├── ViewModels/      # HabitListViewModel.swift
-│   └── Views/           # Vistas de hábitos
-├── feature/
-│   ├── DailyNotes/      # Sistema de notas
-│   ├── Goals/           # Objetivos (solo iOS)
-│   └── TestNoti/        # Testing de notificaciones
-├── infraestructure/
-│   └── Plugins/         # Sistema de plugins y notificaciones
-└── Utils/               # Extensiones y utilidades
-```
-
-## 🔧 Configuración
-
-### **Permisos iOS**
-
-```swift
-// En HabitApp.swift
-UNUserNotificationCenter.current().requestAuthorization(
-    options: [.alert, .sound, .badge]
-) { granted, error in
-    // Manejo de permisos
-}
-```
-
-### **Compilación Condicional**
-
-```swift
-#if os(iOS)
-// Código específico para iOS
-#else
-// Código específico para macOS
-#endif
-```
-
-## 📱 Plataformas Soportadas
-
-- **iOS 17.0+**
-- **macOS 14.0+**
-- **SwiftUI + SwiftData**
-
-## 🎯 Funcionalidades por Plataforma
-
-| Funcionalidad          | iOS | macOS |
-| ---------------------- | --- | ----- |
-| Hábitos               | ✅  | ✅    |
-| Notas Diarias          | ✅  | ✅    |
-| Objetivos              | ✅  | ❌    |
-| Notificaciones UIKit   | ✅  | ❌    |
-| Notificaciones Console | ❌  | ✅    |
-| Test Notificaciones    | ✅  | ✅    |
