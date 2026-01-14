@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="HabitApp/Assets.xcassets/AppIcon.appiconset/icon 1.png" alt="HabitApp Logo" width="120"/>
+  <img src="HabitApp/Assets.xcassets/AppIcon.appiconset/1024.png" alt="HabitApp Logo" width="120"/>
 </p>
 
 <h1 align="center">🌀 HabitApp3 📝</h1>
