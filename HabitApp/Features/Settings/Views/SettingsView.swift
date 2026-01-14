@@ -110,6 +110,8 @@ extension SettingsView {
 // MARK: - macOS UI
 #if os(macOS)
 extension SettingsView {
+    private var accentOptions: [String] { ["Blue", "Red", "Green", "Orange", "Purple", "Pink"] }
+    
     var macBody: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
@@ -126,6 +128,53 @@ extension SettingsView {
                 .padding(.top, 24)
                 
                 Divider()
+
+                // Apariencia
+                SettingsSection(
+                    title: "Apariencia",
+                    icon: "paintpalette.fill",
+                    iconColor: userPreferences.accentColor
+                ) {
+                    SettingsRow(
+                        title: "Tema",
+                        description: "Sistema, claro u oscuro"
+                    ) {
+                        Picker("", selection: Binding(
+                            get: { userPreferences.appTheme },
+                            set: { userPreferences.appTheme = $0 }
+                        )) {
+                            Text("Sistema").tag(0)
+                            Text("Claro").tag(1)
+                            Text("Oscuro").tag(2)
+                        }
+                        .pickerStyle(.segmented)
+                        .frame(maxWidth: 260)
+                        .labelsHidden()
+                    }
+                    
+                    Divider()
+                        .padding(.leading, 40)
+                    
+                    SettingsRow(
+                        title: "Color de acento",
+                        description: "Aplica a botones y resaltados"
+                    ) {
+                        Picker("", selection: Binding(
+                            get: { userPreferences.accentColorName },
+                            set: { userPreferences.accentColorName = $0 }
+                        )) {
+                            ForEach(accentOptions, id: \.self) { name in
+                                HStack {
+                                    ColorCircle(color: color(for: name))
+                                    Text(name)
+                                }
+                                .tag(name)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .labelsHidden()
+                    }
+                }
                 
                 // Visualización
                 SettingsSection(
@@ -374,6 +423,26 @@ struct SettingsRow<Content: View>: View {
             content
         }
         .padding(.vertical, 8)
+    }
+}
+
+private func color(for name: String) -> Color {
+    switch name {
+    case "Red": return .red
+    case "Green": return .green
+    case "Orange": return .orange
+    case "Purple": return .purple
+    case "Pink": return .pink
+    default: return .blue
+    }
+}
+
+private struct ColorCircle: View {
+    let color: Color
+    var body: some View {
+        Circle()
+            .fill(color)
+            .frame(width: 14, height: 14)
     }
 }
 #endif

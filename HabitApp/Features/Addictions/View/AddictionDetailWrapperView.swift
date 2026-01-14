@@ -261,7 +261,9 @@ struct AddictionDetailWrapperView: View {
 
     var body: some View {
         #if os(iOS)
-                content.padding()
+        ScrollView {
+            content.padding()
+        }
         #else
         content
             .padding()
