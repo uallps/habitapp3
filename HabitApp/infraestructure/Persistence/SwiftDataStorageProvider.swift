@@ -13,6 +13,8 @@ class SwiftDataStorageProvider: StorageProvider {
     var modelContainer: ModelContainer
     private var context: ModelContext
     
+      
+    @MainActor
     init(schema: Schema) {
         // SIEMPRE crear un nuevo ModelContainer y contexto
         // No reutilizar anteriores porque pueden estar corruptos
