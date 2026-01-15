@@ -7,6 +7,10 @@ on:
     branches: [ "core_8jan" ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   lint:
     name: SwiftLint & Code Quality
@@ -34,6 +38,22 @@ jobs:
     runs-on: macos-latest
     needs: lint
 
+    strategy:
+      matrix:
+        platform: [iOS, macOS]
+        scheme: ["HabitApp", "HabitApp Pro"]
+        include:
+          - platform: iOS
+            sdk: iphonesimulator
+            destination: "generic/platform=iOS"
+            artifact-name: ios-build
+            deployment-target: IPHONEOS_DEPLOYMENT_TARGET=18.0
+          - platform: macOS
+            sdk: macosx
+            destination: "platform=macOS"
+            artifact-name: macos-build
+            deployment-target: MACOSX_DEPLOYMENT_TARGET=15.0
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -48,32 +68,33 @@ jobs:
         run: |
           xcodebuild clean build \
             -project HabitApp.xcodeproj \
-            -scheme HabitApp \
+            -scheme "${{ matrix.scheme }}" \
             -sdk iphonesimulator \
-            -destination generic/platform=iOS \
+            -destination "generic/platform=iOS" \
             -derivedDataPath ./DerivedData \
             IPHONEOS_DEPLOYMENT_TARGET=18.0 \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO 2>&1 | tee build.log
+        if: matrix.platform == 'iOS'
         continue-on-error: true
 
       - name: Show Build Errors
         if: always()
         run: |
-          echo "Build Results:"
-          if grep -q "error:" build.log; then
+          echo "Build Results for ${{ matrix.platform }} - ${{ matrix.scheme }}:"
+          if [ -f build.log ] && grep -q "error:" build.log; then
             echo "Compilation errors found:"
             grep -A 2 "error:" build.log | head -50
           else
-            echo "Build completed"
+            echo "Build completed successfully"
           fi
 
       - name: Build for macOS
         run: |
           xcodebuild clean build \
             -project HabitApp.xcodeproj \
-            -scheme HabitApp \
+            -scheme "${{ matrix.scheme }}" \
             -sdk macosx \
             -destination 'platform=macOS' \
             -derivedDataPath ./DerivedData \
@@ -81,13 +102,15 @@ jobs:
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO
+        if: matrix.platform == 'macOS'
         continue-on-error: true
 
       - name: Run Unit Tests
+        if: matrix.platform == 'iOS'
         run: |
           xcodebuild test \
             -project HabitApp.xcodeproj \
-            -scheme HabitApp \
+            -scheme "${{ matrix.scheme }}" \
             -sdk iphonesimulator \
             -destination generic/platform=iOS \
             -derivedDataPath ./DerivedData \
@@ -99,16 +122,16 @@ jobs:
         continue-on-error: true
 
       - name: Test Results Summary
-        if: always()
+        if: always() && matrix.platform == 'iOS'
         run: |
-          echo "Test Results:"
+          echo "Test Results for ${{ matrix.scheme }}:"
           find ./DerivedData -name "*.xcresult" -type d || echo "No test results found"
           
           # Extract test summary if available
           XCRESULT=$(find ./DerivedData -name "*.xcresult" -type d | head -n 1)
           if [ ! -z "$XCRESULT" ]; then
-            xcrun xcresulttool get --path "$XCRESULT" --format json > test-results.json || true
-            echo "Test results exported"
+            xcrun xcresulttool get --path "$XCRESULT" --format json > test-results-${{ matrix.scheme }}.json || true
+            echo "Test results exported for ${{ matrix.scheme }}"
           fi
 
       - name: Code Quality Metrics
@@ -137,65 +160,16 @@ jobs:
       - name: Find and list build products
         if: success()
         run: |
-          echo "=== Build products ==="
-          find ./DerivedData -name "*.app" -type d || echo "No apps found"
+          echo "=== ${{ matrix.platform }} ${{ matrix.scheme }} Build products ==="
+          find ./DerivedData -name "*.app" -type d
           ls -R ./DerivedData/Build/Products/ || true
-
-      - name: Boot simulator and launch app
-        if: false
-        timeout-minutes: 10
-        continue-on-error: true
-        run: |
-          mkdir -p screenshots
-          
-          # Boot simulator
-          DEVICE_NAME="iPhone 16"
-          xcrun simctl boot "$DEVICE_NAME" || true
-          xcrun simctl bootstatus "$DEVICE_NAME" -b
-          
-          # Find app
-          APP_BUNDLE_ID="ual.HabitApp"
-          APP_PATH=$(find ./DerivedData -name "HabitApp.app" -type d | head -n 1)
-          
-          if [ -z "$APP_PATH" ]; then
-            echo "App not found"
-            exit 1
-          fi
-          
-          echo "Found app at: $APP_PATH"
-          
-          # Install and launch app
-          xcrun simctl install booted "$APP_PATH"
-          xcrun simctl launch booted $APP_BUNDLE_ID &
-          sleep 5
-          
-          # Take screenshots quickly
-          echo "Taking screenshots..."
-          xcrun simctl io booted screenshot screenshots/01-launch.png || true
-          sleep 1
-          xcrun simctl io booted screenshot screenshots/02-app.png || true
-          sleep 1
-          xcrun simctl io booted screenshot screenshots/03-app.png || true
-          sleep 1
-          xcrun simctl io booted screenshot screenshots/04-app.png || true
-          
-          echo "Screenshots captured"
-          ls -la screenshots
 
       - name: Archive build artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifacts
+          name: build-${{ matrix.platform }}-${{ matrix.scheme }}
           path: ./DerivedData/Build/Products/**/*.app
-          if-no-files-found: warn
-
-      - name: Upload screenshots
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-screenshots
-          path: screenshots
           if-no-files-found: warn
 
       - name: Upload test results
