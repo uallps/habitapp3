@@ -4,7 +4,7 @@ import Combine
 import UserNotifications
 
 final class HabitListViewModel: ObservableObject {
-    private let storageProvider: StorageProvider
+    let storageProvider: StorageProvider
     private let wildcardProvider: WildcardHabitProvider?
     
     init(storageProvider: StorageProvider, wildcardProvider: WildcardHabitProvider? = nil) {

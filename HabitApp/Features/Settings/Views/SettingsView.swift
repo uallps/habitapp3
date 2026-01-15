@@ -89,7 +89,8 @@ extension SettingsView {
                     ForEach(0..<PluginRegistry.shared.getPluginSettingsViews().count, id: \.self) { index in
                         PluginRegistry.shared.getPluginSettingsViews()[index]
                     }
-                }            }
+                }
+            }
             .navigationTitle("Ajustes")
             .sheet(isPresented: $showingAbout) {
                 AboutView()

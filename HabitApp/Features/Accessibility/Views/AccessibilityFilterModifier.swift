@@ -21,6 +21,7 @@ struct AccessibilityFilterModifier: ViewModifier {
         switch prefs.daltonismType {
             case 1: return 90  // Ajuste cromático para Protanopía
             case 2: return 180 // Ajuste para Deuteranopía
+            case 3: return 270
             default: return 0
         }
     }

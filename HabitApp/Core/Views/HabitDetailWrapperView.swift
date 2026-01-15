@@ -149,6 +149,15 @@ extension HabitDetailWrapper {
                         
                         // 🔹 Botones
                         VStack(spacing: 12) {
+                            
+                            #if CATEGORY_FEATURE
+                            if habitToEdit != nil {
+                                HabitCategoryView(
+                                    storageProvider: viewModel.storageProvider, habit: habitToEdit!, userImageSlot: UserImageSlot(emojis:[])
+                                )
+                            }
+                            #endif
+                            
                             Button(action: saveHabit) {
                                 HStack(spacing: 8) {
                                     Image(systemName: "checkmark.circle.fill")
@@ -303,6 +312,16 @@ extension HabitDetailWrapper {
                     .cornerRadius(10)
                 }
                 .padding(.horizontal, 20)
+                
+                VStack(alignment: .leading, spacing: 12) {
+                    #if CATEGORY_FEATURE
+                    if habitToEdit != nil {
+                        HabitCategoryView(
+                            storageProvider: viewModel.storageProvider, habit: habitToEdit!, userImageSlot: UserImageSlot(emojis:[])
+                        )
+                    }
+                    #endif
+                }
                 
                 //Recordatorios
                 VStack(alignment: .leading, spacing: 12) {
