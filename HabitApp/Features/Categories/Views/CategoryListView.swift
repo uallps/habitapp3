@@ -48,13 +48,14 @@ var iOSBody: some View {
                     CategoryDetailWrapperView(
                         storageProvider: categoryListVM.storageProvider,
                         category: category,
-                        isSubcategory: category.isSubcategory
+                        isSubcategory: category.isSubcategory, userImageSlot: UserImageSlot(emojis:[])
                     )
                 } label: {
                     CategoryRowView(
                         storageProvider: categoryListVM.storageProvider,
                         category: category,
-                        isCategoryParentView: true
+                        isCategoryParentView: true,
+                        userImageSlot: UserImageSlot(emojis:[])
                     )
                 }
                 
@@ -76,7 +77,8 @@ var iOSBody: some View {
                     CategoryDetailWrapperView(
                         storageProvider: categoryListVM.storageProvider,
                         category: category,
-                        isSubcategory: category.isSubcategory
+                        isSubcategory: category.isSubcategory,
+                        userImageSlot: UserImageSlot(emojis:[])
                     )
                 } label: {
                     Label("Añadir", systemImage: "plus")

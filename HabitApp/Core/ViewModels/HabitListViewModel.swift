@@ -3,7 +3,7 @@ import SwiftData
 import Combine
 
 final class HabitListViewModel: ObservableObject {
-    private let storageProvider: StorageProvider
+    let storageProvider: StorageProvider
     
     init(storageProvider: StorageProvider) {
         self.storageProvider = storageProvider
