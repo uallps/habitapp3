@@ -1,0 +1,122 @@
+@startuml
+top to bottom direction
+skinparam componentStyle rectangle
+skinparam linetype ortho
+
+' Componente base centrado
+[HabitApp Core] as core
+
+' Features principales (obligatorios)
+[Hábito] as habit
+[Estadísticas] as stats
+
+' Layout: centrar core y distribuir features
+habit -[hidden]- stats
+
+' Atributos de Hábito
+component "id" as habitId
+component "título" as habitTitle
+component "estaCompletado" as habitIsCompleted
+component "fechasCompleción" as habitCompletionDates
+
+' Sub-features de Estadísticas
+[EstadísticasDiarias] as statsDiarias
+[EstadísticasSemanales] as statsSemanales
+
+' Sub-features de EstadísticasSemanales
+[EstadísticasSemanalesGenerales] as statsSemanalesGenerales
+[EstadísticasSemanalesPorHábito] as statsSemanalesPorHabito
+
+' Componente común
+[DatosPeriodo] as datosPeriodo
+
+' Atributos de EstadísticasDiarias
+component "fecha" as sdFecha
+component "totalCompletados" as sdTotalCompletados
+component "totalEsperados" as sdTotalEsperados
+component "tasa" as sdTasa
+
+' Atributos de EstadísticasSemanalesGenerales
+component "semana" as esgSemana
+component "periodos" as esgPeriodos
+component "totalCompletados" as esgTotalCompletados
+component "totalEsperados" as esgTotalEsperados
+component "tasaGeneral" as esgTasaGeneral
+
+' Atributos de EstadísticasSemanalesPorHábito
+component "id" as eshId
+component "título" as eshTitulo
+component "semana" as eshSemana
+component "periodos" as eshPeriodos
+component "totalCompletados" as eshTotalCompletados
+component "totalEsperados" as eshTotalEsperados
+component "tasaGeneral" as eshTasaGeneral
+
+' Atributos de DatosPeriodo
+component "id" as dpId
+component "etiqueta" as dpEtiqueta
+component "fecha" as dpFecha
+component "completados" as dpCompletados
+component "esperados" as dpEsperados
+component "tasa" as dpTasa
+
+' Core hacia features principales (obligatorios - rombo negro)
+core --* habit
+core --* stats
+
+' Hábito hacia sus atributos (obligatorios)
+habit --* habitId
+habit --* habitTitle
+habit --* habitIsCompleted
+habit --* habitCompletionDates
+
+' Estadísticas hacia tipos de estadísticas (obligatorios - rombo negro)
+stats --* statsDiarias
+stats --* statsSemanales
+stats --* datosPeriodo
+
+' EstadísticasSemanales hacia sus sub-tipos (obligatorios)
+statsSemanales --* statsSemanalesGenerales
+statsSemanales --* statsSemanalesPorHabito
+
+' EstadísticasDiarias hacia atributos (obligatorios)
+statsDiarias --* sdFecha
+statsDiarias --* sdTotalCompletados
+statsDiarias --* sdTotalEsperados
+statsDiarias --* sdTasa
+
+' EstadísticasSemanalesGenerales hacia atributos (obligatorios)
+statsSemanalesGenerales --* esgSemana
+statsSemanalesGenerales --* esgPeriodos
+statsSemanalesGenerales --* esgTotalCompletados
+statsSemanalesGenerales --* esgTotalEsperados
+statsSemanalesGenerales --* esgTasaGeneral
+
+' EstadísticasSemanalesPorHábito hacia atributos (obligatorios)
+statsSemanalesPorHabito --* eshId
+statsSemanalesPorHabito --* eshTitulo
+statsSemanalesPorHabito --* eshSemana
+statsSemanalesPorHabito --* eshPeriodos
+statsSemanalesPorHabito --* eshTotalCompletados
+statsSemanalesPorHabito --* eshTotalEsperados
+statsSemanalesPorHabito --* eshTasaGeneral
+
+' DatosPeriodo hacia atributos (obligatorios)
+datosPeriodo --* dpId
+datosPeriodo --* dpEtiqueta
+datosPeriodo --* dpFecha
+datosPeriodo --* dpCompletados
+datosPeriodo --* dpEsperados
+datosPeriodo --* dpTasa
+
+' Dependencias desde Estadísticas hacia Hábito (requiere - evitar cruces)
+stats ..> habitId
+stats ..> habitTitle
+stats ..> habitIsCompleted
+stats ..> habitCompletionDates
+
+' Dependencias internas (uso de DatosPeriodo)
+esgPeriodos ..> datosPeriodo
+eshPeriodos ..> datosPeriodo
+
+@enduml

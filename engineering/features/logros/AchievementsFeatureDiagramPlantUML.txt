@@ -1,0 +1,235 @@
+@startuml
+top to bottom direction
+skinparam componentStyle rectangle
+skinparam linetype ortho
+
+' Componente base
+[HabitApp Core] as core
+
+' Features principales
+[Hábito] as habitFeature
+[Estadísticas] as statsFeature
+[Logros] as achievementsFeature
+
+' Layout: alinear features en la misma fila
+habitFeature -[hidden]- statsFeature
+statsFeature -[hidden]- achievementsFeature
+
+' ===== SUB-FEATURES DE LOGROS =====
+
+' Núcleo de datos de logros
+[LogrosPersistidos] as achievementsData
+[CatálogoDeLogros] as achievementsCatalog
+[PuntuaciónYNivel] as scoreAndLevel
+[ReglasDeDesbloqueo] as unlockRules
+
+' Atributos de Achievement (modelo persistido)
+component "id" as achId
+component "achievementId" as achAchievementId
+component "title" as achTitle
+component "achievementDescription" as achDescription
+component "iconName" as achIconName
+component "isUnlocked" as achIsUnlocked
+component "unlockedAt" as achUnlockedAt
+
+' Atributos de Definition (catálogo)
+component "id" as defId
+component "title" as defTitle
+component "description" as defDescription
+component "iconName" as defIconName
+component "points" as defPoints
+
+' Atributos de Puntuación/Nivel
+component "totalScore" as totalScore
+component "level" as level
+component "levelTitle" as levelTitle
+component "levelIcon" as levelIcon
+component "levelColor" as levelColor
+
+' Atributos de Hábito relevantes para logros
+component "doneDates" as habitDoneDates
+component "scheduledDays" as habitScheduledDays
+component "priority" as habitPriority
+
+' ===== RELACIONES DE FEATURES =====
+
+' HabitApp Core hacia features
+core --* habitFeature
+core --* statsFeature
+core --o achievementsFeature   ' Logros es opcional (rombo blanco en Logros)
+
+' Logros y su núcleo de datos
+achievementsFeature --* achievementsData
+achievementsFeature --* achievementsCatalog
+achievementsFeature --* scoreAndLevel
+achievementsFeature --* unlockRules
+
+' LogrosPersistidos → Atributos
+achievementsData --* achId
+achievementsData --* achAchievementId
+achievementsData --* achTitle
+achievementsData --* achDescription
+achievementsData --* achIconName
+achievementsData --* achIsUnlocked
+achievementsData --* achUnlockedAt
+
+' Catálogo → Atributos de Definition
+achievementsCatalog --* defId
+achievementsCatalog --* defTitle
+achievementsCatalog --* defDescription
+achievementsCatalog --* defIconName
+achievementsCatalog --* defPoints
+
+' Puntuación y nivel → Atributos
+scoreAndLevel --* totalScore
+scoreAndLevel --* level
+scoreAndLevel --* levelTitle
+scoreAndLevel --* levelIcon
+scoreAndLevel --* levelColor
+
+' ===== DEPENDENCIAS CON HÁBITOS =====
+
+' Logros depende del estado de Hábito para desbloquear
+achievementsFeature ..> habitFeature
+
+' Hábito → atributos relevantes para logros
+habitFeature --* habitDoneDates
+habitFeature --* habitScheduledDays
+habitFeature --* habitPriority
+
+' Reglas de desbloqueo leen datos de hábitos y de definiciones
+unlockRules ..> habitDoneDates
+unlockRules ..> habitScheduledDays
+unlockRules ..> habitPriority
+unlockRules ..> defId
+unlockRules ..> defPoints
+
+@enduml
+@startuml
+top to bottom direction
+skinparam componentStyle rectangle
+skinparam linetype ortho
+
+' =========================
+' COMPONENTE BASE
+' =========================
+[HabitApp Core] as core
+
+' =========================
+' FEATURES PRINCIPALES
+' =========================
+[Hábito] as habitFeature
+[Estadísticas] as statsFeature
+[Logros] as achievementsFeature
+
+' Layout: alinear features en la misma fila
+habitFeature -[hidden]- statsFeature
+statsFeature -[hidden]- achievementsFeature
+
+' =========================
+' SUB-FEATURES DE LOGROS
+' =========================
+[LogrosPersistidos] as achievementsData
+[CatalogoDeLogros] as achievementsCatalog
+[PuntuacionYNivel] as scoreAndLevel
+[ReglasDeDesbloqueo] as unlockRules
+
+' =========================
+' ATRIBUTOS – ACHIEVEMENT (persistido)
+' =========================
+component "id" as achId
+component "achievementId" as achAchievementId
+component "titulo" as achTitle
+component "descripcion" as achDescription
+component "iconName" as achIconName
+component "estaDesbloqueado" as achIsUnlocked
+component "fechaDesbloqueo" as achUnlockedAt
+
+' =========================
+' ATRIBUTOS – DEFINITION (catálogo)
+' =========================
+component "id" as defId
+component "title" as defTitle
+component "description" as defDescription
+component "iconName" as defIconName
+component "points" as defPoints
+
+' =========================
+' ATRIBUTOS – PUNTUACION / NIVEL
+' =========================
+component "totalScore" as totalScore
+component "level" as level
+component "levelTitle" as levelTitle
+component "levelIcon" as levelIcon
+component "levelColor" as levelColor
+
+' =========================
+' ATRIBUTOS DE HABITO
+' =========================
+component "doneDates" as habitDoneDates
+component "scheduledDays" as habitScheduledDays
+component "priority" as habitPriority
+
+' =========================
+' RELACIONES CORE → FEATURES
+' =========================
+core --* habitFeature
+core --* statsFeature
+core --o achievementsFeature
+
+' =========================
+' LOGROS → SUB-FEATURES
+' =========================
+achievementsFeature --* achievementsData
+achievementsFeature --* achievementsCatalog
+achievementsFeature --* scoreAndLevel
+achievementsFeature --* unlockRules
+
+' =========================
+' LOGROS PERSISTIDOS → ATRIBUTOS
+' =========================
+achievementsData --* achId
+achievementsData --* achAchievementId
+achievementsData --* achTitle
+achievementsData --* achDescription
+achievementsData --* achIconName
+achievementsData --* achIsUnlocked
+achievementsData --* achUnlockedAt
+
+' =========================
+' CATALOGO → ATRIBUTOS
+' =========================
+achievementsCatalog --* defId
+achievementsCatalog --* defTitle
+achievementsCatalog --* defDescription
+achievementsCatalog --* defIconName
+achievementsCatalog --* defPoints
+
+' =========================
+' PUNTUACION Y NIVEL → ATRIBUTOS
+' =========================
+scoreAndLevel --* totalScore
+scoreAndLevel --* level
+scoreAndLevel --* levelTitle
+scoreAndLevel --* levelIcon
+scoreAndLevel --* levelColor
+
+' =========================
+' HABITO → ATRIBUTOS
+' =========================
+habitFeature --* habitDoneDates
+habitFeature --* habitScheduledDays
+habitFeature --* habitPriority
+
+' =========================
+' DEPENDENCIAS (EXIGE)
+' =========================
+achievementsFeature ..> habitFeature : exige
+
+unlockRules ..> habitDoneDates : exige
+unlockRules ..> habitScheduledDays : exige
+unlockRules ..> habitPriority : exige
+unlockRules ..> defId : exige
+unlockRules ..> defPoints : exige
+
+@enduml

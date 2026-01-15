@@ -1,0 +1,30 @@
+@startuml
+left to right direction
+skinparam usecase {
+  BackgroundColor #FDF6E3
+  BorderColor black
+  FontSize 14
+}
+
+' =========================
+' ACTOR
+' =========================
+actor "Usuario HabitApp" as usuario
+
+' =========================
+' CASOS DE USO
+' =========================
+usecase "<<list>>\nConsultar logros" as consultarLogros
+usecase "<<list>>\nConsultar logros bloqueados" as logrosBloqueados
+usecase "<<list>>\nConsultar logros desbloqueados" as logrosDesbloqueados
+
+' =========================
+' RELACIONES
+' =========================
+usuario --> consultarLogros
+
+' Herencia de casos de uso
+consultarLogros <|-- logrosBloqueados
+consultarLogros <|-- logrosDesbloqueados
+
+@enduml
