@@ -181,6 +181,7 @@ jobs:
           if-no-files-found: ignore
 
       - name: Generate Build Summary
+        if: matrix.platform == 'iOS' && matrix.scheme == 'HabitApp'
         run: |
           cat > build-summary.txt << 'EOF'
           HabitApp Build Summary
@@ -218,6 +219,7 @@ jobs:
           cat build-summary.txt
 
       - name: Upload build summary
+        if: matrix.platform == 'iOS' && matrix.scheme == 'HabitApp'
         uses: actions/upload-artifact@v4
         with:
           name: build-summary
