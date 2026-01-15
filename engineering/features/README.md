@@ -461,14 +461,6 @@ totalScore(for achievements: [Achievement]) -> Int
 @AppStorage("enableAchievements") var enableAchievements = true
 ```
 
-#### Observador de Cambios
-El sistema usa `HabitDataObserverManager` para detectar cuando:
-- Se completa un hábito
-- Se crea un nuevo hábito
-- Se modifica un hábito
-
-Cuando ocurre un cambio, se dispara `checkAndUnlockAchievements()` automáticamente.
-
 #### Persistencia
 - Los logros se guardan en SwiftData
 - Comparten el mismo `ModelContainer` que los hábitos

@@ -1,0 +1,10 @@
+@startuml
+left to right direction
+actor Usuario
+
+Usuario -- (Ver estadísticas diarias)
+Usuario -- (Ver estadísticas semanales)
+
+(Ver estadísticas semanales) ..> (Ver estadísticas semanales por hábito) : <<include>>
+(Ver estadísticas semanales) ..> (Ver estadísticas semanales de todos) : <<include>>
+@enduml
