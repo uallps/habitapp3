@@ -41,7 +41,7 @@ jobs:
     strategy:
       matrix:
         platform: [iOS, macOS]
-        scheme: ["HabitApp", "HabitApp Pro"]
+        scheme: ["HabitApp", "HabitApp Premium"]
         include:
           - platform: iOS
             sdk: iphonesimulator
