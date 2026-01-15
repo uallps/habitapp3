@@ -7,7 +7,7 @@ struct CategoryListView: View {
     
     @State private var selectedPriority: Priority? = nil
     @State private var selectedColor: Color? = nil
-    @State private var selectedColorName: String? = ""
+    @State private var selectedColorName: String? = "red"
     
     init(storageProvider: StorageProvider) {
         _categoryListVM = StateObject(wrappedValue: CategoryListViewModel(storageProvider: storageProvider))
