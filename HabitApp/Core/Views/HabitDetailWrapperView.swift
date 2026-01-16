@@ -313,21 +313,6 @@ extension HabitDetailWrapper {
                             .font(.headline)
                             .fontWeight(.semibold)
                     }
-                    
-                    Toggle("Activar recordatorio", isOn: $hasReminder)
-                        .onChange(of: hasReminder) { newValue in
-                            if newValue {
-                                NotificationManager.shared.requestAuthorization { granted in
-                                    if !granted {
-                                        print("Permiso denegado")
-                                    }
-                                }
-                            }
-                        }
-                    
-                    if hasReminder {
-                        DatePicker("Hora", selection: $reminderDate, displayedComponents: .hourAndMinute)
-                    }
                 }
                 .padding(16)
                 .background(Color(.controlBackgroundColor)) // ✅ Añadido fondo nativo de Mac

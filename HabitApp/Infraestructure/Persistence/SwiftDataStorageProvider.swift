@@ -7,28 +7,6 @@ class SwiftDataContext {
 }
 
 class SwiftDataStorageProvider: StorageProvider {
-    func upsertUserImageSlot(_ userImageSlot: UserImageSlot) async throws {
-        do {
-            var realUIS: UserImageSlot
-            let predicate = #Predicate<UserImageSlot> { $0.id == userImageSlot.id }
-            let descriptor = FetchDescriptor<UserImageSlot>(predicate: predicate)
-            let realUISs: [UserImageSlot] = try context.fetch(descriptor)
-            if realUISs.first == nil {
-                context.insert(userImageSlot)
-            } else {
-                realUIS = realUISs.first!
-                realUIS.imageData = userImageSlot.imageData
-                realUIS.emojis = userImageSlot.emojis
-            }
-            try await saveContext()
-        } catch {
-            print("Error upserting user image slot: \(error)")
-        }
-
-    }
-    
-
-    
     
     static private var _shared: SwiftDataStorageProvider?
     
@@ -49,17 +27,6 @@ class SwiftDataStorageProvider: StorageProvider {
             // Guardar como singleton para reutilizar el MISMO container
             SwiftDataStorageProvider._shared = self
             print("SwiftDataContext.shared inicializado con mainContext NUEVO")
-
-            // Debug: mostrar conteos al iniciar para confirmar persistencia
-            do {
-                let habitsCount = try context.fetch(FetchDescriptor<Habit>()).count
-                let notesCount = try context.fetch(FetchDescriptor<DailyNote>()).count
-                let categoriesCount = try context.fetch(FetchDescriptor<Category>()).count
-                let addictionsCount = try context.fetch(FetchDescriptor<Addiction>()).count
-                print("Conteos al iniciar -> Habits: \(habitsCount), Notes: \(notesCount), Categories: \(categoriesCount), Addictions: \(addictionsCount)")
-            } catch {
-                print("Error obteniendo conteos iniciales: \(error)")
-            }
         } catch {
             // En caso de error de migración, intentar eliminar y recrear
             print("Error inicial de SwiftData: \(error)")
@@ -86,31 +53,6 @@ class SwiftDataStorageProvider: StorageProvider {
             } catch {
                 fatalError("Failed to initialize storage provider: \(error)")
             }
-        }
-    }
-    
-    @MainActor
-    func loadAddictions() async throws -> [Addiction] {
-        var addictions: [Addiction] = []
-        do {
-            let descriptor = FetchDescriptor<Addiction>() // Use FetchDescriptor
-            addictions = try context.fetch(descriptor)
-            return addictions
-        } catch {
-            print("Error loading addictions: \(error)")
-        }
-        return addictions
-    }
-    
-    @MainActor
-    func associatePreventionHabit(to addiction: Addiction, habit: Habit) async throws {
-        do {
-            let realAddiction = getRealInstanceAddiction(addiction)
-            if realAddiction == nil { return }
-            realAddiction!.preventionHabits.append(habit)
-            try await saveContext()
-        } catch {
-            print("Error associating prevention habit: \(error)")
         }
     }
     
@@ -157,64 +99,6 @@ class SwiftDataStorageProvider: StorageProvider {
         context.processPendingChanges()
     }
     
-    // MARK: - Achievements
-    
-    @MainActor
-    func loadAchievements() async throws -> [Achievement] {
-        print("Cargando logros desde SwiftData...")
-        let descriptor = FetchDescriptor<Achievement>(
-            sortBy: [SortDescriptor(\.unlockedAt, order: .reverse)]
-        )
-        let achievements = try context.fetch(descriptor)
-        print("Logros encontrados: \(achievements.count)")
-        achievements.forEach { print("  - \($0.achievementId): \($0.title)") }
-        return achievements
-    }
-    
-    @MainActor
-    func saveAchievement(_ achievement: Achievement) async throws {
-        print("Insertando logro en contexto: \(achievement.achievementId)")
-        context.insert(achievement)
-        print("Guardando contexto...")
-        try context.save()
-        print("Contexto guardado exitosamente")
-    }
-    
-    @MainActor
-    func deleteAchievement(_ achievement: Achievement) async throws {
-        context.delete(achievement)
-        try context.save()
-    }
-    
-    @MainActor
-    func loadNotes(calendar: Calendar, startOfDay: Date, endOfDay: Date, selectedDate: Date) async throws -> [DailyNote] {
-        var notes: [DailyNote] = []
-        do {
-            let predicate = #Predicate<DailyNote> { note in
-                note.date >= startOfDay && note.date < endOfDay && note.habitId == nil
-            }
-            
-            let descriptor = FetchDescriptor<DailyNote>(
-                predicate: predicate,
-                sortBy: [SortDescriptor(\.createdAt, order: .reverse)]
-            )
-            notes = try context.fetch(descriptor)
-        } catch {
-            print("Error loading notes: \(error)")
-        }
-        return notes
-    }
-    
-    @MainActor
-    func addNote(title: String, content: String, selectedDate: Date, noteDate: Date) async throws -> DailyNote {
-        let note = DailyNote(title: title, content: content, date: noteDate)
-        context.insert(note)
-        do { try context.save() }
-        catch { print("Error guardando contexto: \(error)") }
-        //try await loadNotes(selectedDate: selectedDate)
-        return note
-    }
-    
     @MainActor
     func saveContext() async throws {
         do { try context.save() }
@@ -230,44 +114,6 @@ class SwiftDataStorageProvider: StorageProvider {
     // func saveAndGoToNoteDate(_ note: DailyNote, title: String, content: String) async throws {
     //     <#code#>
     // }
-    
-    @MainActor
-    func deleteNote(_ note: DailyNote) async throws {
-        context.delete(note)
-    }
-
-    @MainActor
-    private func getRealInstanceAddiction(_ addiction: Addiction) -> Addiction? {
-        do {
-            let addictionID = addiction.id
-
-            let descriptor = FetchDescriptor<Addiction>(
-                predicate: #Predicate<Addiction> { storedAddiction in
-                    storedAddiction.id == addictionID
-                }
-            )
-
-            return try context.fetch(descriptor).first
-        } catch {
-            print("Error getting real instance of Habit: \(error)")
-            return nil
-        }
-    }
-    
-    @MainActor
-    func addTriggerHabit(to addiction: Addiction, habit: Habit) async throws {
-        ///TODO
-    }
-    
-    @MainActor
-    func deleteGoal(_ goal: Goal) async throws {
-        context.delete(goal)
-        do {
-            try context.save()
-        } catch {
-            print("Error deleting goal: \(error)")
-        }
-    }
     
     @MainActor
     func onDataChanged(taskId: UUID, title: String, dueDate: Date?) async throws {
@@ -286,209 +132,12 @@ class SwiftDataStorageProvider: StorageProvider {
             let habitId = habit.id
             print("Hábito encontrado: '\(habit.title)' - doneDatesString: '\(habit.doneDatesString)'")
             
-            let goalDescriptor = FetchDescriptor<Goal>(
-                predicate: #Predicate<Goal> { goal in
-                    goal.habitId == habitId
-                }
-            )
-            let goals = try context.fetch(goalDescriptor)
-            
-            
-            for goal in goals {
-                goal.updateProgress(count: habit.doneDates.count)
-                
-                for milestone in goal.milestones where !milestone.isCompleted {
-                    if goal.currentCount >= milestone.targetValue {
-                        milestone.complete()
-                    }
-                }
-            }
-            
             try context.save()
         } catch {
             print("Error onDataChanged: \(error)")
         }
     }
-    
-    @MainActor
-    func addAddiction(addiction: Addiction) async throws {
-        if getRealInstanceAddiction(addiction) == nil {
-            context.insert(addiction)
-            try context.save()
-        }
-    }
 
-    @MainActor
-    func updateAddiction(addiction: Addiction) async throws {
-        if let realAddiction = getRealInstanceAddiction(addiction) {
-            realAddiction.title = addiction.title
-            realAddiction.severity = addiction.severity
-            realAddiction.triggers = addiction.triggers
-            realAddiction.preventionHabits = addiction.preventionHabits
-            realAddiction.compensatoryHabits = addiction.compensatoryHabits
-            realAddiction.relapseCount = addiction.relapseCount
-            realAddiction.selectedDays = addiction.selectedDays
-            try context.save()
-        } else {
-            print("Error updating addiction: realAddiction is nil")
-        }
-    }
-
-    @MainActor
-    func deleteAddiction(addiction: Addiction) async throws {
-        if let realAddiction = getRealInstanceAddiction(addiction) {
-            context.delete(realAddiction)
-            try context.save()
-        } else {
-            print("Error deleting addiction: realAddiction is nil")
-        }
-    }
-
-    @MainActor
-    func createSampleAddictions() async throws {
-       //TODO: Implement sample addictions creation
-    }
-
-    @MainActor
-    func addCompensatoryHabit(to addiction: Addiction, habit: Habit) async throws {
-        guard let realAddiction = getRealInstanceAddiction(addiction) else {
-            print("Error adding compensatory habit: addiction is nil")
-            return
-        }
-
-        guard let realHabit = getRealInstanceHabit(habit) else {
-            print("Error adding compensatory habit: habit is nil")
-            return
-        }
-
-        if !realAddiction.compensatoryHabits.contains(where: { $0.id == habit.id }) {
-            realAddiction.compensatoryHabits.append(realHabit)
-            try context.save()
-        }
-    }
-
-    @MainActor
-    func addPreventionHabit(to addiction: Addiction, habit: Habit) async throws {
-        guard let realAddiction = getRealInstanceAddiction(addiction) else {
-            print("Error adding prevention habit: addiction is nil")
-            return
-        }
-
-        guard let realHabit = getRealInstanceHabit(habit) else {
-            print("Error adding prevention habit: habit is nil")
-            return
-        }
-
-        if !realAddiction.preventionHabits.contains(where: { $0.id == habit.id }) {
-            realAddiction.preventionHabits.append(realHabit)
-            try context.save()
-        }
-    }
-
-    @MainActor
-    func addTrigerHabit(to addiction: Addiction, habit: Habit) async throws {
-        guard let realAddiction = getRealInstanceAddiction(addiction) else {
-            print("Error adding trigger habit: addiction is nil")
-            return
-        }
-
-        guard getRealInstanceHabit(habit) != nil else {
-            print("Error adding trigger habit: habit is nil")
-            return
-        }
-
-        if !realAddiction.triggers.contains(where: { $0.id == habit.id }) {
-            realAddiction.triggers.append(habit)
-            try context.save()
-        }
-    }
-
-    @MainActor
-func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async throws {
-    let realAddiction = getRealInstanceAddiction(addiction)
-    guard realAddiction  != nil else {
-        print("Error removing compensatory habit: addiction is nil")
-        return
-    }
-    if let index = realAddiction!.compensatoryHabits.firstIndex(where: { $0.id == habit.id }) {
-        realAddiction!.compensatoryHabits.remove(at: index)
-        try context.save()
-    }
-
-}
-
-    @MainActor
-    func removePreventionHabit(from addiction: Addiction, habit: Habit) async throws {
-        guard let realAddiction = getRealInstanceAddiction(addiction) else {
-            print("Error removing prevention habit: addiction is nil")
-            return
-        }
-
-        if let index = realAddiction.preventionHabits.firstIndex(where: { $0.id == habit.id }) {
-            realAddiction.preventionHabits.remove(at: index)
-            try context.save()
-        }
-    }
-
-    @MainActor
-    func removeTriggerHabit(from addiction: Addiction, habit: Habit) async throws {
-        guard let realAddiction = getRealInstanceAddiction(addiction) else {
-            print("Error removing trigger habit: addiction is nil")
-            return
-        }
-
-        if let index = realAddiction.triggers.firstIndex(where: { $0.id == habit.id }) {
-            realAddiction.triggers.remove(at: index)
-            try context.save()
-        }
-    }
-
-    @MainActor
-    func associateTriggerHabit(to addiction: Addiction, habit: Habit) async throws {
-        guard let realAddiction = getRealInstanceAddiction(addiction) else {
-            print("Error associating trigger habit: addiction is nil")
-            return
-        }
-
-        realAddiction.triggers.append(habit)
-
-        try context.save()
-    }
-
-        @MainActor
-    func associateCompensatoryHabit(to addiction: Addiction, habit: Habit) async throws {
-        let realAddiction = getRealInstanceAddiction(addiction)
-        guard realAddiction != nil else {
-            print("Error associating trigger habit: addiction is nil")
-            return
-        }
-
-        realAddiction!.compensatoryHabits.append(habit)
-
-        // TODO: LLAMAR A MARCAR HÁBITO COMO REALIZADO
-        try context.save()
-    }
-
-        @MainActor
-    func associatePreventionrHabit(to addiction: Addiction, habit: Habit) async throws {
-        guard let realAddiction = getRealInstanceAddiction(addiction) else {
-            print("Error associating trigger habit: addiction is nil")
-            return
-        }
-
-        // Optional guard: only allow known triggers
-        guard realAddiction.triggers.contains(where: { $0.id == habit.id }) else {
-            print("Habit is not a registered prevention habit for this addiction")
-            return
-        }
-
-        // TODO: LLAMAR A MARCAR HÁBITO COMO REALIZADO
-
-        realAddiction.relapseCount += 1
-        try context.save()
-    }
-
-    
     @MainActor
     private func getRealInstanceHabit(_ habit: Habit) -> Habit? {
         do {
@@ -505,193 +154,6 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
             print("Error getting real instance of Habit: \(error)")
             return nil
         }
-    }
-
-    
-    @MainActor
-    private func getRealInstanceCategory(_ category: Category) -> Category? {
-        do {
-            let descriptor = FetchDescriptor<Category>(
-                predicate: #Predicate { $0.id == category.id },
-                sortBy: []
-            )
-            return try context.fetch(descriptor).first
-        } catch {
-            print("Error getting real instance of Category: \(error)")
-            return nil
-        }
-    }
-    @MainActor
-    func loadPickedImage(_ userImageSlot: UserImageSlot) async throws -> UserImageSlot {
-        var fetchedImage: UserImageSlot? = nil
-        
-        let predicate = #Predicate<UserImageSlot> { storedUIS in
-            storedUIS.id == userImageSlot.id
-        }
-        
-        let descriptor = FetchDescriptor<UserImageSlot>(
-            predicate: predicate
-        )
-        
-        do {
-            fetchedImage = try context.fetch(descriptor).first
-        } catch {
-            print("Error loading picked image: \(error)")
-        }
-        let noImageArray: [Emoji] = []
-        return fetchedImage ?? UserImageSlot(emojis: noImageArray)
-    }
-    
-    @MainActor
-    func addHabitToCategory(habit: Habit, category: Category) async throws {
-        let realCategory = self.getRealInstanceCategory(category)
-        if let realCategory {
-            if !realCategory.habits.contains(where: { $0.id == habit.id } ) {
-                realCategory.habits.append(habit)
-            }
-            try context.save()
-        } else {
-            print("Error adding habit to category: realCategory is nil")
-        }
-
-    }
-    
-    @MainActor
-    func checkIfHabitIsInCategory(habit: Habit, category: Category) async throws -> Bool {
-        var contains = false
-        //let realHabit = self.getRealInstanceHabit(habit) TEMP UNTIL FIX WITH FRANCO
-        let realHabit: Habit? = habit
-        let realCategory = self.getRealInstanceCategory(category)
-        if let realHabit {
-                if let realCategory {
-                    contains = realCategory.habits.contains(realHabit)
-                }else {
-                    print("Error checking if habit is in category, category is nil")
-                }
-        } else {
-            print("Error checking if habit is in category, habit is nil")
-        }
-        return contains
-    }
-    
-    @MainActor
-    func deleteHabitFromCategory(habit: Habit, category: Category) async throws {
-        let realHabit = self.getRealInstanceHabit(habit)
-        let realCategory = self.getRealInstanceCategory(category)
-        do {
-            if let realHabit {
-                if let realCategory {
-                    let index = realCategory.habits.firstIndex(of: realHabit)
-                    if let index {
-                        realCategory.habits.remove(at: index)
-                        try context.save()
-                    } else {
-                        print("Error deleting habit from category, index is nil")
-                    }
-                }else {
-                    print("Error deleting habit from category, category is nil")
-                }
-            } else {
-                print("Error checking deleting habit from category, habit is nil")
-            }
-        }catch {
-            print("Error deleting habit from category, \(error)")
-        }
-
-    }
-    
-    @MainActor
-    func addSubcategory(category: Category, subCategory: Category) async throws {
-        if let realCategory = self.getRealInstanceCategory(category) {
-            var realSubCategory = self.getRealInstanceCategory(subCategory)
-            if realSubCategory == nil {
-                context.insert(subCategory)
-                try context.save()
-                realSubCategory = subCategory
-            }
-            if !realCategory.subCategories.contains(where: { $0.id == subCategory.id }) {
-                realCategory.subCategories.append(realSubCategory!)
-            }
-            
-            try context.save()
-        } else {
-            print("Error adding subcategory, parent category is nil.")
-        }
-
-    }
-    
-    @MainActor
-    func removeCategory(category: Category) async throws {
-        if let trackedCategory = self.getRealInstanceCategory(category) {
-            context.delete(trackedCategory)
-            try context.save()
-            print("Deleted category: \(trackedCategory.name)")
-        } else {
-            print("Category not found in context, cannot delete")
-        }
-    }
-    
-    @MainActor
-    func removeSubCategory(category: Category, subCategory: Category) async throws {
-        if let realCategory = self.getRealInstanceCategory(category) {
-            if let realSubcategory = self.getRealInstanceCategory(subCategory) {
-                let index = realCategory.subCategories.firstIndex(of: realSubcategory)
-                if index != nil {
-                    realCategory.subCategories.remove(at: index! )
-                    context.delete(realSubcategory)
-                    try context.save()
-                } else {
-                    print("Error removing subcategory, couldn't find realCategory on realCategory's categories")
-                }
-            } else {
-                print("Error removing subcategory, realSubcategory is nil")
-            }
-
-        } else {
-            print("Error removing category, realCategory is nil")
-        }
-    }
-    
-    func categoryExists(id: UUID) async throws -> Bool {
-        let categories = try await loadCategories()
-        return categories.contains(where: { $0.id == id } )
-    }
-    
-    @MainActor
-    func updateCategory(id: UUID, newCategory: Category) async throws {
-        let categories = try await loadCategories()
-        let oldCategory = categories.first {
-            category in
-            category.id == id
-        }
-        if let oldCategory {
-            if let realOldCategory = self.getRealInstanceCategory(oldCategory) {
-                realOldCategory.copyFrom(newCategory: newCategory)
-                try context.save()
-            } else {
-                print("Couldn't update category, realOldCategory is nil")
-            }
-        } else {
-            print("Couldn't update category, oldCategory is nil")
-        }
-
-    }
-    
-    @MainActor
-    func upsertCategoryOrSubcategory(parent: Category?, category: Category) async throws {
-        if let parent = parent {
-            try await addSubcategory(category: parent, subCategory: category)
-        }
-        
-        if try await categoryExists(id: category.id) == false {
-            try await addCategory(category: category)
-        }else {
-            // Actualizar categoría existente
-            try await updateCategory(id: category.id, newCategory: category)
-            // Illegal attempt to map a relationship containing temporary objects to its identifiers.
-            // It should already have been saved by context.save on addSubcategory
-        }
-        //try context.save() This is the real culprit to illegal attempt?
     }
 
     func loadTasks() async throws -> [Habit] {
@@ -750,45 +212,10 @@ func removeCompensatoryHabit(from addiction: Addiction, habit: Habit) async thro
     }
     
     @MainActor
-    func loadCategories() async throws -> [Category] {
-        let descriptor = FetchDescriptor<Category>(
-            sortBy: [SortDescriptor(\.name, order: .forward)]
-        )
-        
-        var categories: [Category] = []
-        
-        do {
-            categories = try context.fetch(descriptor)
-        } catch {
-            print("Error loading categories: \(error)")
-        }
-        return categories
-    }
-    
-    @MainActor
-    func addCategory(category: Category) async throws {
-        do {
-            let existingCategories = try await loadCategories()
-            let existingIds = Set(existingCategories.map { $0.id })
-
-            if existingIds.contains(category.id) {
-                // Category already exists
-                // Option 1: do nothing
-                // Option 2: update properties explicitly if needed
-            } else {
-                context.insert(category)
-            }
-            try context.save()
-        } catch {
-            print("Error saving category: \(error)")
-        }
-    }
-    
-    @MainActor
     func addHabit(habit: Habit) async  throws {
         do {
             print("Antes de insertar - hasChanges: \(context.hasChanges)")
-            try context.insert(habit)
+            context.insert(habit)
             print("Habit insertado: \(habit.title), hasChanges después insert: \(context.hasChanges)")
             
             // Si hasChanges sigue siendo false, el contexto está corrupto

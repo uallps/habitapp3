@@ -3,11 +3,6 @@ import SwiftData
 
 struct HabitListView: View {
     let storageProvider: StorageProvider
-    #if WILD_CARD_FEATURE
-    let wildcardService = WildcardHabitService()
-    #else
-    let wildcardService: WildcardHabitService? = nil
-    #endif
     @Query(sort: \Habit.createdAt) private var habits: [Habit]
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var userPreferences: UserPreferences
@@ -19,15 +14,8 @@ struct HabitListView: View {
     
     init(storageProvider: StorageProvider) {
         self.storageProvider = storageProvider
-        let wildcardProvider: WildcardHabitProvider?
-        #if WILD_CARD_FEATURE
-        wildcardProvider = WildcardHabitService()
-        #else
-        wildcardProvider = nil
-        #endif
         self._viewModel = StateObject(wrappedValue: HabitListViewModel(
-            storageProvider: storageProvider,
-            wildcardProvider: wildcardProvider
+            storageProvider: storageProvider
         ))
     }
 

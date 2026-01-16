@@ -4,50 +4,16 @@ import Combine
 // Responsabilidad: preferencias de UI y características persistidas en UserDefaults.
 final class UserPreferences: ObservableObject {
     
-#if HABIT_FEATURE
-@AppStorage("showDueDates") private var storedShowDueDates: Bool = true
-@AppStorage("showPriorities") private var storedShowPriorities: Bool = true
-@AppStorage("enableReminders") private var storedEnableReminders: Bool = true
-#else
-@AppStorage("showDueDates") private var storedShowDueDates: Bool = false
-@AppStorage("showPriorities") private var storedShowPriorities: Bool = false
-@AppStorage("enableReminders") private var storedEnableReminders: Bool = false
-#endif
-
 #if STREAK_FEATURE
 @AppStorage("enableStreaks") private var storedEnableStreaks: Bool = true
 #else
 @AppStorage("enableStreaks") private var storedEnableStreaks: Bool = false
 #endif
 
-#if STATISTIC_FEATURE
-@AppStorage("enableStatistics") private var storedEnableStatistics: Bool = true
-#else
-@AppStorage("enableStatistics") private var storedEnableStatistics: Bool = false
-#endif
-
 #if HABIT_FEATURE
 @AppStorage("enableHabits") private var storedEnableHabits: Bool = true
 #else
 @AppStorage("enableHabits") private var storedEnableHabits: Bool = false
-#endif
-
-#if GOAL_FEATURE
-@AppStorage("enableGoals") private var storedEnableGoals: Bool = true
-#else
-@AppStorage("enableGoals") private var storedEnableGoals: Bool = false
-#endif
-
-#if ADDICTION_FEATURE
-@AppStorage("enableAddictions") private var storedEnableAddictions: Bool = true
-#else
-@AppStorage("enableAddictions") private var storedEnableAddictions: Bool = false
-#endif
-
-#if CATEGORY_FEATURE
-@AppStorage("enableCategories") private var storedEnableCategories: Bool = true
-#else
-@AppStorage("enableCategories") private var storedEnableCategories: Bool = false
 #endif
 
 #if SETTING_FEATURE
@@ -63,25 +29,6 @@ final class UserPreferences: ObservableObject {
 @AppStorage("nightModeIntensity") var nightModeIntensity: Double = 0.0
 @AppStorage("accentColorName") var accentColorName: String = "Blue"
 #endif
-
-#if DAILY_NOTE_FEATURE
-@AppStorage("enableDailyNotes") private var storedEnableDailyNotes: Bool = true
-#else
-@AppStorage("enableDailyNotes") private var storedEnableDailyNotes: Bool = false
-#endif
-
-#if ACHIEVEMENT_FEATURE
-@AppStorage("enableAchievements") private var storedEnableAchievements: Bool = true
-#else
-@AppStorage("enableAchievements") private var storedEnableAchievements: Bool = false
-#endif
-
-#if WILD_CARD_FEATURE
-@AppStorage("enableWildcard") private var storedEnableWildcard: Bool = true
-#else
-@AppStorage("enableWildcard") private var storedEnableWildcard: Bool = false
-#endif
-
     
     var appTheme: Int {
         get { storedAppTheme }
@@ -107,34 +54,9 @@ final class UserPreferences: ObservableObject {
             }
         }
     
-    var showDueDates: Bool {
-        get { storedShowDueDates }
-        set { objectWillChange.send(); storedShowDueDates = newValue }
-    }
-    
-    var enableGoals: Bool {
-        get { storedEnableGoals }
-        set { objectWillChange.send(); storedEnableGoals = newValue }
-    }
-    
     var enableSettings: Bool {
         get { storedEnableSettings }
         set { objectWillChange.send(); storedEnableSettings = newValue }
-    }
-    
-    var enableCategories: Bool {
-        get { storedEnableCategories }
-        set { objectWillChange.send(); storedEnableCategories = newValue }
-    }
-    
-    var showPriorities: Bool {
-        get { storedShowPriorities }
-        set { objectWillChange.send(); storedShowPriorities = newValue }
-    }
-    
-    var enableReminders: Bool {
-        get { storedEnableReminders }
-        set { objectWillChange.send(); storedEnableReminders = newValue }
     }
     
     var enableHabits: Bool {
@@ -142,33 +64,8 @@ final class UserPreferences: ObservableObject {
         set { objectWillChange.send(); storedEnableHabits = newValue }
     }
     
-    var enableStatistics: Bool {
-        get { storedEnableStatistics }
-        set { objectWillChange.send(); storedEnableStatistics = newValue }
-    }
-    
     var enableStreaks: Bool {
         get { storedEnableStreaks }
         set { objectWillChange.send(); storedEnableStreaks = newValue }
-    }
-    
-    var enableDailyNotes: Bool {
-        get { storedEnableDailyNotes }
-        set { objectWillChange.send(); storedEnableDailyNotes = newValue }
-    }
-    
-    var enableAchievements: Bool {
-        get { storedEnableAchievements }
-        set { objectWillChange.send(); storedEnableAchievements = newValue }
-    }
-    
-    var enableAddictions: Bool {
-        get { storedEnableAddictions }
-        set { objectWillChange.send(); storedEnableAddictions = newValue }
-    }
-    
-    var enableWildcard: Bool {
-        get { storedEnableWildcard }
-        set { objectWillChange.send(); storedEnableWildcard = newValue }
     }
 }

@@ -47,33 +47,9 @@ struct HabitRowView: View {
                             .id(habit.id)
                     }
                 }
-                
-                if userPreferences.showDueDates, let dueDate = habit.dueDate {
-                    Text("Vence: \(dueDate.formatted(date: .abbreviated, time: .shortened))")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-                
-                if userPreferences.showPriorities, let priority = habit.priority {
-                    Text("Prioridad: \(priority.localized)")
-                        .font(.caption)
-                        .foregroundColor(priorityColor(for: priority))
-                }
             }
             
             Spacer()
-            
-            //  Navegación a notas (iOS) - Solo si está habilitado
-            if userPreferences.enableDailyNotes {
-                NavigationLink {
-                    HabitNotesView(habit: habit, currentDate: date, storageProvider: storageProvider)
-                } label: {
-                    Image(systemName: "note.text")
-                        .foregroundColor(userPreferences.accentColor)
-                        .font(.title3)
-                }
-                .buttonStyle(.plain)
-            }
             
             //  Botón para editar
             Button {
@@ -134,33 +110,9 @@ struct HabitRowView: View {
                             .id(habit.id)
                     }
                 }
-                
-                if userPreferences.showDueDates, let dueDate = habit.dueDate {
-                    Text("Vence: \(dueDate.formatted(date: .abbreviated, time: .shortened))")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-                
-                if userPreferences.showPriorities, let priority = habit.priority {
-                    Text("Prioridad: \(priority.localized)")
-                        .font(.caption)
-                        .foregroundColor(priorityColor(for: priority))
-                }
             }
             
             Spacer()
-            
-            //  Botón para notas (macOS - usa sheet) - Solo si está habilitado
-            if userPreferences.enableDailyNotes {
-                Button {
-                    showingNotesSheet = true
-                } label: {
-                    Image(systemName: "note.text")
-                        .foregroundColor(userPreferences.accentColor)
-                        .font(.title3)
-                }
-                .buttonStyle(.plain)
-            }
             
             //  Botón para editar
             Button {
@@ -186,11 +138,6 @@ struct HabitRowView: View {
         }
         .sheet(isPresented: $showingEditSheet) {
             HabitDetailWrapper(viewModel: viewModel, habit: habit, isNew: false)
-        }
-        .sheet(isPresented: $showingNotesSheet) {
-            if userPreferences.enableDailyNotes {
-                HabitNotesView(habit: habit, currentDate: date, storageProvider: storageProvider)
-            }
         }
         .alert("¿Eliminar hábito?", isPresented: $showingDeleteAlert) {
             Button("Eliminar", role: .destructive) {

@@ -159,39 +159,9 @@ extension SettingsView {
                         .labelsHidden()
                     }
                 }
-                
-                // Visualización
-                SettingsSection(
-                    title: "Visualización",
-                    icon: "eye.fill",
-                    iconColor: userPreferences.accentColor
-                ) {
-                    SettingsRow(
-                        title: "Mostrar fechas de vencimiento",
-                        description: "Muestra cuándo vence cada hábito"
-                    ) {
-                        Toggle("", isOn: Binding(
-                            get: { userPreferences.showDueDates },
-                            set: { userPreferences.showDueDates = $0 }
-                        ))
-                        .labelsHidden()
-                    }
                     
                     Divider()
                         .padding(.leading, 40)
-                    
-                    SettingsRow(
-                        title: "Mostrar prioridades",
-                        description: "Visualiza el nivel de importancia de cada hábito"
-                    ) {
-                        Toggle("", isOn: Binding(
-                            get: { userPreferences.showPriorities },
-                            set: { userPreferences.showPriorities = $0 }
-                        ))
-                        .labelsHidden()
-                    }
-                }
-                
                 // Características
                 SettingsSection(
                     title: "Características",
@@ -390,11 +360,6 @@ extension SettingsView {
             streaks.forEach { modelContext.delete($0) }
             
             try modelContext.save()
-            
-            // Resetear preferencias de usuario a valores por defecto
-            userPreferences.showDueDates = true
-            userPreferences.showPriorities = true
-            userPreferences.enableReminders = true
             userPreferences.enableHabits = true
             userPreferences.enableStreaks = true
             userPreferences.appTheme = 0

@@ -5,36 +5,9 @@ import UserNotifications
 
 final class HabitListViewModel: ObservableObject {
     private let storageProvider: StorageProvider
-    private let wildcardProvider: WildcardHabitProvider?
     
-    init(storageProvider: StorageProvider, wildcardProvider: WildcardHabitProvider? = nil) {
+    init(storageProvider: StorageProvider) {
         self.storageProvider = storageProvider
-        self.wildcardProvider = wildcardProvider
-        
-        // Ejecutar limpieza de hábitos expirados al iniciar
-        Task {
-            if let context = SwiftDataContext.shared,
-               let provider = wildcardProvider {
-                try? provider.cleanupExpiredHabits(context: context)
-            }
-        }
-    }
-    
-    func unlockWildcardHabit() {
-        guard let provider = wildcardProvider,
-              let context = SwiftDataContext.shared else { return }
-        
-        do {
-            if let newHabit = try provider.getWildcardHabit(context: context) {
-                context.insert(newHabit)
-                try context.save()
-                print("Hábito comodín desbloqueado: \(newHabit.title)")
-            } else {
-                print("No hay hábitos comodín disponibles para hoy")
-            }
-        } catch {
-            print("Error al desbloquear hábito comodín: \(error)")
-        }
     }
     
     func addHabit(title: String,
@@ -49,34 +22,13 @@ final class HabitListViewModel: ObservableObject {
             reminderDate: reminderDate,
             scheduledDays: scheduledDays
         )
-        
-        Task {
-            try await storageProvider.addHabit(habit: habit)
-            // Programar notificaciones si hay recordatorio
-            if reminderDate != nil {
-                NotificationManager.shared.scheduleNotification(for: habit)
-            }
-            //  Notificar plugins si hay fecha de recordatorio
-            if let reminderDate = reminderDate {
-                HabitDataObserverManager.shared.notifyDataChanged(
-                    taskId: habit.id,
-                    title: habit.title,
-                    dueDate: reminderDate)
-            }
-        }
-        
     }
     
     func updateHabit(_ habit: Habit) {
         Task {
             do {
                 try await storageProvider.saveContext()
-                // Actualizar notificaciones
-                NotificationManager.shared.removeHabitNotifications(for: habit)
-                if habit.reminderDate != nil {
-                    NotificationManager.shared.scheduleNotification(for: habit)
-                }
-            } catch {
+                } catch {
                 // Error updating habit
             }
         }
@@ -114,7 +66,6 @@ final class HabitListViewModel: ObservableObject {
     
     func deleteHabit(_ habit: Habit) {
         Task {
-            NotificationManager.shared.removeHabitNotifications(for: habit)
             try await storageProvider.deleteHabit(habit: habit)
         }
     }

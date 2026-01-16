@@ -50,15 +50,6 @@ class AppConfig: ObservableObject {
             }
         }
         
-        // Agregar modelos manualmente si no están ya en el schema
-        // (porque sus plugins fueron excluidos del target)
-        if !schemas.contains(where: { $0 == Category.self }) {
-            schemas.append(Category.self)
-        }
-        if !schemas.contains(where: { $0 == Addiction.self }) {
-            schemas.append(Addiction.self)
-        }
-        
         let schema = Schema(schemas)
         print("Schemas registrados: \(schemas)")
         print("Plugins activos: \(plugins.filter { $0.isEnabled }.count)/\(plugins.count)")
@@ -76,7 +67,6 @@ class AppConfig: ObservableObject {
     
     private func setupHabitDataObservingPlugins() {
         let registry = HabitDataObserverManager.shared
-        registry.register(HabitGoalPlugin(config: self))
         registry.register(StreakPlugin(config: self))
         print("Plugins registrados correctamente")
     }
