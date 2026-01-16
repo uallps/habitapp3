@@ -22,16 +22,6 @@ extension SettingsView {
     var iosBody: some View {
         NavigationStack {
             List {
-                Section("Visualización") {
-                    Toggle("Mostrar fechas de vencimiento", isOn: Binding(
-                        get: { userPreferences.showDueDates },
-                        set: { userPreferences.showDueDates = $0 }
-                    ))
-                    Toggle("Mostrar prioridades", isOn: Binding(
-                        get: { userPreferences.showPriorities },
-                        set: { userPreferences.showPriorities = $0 }
-                    ))
-                }
                 
                 Section("Características") {
                     Toggle("Hábitos", isOn: Binding(

@@ -124,19 +124,6 @@ extension HabitDetailWrapper {
                                     .font(.headline)
                                     .fontWeight(.semibold)
                             }
-                            
-                            
-                            Toggle("Activar recordatorio", isOn: $hasReminder)
-                                // El cambio principal es añadir (_, newValue)
-                                .onChange(of: hasReminder) { _, newValue in 
-                                    if newValue {
-                                        NotificationManager.shared.requestAuthorization { granted in
-                                            if !granted {
-                                                print("Permiso denegado")
-                                            }
-                                        }
-                                    }
-                                }
                             if hasReminder {
                                 DatePicker("Hora", selection: $reminderDate, displayedComponents: .hourAndMinute)
                             }

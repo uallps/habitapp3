@@ -54,9 +54,6 @@
     "Acerca de HabitApp" : {
 
     },
-    "Activar recordatorio" : {
-
-    },
     "Ajustes" : {
 
     },
@@ -70,6 +67,9 @@
 
     },
     "Cancelar" : {
+
+    },
+    "Características" : {
 
     },
     "Categorías" : {
@@ -195,12 +195,6 @@
     "Modo Noche (Luz cálida)" : {
 
     },
-    "Mostrar fechas de vencimiento" : {
-
-    },
-    "Mostrar prioridades" : {
-
-    },
     "No hay hábitos programados" : {
 
     },
@@ -291,6 +285,9 @@
     "Purple" : {
 
     },
+    "Rachas" : {
+
+    },
     "Recordatorio" : {
 
     },
@@ -337,9 +334,6 @@
 
     },
     "Vista no encontrada" : {
-
-    },
-    "Visualización" : {
 
     }
   },
